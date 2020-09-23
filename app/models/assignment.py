@@ -1,10 +1,9 @@
 import sqlalchemy
 import sqlalchemy.ext.declarative
 from sqlalchemy import Integer, String, Column
+from .. import index
 
-Base = sqlalchemy.ext.declarative.declarative_base()
-
-class Assignment(Base):
+class Assignment(index.Base):
     __tablename__ = 'assignments'
     AssignmentID = Column(String, primary_key=True)
     AssignmentUrl = Column(String)

@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PandAsh</title>
     <!-- BootstrapのCSS読み込み -->
-    <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
     <!-- jQuery読み込み -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -13,7 +13,7 @@
     <!-- BootstrapのJS読み込み -->
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='makeup.css') }}" type="text/css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/originalcss_forlg.css') }}" type="text/css"/>
 </head>
 
 <!--Modal-->
@@ -98,7 +98,7 @@ role="dialog" aria-labelledby="label1" aria-hidden="true">
    <div class="fixed-top">
     <nav class="navbar navbar-light bg-light"> 
      <a href="#" class = navbar-brand>
-        <img src="{{ url_for('static', filename='popup.jpg') }}" width="30" height="30" alt="ロゴ">
+        <img src="{{ url_for('static', filename='images/popup.jpg') }}" width="30" height="30" alt="ロゴ">
         PandAsh
      </a>
     </nav>
