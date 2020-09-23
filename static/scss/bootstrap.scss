@@ -1,0 +1,78 @@
+/*!
+ * Bootstrap v4.5.2 (https://getbootstrap.com/)
+ * Copyright 2011-2020 The Bootstrap Authors
+ * Copyright 2011-2020 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
+
+@import "functions";
+@import "variables";
+@import "mixins";
+@import "root";
+@import "reboot";
+@import "type";
+@import "images";
+@import "code";
+@import "grid";
+@import "tables";
+@import "forms";
+@import "buttons";
+@import "transitions";
+@import "dropdown";
+@import "button-group";
+@import "input-group";
+@import "custom-forms";
+@import "nav";
+@import "navbar";
+@import "card";
+@import "breadcrumb";
+@import "pagination";
+@import "badge";
+@import "jumbotron";
+@import "alert";
+@import "progress";
+@import "media";
+@import "list-group";
+@import "close";
+@import "toasts";
+@import "modal";
+@import "tooltip";
+@import "popover";
+@import "carousel";
+@import "spinners";
+@import "utilities";
+@import "print";
+
+.col-xs-1-5, .col-sm-1-5, .col-md-1-5, .col-lg-1-5,
+.col-xs-2-5, .col-sm-2-5, .col-md-2-5, .col-lg-2-5,
+.col-xs-3-5, .col-sm-3-5, .col-md-3-5, .col-lg-3-5,
+.col-xs-4-5, .col-sm-4-5, .col-md-4-5, .col-lg-4-5 {
+  position: relative;
+  min-height: 1px;
+  padding-left:  ($grid-gutter-width / 2);
+  padding-right: ($grid-gutter-width / 2);
+}
+@for $i from 1 through 4 {
+  .col-xs-#{$i}-5 {
+    float: left;
+    width: percentage($i / 5);
+  }
+  @media (min-width: $screen-sm-min) {
+    .col-sm-#{$i}-5 {
+      float: left;
+      width: percentage($i / 5);
+    }
+  }
+  @media (min-width: $screen-md-min) {
+    .col-md-#{$i}-5 {
+      float: left;
+      width: percentage($i / 5);
+    }
+  }
+  @media (min-width: $screen-lg-min) {
+    .col-lg-#{$i}-5 {
+      float: left;
+      width: percentage($i / 5);
+    }
+  }
+}

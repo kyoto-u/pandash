@@ -1,0 +1,31 @@
+body {
+    padding-top: 140px; 
+  }
+
+.alt-table-responsive {
+  width: 100%;
+  overflow-y: hidden;
+  overflow-x: auto;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  -webkit-overflow-scrolling: touch;
+ }    
+  
+ #fixed {
+    position: fixed;	/* 要素の位置を固定する */
+    top: 300; /* 基準の位置を画面の一番下に指定する */
+    left: 0; /* 基準の位置を画面の一番右に指定する */
+    color: black;
+    background: silver;
+　}
+  
+.modal-dialog-fluid {
+      max-width: inherit;
+      width: 98%;
+      margin-left: 15px;
+}
+
+#base_footer {
+  color:gray;
+  background: green;
+  text-align: center;
+}
