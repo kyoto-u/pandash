@@ -2,13 +2,13 @@
 {% extends "_base.htm" %}
 {% block bodycontent %}
 <div class = "row">
-    <div class = "col-sm-12 col-md-2">
+    <div class = "col-sm-12 col-md-2" id = "ScrollSearchbar">
         <div class = "container py-2">
             <div class = "row">
                 <div class="col-sm-2 col-md-12">
-                    <p>しぼりこみ検索</p>
+                    <h6>しぼりこみ検索</h6>
                 </div>
-                <div class= "col-2 col-md-12">
+                <div class= "col-sm-2 col-md-12">
                      <!--曜日しぼりこみ-->
                     <div class="form-group">
                       <label for="select1a">科目</label>
@@ -22,7 +22,7 @@
                       </select>
                     </div>
                 </div>
-                <div class = "col-sm-12 col-md-8">
+                <div class = "col-sm-8 col-md-12">
                     <!--時間割検索機能-->
                     <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#modal_timeboard_select">時間割で検索</button>
                 </div>
@@ -69,55 +69,15 @@
             </tr>
           </thead>
           <tbody>
+            {% for task in tasks %}
             <tr class = "d-flex">
-                <td class="col-4">[2020前期火２]線形代数学A</td>
-                <td class="col-2"> 課題１</td>
-                <td class="col-2">未完了​</td>
-                <td class="col-2">あと7時間</td>
-                <td class="col-2">2020/09/02/21:00</td>
+                <td class="col-4">{{task.subject}}</td>
+                <td class="col-2">{{task.taskname}}</td>
+                <td class="col-2">{{task.status}}​</td>
+                <td class="col-2">{{task.time_left}}</td>
+                <td class="col-2">{{task.deadline}}</td>
             </tr>
-            <tr class = "d-flex">
-                <td class="col-4">[2020前期水4]地球工学総論</td>
-                <td class="col-2">課題２</td>
-                <td class="col-2">未完了</td>
-                <td class="col-2">あ​と3日</td>
-                <td class="col-2">2020/09/05/23:59</td>
-            </tr>
-            <tr class = "d-flex">
-              　<td class="col-4">[2020前期月5]情報基礎演習</td>
-              　<td class="col-2">課題３</td>
-             　 <td class="col-2">完了</td>
-              　<td class="col-2"></td>
-              　<td class="col-2">2020/08/31/23:55</td>
-          　</tr>
-          　<tr class = "d-flex">
-            　<td class="col-4">[2020前期木3]ドイツ語IA(演習)</td>
-            　<td class="col-2">課題４</td>
-           　 <td class="col-2">完了</td>
-            　<td class="col-2"></td>
-            　<td class="col-2">2020/08/19/12:00</td>
-        　　</tr>
-        　　<tr class = "d-flex">
-          　　<td class="col-4">[2020前期火２]線形代数学A</td>
-          　　<td class="col-2">課題５</td>
-         　 　<td class="col-2">期限切れ</td>
-          　　<td class="col-2"></td>
-          　　<td class="col-2">2020/08/11/21:00</td>
-      　　　</tr>
-          <tr class = "d-flex">
-          　　<td class="col-4">[2020前期月３]微分積分学A</td>
-          　　<td class="col-2">課題６</td>
-         　 　<td class="col-2">完了</td>
-          　　<td class="col-2"></td>
-          　　<td class="col-2">2020/08/09/21:00</td>
-      　　　</tr>
-     　　　 <tr class = "d-flex">
-        　　　<td class="col-4">[2020前期金4]基礎化学実験</td>
-        　　　<td class="col-2">課題７</td>
-       　 　　<td class="col-2">完了</td>
-        　　　<td class="col-2"></td>
-        　　　<td class="col-2">2020/08/02/23:00</td>
-    　　　　</tr>
+            {% end for %}
         </table>
        </div>
      </div>

@@ -140,7 +140,8 @@ role="dialog" aria-labelledby="label1" aria-hidden="true">
       </nav>
       </div>
   </header>
-  <main>
+ <div id="wrapper">
+  <main id = "contents">
     <div id="bodycontent">
         {% block bodycontent %}
             Replace this
@@ -148,13 +149,14 @@ role="dialog" aria-labelledby="label1" aria-hidden="true">
     </div>
   </main>
 
-  <footer id = "base_footer">
-        <div class = "fixed-bottom">
-          <div class = "container">
-            <div class = "row">
-           <small>京都大学 KYOTO UNIVERSITY 京都大学情報環境機構</small>
-            </div>
-          </div>
+  <footer>
+    <div class = "container-fluid">
+      <div class = "row">
+        <div class = "col-12">
+           <h2>京都大学 KYOTO UNIVERSITY 京都大学情報環境機構</h2>
         </div>
+      </div>
+    </div>
   </footer>
+ </div>
 </body>
