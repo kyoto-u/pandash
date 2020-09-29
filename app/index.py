@@ -2,6 +2,42 @@ from .models import student, assignment, course, enrollment, instructor
 from .settings import session
 
 
+
+def get_tasklist(studentid):
+    # new_student = enrollment.enrollment()
+    # new_student.enrollmentID = "2"
+    # new_student.assignmentID = "kadai"
+    # new_student.StudentID = "guest"
+    # new_student.Status = "finished"
+    # new_student.CourseID = "courseA"
+
+    # new_student = assignment.Assignment()
+    # new_student.AssignmentID = "kadai"
+    # new_student.Title = "kadai"
+
+    # session.add(new_student)
+
+    # new_student = course.Course()
+    # new_student.CourseID = "courseA"
+    # new_student.CourseName = "PandAsh"
+    # session.add(new_student)
+    # session.commit()
+
+    enrollments = session.query(enrollment.Enrollment).filter(enrollment.Enrollment.StudentID == studentid).all()
+    tasks=[]
+    for data in enrollments:
+        task={}
+        task["status"]=data.Status
+        assignmentdata = session.query(assignment.Assignment).filter(assignment.Assignment.AssignmentID == data.assignmentID).all()
+        task["taskname"] = assignmentdata[0].Title
+        task["deadline"] = assignmentdata[0].Limit_at
+        task["time_left"] = "あと1分"
+        coursedata = session.query(course.Course).filter(course.Course.CourseID == data.CourseID).all()
+        task["subject"] = coursedata[0].CourseName
+        tasks.append(task)
+    return tasks
+
+
 def add_student(studentid, fullname):
     students = session.query(student.Student.StudentID).all()
     isExist = False
@@ -21,7 +57,7 @@ def add_student(studentid, fullname):
 
         session.add(new_student)
         session.commit()
-    
+
     return
 
 def add_assignment(assignmentid, assignmenturl, \
