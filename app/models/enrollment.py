@@ -6,7 +6,7 @@ from .. import settings
 
 class Enrollment(settings.Base):
     __tablename__ = 'enrollments'
-    EnrollmentID = sqlalchemy.Column(String(40), primary_key=True)
+    EnrollmentID = sqlalchemy.Column(Integer, primary_key=True, autoincrement=True)
     AssignmentID = sqlalchemy.Column(String(40))
     StudentID = sqlalchemy.Column(String(40))
     CourseID = sqlalchemy.Column(String(40))

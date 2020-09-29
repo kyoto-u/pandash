@@ -16,10 +16,11 @@ def root():
 @app.route('/controller')
 def controller():
     # ex
-    add_student('student1','s_fullname1')
-    add_assignment('assignment1', 'https://panda...', '課題１', '2020-10-06T01:55:00Z', '<p>説明</p>')
-    add_course('course1', 'teacher1', 'コース１', '火5')
-    add_instructor('instructor1', 'i_fullname', 'i_mailadress')
+    # add_student('student1','s_fullname1')
+    # add_assignment('assignment1', 'https://panda...', '課題１', '2020-10-06T01:55:00Z', '<p>説明</p>')
+    # add_course('course1', 'teacher1', 'コース１', '火5')
+    # add_instructor('instructor1', 'i_fullname', 'i_mailadress')
+    # add_enrollment('assignmentid', 'studentid', 'courseid', 'status')
     return ''
     
 @app.route('/tasklist')
