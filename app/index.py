@@ -76,18 +76,30 @@ def add_course(courseid, instructorid, \
 
 def add_enrollment(enrollmentid, assignmentid, \
                     studentid, courseid, status):
-    enrollments = session.query(enrollment.Enrollment).all()
-    isExist = False
-    for i in enrollments:
+    enrollments_assignmentid = session.query(enrollment.Enrollment.AssignmentID).all()
+    enrollments_studentid = session.query(enrollment.Enrollment.StudentID).all()
+    isExist_assignmentid = False
+    isExist_studentid = False
+    for i in enrollments_assignmentid:
         i_str = str(i)
         i_str = i_str.replace('(','')
         i_str = i_str.replace(')','')
         i_str = i_str.replace('\'','')
         i_str = i_str.replace(',','')
         if i_str == enrollmentid:
-            isExist = True
+            isExist_assignmentid = True
+        
+    if isExist_assignmentid:
+        for i in enrollments_studentid:
+            i_str = str(i)
+            i_str = i_str.replace('(','')
+            i_str = i_str.replace(')','')
+            i_str = i_str.replace('\'','')
+            i_str = i_str.replace(',','')
+            if i_str == enrollmentid:
+                isExist_studentid = True
 
-    if isExist == False:
+    if isExist_studentid == False:
         new_enrollment = enrollment.Enrollment()
         new_enrollment.enrollmentID = enrollmentid
         new_enrollment.assignmentID = assignmentid
@@ -95,7 +107,7 @@ def add_enrollment(enrollmentid, assignmentid, \
         new_enrollment.CourseID = courseid
         new_enrollment.Status = status
 
-        session.add(new_student)
+        session.add(new_enrollment)
         session.commit()
     
     return
