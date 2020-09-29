@@ -2,12 +2,18 @@ from .models import student
 from .settings import session
 
 
-student = student.Student()
-student.StudentID = '0000'
-student.FullName = 'kita'
+def student_add(studentid, fullname):
+    students = session.query(student.Student).all()
+    for st in students:
+        if st.StudentID == studentid:
+            continue
+        else:
+            new_student = student.Student()
+            new_student.StudentID = studentid
+            new_student.FullName = fullname
 
-session.add(student)
-session.commit()
-
+            session.add(new_student)
+            session.commit()
+            return
 
 

@@ -2,7 +2,7 @@ from app.app import app
 from app.settings import engine
 import flask
 from sqlalchemy.orm import sessionmaker
-from app import index
+from app.index import *
 
 @app.route('/hello')
 def main():
@@ -15,6 +15,7 @@ def root():
 
 @app.route('/controller')
 def controller():
+    student_add('bb','cc')
     return ''
     
 @app.route('/tasklist')
