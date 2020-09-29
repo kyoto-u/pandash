@@ -28,7 +28,7 @@ def get_tasklist(studentid):
     for data in enrollments:
         task={}
         task["status"]=data.Status
-        assignmentdata = session.query(assignment.Assignment).filter(assignment.Assignment.AssignmentID == data.assignmentID).all()
+        assignmentdata = session.query(assignment.Assignment).filter(assignment.Assignment.AssignmentID == data.AssignmentID).all()
         task["taskname"] = assignmentdata[0].Title
         task["deadline"] = assignmentdata[0].Limit_at
         task["time_left"] = "あと1分"
