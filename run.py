@@ -2,6 +2,7 @@ from app.app import app
 from app.settings import engine
 import flask
 from sqlalchemy.orm import sessionmaker
+from app import index
 
 @app.route('/hello')
 def main():
@@ -14,8 +15,7 @@ def root():
 
 @app.route('/controller')
 def controller():
-    Session = sessionmaker(bind=engine)
-    session = Session()
+    return ''
     
 @app.route('/tasklist')
 def tasklist():
