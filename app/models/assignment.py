@@ -10,6 +10,5 @@ class Assignment(settings.Base):
     Title = Column(String(40))
     Limit_at = Column(String(40))
     Instructions = Column(String(40))
-    ClassSchedule = Column(String(40))
 
 settings.Base.metadata.create_all(settings.engine)

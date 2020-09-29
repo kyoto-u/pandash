@@ -4,7 +4,7 @@ import sqlalchemy.ext.declarative
 from sqlalchemy import Integer, String
 from .. import settings
 
-class enrollment(settings.Base):
+class Enrollment(settings.Base):
     __tablename__ = 'enrollments'
     enrollmentID = sqlalchemy.Column(String(40), primary_key=True)
     assignmentID = sqlalchemy.Column(String(40))
