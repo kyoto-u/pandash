@@ -170,3 +170,17 @@ def add_instructor(instructorid, fullname, emailaddress):
         session.commit()
     
     return
+
+def sort_tasks(tasks):
+    tasks = sorted(tasks, key=lambda x: order_status(x["status"]))
+    return tasks
+
+def order_status(status):
+    if status == "未":
+        return 0
+    elif status == "済":
+        return 1
+    elif status == "期限切れ":
+        return 2
+    else:
+        return 3

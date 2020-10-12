@@ -4,6 +4,7 @@ import flask
 from sqlalchemy.orm import sessionmaker
 from app.index import *
 
+
 @app.route('/hello')
 def main():
     return "Hello World!"
@@ -13,21 +14,23 @@ def main():
 def root():
     return flask.redirect(flask.url_for('main'))
 
+
 @app.route('/controller')
 def controller():
     # ex
     # add_student('student1','s_fullname1')
-    # add_assignment('assignment1', 'https://panda...', '課題１', '2020-10-06T01:55:00Z', '<p>説明</p>')
+    # add_assignment('assignment3', 'https://panda...', '課題3', '2020-10-06T01:55:00Z', '<p>説明</p>')
     # add_course('course1', 'teacher1', 'コース１', '火5')
     # add_instructor('instructor1', 'i_fullname', 'i_mailadress')
-    # add_enrollment('assignment1', 'student1', 'course1', 'status')
+    # add_enrollment('assignment3', 'student1', 'course1', '未')
     return ''
+
 
 @app.route('/tasklist')
 def tasklist():
     studentid = "student1"
     tasks = get_tasklist(studentid)
-
+    tasks = sort_tasks(tasks)
     # tasks = [
     #     {'subject':'線形代数', 'taskname':'課題1', 'status':'未完了', 'time_left':'30', 'deadline':'0930'},
     #     {'subject':'線形代数', 'taskname':'課題1', 'status':'未完了', 'time_left':'30', 'deadline':'0930'},
