@@ -40,13 +40,5 @@ def tasklist():
     return flask.render_template('tasklist.htm', tasks=tasks)
 
 
-@app.route('/timeboard')
-def timeboard():
-    studentid = "student1"
-    # 今後下のような方法で時間割表時向けのtaskをリスト化
-    # tasks = get_tasklist(studentid)
-    return flask.render_template('timeboard.htm')
-
-
 if __name__ == '__main__':
     app.run(debug=True)
