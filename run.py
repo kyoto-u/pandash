@@ -8,7 +8,7 @@ from app.index import *
 def main():
     return "Hello World!"
 
-    
+
 @app.route('/')
 def root():
     return flask.redirect(flask.url_for('main'))
@@ -22,7 +22,7 @@ def controller():
     # add_instructor('instructor1', 'i_fullname', 'i_mailadress')
     # add_enrollment('assignment1', 'student1', 'course1', 'status')
     return ''
-    
+
 @app.route('/tasklist')
 def tasklist():
     studentid = "student1"
@@ -34,11 +34,19 @@ def tasklist():
     #     {'subject':'線形代数', 'taskname':'課題1', 'status':'未完了', 'time_left':'30', 'deadline':'0930'},
     #     {'subject':'線形代数', 'taskname':'課題1', 'status':'未完了', 'time_left':'30', 'deadline':'0930'},
     #     {'subject':'線形代数', 'taskname':'課題1', 'status':'未完了', 'time_left':'30', 'deadline':'0930'},
-    #     {'subject':'線形代数', 'taskname':'課題1', 'status':'未完了', 'time_left':'30', 'deadline':'0930'}           
+    #     {'subject':'線形代数', 'taskname':'課題1', 'status':'未完了', 'time_left':'30', 'deadline':'0930'}
     #     ]
-    
-    return flask.render_template('tasklist.htm',tasks=tasks)
+
+    return flask.render_template('tasklist.htm', tasks=tasks)
 
 
-if __name__ =='__main__':
+@app.route('/timeboard')
+def timeboard():
+    studentid = "student1"
+    # 今後下のような方法で時間割表時向けのtaskをリスト化
+    # tasks = get_tasklist(studentid)
+    return flask.render_template('timeboard.htm')
+
+
+if __name__ == '__main__':
     app.run(debug=True)
