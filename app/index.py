@@ -31,7 +31,7 @@ def get_tasklist(studentid):
         assignmentdata = session.query(assignment.Assignment).filter(assignment.Assignment.AssignmentID == data.AssignmentID).all()
         task["taskname"] = assignmentdata[0].Title
         task["deadline"] = assignmentdata[0].Limit_at
-        task["time_left"] = "あと1分"
+        task["time_left"] = remain_time(assignmentdata[0].Time_ms)
         coursedata = session.query(course.Course).filter(course.Course.CourseID == data.CourseID).all()
         task["subject"] = coursedata[0].CourseName
         tasks.append(task)
@@ -212,3 +212,31 @@ def order_status(status):
         return 2
     else:
         return 3
+
+from math import *
+def remain_time(time_ms):
+    ato = 'あと'
+    seconds = time_ms/1000
+    minutes = seconds/60
+    hours = minutes/60
+    days = hours/24
+    weeks = days/7
+    months = weeks/4
+
+    if minutes < 1:
+        return '1分未満'
+    elif hours < 1:
+        return ato + str(floor(minutes)) + '分'
+    elif days < 1:
+        return ato + str(floor(hours)) + '時間'
+    elif weeks < 1:
+        return ato + str(floor(days)) + '日'
+    elif months < 1:
+        remain_days = floor(days) - floor(weeks)*7
+        if remain_days == 0:
+            return ato + str(floor(weeks)) + '週間'
+        else:
+            return ato + str(floor(weeks)) + '週と' + \
+                str(remain_days) + '日'
+    else:
+        return ato + '4週間以上'
