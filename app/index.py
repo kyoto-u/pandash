@@ -227,7 +227,9 @@ def remain_time(time_ms):
     weeks = days/7
     months = weeks/4
 
-    if minutes < 1:
+    if seconds < 0:
+        return ''
+    elif minutes < 1:
         return '1分未満'
     elif hours < 1:
         return ato + str(floor(minutes)) + '分'
