@@ -60,6 +60,7 @@ def add_student(studentid, fullname):
 
     return
 
+from math import *
 def add_assignment(assignmentid, assignmenturl, \
                     title, limit_at, instructions, time_ms):
     assignments = session.query(assignment.Assignment.AssignmentID).all()
@@ -79,7 +80,7 @@ def add_assignment(assignmentid, assignmenturl, \
         new_assignment.AssignmentUrl = assignmenturl
         new_assignment.Title = title
         new_assignment.Limit_at = limit_at
-        new_assignment.Time_ms = time_ms
+        new_assignment.Time_ms = floor(time_ms/1000)
 
         session.add(new_assignment)
         session.commit()
@@ -218,9 +219,8 @@ from math import *
 import time
 def remain_time(time_ms):
     ato = 'あと'
-    now = floor(time.time() * 1000)
-    milliseconds = time_ms - now
-    seconds = milliseconds/1000
+    now = floor(time.time())
+    seconds = time_ms - now
     minutes = seconds/60
     hours = minutes/60
     days = hours/24
