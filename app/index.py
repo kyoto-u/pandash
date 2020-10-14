@@ -215,9 +215,12 @@ def order_status(status):
         return 3
 
 from math import *
+import time
 def remain_time(time_ms):
     ato = 'あと'
-    seconds = time_ms/1000
+    now = floor(time.time() * 1000)
+    milliseconds = time_ms - now
+    seconds = milliseconds/1000
     minutes = seconds/60
     hours = minutes/60
     days = hours/24
