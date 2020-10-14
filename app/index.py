@@ -79,7 +79,7 @@ def add_assignment(assignmentid, assignmenturl, \
         new_assignment.AssignmentUrl = assignmenturl
         new_assignment.Title = title
         new_assignment.Limit_at = limit_at
-        new_assignment.Time_ms = time]
+        new_assignment.Time_ms = time_ms
 
         session.add(new_assignment)
         session.commit()
