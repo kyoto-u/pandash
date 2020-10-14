@@ -171,9 +171,37 @@ def add_instructor(instructorid, fullname, emailaddress):
     
     return
 
-def sort_tasks(tasks):
+def sort_tasks(tasks, show_only_finished = False, max_time_left = 1):
+    """
+        about max_time_left
+        0:an hour
+        1:a day
+        2:a week
+    """
+    if show_only_finished == True:
+        tasks = [task for task in tasks if task["status"] == "未"]     
+    if max_time_left in [0,1,2]:
+        tasks = [task for task in tasks if timejudge(task,max_time_left)]
+    tasks = sorted(tasks, key=lambda x: x["deadline"])
     tasks = sorted(tasks, key=lambda x: order_status(x["status"]))
     return tasks
+
+def timejudge(task,max_time_left):
+    # ex あと10分
+    time_left = task["time_left"]
+    units = ["minute","分","hour","時","day","日"]
+    u_num=0
+    if max_time_left == 0:
+        u_num =2
+    elif max_time_left == 1:
+        u_num =4
+    else:
+        u_num =6
+    for i in range(u_num):
+        if units[i] in time_left:
+            return True
+    return False
+
 
 def order_status(status):
     if status == "未":
