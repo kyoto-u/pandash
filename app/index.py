@@ -61,7 +61,7 @@ def add_student(studentid, fullname):
     return
 
 def add_assignment(assignmentid, assignmenturl, \
-                    title, limit_at, instructions):
+                    title, limit_at, instructions, time_ms):
     assignments = session.query(assignment.Assignment.AssignmentID).all()
     isExist = False
     for i in assignments:
@@ -79,6 +79,7 @@ def add_assignment(assignmentid, assignmenturl, \
         new_assignment.AssignmentUrl = assignmenturl
         new_assignment.Title = title
         new_assignment.Limit_at = limit_at
+        new_assignment.Time_ms = time_ms
 
         session.add(new_assignment)
         session.commit()
