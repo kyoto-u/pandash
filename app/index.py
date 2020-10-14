@@ -171,14 +171,14 @@ def add_instructor(instructorid, fullname, emailaddress):
     
     return
 
-def sort_tasks(tasks, show_only_finished = False, max_time_left = 1):
+def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 1):
     """
         about max_time_left
         0:an hour
         1:a day
         2:a week
     """
-    if show_only_finished == True:
+    if show_only_unfinished == True:
         tasks = [task for task in tasks if task["status"] == "未"]     
     if max_time_left in [0,1,2]:
         tasks = [task for task in tasks if timejudge(task,max_time_left)]

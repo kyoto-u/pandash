@@ -25,20 +25,23 @@ def controller():
     # add_enrollment('assignment3', 'student1', 'course1', '未')
     return ''
 
-
 @app.route('/tasklist')
-def tasklist():
+def tasklist_all():
+    return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
+
+@app.route('/tasklist/<int:show_only_unfinished>/<int:max_time_left>')
+def tasklist(show_only_unfinished,max_time_left):
     studentid = "student1"
     tasks = get_tasklist(studentid)
-    tasks = sort_tasks(tasks)
     # tasks = [
-    #     {'subject':'線形代数', 'taskname':'課題1', 'status':'未完了', 'time_left':'30', 'deadline':'0930'},
-    #     {'subject':'線形代数', 'taskname':'課題1', 'status':'未完了', 'time_left':'30', 'deadline':'0930'},
-    #     {'subject':'線形代数', 'taskname':'課題1', 'status':'未完了', 'time_left':'30', 'deadline':'0930'},
-    #     {'subject':'線形代数', 'taskname':'課題1', 'status':'未完了', 'time_left':'30', 'deadline':'0930'},
-    #     {'subject':'線形代数', 'taskname':'課題1', 'status':'未完了', 'time_left':'30', 'deadline':'0930'},
-    #     {'subject':'線形代数', 'taskname':'課題1', 'status':'未完了', 'time_left':'30', 'deadline':'0930'}
+    #     {'subject':'線形代数', 'taskname':'課題1', 'status':'未', 'time_left': "あと50分", 'deadline':'2020-10-30T00:50:00Z'},
+    #     {'subject':'線形代数', 'taskname':'課題2', 'status':'未', 'time_left':'あと2時間', 'deadline':'2020-10-30T02:00:00Z'},
+    #     {'subject':'線形代数', 'taskname':'課題3', 'status':'終了', 'time_left':'', 'deadline':'2020-10-29T23:00:00Z'},
+    #     {'subject':'線形代数', 'taskname':'課題4', 'status':'未', 'time_left':'あと3日', 'deadline':'2020-11-02T03:00:00Z'},
+    #     {'subject':'線形代数', 'taskname':'課題5', 'status':'済', 'time_left':'あと1時間', 'deadline':'2020-10-30T01:00:00Z'},
+    #     {'subject':'線形代数', 'taskname':'課題6', 'status':'済', 'time_left':'あと1日', 'deadline':'2020-10-31T01:00:00Z'}
     #     ]
+    tasks = sort_tasks(tasks, show_only_unfinished = show_only_unfinished, max_time_left = max_time_left)
 
     return flask.render_template('tasklist.htm', tasks=tasks)
 
