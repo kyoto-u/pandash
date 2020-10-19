@@ -1,0 +1,87 @@
+/*全ページ共通部分*/
+#siteface{
+  height: 8vh;
+  width: 8vh;
+}
+
+html{
+  font-size: smaller;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top:200px;
+}
+
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+footer {
+  margin-top: auto;
+}
+
+/*時間割表示ページ*/
+.table-responsive{
+  display: flex;
+  flex-direction: column-reverse;  
+  left:0;
+}
+
+.th,.td{
+  font-size: 1vw;
+}
+
+body{
+  padding-top: 140px;
+}
+
+#ScrollSearchbar{
+  padding-top:5;
+  padding-bottom:0px;
+  font-size:smaller;
+  background-color:silver;
+  margin-bottom:12;
+}
+
+#searchlabel{
+  font-size:small;
+  padding-top:0;
+  padding-right:20;
+}
+
+#select1a{
+  font-size:x-small;
+}
+
+#timesearchbutton{
+  margin-left:30;
+  margin-top:30;
+  margin-bottom: 20;
+}
+
+.modal-dialog-fluid {
+  max-width: inherit;
+  width: 95%;
+  margin-left: 15px;
+  font-size: xx-small;
+}
+
+/*一覧表示ページ*/
+.taskcard > a{
+    color: black;
+}
+
+#overviewtable{
+    font-size: 1vw;
+    overflow-x: auto;
+}
+
+.elsesbjcard{
+    font-size: x-small;
+}
+

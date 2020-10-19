@@ -1,47 +1,83 @@
-body {
-    padding-top: 140px; 
+/*全ページ共通部分*/
+html{
+    font-size: smaller;
+}
+
+#siteface{
+    height:50;
+    width:50;
+}
+
+#wrapper {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-  }
-
-.alt-table-responsive {
-  width: 100%;
-  overflow-y: hidden;
-  overflow-x: auto;
-  -ms-overflow-style: -ms-autohiding-scrollbar;
-  -webkit-overflow-scrolling: touch;
- }    
-  
- #ScrollSearchbar {
-    position: fixed;	/* 要素の位置を固定する */
-    top: 300; /* 基準の位置を画面の一番下に指定する */
-    left: 0; /* 基準の位置を画面の一番右に指定する */
-    color: black;
-    background: silver;
-　}
-  
-.modal-dialog-fluid {
-      max-width: inherit;
-      width: 98%;
-      margin-left: 15px;
 }
 
-#wrapper{
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-top: 160;
+    width:100%;
 }
-
 
 footer {
-  color:black;
-  background: gray;
-  margin-top: auto;
-  text-align: center;
-  padding: 30px,0;
+    margin-top: auto;
 }
 
 
+/*一覧表示ページ*/
+#ScrollSearchbar{
+   background-color:silver;
+   height:200px;
+   top:30vh;
+   position:fixed;
+}
 
+#searchlabel{
+    font-size:14;
+    padding-top:8;
+}
 
+#select1a,
+#select2a,
+#select3a{
+    font-size:x-small;
+}
+
+#taskmain{
+    left:17vw;
+}
+
+.modal-dialog-fluid {
+    max-width: inherit;
+    width: 98%;
+    margin-left: 15px;
+}
+
+/*時間割表示ページ*/
+#dastshoot{
+    background-color: gray;
+    color: white;
+    position: fixed;
+    display: flex;
+    height: 300px;
+}
+.taskcard > a{
+    color: black;
+}
+
+#overviewtable{
+    font-size: smaller;
+    overflow: visible;
+}
+
+.elsesbjcard{
+    font-size: smaller;
+}
+
+/*授業資料ページ*/
+#resourcestable{
+    font-size: small;
+}
