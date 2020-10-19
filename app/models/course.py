@@ -8,5 +8,6 @@ class Course(settings.Base):
     CourseID = Column(String(40), primary_key=True)
     InstructorID = Column(String(40))
     CourseName = Column(String(40))
+    ClassSchedule = Column(String(40))
 
 settings.Base.metadata.create_all(settings.engine)
