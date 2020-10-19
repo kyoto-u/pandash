@@ -1,0 +1,175 @@
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PandAsh</title>
+  <!-- BootstrapのCSS読み込み -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <!-- jQuery読み込み -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
+  <!-- BootstrapのJS読み込み -->
+  <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='images/font/css/open-iconic-bootstrap.css') }}">
+  <script src="https://kit.fontawesome.com/7bb95e7ca3.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/originalcss_forlg.css') }}" type="text/css"
+    media="screen and (min-width:768px)" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/originalcss_formd.css') }}" type="text/css"
+    media="screen and (max-width:767px)" />
+</head>
+
+<!--Modal-->
+<div class="modal fade" id="modal_timeboard_select" tabindex="-1" role="dialog" aria-labelledby="label1"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-fluid" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="label1">科目を選択してください</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive table-considered">
+          <table class="table table-sm modaltable">
+            <thead>
+              <tr id="modaltable" class="d-flex">
+                <th class="col-2"></th>
+                <th class="col-2">月</th>
+                <th class="col-2">火</th>
+                <th class="col-2">水</th>
+                <th class="col-2">木</th>
+                <th class="col-2">金</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="d-flex">
+                <td class="col-2">1</td>
+                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
+                <td class="col-2"><a class="btn btn-link" href="#">英語リーディング</a></td>
+                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
+                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
+                <td class="col-2"><a class="btn btn-link" href="#">物理学基礎論</a></td>
+              </tr>
+              <tr class="d-flex">
+                <td class="col-2">2</td>
+                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
+                <td class="col-2"><a class="btn btn-link" href="#">線形代数学A</a></td>
+                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
+                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
+                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
+              </tr>
+              <tr class="d-flex">
+                <td class="col-2">3</td>
+                <td class="col-2"><a class="btn btn-link" href="#">微分積分学A</a></td>
+                <td class="col-2"><a class="btn btn-link" href="#">自然現象と数学</a></td>
+                <td class="col-2"><a class="btn btn-link" href="#">英語WL A</a></td>
+                <td class="col-2"><a class="btn btn-link" href="#">ドイツ語IA(演習)</a></td>
+                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
+                　
+              </tr>
+              　<tr class="d-flex">
+                <td class="col-2">4</td>
+                <td class="col-2"><a class="btn btn-link" href="#">ILAS</a></td>
+                <td class="col-2"><a class="btn btn-link" href="#">アルゴリズム入門</a></td>
+                <td class="col-2"><a class="btn btn-link" href="#">地球工学総論</a></td>
+                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
+                <td class="col-2"><a class="btn btn-link" href="#">基礎化学実験</a></td>
+                　　
+              </tr>
+              　 <tr class="d-flex">
+                <td class="col-2">5</td>
+                <td class="col-2"><a class="btn btn-link" href="#">情報基礎演習</a></td>
+                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
+                <td class="col-2"><a class="btn btn-link" href="#">計算機科学概論</a></td>
+                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
+                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
+                　　
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">とじる</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<body>
+  <header>
+    <!-- ロゴとサイト名-->
+    <div class="fixed-top logos">
+      <nav class="navbar navbar-light bg-light" id="logonav">
+        <div class="row">
+          <a href="#" class=navbar-brand>
+            <img id="siteface" src="{{ url_for('static', filename='images/popup.jpg') }}" alt="ロゴ" width="60px"
+              height="60px">
+          </a>
+          <h1 id="SiteNamelabel">PandAsh</h1>
+        </div>
+      </nav>
+      <!--メニュー-->
+      <nav class="navbar navbar-expand-md md_fixed navbar-dark bg-dark">
+        <div class="container" id="menubar">
+          <a class="navbar-brand " href="/"></a>
+          <button id="logotoggle" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown2" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown2">
+            <ul class="navbar-nav mr-auto toggle_lefts">　
+              <li class="nav-item">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                  <label class="btn btn-dark active">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked>一覧表示
+                  </label>
+                  <label class="btn btn-dark">
+                    <input type="radio" name="options" id="option2" autocomplete="off">時間割表示
+                  </label>
+                </div>
+              </li>
+              <li class="nav-item">
+                <a class="btn btn-secondary" href="#" role="button">授業資料</a>
+              </li>
+            </ul>
+
+            <ul class="navbar-nav toggle_rights">
+              <li class="nav-item">
+                <a class="nav-link" href="#">iCalと共有</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">ログアウト</a>
+              </li>
+            </ul>
+
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+  <div id="wrapper">
+    <main id="contents">
+      <div id="bodycontent">
+        {% block bodycontent %}
+        Replace this
+        {% endblock %}
+      </div>
+    </main>
+
+    <footer>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <h2>京都大学 KYOTO UNIVERSITY 京都大学情報環境機構</h2>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
