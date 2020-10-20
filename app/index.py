@@ -173,21 +173,21 @@ def add_instructor(instructorid, fullname, emailaddress):
     
     return
 
-def add_enrollmentR(resourceid, studentid, courseid, status):
-    enrollments_resourceid = session.query(enrollmentR.EnrollmentR.EnrollmentID).all()
+def add_enrollmentR(resourceurl, studentid, courseid, status):
+    enrollments_resourceurl = session.query(enrollmentR.EnrollmentR.ResourceUrl).all()
     enrollments_studentid = session.query(enrollmentR.EnrollmentR.StudentID).all()
-    isExist_resourceid = False
+    isExist_resourceurl = False
     isExist_studentid = False
-    for i in enrollments_resourceid:
+    for i in enrollments_resourceurl:
         i_str = str(i)
         i_str = i_str.replace('(','')
         i_str = i_str.replace(')','')
         i_str = i_str.replace('\'','')
         i_str = i_str.replace(',','')
-        if i_str == resourceid:
-            isExist_resourceid = True
+        if i_str == resourceurl:
+            isExist_resourceurl = True
         
-    if isExist_resourceid:
+    if isExist_resourceurl:
         for i in enrollments_studentid:
             i_str = str(i)
             i_str = i_str.replace('(','')
@@ -200,7 +200,7 @@ def add_enrollmentR(resourceid, studentid, courseid, status):
     if isExist_studentid == False:
         new_enrollment = enrollment.Enrollment()
         # new_enrollment.enrollmentID = enrollmentid
-        new_enrollment.ResourceID = resourceid
+        new_enrollment.ResourceUrl = resourceurl
         new_enrollment.StudentID = studentid
         new_enrollment.CourseID = courseid
         new_enrollment.Status = status
@@ -212,7 +212,7 @@ def add_enrollmentR(resourceid, studentid, courseid, status):
 
 
 def add_resource(resourceid, resourceurl, title, container, modifieddate):
-    resources = session.query(resource.Resource.ResourceID).all()
+    resources = session.query(resource.Resource.ResourceUrl).all()
     isExist = False
     for i in resources:
         i_str = str(i)
@@ -220,11 +220,11 @@ def add_resource(resourceid, resourceurl, title, container, modifieddate):
         i_str = i_str.replace(')','')
         i_str = i_str.replace('\'','')
         i_str = i_str.replace(',','')
-        if i_str == resourceid:
+        if i_str == resourceurl:
             isExist = True
     if isExist == False:
         new_resource = resource.Resource()
-        new_resource.ResourceID = resourceid
+        # new_resource.ResourceID = resourceid
         new_resource.ResourceUrl = resourceurl
         new_resource.Title = title
         new_resource.Container = container

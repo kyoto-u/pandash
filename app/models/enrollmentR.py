@@ -6,8 +6,9 @@ from .. import settings
 
 class EnrollmentR(settings.Base):
     __tablename__ = 'enrollmentRs'
-    EnrollmentID = sqlalchemy.Column(Integer, primary_key=True, autoincrement=True)
-    ResourceID = sqlalchemy.Column(String(40))
+    EnrollmentID = sqlalchemy.Column(Integer(), primary_key=True, autoincrement=True)
+    # ResourceID
+    ResourceUrl = sqlalchemy.Column(String(40))
     StudentID = sqlalchemy.Column(String(40))
     CourseID = sqlalchemy.Column(String(40))
     Status = sqlalchemy.Column(String(40))
