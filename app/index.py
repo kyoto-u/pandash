@@ -220,7 +220,7 @@ def add_resource(resourceid, resourceurl, title, container, modifieddate):
         i_str = i_str.replace(')','')
         i_str = i_str.replace('\'','')
         i_str = i_str.replace(',','')
-        if i_str == resourceId:
+        if i_str == resourceid:
             isExist = True
     if isExist == False:
         new_resource = resource.Resource()
