@@ -1,4 +1,4 @@
-from .models import student, assignment, course, enrollment, instructor
+from .models import student, assignment, course, enrollment, instructor, enrollmentR, resource
 from .settings import session
 
 
@@ -171,6 +171,65 @@ def add_instructor(instructorid, fullname, emailaddress):
         session.add(new_instructor)
         session.commit()
     
+    return
+
+def add_enrollmentR(resourceid, studentid, courseid, status):
+    enrollments_resourceid = session.query(enrollmentR.EnrollmentR.EnrollmentID).all()
+    enrollments_studentid = session.query(enrollmentR.EnrollmentR.StudentID).all()
+    isExist_resourceid = False
+    isExist_studentid = False
+    for i in enrollments_resourceid:
+        i_str = str(i)
+        i_str = i_str.replace('(','')
+        i_str = i_str.replace(')','')
+        i_str = i_str.replace('\'','')
+        i_str = i_str.replace(',','')
+        if i_str == resourceid:
+            isExist_resourceid = True
+        
+    if isExist_resourceid:
+        for i in enrollments_studentid:
+            i_str = str(i)
+            i_str = i_str.replace('(','')
+            i_str = i_str.replace(')','')
+            i_str = i_str.replace('\'','')
+            i_str = i_str.replace(',','')
+            if i_str == studentid:
+                isExist_studentid = True
+
+    if isExist_studentid == False:
+        new_enrollment = enrollment.Enrollment()
+        # new_enrollment.enrollmentID = enrollmentid
+        new_enrollment.ResourceID = resourceid
+        new_enrollment.StudentID = studentid
+        new_enrollment.CourseID = courseid
+        new_enrollment.Status = status
+
+        session.add(new_enrollment)
+        session.commit()
+    
+    return
+
+
+def add_resource(resourceid, resourceurl, title, container, modifieddate):
+    resources = session.query(resource.Resource.ResourceID).all()
+    isExist = False
+    for i in resources:
+        i_str = str(i)
+        i_str = i_str.replace('(','')
+        i_str = i_str.replace(')','')
+        i_str = i_str.replace('\'','')
+        i_str = i_str.replace(',','')
+        if i_str == resourceId:
+            isExist = True
+    if isExist == False:
+        new_resource = resource.Resource()
+        new_resource.ResourceID = resourceid
+        new_resource.ResourceUrl = resourceurl
+        new_resource.Title = title
+        new_resource.Container = container
+        new_resource.ModifiedDate = modifieddate
+
     return
 
 def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 1):
