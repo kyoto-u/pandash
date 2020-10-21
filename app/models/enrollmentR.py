@@ -4,10 +4,11 @@ import sqlalchemy.ext.declarative
 from sqlalchemy import Integer, String
 from .. import settings
 
-class Enrollment(settings.Base):
-    __tablename__ = 'enrollments'
+class EnrollmentR(settings.Base):
+    __tablename__ = 'enrollmentRs'
     EnrollmentID = sqlalchemy.Column(Integer(), primary_key=True, autoincrement=True)
-    AssignmentID = sqlalchemy.Column(String(40))
+    # ResourceID
+    ResourceUrl = sqlalchemy.Column(String(500))
     StudentID = sqlalchemy.Column(String(40))
     CourseID = sqlalchemy.Column(String(40))
     Status = sqlalchemy.Column(String(8))
