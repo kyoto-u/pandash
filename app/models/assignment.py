@@ -6,10 +6,10 @@ from .. import settings
 class Assignment(settings.Base):
     __tablename__ = 'assignments'
     AssignmentID = Column(String(40), primary_key=True)
-    AssignmentUrl = Column(String(100))
+    AssignmentUrl = Column(String(500))
     Title = Column(String(100))
     Limit_at = Column(String(40))
-    Instructions = Column(String(4000))
+    Instructions = Column(String(65000))
     Time_ms = Column(Integer())
     ModifiedDate = Column(sqlalchemy.BigInteger())
 
