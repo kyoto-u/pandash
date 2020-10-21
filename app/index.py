@@ -88,7 +88,7 @@ def add_assignment(assignmentid, assignmenturl, \
     return
 
 def add_course(courseid, instructorid, \
-                    coursename, classschedule):
+                    coursename, yearsemester, classschedule):
     courses = session.query(course.Course.CourseID).all()
     isExist = False
     for i in courses:
@@ -105,6 +105,7 @@ def add_course(courseid, instructorid, \
         new_course.CourseID = courseid
         new_course.InstructorID = instructorid
         new_course.CourseName = coursename
+        new_course.YearSemester = yearsemester
         new_course.ClassSchedule = classschedule
 
         session.add(new_course)
