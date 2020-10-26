@@ -1,4 +1,4 @@
-from .models import student, assignment, course, enrollment, instructor, enrollmentR, resource, studentcource, resource_attachment
+from .models import student, assignment, course, enrollment, instructor, enrollmentR, resource, studentcourse, resource_attachment
 from .settings import session
 import re
 
@@ -55,12 +55,12 @@ def get_courses_to_be_taken(studentid):
     data=[]
     courses = session.query(studentassignment.Student_Assignment).filter(
         studentassignment.Student_Assignment.student_id == studentid).all()
-    for cource in cources:
-        if cource.hide == 1:
+    for course in courses:
+        if course.hide == 1:
             continue
-        courcedata = session.query(course.Course).filter(
-            course.Course.course_id == cource.course_id).all()
-        data.append(courcedata[0])
+        coursedata = session.query(course.Course).filter(
+            course.Course.course_id == course.course_id).all()
+        data.append(coursedata[0])
     return data
 
 def setdefault_for_overview(data, studentid):
@@ -72,15 +72,15 @@ def setdefault_for_overview(data, studentid):
     data.setdefault("others",[])
     for subject in data["others"]:
         subject["tasks"] = sort_tasks(subject["tasks"])
-    courcedata = get_cources_to_be_taken(studentid)
-    for cource in couracedata:
+    coursedata = get_courses_to_be_taken(studentid)
+    for course in coursedata:
         add_in_others = False
         add_new_subject = False
         # 教科に時限情報がない場合
-        if cource.classschedule == "others":
+        if course.classschedule == "others":
             add_in_others = True
         else:
-            if cource.courcename != data[cource.classschedule]["subject"] and cource.courcename != "":
+            if course.coursename != data[course.classschedule]["subject"] and course.coursename != "":
                 add_in_others = True
             else:
                 add_new_subject = True
@@ -89,7 +89,7 @@ def setdefault_for_overview(data, studentid):
             subject_exist = False
             index = 0
             for subject in data["others"]:
-                if subject["subject"] == cource.courcename:
+                if subject["subject"] == course.coursename:
                     subject_exist = True
                     break
                 index += 1
@@ -98,18 +98,18 @@ def setdefault_for_overview(data, studentid):
             else:
                 # 新しい教科を追加
                 data["others"].append({})
-                data["others"][index]["subject"] = cource.courcename
+                data["others"][index]["subject"] = course.coursename
                 data["others"][index]["shortname"] = re.sub(
-                    "\[.*\]", "", cource.courcename)
+                    "\[.*\]", "", course.coursename)
                 data["others"][index]["tasks"] = []
 
         elif add_new_subject == True:
-            data[cource.classschedule] = {}
-            data[cource.classschedule]["shorturl"] = ""
-            data[cource.classschedule]["subject"] = cource.courcename
-            data[cource.classschedule]["shortname"] = re.sub(
-                "\[.*\]", "", cource.courcename)
-            data[cource.classschedule]["tasks"] = []
+            data[course.classschedule] = {}
+            data[course.classschedule]["shorturl"] = ""
+            data[course.classschedule]["subject"] = course.coursename
+            data[course.classschedule]["shortname"] = re.sub(
+                "\[.*\]", "", course.coursename)
+            data[course.classschedule]["tasks"] = []
     return data
 
 
