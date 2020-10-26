@@ -1,9 +1,14 @@
-from .models import student, assignment, course, enrollment, instructor, enrollmentR, resource
+from .models import student, assignment, course, enrollment, instructor, enrollmentR, resource, studentcource, resource_attachment
 from .settings import session
+import re
 
 
-
-def get_tasklist(studentid):
+def get_tasklist(studentid, mode=0):
+    """
+        mode
+        0:tasklist
+        1:tasklist for overview
+    """
     # new_student = enrollment.enrollment()
     # new_student.enrollmentID = "2"
     # new_student.assignmentID = "kadai"
@@ -23,19 +28,87 @@ def get_tasklist(studentid):
     # session.add(new_student)
     # session.commit()
 
-    enrollments = session.query(enrollment.Enrollment).filter(enrollment.Enrollment.StudentID == studentid).all()
-    tasks=[]
+    enrollments = session.query(enrollment.Enrollment).filter(
+        enrollment.Enrollment.student_id == studentid).all()
+    tasks = []
     for data in enrollments:
-        task={}
-        task["status"]=data.Status
-        assignmentdata = session.query(assignment.Assignment).filter(assignment.Assignment.AssignmentID == data.AssignmentID).all()
-        task["taskname"] = assignmentdata[0].Title
-        task["deadline"] = assignmentdata[0].Limit_at
-        task["time_left"] = remain_time(assignmentdata[0].Time_ms)
-        coursedata = session.query(course.Course).filter(course.Course.CourseID == data.CourseID).all()
-        task["subject"] = coursedata[0].CourseName
+        task = {}
+        task["status"] = data.status
+        task["assignmentid"] = data.assignment_id
+        assignmentdata = session.query(assignment.Assignment).filter(
+            assignment.Assignment.assignment_id == data.assignment_id).all()
+        task["taskname"] = assignmentdata[0].title
+        task["deadline"] = assignmentdata[0].limit_at
+        if mode == 0:
+            task["time_left"] = remain_time(assignmentdata[0].time_ms)
+        if mode == 1:
+            task["instructions"] = assignmentdata[0].instructions
+        coursedata = session.query(course.Course).filter(
+            course.Course.course_id == data.course_id).all()
+        task["subject"] = coursedata[0].coursename
+        if mode == 1:
+            task["classschedule"] = coursedata[0].classschedule
         tasks.append(task)
     return tasks
+
+def get_courses_to_be_taken(studentid):
+    data={}
+    courses = session.query(student_assignment.Student_Assignment).filter(
+        student_assignment.Student_Assignment.student_id == studentid).all()
+    for cource in cources:
+        if cource.hide == 1:
+            continue
+        courcedata = session.query(course.Course).filter(
+            course.Course.course_id == cource.course_id).all()
+    return data
+
+
+def task_arrange_for_overview(tasks):
+    task_arranged = {"others": []}
+
+    for task in tasks:
+        # if task["status"] != "未":
+        #     continue
+        add_in_others = False
+        add_new_subject = False
+        # 教科情報がない場合
+        if task["classschedule"] == "others":
+            add_in_others = True
+        else:
+            if task["classschedule"] in task_arranged.keys():
+                if task["subject"] != task_arranged[task["classschedule"]]["subject"]:
+                    add_in_others = True
+            else:
+                add_new_subject = True
+        if add_in_others == True:
+            # othersは教科が複数あるので何番目の教科か判定する必要がある
+            subject_exist = False
+            index = 0
+            for subject in task_arranged["others"]:
+                if subject["subject"] == task["subject"]:
+                    subject_exist = True
+                    break
+                index += 1
+            if subject_exist:
+                task_arranged["others"][index]["tasks"].append(task)
+            else:
+                # 新しい教科を追加
+                task_arranged["others"].append({})
+                task_arranged["others"][index]["subject"] = task["subject"]
+                task_arranged["others"][index]["shortname"] = re.sub(
+                    "\[.*\]", "", task["subject"])
+                task_arranged["others"][index]["tasks"] = [task]
+
+        elif add_new_subject == True:
+            task_arranged[task["classschedule"]] = {}
+            task_arranged[task["classschedule"]]["shorturl"] = ""
+            task_arranged[task["classschedule"]]["subject"] = task["subject"]
+            task_arranged[task["classschedule"]]["shortname"] = re.sub(
+                "\[.*\]", "", task["subject"])
+            task_arranged[task["classschedule"]]["tasks"] = [task]
+        else:
+            task_arranged[task["classschedule"]]["tasks"].append(task)
+    return task_arranged
 
 
 def add_student(studentid, fullname):
@@ -43,10 +116,10 @@ def add_student(studentid, fullname):
     isExist = False
     for i in students:
         i_str = str(i)
-        i_str = i_str.replace('(','')
-        i_str = i_str.replace(')','')
-        i_str = i_str.replace('\'','')
-        i_str = i_str.replace(',','')
+        i_str = i_str.replace('(', '')
+        i_str = i_str.replace(')', '')
+        i_str = i_str.replace('\'', '')
+        i_str = i_str.replace(',', '')
         if i_str == studentid:
             isExist = True
 
@@ -60,17 +133,17 @@ def add_student(studentid, fullname):
 
     return
 
-from math import *
-def add_assignment(assignmentid, assignmenturl, \
-                    title, limit_at, instructions, time_ms):
+
+def add_assignment(assignmentid, assignmenturl,
+                   title, limit_at, instructions, time_ms):
     assignments = session.query(assignment.Assignment.AssignmentID).all()
     isExist = False
     for i in assignments:
         i_str = str(i)
-        i_str = i_str.replace('(','')
-        i_str = i_str.replace(')','')
-        i_str = i_str.replace('\'','')
-        i_str = i_str.replace(',','')
+        i_str = i_str.replace('(', '')
+        i_str = i_str.replace(')', '')
+        i_str = i_str.replace('\'', '')
+        i_str = i_str.replace(',', '')
         if i_str == assignmentid:
             isExist = True
 
@@ -84,7 +157,7 @@ def add_assignment(assignmentid, assignmenturl, \
 
         session.add(new_assignment)
         session.commit()
-    
+
     return
 
 def add_course(courseid, instructorid, \
@@ -93,10 +166,10 @@ def add_course(courseid, instructorid, \
     isExist = False
     for i in courses:
         i_str = str(i)
-        i_str = i_str.replace('(','')
-        i_str = i_str.replace(')','')
-        i_str = i_str.replace('\'','')
-        i_str = i_str.replace(',','')
+        i_str = i_str.replace('(', '')
+        i_str = i_str.replace(')', '')
+        i_str = i_str.replace('\'', '')
+        i_str = i_str.replace(',', '')
         if i_str == courseid:
             isExist = True
 
@@ -110,31 +183,34 @@ def add_course(courseid, instructorid, \
 
         session.add(new_course)
         session.commit()
-    
+
     return
 
-def add_enrollment(assignmentid, \
-                    studentid, courseid, status):
-    enrollments_assignmentid = session.query(enrollment.Enrollment.AssignmentID).all()
-    enrollments_studentid = session.query(enrollment.Enrollment.StudentID).all()
+
+def add_enrollment(assignmentid,
+                   studentid, courseid, status):
+    enrollments_assignmentid = session.query(
+        enrollment.Enrollment.AssignmentID).all()
+    enrollments_studentid = session.query(
+        enrollment.Enrollment.StudentID).all()
     isExist_assignmentid = False
     isExist_studentid = False
     for i in enrollments_assignmentid:
         i_str = str(i)
-        i_str = i_str.replace('(','')
-        i_str = i_str.replace(')','')
-        i_str = i_str.replace('\'','')
-        i_str = i_str.replace(',','')
+        i_str = i_str.replace('(', '')
+        i_str = i_str.replace(')', '')
+        i_str = i_str.replace('\'', '')
+        i_str = i_str.replace(',', '')
         if i_str == assignmentid:
             isExist_assignmentid = True
-        
+
     if isExist_assignmentid:
         for i in enrollments_studentid:
             i_str = str(i)
-            i_str = i_str.replace('(','')
-            i_str = i_str.replace(')','')
-            i_str = i_str.replace('\'','')
-            i_str = i_str.replace(',','')
+            i_str = i_str.replace('(', '')
+            i_str = i_str.replace(')', '')
+            i_str = i_str.replace('\'', '')
+            i_str = i_str.replace(',', '')
             if i_str == studentid:
                 isExist_studentid = True
 
@@ -148,18 +224,19 @@ def add_enrollment(assignmentid, \
 
         session.add(new_enrollment)
         session.commit()
-    
+
     return
+
 
 def add_instructor(instructorid, fullname, emailaddress):
     instructors = session.query(instructor.Instructor.InstructorID).all()
     isExist = False
     for i in instructors:
         i_str = str(i)
-        i_str = i_str.replace('(','')
-        i_str = i_str.replace(')','')
-        i_str = i_str.replace('\'','')
-        i_str = i_str.replace(',','')
+        i_str = i_str.replace('(', '')
+        i_str = i_str.replace(')', '')
+        i_str = i_str.replace('\'', '')
+        i_str = i_str.replace(',', '')
         if i_str == instructorid:
             isExist = True
 
@@ -171,7 +248,7 @@ def add_instructor(instructorid, fullname, emailaddress):
 
         session.add(new_instructor)
         session.commit()
-    
+
     return
 
 def add_enrollmentR(resourceurl, studentid, courseid, status):
@@ -241,24 +318,25 @@ def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 1):
         2:a week
     """
     if show_only_unfinished == True:
-        tasks = [task for task in tasks if task["status"] == "未"]     
-    if max_time_left in [0,1,2]:
-        tasks = [task for task in tasks if timejudge(task,max_time_left)]
+        tasks = [task for task in tasks if task["status"] == "未"]
+    if max_time_left in [0, 1, 2]:
+        tasks = [task for task in tasks if timejudge(task, max_time_left)]
     tasks = sorted(tasks, key=lambda x: x["deadline"])
     tasks = sorted(tasks, key=lambda x: order_status(x["status"]))
     return tasks
 
-def timejudge(task,max_time_left):
+
+def timejudge(task, max_time_left):
     # ex あと10分
     time_left = task["time_left"]
-    units = ["minute","分","hour","時","day","日"]
-    u_num=0
+    units = ["minute", "分", "hour", "時", "day", "日"]
+    u_num = 0
     if max_time_left == 0:
-        u_num =2
+        u_num = 2
     elif max_time_left == 1:
-        u_num =4
+        u_num = 4
     else:
-        u_num =6
+        u_num = 6
     for i in range(u_num):
         if units[i] in time_left:
             return True
@@ -275,8 +353,7 @@ def order_status(status):
     else:
         return 3
 
-from math import *
-import time
+
 def remain_time(time_ms):
     ato = 'あと'
     now = floor(time.time())
