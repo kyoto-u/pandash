@@ -5,8 +5,8 @@ from .. import settings
 
 class Instructor(settings.Base):
     __tablename__ = 'Instructors'
-    InstructorID = sqlalchemy.Column(String(40), primary_key=True)
-    FullName = sqlalchemy.Column(String(40))
-    EmailAddress = sqlalchemy.Column(String(40))
+    instructor_id = sqlalchemy.Column(String(40), primary_key=True)
+    fullname = sqlalchemy.Column(String(40))
+    emailaddress = sqlalchemy.Column(String(40))
 
 settings.Base.metadata.create_all(settings.engine)
