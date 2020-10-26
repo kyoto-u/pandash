@@ -41,15 +41,9 @@ def overview():
         {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題7', 'status':'未', 'time_left':'あと1日', 'deadline':'2020-10-31T01:00:00Z','instructions':'なし'},
         {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題8', 'status':'未', 'time_left':'あと1日', 'deadline':'2020-10-31T00:00:00Z','instructions':'なし'}
         ]
+    studentid = "student1"
     data = task_arrange_for_overview(tasks)
-    days =["mon", "tue", "wed", "thu", "fri"]
-    for day in days:
-        for i in range(5):
-            data.setdefault(day+str(i+1),{"subject": "", "shortname": "", "searchURL": "","tasks": []})
-            data[day+str(i+1)]["tasks"] = sort_tasks(data[day+str(i+1)]["tasks"])
-    data.setdefault("others",[])
-    for subject in data["others"]:
-        subject["tasks"] = sort_tasks(subject["tasks"])
+    data = setdefault_for_overview(data, studentid)
     
     
     return flask.render_template('overview.htm')

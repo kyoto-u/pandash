@@ -52,14 +52,64 @@ def get_tasklist(studentid, mode=0):
     return tasks
 
 def get_courses_to_be_taken(studentid):
-    data={}
-    courses = session.query(student_assignment.Student_Assignment).filter(
-        student_assignment.Student_Assignment.student_id == studentid).all()
+    data=[]
+    courses = session.query(studentassignment.Student_Assignment).filter(
+        studentassignment.Student_Assignment.student_id == studentid).all()
     for cource in cources:
         if cource.hide == 1:
             continue
         courcedata = session.query(course.Course).filter(
             course.Course.course_id == cource.course_id).all()
+        data.append(courcedata[0])
+    return data
+
+def setdefault_for_overview(data, studentid):
+    days =["mon", "tue", "wed", "thu", "fri"]
+    for day in days:
+        for i in range(5):
+            data.setdefault(day+str(i+1),{"subject": "", "shortname": "", "searchURL": "","tasks": []})
+            data[day+str(i+1)]["tasks"] = sort_tasks(data[day+str(i+1)]["tasks"])
+    data.setdefault("others",[])
+    for subject in data["others"]:
+        subject["tasks"] = sort_tasks(subject["tasks"])
+    courcedata = get_cources_to_be_taken(studentid)
+    for cource in couracedata:
+        add_in_others = False
+        add_new_subject = False
+        # 教科に時限情報がない場合
+        if cource.classschedule == "others":
+            add_in_others = True
+        else:
+            if cource.courcename != data[cource.classschedule]["subject"] and cource.courcename != "":
+                add_in_others = True
+            else:
+                add_new_subject = True
+        if add_in_others == True:
+            # othersは教科が複数あるので何番目の教科か判定する必要がある
+            subject_exist = False
+            index = 0
+            for subject in data["others"]:
+                if subject["subject"] == cource.courcename:
+                    subject_exist = True
+                    break
+                index += 1
+            if subject_exist:
+                continue
+            else:
+                # 新しい教科を追加
+                data["others"].append({})
+                data["others"][index]["subject"] = cource.courcename
+                data["others"][index]["shortname"] = re.sub(
+                    "\[.*\]", "", cource.courcename)
+                data["others"][index]["tasks"] = []
+
+        elif add_new_subject == True:
+            data[cource.classschedule] = {}
+            data[cource.classschedule]["shorturl"] = ""
+            data[cource.classschedule]["subject"] = cource.courcename
+            data[cource.classschedule]["shortname"] = re.sub(
+                "\[.*\]", "", cource.courcename)
+            data[cource.classschedule]["tasks"] = []
     return data
 
 
@@ -71,7 +121,7 @@ def task_arrange_for_overview(tasks):
         #     continue
         add_in_others = False
         add_new_subject = False
-        # 教科情報がない場合
+        # 教科に時限情報がない場合
         if task["classschedule"] == "others":
             add_in_others = True
         else:
