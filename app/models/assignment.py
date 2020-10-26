@@ -9,7 +9,7 @@ class Assignment(settings.Base):
     AssignmentUrl = Column(String(500))
     Title = Column(String(100))
     Limit_at = Column(String(40))
-    Instructions = Column(String(65000))
+    Instructions = Column(String(1000))
     Time_ms = Column(Integer())
     ModifiedDate = Column(sqlalchemy.BigInteger())
 
