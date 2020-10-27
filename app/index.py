@@ -1,4 +1,4 @@
-from .models import student, assignment, course, enrollment, instructor, enrollmentR, resource, studentcourse, resource_attachment
+from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment
 from .settings import session
 import re
 
@@ -28,8 +28,8 @@ def get_tasklist(studentid, mode=0):
     # session.add(new_student)
     # session.commit()
 
-    enrollments = session.query(enrollment.Enrollment).filter(
-        enrollment.Enrollment.student_id == studentid).all()
+    enrollments = session.query(studentassignment.Student_Assignment).filter(
+        studentassignment.Student_Assignment.student_id == studentid).all()
     tasks = []
     for data in enrollments:
         task = {}
@@ -162,7 +162,7 @@ def task_arrange_for_overview(tasks):
 
 
 def add_student(studentid, fullname):
-    students = session.query(student.Student.StudentID).all()
+    students = session.query(student.Student.student_id).all()
     isExist = False
     for i in students:
         i_str = str(i)
@@ -174,19 +174,35 @@ def add_student(studentid, fullname):
             isExist = True
 
     if isExist == False:
-        new_student = student.Student()
-        new_student.StudentID = studentid
-        new_student.FullName = fullname
-
+        new_student = student.Student(student_id=studentid, fullname=fullname)
         session.add(new_student)
         session.commit()
 
     return
 
+def add_assignment_attachment(url, title, assignment_id):
+    assignments = session.query(assignment_attachment.Assignment_attachment.assignment_url).all()
+    isExist = False
+    for i in assignments:
+        i_str = str(i)
+        i_str = i_str.replace('(', '')
+        i_str = i_str.replace(')', '')
+        i_str = i_str.replace('\'', '')
+        i_str = i_str.replace(',', '')
+        if i_str == url:
+            isExist = True
 
-def add_assignment(assignmentid, assignmenturl,
-                   title, limit_at, instructions, time_ms):
-    assignments = session.query(assignment.Assignment.AssignmentID).all()
+    if isExist == False:
+        new_assignment_attachment = assignment_attachment.Assignment_attachment(assignment_url=url, title=title, assignment_id=assignment_id)
+
+        session.add(new_assignment_attachment)
+        session.commit()
+
+    return
+
+def add_assignment(assignmentid, url,
+                   title, limit_at, instructions, time_ms, modifieddate, courseid):
+    assignments = session.query(assignment.Assignment.assignment_id).all()
     isExist = False
     for i in assignments:
         i_str = str(i)
@@ -198,12 +214,8 @@ def add_assignment(assignmentid, assignmenturl,
             isExist = True
 
     if isExist == False:
-        new_assignment = assignment.Assignment()
-        new_assignment.AssignmentID = assignmentid
-        new_assignment.AssignmentUrl = assignmenturl
-        new_assignment.Title = title
-        new_assignment.Limit_at = limit_at
-        new_assignment.Time_ms = floor(time_ms/1000)
+        new_assignment = assignment.Assignment(assignment_id=assignmentid, url=url, title=title, \
+            limit_at=limit_at, instructions=instructions, time_ms=time_ms/1000, modifieddate=modifieddate, course_id=courseid)
 
         session.add(new_assignment)
         session.commit()
@@ -212,7 +224,7 @@ def add_assignment(assignmentid, assignmenturl,
 
 def add_course(courseid, instructorid, \
                     coursename, yearsemester, classschedule):
-    courses = session.query(course.Course.CourseID).all()
+    courses = session.query(course.Course.course_id).all()
     isExist = False
     for i in courses:
         i_str = str(i)
@@ -224,25 +236,19 @@ def add_course(courseid, instructorid, \
             isExist = True
 
     if isExist == False:
-        new_course = course.Course()
-        new_course.CourseID = courseid
-        new_course.InstructorID = instructorid
-        new_course.CourseName = coursename
-        new_course.YearSemester = yearsemester
-        new_course.ClassSchedule = classschedule
-
+        new_course = course.Course(course_id=courseid, instructor_id=instructorid, \
+            coursename=coursename, yearsemester=yearsemester, classschedule=classschedule)
         session.add(new_course)
         session.commit()
 
     return
 
 
-def add_enrollment(assignmentid,
-                   studentid, courseid, status):
+def add_student_assignment(assignment_id, student_id, status):
     enrollments_assignmentid = session.query(
-        enrollment.Enrollment.AssignmentID).all()
+        studentassignment.Student_Assignment.assignment_id).all()
     enrollments_studentid = session.query(
-        enrollment.Enrollment.StudentID).all()
+        studentassignment.Student_Assignment.student_id).all()
     isExist_assignmentid = False
     isExist_studentid = False
     for i in enrollments_assignmentid:
@@ -251,7 +257,7 @@ def add_enrollment(assignmentid,
         i_str = i_str.replace(')', '')
         i_str = i_str.replace('\'', '')
         i_str = i_str.replace(',', '')
-        if i_str == assignmentid:
+        if i_str == assignment_id:
             isExist_assignmentid = True
 
     if isExist_assignmentid:
@@ -261,17 +267,11 @@ def add_enrollment(assignmentid,
             i_str = i_str.replace(')', '')
             i_str = i_str.replace('\'', '')
             i_str = i_str.replace(',', '')
-            if i_str == studentid:
+            if i_str == student_id:
                 isExist_studentid = True
 
     if isExist_studentid == False:
-        new_enrollment = enrollment.Enrollment()
-        # new_enrollment.enrollmentID = enrollmentid
-        new_enrollment.AssignmentID = assignmentid
-        new_enrollment.StudentID = studentid
-        new_enrollment.CourseID = courseid
-        new_enrollment.Status = status
-
+        new_enrollment = studentassignment.Student_Assignment(assignment_id=assignment_id, student_id=student_id, status=status)
         session.add(new_enrollment)
         session.commit()
 
@@ -279,7 +279,7 @@ def add_enrollment(assignmentid,
 
 
 def add_instructor(instructorid, fullname, emailaddress):
-    instructors = session.query(instructor.Instructor.InstructorID).all()
+    instructors = session.query(instructor.Instructor.instructor_id).all()
     isExist = False
     for i in instructors:
         i_str = str(i)
@@ -291,22 +291,18 @@ def add_instructor(instructorid, fullname, emailaddress):
             isExist = True
 
     if isExist == False:
-        new_instructor = instructor.Instructor()
-        new_instructor.InstructorID = instructorid
-        new_instructor.FullName = fullname
-        new_instructor.EmailAddress = emailaddress
-
+        new_instructor = instructor.Instructor(instructor_id=instructorid, fullname=fullname, emailaddress=emailaddress)
         session.add(new_instructor)
         session.commit()
 
     return
 
-def add_enrollmentR(resourceurl, studentid, courseid, status):
-    enrollments_resourceurl = session.query(enrollmentR.EnrollmentR.ResourceUrl).all()
-    enrollments_studentid = session.query(enrollmentR.EnrollmentR.StudentID).all()
+def add_student_resource(resourceurl, studentid, status):
+    sr_resourceurl = session.query(studentresource.Student_Resource.resourse_url).all()
+    sr_studentid = session.query(studentresource.Student_Resource.student_id).all()
     isExist_resourceurl = False
     isExist_studentid = False
-    for i in enrollments_resourceurl:
+    for i in sr_resourceurl:
         i_str = str(i)
         i_str = i_str.replace('(','')
         i_str = i_str.replace(')','')
@@ -316,7 +312,7 @@ def add_enrollmentR(resourceurl, studentid, courseid, status):
             isExist_resourceurl = True
         
     if isExist_resourceurl:
-        for i in enrollments_studentid:
+        for i in sr_studentid:
             i_str = str(i)
             i_str = i_str.replace('(','')
             i_str = i_str.replace(')','')
@@ -326,21 +322,14 @@ def add_enrollmentR(resourceurl, studentid, courseid, status):
                 isExist_studentid = True
 
     if isExist_studentid == False:
-        new_enrollment = enrollment.Enrollment()
-        # new_enrollment.enrollmentID = enrollmentid
-        new_enrollment.ResourceUrl = resourceurl
-        new_enrollment.StudentID = studentid
-        new_enrollment.CourseID = courseid
-        new_enrollment.Status = status
-
-        session.add(new_enrollment)
+        new_sc = studentresource.Student_Resource(resource_url=resourceurl, student_id=studentid, status=status)
+        session.add(new_sc)
         session.commit()
     
     return
 
-
-def add_resource(resourceid, resourceurl, title, container, modifieddate):
-    resources = session.query(resource.Resource.ResourceUrl).all()
+def add_resource(resourceurl, title, container, modifieddate, course_id):
+    resources = session.query(resource.Resource.resource_url).all()
     isExist = False
     for i in resources:
         i_str = str(i)
@@ -351,13 +340,41 @@ def add_resource(resourceid, resourceurl, title, container, modifieddate):
         if i_str == resourceurl:
             isExist = True
     if isExist == False:
-        new_resource = resource.Resource()
-        # new_resource.ResourceID = resourceid
-        new_resource.ResourceUrl = resourceurl
-        new_resource.Title = title
-        new_resource.Container = container
-        new_resource.ModifiedDate = modifieddate
+        new_resource = resource.Resource(resource_url=resourceurl, title=title, container=container, modifieddate=modifieddate, course_id=course_id)
+        session.add(new_resource)
+        session.commit()
+    return
 
+def add_studentcourse(student_id, course_id):
+    sc_studentid = session.query(
+        studentcourse.Studentcourse.student_id).all()
+    sc_courseid = session.query(
+        studentcourse.Studentcourse.course_id).all()
+    isExist_studentid = False
+    isExist_courseid = False
+    for i in sc_courseid:
+        i_str = str(i)
+        i_str = i_str.replace('(', '')
+        i_str = i_str.replace(')', '')
+        i_str = i_str.replace('\'', '')
+        i_str = i_str.replace(',', '')
+        if i_str == course_id:
+            isExist_courseid = True
+
+    if isExist_courseid:
+        for i in sc_studentid:
+            i_str = str(i)
+            i_str = i_str.replace('(', '')
+            i_str = i_str.replace(')', '')
+            i_str = i_str.replace('\'', '')
+            i_str = i_str.replace(',', '')
+            if i_str == student_id:
+                isExist_studentid = True
+
+    if isExist_studentid == False:
+        new_sc = studentcourse.Studentcourse(student_id=student_id, course_id=course_id)
+        session.add(new_sc)
+        session.commit()
     return
 
 def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 1):
@@ -403,7 +420,8 @@ def order_status(status):
     else:
         return 3
 
-
+from math import *
+import time
 def remain_time(time_ms):
     ato = 'あと'
     now = floor(time.time())
