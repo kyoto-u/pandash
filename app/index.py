@@ -3,7 +3,7 @@ from .settings import session
 import re
 
 
-def get_tasklist(studentid, mode=0):
+def get_tasklist(studentid,courseid = None ,mode=0):
     """
         mode
         0:tasklist
@@ -32,19 +32,22 @@ def get_tasklist(studentid, mode=0):
         studentassignment.Student_Assignment.student_id == studentid).all()
     tasks = []
     for data in enrollments:
-        task = {}
-        task["status"] = data.status
-        task["assignmentid"] = data.assignment_id
         assignmentdata = session.query(assignment.Assignment).filter(
             assignment.Assignment.assignment_id == data.assignment_id).all()
+        if courseid != None:
+            if courseid != assignmentdata[0].course_id:
+                continue
+        task = {}
+        task["status"] = data.status
         task["taskname"] = assignmentdata[0].title
+        task["assignmentid"] = data.assignment_id
         task["deadline"] = assignmentdata[0].limit_at
         if mode == 0:
             task["time_left"] = remain_time(assignmentdata[0].time_ms)
         if mode == 1:
             task["instructions"] = assignmentdata[0].instructions
         coursedata = session.query(course.Course).filter(
-            course.Course.course_id == data.course_id).all()
+            course.Course.course_id == assignmentdata[0].course_id).all()
         task["subject"] = coursedata[0].coursename
         if mode == 1:
             task["classschedule"] = coursedata[0].classschedule
@@ -68,10 +71,10 @@ def setdefault_for_overview(data, studentid):
     for day in days:
         for i in range(5):
             data.setdefault(day+str(i+1),{"subject": "", "shortname": "", "searchURL": "","tasks": []})
-            data[day+str(i+1)]["tasks"] = sort_tasks(data[day+str(i+1)]["tasks"])
+            data[day+str(i+1)]["tasks"] = sort_tasks(data[day+str(i+1)]["tasks"],show_only_unfinished = 1)
     data.setdefault("others",[])
     for subject in data["others"]:
-        subject["tasks"] = sort_tasks(subject["tasks"])
+        subject["tasks"] = sort_tasks(subject["tasks"],show_only_unfinished = 1)
     coursedata = get_courses_to_be_taken(studentid)
     for course in coursedata:
         add_in_others = False
