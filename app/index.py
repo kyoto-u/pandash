@@ -53,13 +53,13 @@ def get_tasklist(studentid, mode=0):
 
 def get_courses_to_be_taken(studentid):
     data=[]
-    courses = session.query(studentassignment.Student_Assignment).filter(
-        studentassignment.Student_Assignment.student_id == studentid).all()
-    for course in courses:
-        if course.hide == 1:
-            continue
+    courses = session.query(studentcourse.Studentcourse).filter(
+        studentcourse.Studentcourse.student_id == studentid).all()
+    for i in courses:
+        # if course.hide == 1:
+        #     continue
         coursedata = session.query(course.Course).filter(
-            course.Course.course_id == course.course_id).all()
+            course.Course.course_id == i.course_id).all()
         data.append(coursedata[0])
     return data
 
@@ -80,8 +80,9 @@ def setdefault_for_overview(data, studentid):
         if course.classschedule == "others":
             add_in_others = True
         else:
-            if course.coursename != data[course.classschedule]["subject"] and course.coursename != "":
-                add_in_others = True
+            if data[course.classschedule]["subject"] != "":
+                if course.coursename != data[course.classschedule]["subject"]:
+                    add_in_others = True
             else:
                 add_new_subject = True
         if add_in_others == True:
