@@ -3,7 +3,7 @@ from .settings import session
 import re
 
 
-def get_tasklist(studentid,courseid = None ,mode=0):
+def get_tasklist(studentid,courseid = None, day = None, mode=0):
     """
         mode
         0:tasklist
@@ -37,6 +37,11 @@ def get_tasklist(studentid,courseid = None ,mode=0):
         if courseid != None:
             if courseid != assignmentdata[0].course_id:
                 continue
+        coursedata = session.query(course.Course).filter(
+            course.Course.course_id == assignmentdata[0].course_id).all()
+        if day !=None:
+            if day not in coursedata[0].classschedule:
+                continue
         task = {}
         task["status"] = data.status
         task["taskname"] = assignmentdata[0].title
@@ -46,8 +51,6 @@ def get_tasklist(studentid,courseid = None ,mode=0):
             task["time_left"] = remain_time(assignmentdata[0].time_ms)
         if mode == 1:
             task["instructions"] = assignmentdata[0].instructions
-        coursedata = session.query(course.Course).filter(
-            course.Course.course_id == assignmentdata[0].course_id).all()
         task["subject"] = coursedata[0].coursename
         if mode == 1:
             task["classschedule"] = coursedata[0].classschedule
