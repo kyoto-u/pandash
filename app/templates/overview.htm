@@ -20,319 +20,447 @@
             <tr class="d-flex">
               <td class="col-2">1</td>
               <td class="col-2">
-                <a href="#">月曜1限の科目を入力</a>
+                <a href="{{data.mon1.searchURL}}">{{data.mon1.shortname}}</a>
+                {% for task in data.mon1.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
+                </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
                   <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
-                    title="近世の宗教改革においてどこが重要だと考えますか。300字程度で自由に論じなさい">課題１</a>
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
+              </td>
+              <td class="col-2">
+                <a href="{{data.tue1.searchURL}}">{{data.tue1.shortname}}</a>
+                {% for task in data.tue1.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
+                </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
                   <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
-                    title="近世の宗教改革においてどこが重要だと考えますか。300字程度で自由に論じなさい">課題2</a>
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">火曜1限の科目を入力</a>
-                <div class="card taskcard" draggable="true" data-container='body' 　data-placement="left"
-                  data-toggle="tooltip" title="近世の宗教改革においてどこが重要だと考えますか。300字程度で自由に論じなさい">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.wed1.searchURL}}">{{data.wed1.shortname}}</a>
+                {% for task in data.wed1.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">水曜1限の科目を入力</a>
-                <div class="card taskcard" draggable="true" data-container='body' 　data-placement="right"
-                  data-toggle="tooltip" title="近世の宗教改革においてどこが重要だと考えますか。300字程度で自由に論じなさい">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.thu1.searchURL}}">{{data.thu1.shortname}}</a>
+                {% for task in data.thu1.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">木曜1限の科目を入力</a>
-                <div class="card taskcard" draggable="true" data-container='body' 　data-placement="bottom"
-                  data-toggle="tooltip" title="近世の宗教改革においてどこが重要だと考えますか。300字程度で自由に論じなさい">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.fri1.searchURL}}">{{data.fri1.shortname}}</a>
+                {% for task in data.fri1.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-              </td>
-              <td class="col-2">
-                <a href="#">金曜1限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
-                </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
-                </div>
+                {% endif %}
+                {% endfor %}
               </td>
             </tr>
             <tr class="d-flex">
               <td class="col-2">2</td>
               <td class="col-2">
-                <a href="#">月曜2限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.mon2.searchURL}}">{{data.mon2.shortname}}</a>
+                {% for task in data.mon2.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">火曜2限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.tue2.searchURL}}">{{data.tue2.shortname}}</a>
+                {% for task in data.tue2.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">水曜2限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.wed2.searchURL}}">{{data.wed2.shortname}}</a>
+                {% for task in data.wed2.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">木曜2限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.thu2.searchURL}}">{{data.thu2.shortname}}</a>
+                {% for task in data.thu2.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">金曜2限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.fri2.searchURL}}">{{data.fri2.shortname}}</a>
+                {% for task in data.fri2.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
             </tr>
             <tr class="d-flex">
               <td class="col-2">3</td>
               <td class="col-2">
-                <a href="#">月曜3限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.mon3.searchURL}}">{{data.mon3.shortname}}</a>
+                {% for task in data.mon3.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">火曜3限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.tue3.searchURL}}">{{data.tue3.shortname}}</a>
+                {% for task in data.tue3.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">水曜3限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.wed3.searchURL}}">{{data.wed3.shortname}}</a>
+                {% for task in data.wed3.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">木曜3限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.thu3.searchURL}}">{{data.thu3.shortname}}</a>
+                {% for task in data.thu3.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">金曜3限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.fri3.searchURL}}">{{data.fri3.shortname}}</a>
+                {% for task in data.fri3.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
             </tr>
             <tr class="d-flex">
               <td class="col-2">4</td>
               <td class="col-2">
-                <a href="#">月曜4限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.mon4.searchURL}}">{{data.mon4.shortname}}</a>
+                {% for task in data.mon4.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">火曜4限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.tue4.searchURL}}">{{data.tue4.shortname}}</a>
+                {% for task in data.tue4.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">水曜4限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.wed4.searchURL}}">{{data.wed4.shortname}}</a>
+                {% for task in data.wed4.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">木曜4限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.thu4.searchURL}}">{{data.thu4.shortname}}</a>
+                {% for task in data.thu4.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">金曜4限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.fri4.searchURL}}">{{data.fri4.shortname}}</a>
+                {% for task in data.fri4.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
             </tr>
             <tr class="d-flex">
               <td class="col-2">5</td>
               <td class="col-2">
-                <a href="#">月曜5限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.mon5.searchURL}}">{{data.mon5.shortname}}</a>
+                {% for task in data.mon5.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">火曜5限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.tue5.searchURL}}">{{data.tue5.shortname}}</a>
+                {% for task in data.tue5.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">水曜5限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.wed5.searchURL}}">{{data.wed5.shortname}}</a>
+                {% for task in data.wed5.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">木曜5限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.thu5.searchURL}}">{{data.thu5.shortname}}</a>
+                {% for task in data.thu5.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">金曜5限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.fri5.searchURL}}">{{data.fri5.shortname}}</a>
+                {% for task in data.fri5.tasks %}
+                {% if {loop.index} > 3 %}
+                <div class="card taskcard d-none" draggable="true">
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% else %}
                 <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                    title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
             </tr>
           </tbody>
         </table>
       </div>
+
+
       <h4>その他の科目</h4>
       <div class="card-columns">
+
+        {% for sbj in data.others %}
         <div class="card elsesbjcard">
-          <div class="card-header">科目名</div>
+          <div class="card-header">{{sbj.sbjname}}</div>
           <div class="card-body">
+            {% for task in sbj.tasks %}
+            {% if {loop.index} > 3 %}
             <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題１</a>
+              <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                title={{task.tooltip}}>{{task.taskname}}</a>
             </div>
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題2</a>
+            {% else %}
+            <div class="card taskcard d-none" draggable="true">
+              <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                title={{task.tooltip}}>{{task.taskname}}</a>
             </div>
+            {% endif %}
+            {% endfor %}
           </div>
         </div>
-        <div class="card elsesbjcard">
-          <div class="card-header">科目名</div>
-          <div class="card-body">
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題１</a>
-            </div>
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題2</a>
-            </div>
-          </div>
-        </div>
-        <div class="card elsesbjcard">
-          <div class="card-header">科目名</div>
-          <div class="card-body">
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題１</a>
-            </div>
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題2</a>
-            </div>
-          </div>
-        </div>
-        <div class="card elsesbjcard">
-          <div class="card-header">科目名</div>
-          <div class="card-body">
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題１</a>
-            </div>
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題2</a>
-            </div>
-          </div>
-        </div>
-        <div class="card elsesbjcard">
-          <div class="card-header">科目名</div>
-          <div class="card-body">
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題１</a>
-            </div>
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題2</a>
-            </div>
-          </div>
-        </div>
-        <div class="card elsesbjcard">
-          <div class="card-header">科目名</div>
-          <div class="card-body">
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題１</a>
-            </div>
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題2</a>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
+
       </div>
     </div>
 

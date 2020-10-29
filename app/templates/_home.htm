@@ -1,0 +1,63 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PandAsh</title>
+    <!-- BootstrapのCSS読み込み -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <!-- jQuery読み込み -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
+    <!-- BootstrapのJS読み込み -->
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" type="text/css">
+</head>
+
+<body>
+    <div class="fixed-top logos">
+        <nav class="navbar navbar-light bg-light" id="logonav">
+            <div class="row">
+                <a href="#" class=navbar-brand>
+                    <img id="siteface" src="{{ url_for('static', filename='images/popup.jpg') }}" alt="ロゴ" width="60px"
+                        height="60px">
+                </a>
+                <h1 id="SiteNamelabel">PandAsh</h1>
+            </div>
+        </nav>
+        <!--メニュー-->
+        <nav class="navbar justify-content-end navbar-dark bg-dark">
+            <div class="navbar-nav">
+                <div class="container">
+                    <a class="nav-item nav-link text-nowrap" href="#">ログイン</a>
+                </div>
+                <div class="container">
+                    <a class="nav-item nav-link" href="#">ホーム</a>
+                </div>
+                <div class="container">
+                    <a class="nav-item nav-link" href="#">問い合わせホーム</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <h3>Welcome to PandAsh!</h3><br>
+    <h6>PandAsh is service provided by Institution for Information Management in Kyoto University. You can overview your
+        assignments.</h6>
+    <footer>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <h2>京都大学 KYOTO UNIVERSITY 京都大学情報環境機構</h2>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+
+
+</html>

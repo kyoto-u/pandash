@@ -1,0 +1,15 @@
+html{
+    font-size: small;
+}
+
+.card{
+    width: 50%;
+    color: black;
+    left:25%;
+    right:25%;
+}
+.card-header{
+    background-color: black;
+    color: white;
+}
+

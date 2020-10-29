@@ -1,5 +1,5 @@
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PandAsh</title>
@@ -21,7 +21,6 @@
     media="screen and (max-width:767px)" />
 </head>
 
-<!--Modal-->
 <div class="modal fade" id="modal_timeboard_select" tabindex="-1" role="dialog" aria-labelledby="label1"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-fluid" role="document">
@@ -48,49 +47,72 @@
             <tbody>
               <tr class="d-flex">
                 <td class="col-2">1</td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">英語リーディング</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">物理学基礎論</a></td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.mon1.searchURL}}">{{data.mon1.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.tue1.searchURL}}">{{data.tue1.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.wed1.searchURL}}">{{data.wed1.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.thu1.searchURL}}">{{data.thu1.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.fri1.searchURL}}">{{data.fri1.shortname}}</a>
+                </td>
               </tr>
               <tr class="d-flex">
                 <td class="col-2">2</td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">線形代数学A</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.mon2.searchURL}}">{{data.mon2.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.tue2.searchURL}}">{{data.tue2.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.wed2.searchURL}}">{{data.wed2.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.thu2.searchURL}}">{{data.thu2.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.fri2.searchURL}}">{{data.fri2.shortname}}</a>
+                </td>
               </tr>
               <tr class="d-flex">
                 <td class="col-2">3</td>
-                <td class="col-2"><a class="btn btn-link" href="#">微分積分学A</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">自然現象と数学</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">英語WL A</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">ドイツ語IA(演習)</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                　
+                <td class="col-2"><a class="btn btn-link" href="{{data.mon3.searchURL}}">{{data.mon3.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.tue3.searchURL}}">{{data.tue3.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.wed3.searchURL}}">{{data.wed3.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.thu3.searchURL}}">{{data.thu3.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.fri3.searchURL}}">{{data.fri3.shortname}}</a>
+                </td>
               </tr>
               　<tr class="d-flex">
                 <td class="col-2">4</td>
-                <td class="col-2"><a class="btn btn-link" href="#">ILAS</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">アルゴリズム入門</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">地球工学総論</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">基礎化学実験</a></td>
-                　　
+                <td class="col-2"><a class="btn btn-link" href="{{data.mon4.searchURL}}">{{data.mon4.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.tue4.searchURL}}">{{data.tue4.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.wed4.searchURL}}">{{data.wed4.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.thu4.searchURL}}">{{data.thu4.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.fri4.searchURL}}">{{data.fri4.shortname}}</a>
+                </td>
               </tr>
               　 <tr class="d-flex">
                 <td class="col-2">5</td>
-                <td class="col-2"><a class="btn btn-link" href="#">情報基礎演習</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">計算機科学概論</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                　　
+                <td class="col-2"><a class="btn btn-link" href="{{data.mon5.searchURL}}">{{data.mon5.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.tue5.searchURL}}">{{data.tue5.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.wed5.searchURL}}">{{data.wed5.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.thu5.searchURL}}">{{data.thu5.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.fri5.searchURL}}">{{data.fri5.shortname}}</a>
+                </td>
               </tr>
             </tbody>
           </table>
+
         </div>
       </div>
       <div class="modal-footer">
@@ -141,13 +163,34 @@
 
             <ul class="navbar-nav toggle_rights">
               <li class="nav-item">
-                <a class="nav-link" href="#">iCalと共有</a>
+                <a class="nav-link" href="#" data-container='body' 　data-placement="left" data-toggle="tooltip"
+                  title="iCalファイルをダウンロードします">iCalと共有</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">ログアウト</a>
               </li>
             </ul>
 
+          </div>
+        </div>
+      </nav>
+      <nav class="navbar justify-content-end navbar-dark bg-dark">
+        <div class="navbar-nav">
+          <div class="nav-item btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-dark active">
+              <input type="radio" name="options" id="option1" autocomplete="off" checked>一覧表示
+            </label>
+            <label class="btn btn-dark">
+              <input type="radio" name="options" id="option2" autocomplete="off">時間割表示
+            </label>
+          </div>
+          <a class="btn btn-secondary d-none d-md-block" href="#" role="button">授業資料</a>
+          <div class="nav-item d-none d-md-block">
+            <a class="nav-link" href="#" data-container='body' 　data-placement="left" data-toggle="tooltip"
+              title="iCalファイルをダウンロードします">iCalと共有</a>
+          </div>
+          <div class="nav-item">
+            <a class="nav-link" href="#">ログアウト</a>
           </div>
         </div>
       </nav>

@@ -1,0 +1,43 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PandAsh</title>
+    <!-- BootstrapのCSS読み込み -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <!-- jQuery読み込み -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
+    <!-- BootstrapのJS読み込み -->
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/logout.css') }}" type="text/css">
+</head>
+
+<body>
+    <div class="card">
+        <div class="card-header">ログアウト/ Log out</div>
+        <div class="card-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-3">
+                        PandAsh
+                    </div>
+                    <div class="col-9">
+                        ログアウトが完了しました<br>
+                        <a href="#">ページトップに戻る</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <small>Copyright 2020 Institution for Information Management</small>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -25,10 +25,15 @@ footer {
   margin-top: auto;
 }
 
+.navbar-nav{
+   display:inline-flex;
+    flex-direction: row;
+}
+
 /*時間割表示ページ*/
 .table-responsive{
   display: flex;
-  flex-direction: column-reverse;  
+  flex-direction: column;  
   left:0;
 }
 
