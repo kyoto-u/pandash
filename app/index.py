@@ -1,7 +1,7 @@
 from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment
 from .settings import session
 import re
-
+from pprint import pprint
 
 def get_tasklist(studentid,courseid = None, day = None, mode=0):
     """
@@ -167,6 +167,79 @@ def task_arrange_for_overview(tasks):
             task_arranged[task["classschedule"]]["tasks"].append(task)
     return task_arranged
 
+def get_resource_list(studentid, course_id=None, day=None):
+    resource_list = []
+    resources = session.query(studentresource.Student_Resource).filter(
+        studentresource.Student_Resource.student_id == studentid).all()
+    for data in resources:
+        resourcedata = session.query(resource.Resource).filter(
+            resource.Resource.resource_url == data.resource_url).all()       
+        if course_id != None:
+            if course_id != resourcedata[0].course_id:
+                continue
+        coursedata = session.query(course.Course).filter(
+            course.Course.course_id == resourcedata[0].course_id).all()
+        if day !=None:
+            if day not in coursedata.classschedule:
+                continue
+        resource_dict = {}
+        resource_dict["resource_url"] = data.resource_url
+        resource_dict["title"] = resourcedata[0].title
+        resource_dict["container"] = resourcedata[0].container
+        resource_dict["modifieddate"] = resourcedata[0].modifieddate
+        resource_list.append(resource_dict)
+    return resource_list
+
+def resource_arrange(resource_list:list, coursename:str):
+    course = {"folders":[],"files":[],"name":coursename}
+    # list_f = course["folders"]
+    folderlist = []
+    for r in resource_list:
+        container = r['container']
+        container_spilt = container.split('/')
+        del container_spilt[-1]
+        for i in range(4):
+            del container_spilt[0]
+        for folder in folderlist:
+            if folder == container_spilt:
+                break
+        else:
+            folderlist.append(container_spilt)
+    for foldername in folderlist:
+        list_f = course["folders"]
+        for f in foldername:
+            index = 0
+            isExist = False
+            for lf in list_f:
+                if lf["name"] == f:
+                    list_f = list_f[index]["folders"]
+                    isExist = True
+                index += 1
+            if isExist:
+                continue
+            list_f.append({'folders':[],'files':[],'name':f})
+            list_len = len(list_f)
+            list_f = list_f[list_len-1]["folders"]
+    for r in resource_list:
+        list_f = course["folders"]
+        container = r['container']
+        container_spilt = container.split('/')
+        del container_spilt[-1]
+        for i in range(4):
+            del container_spilt[0]        
+        container_spilt_len = len(container_spilt)
+        for cl in range(container_spilt_len):
+            for lf in list_f:
+                if lf["name"] == container_spilt[cl]:
+                    if container_spilt_len == cl + 1:
+                        list_f = lf["files"]
+                        list_f.append({r['title']:r['resource_url']})
+                        break
+                    else:
+                        list_f = lf["folders"]
+    return course
+
+
 
 def add_student(studentid, fullname):
     students = session.query(student.Student.student_id).all()
@@ -305,7 +378,7 @@ def add_instructor(instructorid, fullname, emailaddress):
     return
 
 def add_student_resource(resourceurl, studentid, status):
-    sr_resourceurl = session.query(studentresource.Student_Resource.resourse_url).all()
+    sr_resourceurl = session.query(studentresource.Student_Resource.resource_url).all()
     sr_studentid = session.query(studentresource.Student_Resource.student_id).all()
     isExist_resourceurl = False
     isExist_studentid = False

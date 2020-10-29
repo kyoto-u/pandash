@@ -3,6 +3,7 @@ from app.settings import engine
 import flask
 from sqlalchemy.orm import sessionmaker
 from app.index import *
+from pprint import pprint
 
 
 @app.route('/hello')
@@ -18,20 +19,38 @@ def root():
 @app.route('/controller')
 def controller():
     # ex
-    # add_student('student1','s_fullname1')
-    # add_instrucstor('instructor1', 'i_fullname', 'i_mailadress')
-    # add_assignment("assignmentid1", "url","課題1", "2020-10-30T01:55:00Z", "<p>説明<p>", 11111111111, 1111, "course1" )
-    # add_assignment("assignmentid2", "ur2","課題2", "2020-10-30T01:50:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
-    # add_student_assignment('assignmentid1', 'student1', '未')
-    # add_student_assignment('assignmentid2', 'student1', '未')
-    # add_studentcourse("student1","course1")
-    # add_studentcourse("student1","course2")
-    # add_studentcourse("student1","course3")
-    # add_studentcourse("student1","course4")
-    # add_course('course1', 'teacher1', 'コース1', 20200, 'wed2')
-    # add_course('course2', 'teacher1', 'コース2', 20200, 'mon2')
-    # add_course('course3', 'teacher1', '[2020前期月1]線形代数学', 20200, 'mon1')
-    # add_course('course4', 'teacher1', '[2020前期月2]微分積分学', 20200, 'mon2')
+    add_student('student1','s_fullname1')
+    add_instructor('instructor1', 'i_fullname', 'i_mailadress')
+    add_assignment("assignmentid1", "url","課題1", "2020-10-30T01:55:00Z", "<p>説明<p>", 11111111111, 1111, "course1" )
+    add_assignment("assignmentid2", "ur2","課題2", "2020-10-30T01:50:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
+    add_student_assignment('assignmentid1', 'student1', '未')
+    add_student_assignment('assignmentid2', 'student1', '未')
+    add_studentcourse("student1","course1")
+    add_studentcourse("student1","course2")
+    add_studentcourse("student1","course3")
+    add_studentcourse("student1","course4")
+    add_course('course1', 'teacher1', 'コース1', 20200, 'wed2')
+    add_course('course2', 'teacher1', 'コース2', 20200, 'mon2')
+    add_course('course3', 'teacher1', '[2020前期月1]線形代数学', 20200, 'mon1')
+    add_course('course4', 'teacher1', '[2020前期月2]微分積分学', 20200, 'mon2')
+    add_resource('url1', '資料１', '/content/group/2020-888-N150-017/演義/演義動画/', 111, 'course1')
+    add_resource('url2', '資料２', '/content/group/2020-888-N150-017/演義/演義動画/', 222, 'course1')
+    add_resource('url3', '資料３', '/content/group/2020-888-N150-017/演義/演義資料/', 222, 'course1')
+    add_resource('url4', '資料４', '/content/group/2020-888-N150-017/演義/演義動画/詳細/', 222, 'course1')
+    add_resource('url5', '資料５', '/content/group/2020-888-N150-017/講義/講義動画/', 222, 'course1')
+    add_resource('url6', '資料６', '/content/group/2020-888-N150-017/講義/講義ノート/', 222, 'course1')
+    add_resource('url7', '資料７', '/content/group/2020-888-N150-017/演義/演義動画/', 222, 'course2')
+    add_student_resource('url1', 'student1', '未')
+    add_student_resource('url2', 'student1', '未')
+    add_student_resource('url3', 'student1', '未')
+    add_student_resource('url4', 'student1', '未')
+    add_student_resource('url5', 'student1', '未')
+    add_student_resource('url6', 'student1', '未')
+    add_student_resource('url7', 'student1', '未')
+
+
+    pprint(resource_arrange(get_resource_list('student1', 'course1'), 'コース名'))
+    # get_tasklist('student1')
     return ''
 
 @app.route('/tasklist')
