@@ -26,11 +26,15 @@ footer {
     margin-top: auto;
 }
 
+.navbar-nav{
+   display:inline-flex;
+    flex-direction: row;
+}
 
 /*一覧表示ページ*/
 #ScrollSearchbar{
    background-color:silver;
-   height:200px;
+   height:60vh;
    top:30vh;
    position:fixed;
 }
@@ -54,6 +58,11 @@ footer {
     max-width: inherit;
     width: 98%;
     margin-left: 15px;
+}
+
+#tali_flag{
+    background-color: whitesmoke;
+    margin-top: 30px;
 }
 
 /*時間割表示ページ*/
@@ -80,4 +89,9 @@ footer {
 /*授業資料ページ*/
 #resourcestable{
     font-size: small;
+}
+
+/*資料ダウンロードページ*/
+label > a{
+    color: gray;
 }

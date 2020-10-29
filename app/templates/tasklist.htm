@@ -1,173 +1,78 @@
 <!--一覧表示ページ-->
 {% extends "_base.htm" %}
 {% block bodycontent %}
-<div class = "row">
-    <div class = "col-sm-12 col-md-2" id = "ScrollSearchbar">
-        <div class = "container">
-            <div class = "d-flex flex-md-column">
-                    <h6 id ="searchlabel">しぼりこみ検索</h6>           
-                     <!--曜日しぼりこみ-->
-                    <div class="form-group">
-                      <label for="select0a">科目</label>
-                      <select id="select0a" class="form-control">
-                         <option>全ての曜日</option>
-                         <option>月曜のみ</option>
-                         <option>火曜のみ</option>
-                         <option>水曜のみ</option>
-                         <option>木曜のみ</option>
-                         <option>金曜のみ</option>
-                      </select>
-                    </div>
-                    <!--時間割検索機能-->
-                    <button id="timesearchbutton" type="button" class="btn btn-dark" data-toggle="modal" data-target="#modal_timeboard_select">時間割で検索</button>
-                    
-            </div>
+<!--Modal-->
+<div class="row">
+  <div class="col-sm-12 col-md-2" id="ScrollSearchbar">
+    <div class="container">
+      <div class="d-flex flex-md-column">
+        <h6 id="searchlabel">しぼりこみ検索</h6>
+        <!--曜日しぼりこみ-->
+        <div class="form-group">
+          <label for="select0a">科目</label>
+          <select id="select0a" class="form-control">
+            <option>全ての曜日</option>
+            <option>月曜のみ</option>
+            <option>火曜のみ</option>
+            <option>水曜のみ</option>
+            <option>木曜のみ</option>
+            <option>金曜のみ</option>
+          </select>
         </div>
+        <!--時間割検索機能-->
+        <button id="timesearchbutton" type="button" class="btn btn-dark" data-toggle="modal"
+          data-target="#modal_timeboard_select">時間割で検索</button>
+        <div class="d-none d-md-block" id="tali_flag">
+          <div class="container">
+            <i class="fas fa-flag-checkered">ここに課題をドラッグ＆ドロップして完了済みにする</i>
+          </div>
+        </div>
+      </div>
     </div>
-    <div id = "taskmain" class = "col-sm-12 col-md-10">
-      <!--タイトル-->
-       <h3>あなたの課題</h3>
-       <!--アラート-->
-         <div class="alert alert-danger" role="alert">
-           <div class="row">
-             未完了の課題が<div class = "text-danger">2</div>件あります
-           </div>
-         </div>
-        <!--課題表-->
-      <div class = "table-responsive">
-        <table class="table">
-          <thead>
-            <tr class = "d-flex">
-                <th class="col-3">科目名</th>
-                <th class="col-3">課題名</th>
-                <!--<th class="col-3">
-                  <div class="form-group">
-                    <label for="select2a">状態:</label>
-                    <select id="select2a" class="form-control">
-                      <option>全て</option>
-                      <option>未完了のみ</option>
-                    </select>
-                  </div>
-                </th>
-              -->
-                <th class="col-3">
-                  <div class="form-group">
-                    <label for="select3a">締め切りまで:</label>
-                    <select id="select3a" class="form-control">
-                      <option>全て</option>
-                      <option>未完了のみ</option>
-                      <option>今日中</option>
-                      <option>1週間以内</option>
-                    </select>
-                  </div>
-                </th>
-                <th class="col-3">締切日</th>
-            </tr>
-          </thead>
-          <tbody>
-           <!-- {% for task in tasks %}
-            <tr class = "d-flex tablecontents">
-                <td class="col-3">{{task.subject}}</td>
-                <td class="col-3">{{task.taskname}}</td>
-                <td class="col-3">{{task.time_left}}</td>
-                <td class="col-3">{{task.deadline}}</td>
-            </tr>
-            {% endfor %}
-            -->
-            <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
+  </div>
+  <div id="taskmain" class="col-sm-12 col-md-10">
+    <!--タイトル-->
+    <h3>あなたの課題</h3>
+    <!--アラート-->
+    <div class="alert alert-danger" role="alert">
+      <div class="row">
+        未完了の課題が<div class="text-danger">2</div>件あります
+      </div>
+    </div>
+    <!--課題表-->
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr class="d-flex">
+            <th class="col-3">科目名</th>
+            <th class="col-3">課題名</th>
 
-          
-          
-        </table>
-       </div>
-     </div>
-{% endblock %}
+            <th class="col-3">
+              <div class="form-group">
+                <label for="select3a">締め切りまで:</label>
+                <select id="select3a" class="form-control">
+                  <option>全て</option>
+                  <option>未完了のみ</option>
+                  <option>今日中</option>
+                  <option>1週間以内</option>
+                </select>
+              </div>
+            </th>
+            <th class="col-3">締切日</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          {% for task in tasks %}
+          <tr class="d-flex tablecontents">
+            <td class="col-3">{{task.subject}}</td>
+            <td class="col-3">{{task.taskname}}</td>
+            <td class="col-3">{{task.time_left}}</td>
+            <td class="col-3">{{task.deadline}}</td>
+          </tr>
+          {% endfor %}
+
+      </table>
+    </div>
+  </div>
+  {% endblock %}
