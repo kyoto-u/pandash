@@ -1,5 +1,5 @@
 import flask
-from .models import student, assignment, course, enrollment,instructor
+# from .models import student, assignment, course, enrollment,instructor
 
 
 def create_app():

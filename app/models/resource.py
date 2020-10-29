@@ -1,0 +1,15 @@
+import sqlalchemy
+import sqlalchemy.ext.declarative
+from sqlalchemy import Integer, String, Column
+from .. import settings
+
+class Resource(settings.Base):
+    __tablename__ = 'resources'
+    # ResourceID = Column(Integer(), primary_key=True, autoincrement=True)
+    resource_url = Column(String(500), primary_key=True)
+    title = Column(String(100))
+    container = Column(String(500))
+    modifieddate = Column(sqlalchemy.BigInteger())
+    course_id = Column(String(40))
+
+settings.Base.metadata.create_all(settings.engine)
