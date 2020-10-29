@@ -245,61 +245,55 @@ def add_student(studentid, fullname):
     students = session.query(student.Student.student_id).all()
     isExist = False
     for i in students:
-        i_str = str(i)
-        i_str = i_str.replace('(', '')
-        i_str = i_str.replace(')', '')
-        i_str = i_str.replace('\'', '')
-        i_str = i_str.replace(',', '')
-        if i_str == studentid:
+        if list(i)[0] == studentid:
             isExist = True
-
+            break
     if isExist == False:
         new_student = student.Student(student_id=studentid, fullname=fullname)
         session.add(new_student)
         session.commit()
-
     return
 
 def add_assignment_attachment(url, title, assignment_id):
     assignments = session.query(assignment_attachment.Assignment_attachment.assignment_url).all()
     isExist = False
     for i in assignments:
-        i_str = str(i)
-        i_str = i_str.replace('(', '')
-        i_str = i_str.replace(')', '')
-        i_str = i_str.replace('\'', '')
-        i_str = i_str.replace(',', '')
-        if i_str == url:
+        if list(i)[0] == url:
             isExist = True
-
+            break
     if isExist == False:
         new_assignment_attachment = assignment_attachment.Assignment_attachment(assignment_url=url, title=title, assignment_id=assignment_id)
-
         session.add(new_assignment_attachment)
         session.commit()
-
     return
 
 def add_assignment(assignmentid, url,
                    title, limit_at, instructions, time_ms, modifieddate, courseid):
     assignments = session.query(assignment.Assignment.assignment_id).all()
     isExist = False
+    need_update = False
     for i in assignments:
-        i_str = str(i)
-        i_str = i_str.replace('(', '')
-        i_str = i_str.replace(')', '')
-        i_str = i_str.replace('\'', '')
-        i_str = i_str.replace(',', '')
-        if i_str == assignmentid:
+        if list(i)[0] == assignmentid:
             isExist = True
-
+            assignment_md = session.query(assignment.Assignment.modifieddate).filter(
+                assignment.Assignment.assignment_id == assignmentid).all()
+            if list(assignment_md[0])[0] != modifieddate:
+                need_update = True
+            break
     if isExist == False:
         new_assignment = assignment.Assignment(assignment_id=assignmentid, url=url, title=title, \
             limit_at=limit_at, instructions=instructions, time_ms=time_ms/1000, modifieddate=modifieddate, course_id=courseid)
-
         session.add(new_assignment)
         session.commit()
-
+    elif need_update:
+        old_assignment = session.query(assignment.Assignment).filter(assignment.Assignment.assignment_id==assignmentid).first()
+        old_assignment.url = url
+        old_assignment.title = title
+        old_assignment.limit_at = limit_at
+        old_assignment.time_ms = time_ms
+        old_assignment.modifieddate = modifieddate
+        session.add(old_assignment)
+        session.commit()
     return
 
 def add_course(courseid, instructorid, \
@@ -307,20 +301,14 @@ def add_course(courseid, instructorid, \
     courses = session.query(course.Course.course_id).all()
     isExist = False
     for i in courses:
-        i_str = str(i)
-        i_str = i_str.replace('(', '')
-        i_str = i_str.replace(')', '')
-        i_str = i_str.replace('\'', '')
-        i_str = i_str.replace(',', '')
-        if i_str == courseid:
+        if list(i)[0] == courseid:
             isExist = True
-
+            break
     if isExist == False:
         new_course = course.Course(course_id=courseid, instructor_id=instructorid, \
             coursename=coursename, yearsemester=yearsemester, classschedule=classschedule)
         session.add(new_course)
         session.commit()
-
     return
 
 
@@ -332,29 +320,18 @@ def add_student_assignment(assignment_id, student_id, status):
     isExist_assignmentid = False
     isExist_studentid = False
     for i in enrollments_assignmentid:
-        i_str = str(i)
-        i_str = i_str.replace('(', '')
-        i_str = i_str.replace(')', '')
-        i_str = i_str.replace('\'', '')
-        i_str = i_str.replace(',', '')
-        if i_str == assignment_id:
+        if list(i)[0] == assignment_id:
             isExist_assignmentid = True
-
+            break
     if isExist_assignmentid:
         for i in enrollments_studentid:
-            i_str = str(i)
-            i_str = i_str.replace('(', '')
-            i_str = i_str.replace(')', '')
-            i_str = i_str.replace('\'', '')
-            i_str = i_str.replace(',', '')
-            if i_str == student_id:
+            if list(i)[0] == student_id:
                 isExist_studentid = True
-
+                break
     if isExist_studentid == False:
         new_enrollment = studentassignment.Student_Assignment(assignment_id=assignment_id, student_id=student_id, status=status)
         session.add(new_enrollment)
         session.commit()
-
     return
 
 
@@ -362,19 +339,13 @@ def add_instructor(instructorid, fullname, emailaddress):
     instructors = session.query(instructor.Instructor.instructor_id).all()
     isExist = False
     for i in instructors:
-        i_str = str(i)
-        i_str = i_str.replace('(', '')
-        i_str = i_str.replace(')', '')
-        i_str = i_str.replace('\'', '')
-        i_str = i_str.replace(',', '')
-        if i_str == instructorid:
+        if list(i)[0] == instructorid:
             isExist = True
-
+            break
     if isExist == False:
         new_instructor = instructor.Instructor(instructor_id=instructorid, fullname=fullname, emailaddress=emailaddress)
         session.add(new_instructor)
         session.commit()
-
     return
 
 def add_student_resource(resourceurl, studentid, status):
@@ -383,45 +354,49 @@ def add_student_resource(resourceurl, studentid, status):
     isExist_resourceurl = False
     isExist_studentid = False
     for i in sr_resourceurl:
-        i_str = str(i)
-        i_str = i_str.replace('(','')
-        i_str = i_str.replace(')','')
-        i_str = i_str.replace('\'','')
-        i_str = i_str.replace(',','')
-        if i_str == resourceurl:
+        if list(i)[0] == resourceurl:
             isExist_resourceurl = True
-        
+            break
     if isExist_resourceurl:
         for i in sr_studentid:
-            i_str = str(i)
-            i_str = i_str.replace('(','')
-            i_str = i_str.replace(')','')
-            i_str = i_str.replace('\'','')
-            i_str = i_str.replace(',','')
-            if i_str == studentid:
+            if list(i)[0] == studentid:
                 isExist_studentid = True
-
+                break
     if isExist_studentid == False:
         new_sc = studentresource.Student_Resource(resource_url=resourceurl, student_id=studentid, status=status)
         session.add(new_sc)
-        session.commit()
-    
+        session.commit()   
     return
 
 def add_resource(resourceurl, title, container, modifieddate, course_id):
     resources = session.query(resource.Resource.resource_url).all()
     isExist = False
+    need_update = False
     for i in resources:
-        i_str = str(i)
-        i_str = i_str.replace('(','')
-        i_str = i_str.replace(')','')
-        i_str = i_str.replace('\'','')
-        i_str = i_str.replace(',','')
-        if i_str == resourceurl:
+        if list(i)[0] == resourceurl:
             isExist = True
+            resource_md = session.query(resource.Resource.modifieddate).filter(
+                resource.Resource.resource_url==resourceurl)
+            if list(resource_md[0])[0] != modifieddate:
+                need_update = True
+            break
     if isExist == False:
         new_resource = resource.Resource(resource_url=resourceurl, title=title, container=container, modifieddate=modifieddate, course_id=course_id)
         session.add(new_resource)
+        session.commit()
+    elif need_update:
+        old_resource = session.query(resource.Resource).filter(
+            resource.Resource.resource_url==resourceurl).first()
+        old_resource.title = title
+        old_resource.container = container
+        old_resource.modifieddate = modifieddate
+        old_resource.course_id = course_id
+        session.add(old_resource)
+        need_student_resource = session.query(studentresource.Student_Resource).filter(
+            studentresource.Student_Resource.resource_url==resourceurl).all()
+        for sr in need_student_resource:
+            sr.status = '未dl'
+            session.add(sr)
         session.commit()
     return
 
@@ -433,22 +408,12 @@ def add_studentcourse(student_id, course_id):
     isExist_studentid = False
     isExist_courseid = False
     for i in sc_courseid:
-        i_str = str(i)
-        i_str = i_str.replace('(', '')
-        i_str = i_str.replace(')', '')
-        i_str = i_str.replace('\'', '')
-        i_str = i_str.replace(',', '')
-        if i_str == course_id:
+        if list(i)[0] == course_id:
             isExist_courseid = True
 
     if isExist_courseid:
         for i in sc_studentid:
-            i_str = str(i)
-            i_str = i_str.replace('(', '')
-            i_str = i_str.replace(')', '')
-            i_str = i_str.replace('\'', '')
-            i_str = i_str.replace(',', '')
-            if i_str == student_id:
+            if list(i)[0] == student_id:
                 isExist_studentid = True
 
     if isExist_studentid == False:
