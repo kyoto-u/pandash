@@ -2,15 +2,26 @@ html{
     font-size: medium;
 }
 
+#logo{
+    height:60px;
+    width:60px;
+}
+
+#loginface{
+    width:40%;
+}
+
+#siteface{
+    padding-top:10;
+}
+
 .card-header{
     background-color: black;
     color:white;
 }
 
 .card{
-    width:80%;
-    left:10%;
-    right:10%;
+    width:500;
     top:10vh;
 }
 

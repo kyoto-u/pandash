@@ -1,7 +1,11 @@
 /*全ページ共通部分*/
 #siteface{
-  height: 8vh;
-  width: 8vh;
+  height: 50;
+  width: 50;
+}
+
+#SiteNamelabel{
+    padding-top: 13;
 }
 
 html{
@@ -28,6 +32,10 @@ footer {
 .navbar-nav{
    display:inline-flex;
     flex-direction: row;
+}
+
+#logout_button{
+  padding-right: 10;
 }
 
 /*時間割表示ページ*/

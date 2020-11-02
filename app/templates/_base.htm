@@ -32,6 +32,7 @@
         </button>
       </div>
       <div class="modal-body">
+
         <div class="table-responsive table-considered">
           <table class="table table-sm modaltable">
             <thead>
@@ -114,6 +115,7 @@
           </table>
 
         </div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">とじる</button>
@@ -129,13 +131,14 @@
       <nav class="navbar navbar-light bg-light" id="logonav">
         <div class="row">
           <a href="#" class=navbar-brand>
-            <img id="siteface" src="{{ url_for('static', filename='images/popup.jpg') }}" alt="ロゴ" width="60px"
-              height="60px">
+            <img id="siteface" src="{{ url_for('static', filename='images/headerlogo.jpg') }}" alt="ロゴ" width="60px"
+              height="80px">
           </a>
           <h1 id="SiteNamelabel">PandAsh</h1>
         </div>
       </nav>
       <!--メニュー-->
+      <!--
       <nav class="navbar navbar-expand-md md_fixed navbar-dark bg-dark">
         <div class="container" id="menubar">
           <a class="navbar-brand " href="/"></a>
@@ -174,28 +177,48 @@
           </div>
         </div>
       </nav>
-      <nav class="navbar justify-content-end navbar-dark bg-dark">
-        <div class="navbar-nav">
-          <div class="nav-item btn-group btn-group-toggle" data-toggle="buttons">
-            <label class="btn btn-dark active">
-              <input type="radio" name="options" id="option1" autocomplete="off" checked>一覧表示
-            </label>
-            <label class="btn btn-dark">
-              <input type="radio" name="options" id="option2" autocomplete="off">時間割表示
-            </label>
-          </div>
-          <a class="btn btn-secondary d-none d-md-block" href="#" role="button">授業資料</a>
-          <div class="nav-item d-none d-md-block">
-            <a class="nav-link" href="#" data-container='body' 　data-placement="left" data-toggle="tooltip"
-              title="iCalファイルをダウンロードします">iCalと共有</a>
-          </div>
-          <div class="nav-item">
-            <a class="nav-link" href="#">ログアウト</a>
+    -->
+      <nav class="navbar navbar-expand md_fixed navbar-dark bg-dark">
+        <div class="container" id="menubar">
+          <a class="navbar-brand " href="/"></a>
+          <button id="logotoggle" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown2" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown2">
+            <ul class="navbar-nav mr-auto toggle_lefts">　
+              <li class="nav-item">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                  <label class="btn btn-dark active">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked>一覧表示
+                  </label>
+                  <label class="btn btn-dark">
+                    <input type="radio" name="options" id="option2" autocomplete="off">時間割表示
+                  </label>
+                </div>
+              </li>
+              <li class="nav-item d-none d-md-block">
+                <a class="btn btn-secondary" href="#" role="button">授業資料</a>
+              </li>
+            </ul>
+
+            <ul class="navbar-nav toggle_rights">
+              <li class="nav-item d-none d-md-block">
+                <a class="nav-link" href="#" data-container='body' 　data-placement="left" data-toggle="tooltip"
+                  title="iCalファイルをダウンロードします">iCalと共有</a>
+              </li>
+              <li id="logout_button" class="nav-item">
+                <a class="nav-link" href="#">ログアウト</a>
+              </li>
+            </ul>
+
           </div>
         </div>
       </nav>
     </div>
   </header>
+
   <div id="wrapper">
     <main id="contents">
       <div id="bodycontent">

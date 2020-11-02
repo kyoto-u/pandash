@@ -4,8 +4,13 @@ html{
 }
 
 #siteface{
-    height:50;
-    width:50;
+    height:60;
+    width:60;
+    margin-left: 10;
+}
+
+#SiteNamelabel{
+    padding-top: 13;
 }
 
 #wrapper {
@@ -63,6 +68,8 @@ footer {
 #tali_flag{
     background-color: whitesmoke;
     margin-top: 30px;
+    padding-top: 30;
+    padding-bottom: 30;
 }
 
 /*時間割表示ページ*/
