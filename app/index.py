@@ -47,13 +47,13 @@ def get_tasklist(studentid,courseid = None, day = None, mode=0):
         task["taskname"] = assignmentdata[0].title
         task["assignmentid"] = data.assignment_id
         task["deadline"] = assignmentdata[0].limit_at
-        if mode == 0:
-            task["time_left"] = remain_time(assignmentdata[0].time_ms)
+        task["time_left"] = remain_time(assignmentdata[0].time_ms)
         if mode == 1:
             task["instructions"] = assignmentdata[0].instructions
         task["subject"] = coursedata[0].coursename
         if mode == 1:
             task["classschedule"] = coursedata[0].classschedule
+            task["courseid"] = coursedata[0].course_id
         tasks.append(task)
     return tasks
 
@@ -105,6 +105,7 @@ def setdefault_for_overview(data, studentid):
             else:
                 # 新しい教科を追加
                 data["others"].append({})
+                data["others"][index]["searchURL"] = "localhost:5000/tasklist/course/"+course.course_id
                 data["others"][index]["subject"] = course.coursename
                 data["others"][index]["shortname"] = re.sub(
                     "\[.*\]", "", course.coursename)
@@ -112,7 +113,7 @@ def setdefault_for_overview(data, studentid):
 
         elif add_new_subject == True:
             data[course.classschedule] = {}
-            data[course.classschedule]["shorturl"] = ""
+            data[course.classschedule]["searchURL"] = "localhost:5000/tasklist/course/"+course.course_id
             data[course.classschedule]["subject"] = course.coursename
             data[course.classschedule]["shortname"] = re.sub(
                 "\[.*\]", "", course.coursename)
@@ -151,6 +152,7 @@ def task_arrange_for_overview(tasks):
             else:
                 # 新しい教科を追加
                 task_arranged["others"].append({})
+                task_arranged["others"][index]["searchURL"] = "localhost:5000/tasklist/course/"+task["courseid"]
                 task_arranged["others"][index]["subject"] = task["subject"]
                 task_arranged["others"][index]["shortname"] = re.sub(
                     "\[.*\]", "", task["subject"])
@@ -158,7 +160,7 @@ def task_arrange_for_overview(tasks):
 
         elif add_new_subject == True:
             task_arranged[task["classschedule"]] = {}
-            task_arranged[task["classschedule"]]["shorturl"] = ""
+            task_arranged[task["classschedule"]]["searchURL"] = "localhost:5000/tasklist/course/"+task["courseid"]
             task_arranged[task["classschedule"]]["subject"] = task["subject"]
             task_arranged[task["classschedule"]]["shortname"] = re.sub(
                 "\[.*\]", "", task["subject"])
@@ -422,7 +424,7 @@ def add_studentcourse(student_id, course_id):
         session.commit()
     return
 
-def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 1):
+def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
     """
         about max_time_left
         0:an hour
