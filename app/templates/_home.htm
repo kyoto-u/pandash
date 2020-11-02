@@ -23,30 +23,47 @@
         <nav class="navbar navbar-light bg-light" id="logonav">
             <div class="row">
                 <a href="#" class=navbar-brand>
-                    <img id="siteface" src="{{ url_for('static', filename='images/popup.jpg') }}" alt="ロゴ" width="60px"
-                        height="60px">
+                    <img id="siteface" src="{{ url_for('static', filename='images/headerlogo.jpg') }}" alt="ロゴ"
+                        width="60px" height="60px">
                 </a>
-                <h1 id="SiteNamelabel">PandAsh</h1>
+                <h1 id="sitename">PandAsh</h1>
             </div>
         </nav>
         <!--メニュー-->
-        <nav class="navbar justify-content-end navbar-dark bg-dark">
-            <div class="navbar-nav">
-                <div class="container">
-                    <a class="nav-item nav-link text-nowrap" href="#">ログイン</a>
-                </div>
-                <div class="container">
-                    <a class="nav-item nav-link" href="#">ホーム</a>
-                </div>
-                <div class="container">
-                    <a class="nav-item nav-link" href="#">問い合わせホーム</a>
+        <nav class="navbar navbar-expand md_fixed navbar-dark bg-dark">
+            <div class="container" id="menubar">
+                <a class="navbar-brand" href="/"></a>
+                <button id="logotoggle" class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown2" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown2">
+                    <ul class="navbar-nav mr-auto toggle_lefts">　
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">ホーム</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">問い合わせホーム</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav toggle_rights">
+                        <li class="nav-item">
+                            <a class="btn btn-secondary" href="#" role="button">ログイン</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>
     </div>
-    <h3>Welcome to PandAsh!</h3><br>
-    <h6>PandAsh is service provided by Institution for Information Management in Kyoto University. You can overview your
-        assignments.</h6>
+    <div class="col-12">
+        <h1>Welcome to PandAsh!</h1><br>
+        <h6>PandAsh is a service provided by Institution for Information Management in Kyoto University. You can
+            overview
+            your
+            assignments.</h6><br>
+        <h6>More home contents will be placed below.</h6>
+    </div>
     <footer>
         <div class="container-fluid">
             <div class="row">

@@ -24,20 +24,19 @@
         <div class="card-body">
             <div class="mx-auto" id="loginface">
                 <div class="row">
-                    <img id="logo" src="{{ url_for('static', filename='images/logo.jpg') }}" alt="ロゴ">
+                    <img id="logo" src="{{ url_for('static', filename='images/loginlogo.jpg') }}" alt="ロゴ">
                     <h1 id="sitename">PandAsh</h1>
                 </div>
             </div>
             <form class="form-inline">
-                <label for="text1">ECS-ID : </label>
-                <input type="text" id="ecs-id" class="form-control is-invalid ml-auto">
-                <div class="invalid-feedback">ECS-IDが不正です</div>
+                <label for="text1">ECS-ID : 　　</label>
+                <input type="text" id="ecs-id" class="form-control ml-auto">
             </form>
             <form class="form-inline">
-                <label for="passwd1">パスワード : </label>
-                <input type="password" id="passwd" class="form-control">
+                <label for="passwd1">Password : </label>
+                <input type="password" id="passwd" class="form-control ml-auto">
             </form>
-            <button class="btn btn-dark btn-block" 　id="logi">ログイン</button>
+            <button class="btn btn-dark btn-block" id="logi">ログイン</button>
         </div>
         <div class="card-footer">
             <a href="#">ECS-IDを忘れた</a>

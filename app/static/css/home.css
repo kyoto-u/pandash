@@ -6,22 +6,17 @@ html{
     right: 20;
 }
 
+#sitename{
+    padding-top:8;
+}
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     padding-top: 160;
-    width:100%;
+    width:98%;
 }
 
 footer {
     margin-top: auto;
-}
-
-.navbar-nav{
-    display:inline-flex;
-    flex-direction: row-reverse;
-    width:100%;
-    padding: 0;
-    margin: 0S;
 }

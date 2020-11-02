@@ -19,13 +19,16 @@
 </head>
 
 <body>
-    <div class="card">
+    <div class="card mx-auto">
         <div class="card-header">ログアウト/ Log out</div>
         <div class="card-body">
             <div class="container">
                 <div class="row">
                     <div class="col-3">
-                        PandAsh
+                        <div class="row">
+                            <h3 id="sitename">PandAsh</h3>
+                            <img id="siteface" src="{{ url_for('static', filename='images/logo.jpg') }}" alt="ロゴ">
+                        </div>
                     </div>
                     <div class="col-9">
                         ログアウトが完了しました<br>

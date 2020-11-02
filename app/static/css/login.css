@@ -3,16 +3,17 @@ html{
 }
 
 #logo{
-    height:60px;
+    height:55px;
     width:60px;
 }
 
 #loginface{
-    width:40%;
+    width:fit-content;
+    margin-bottom:15;
 }
 
-#siteface{
-    padding-top:10;
+#sitename{
+    margin-top:4;
 }
 
 .card-header{
@@ -21,7 +22,7 @@ html{
 }
 
 .card{
-    width:500;
+    width:fit-content;
     top:10vh;
 }
 
@@ -32,5 +33,6 @@ html{
 #logi{
     margin-top: auto;
 }
+
 
 
