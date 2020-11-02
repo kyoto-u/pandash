@@ -8,7 +8,7 @@ from cas_client import CASClient
 from flask import Flask, redirect, request, session, url_for
 
 app_login_url = 'http://127.0.0.1:5000'
-cas_url = 'https://cas.ecs.kyoto-u.ac.jp/'
+cas_url = 'https://cas.ecs.kyoto-u.ac.jp/cas'
 cas_client = CASClient(cas_url, auth_prefix='')
 
 @app.route('/login')
@@ -26,7 +26,7 @@ def login():
         if cas_response and cas_response.success:
             session['logged-in'] = True
             return redirect(url_for('root'))
-    del(session['logged-in'])
+   #  del(session['logged-in'])
     cas_login_url = cas_client.get_login_url(service_url=app_login_url)
     return redirect(cas_login_url)
 

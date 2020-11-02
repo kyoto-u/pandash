@@ -11,10 +11,19 @@ cd pandash
 
 sudo yum install git-all
 
-python3 -m venv pandash
+python3 -m venv venv
 
-source pandash/bin/activate
+source venv/bin/activate
 
 pip install --upgrade pip
 <!-- pip install flask, sqlalchemy, mysqlclient -->
+
+git clone https://github.com/kyoto-u/pandash.git
+cd pandash
 pip install -r requirements.txt
+
+cd ..
+git clone https://github.com/discogs/python-cas-client
+
+cd python-cas-client
+pip install python-cas-client
