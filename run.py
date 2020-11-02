@@ -4,6 +4,44 @@ import flask
 from sqlalchemy.orm import sessionmaker
 from app.index import *
 from pprint import pprint
+from cas_client import CASClient
+from flask import Flask, redirect, request, session, url_for
+
+app_login_url = 'http://127.0.0.1:5000'
+cas_url = 'https://cas.ecs.kyoto-u.ac.jp/'
+cas_client = CASClient(cas_url, auth_prefix='')
+
+@app.route('/login')
+def login():
+    ticket = request.args.get('ticket')
+    if ticket:
+        try:
+            cas_response = cas_client.perform_service_validate(
+                ticket=ticket,
+                service_url=app_login_url,
+                )
+        except:
+            # CAS server is currently broken, try again later.
+            return redirect(url_for('root'))
+        if cas_response and cas_response.success:
+            session['logged-in'] = True
+            return redirect(url_for('root'))
+    del(session['logged-in'])
+    cas_login_url = cas_client.get_login_url(service_url=app_login_url)
+    return redirect(cas_login_url)
+
+@app.route('/logout')
+def logout():
+    del(session['logged-in'])
+    cas_logout_url = cas_client.get_logout_url(service_url=app_login_url)
+    return redirect(cas_logout_url)
+
+@app.route('/')
+def root():
+    if session.get('logged-in'):
+        return 'You Are Logged In'
+    else:
+        return 'You Are Not Logged In'
 
 
 @app.route('/hello')
