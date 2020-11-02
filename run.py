@@ -49,9 +49,9 @@ def main():
     return "Hello World!"
 
 
-@app.route('/')
-def root():
-    return flask.redirect(flask.url_for('main'))
+# @app.route('/')
+# def root():
+#     return flask.redirect(flask.url_for('main'))
 
 
 @app.route('/controller')
