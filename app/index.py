@@ -2,6 +2,7 @@ from .models import student, assignment, course, studentassignment, instructor, 
 from .settings import session, app_login_url
 import re
 from pprint import pprint
+import copy
 
 
 
@@ -77,7 +78,7 @@ def setdefault_for_overview(studentid):
     default = {"subject": "", "shortname": "", "searchURL": "","tasks": []}
     for day in days:
         for i in range(5):
-            data[day+str(i+1)]=default
+            data[day+str(i+1)]=copy.copy(default)
     data["others"]=[]
     coursedata = get_courses_to_be_taken(studentid)
     for course in coursedata:
