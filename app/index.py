@@ -1,5 +1,5 @@
 from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment
-from .settings import session
+from .settings import session, app_login_url
 import re
 from pprint import pprint
 
@@ -105,7 +105,7 @@ def setdefault_for_overview(data, studentid):
             else:
                 # 新しい教科を追加
                 data["others"].append({})
-                data["others"][index]["searchURL"] = "localhost:5000/tasklist/course/"+course.course_id
+                data["others"][index]["searchURL"] = app_login_url+course.course_id
                 data["others"][index]["subject"] = course.coursename
                 data["others"][index]["shortname"] = re.sub(
                     "\[.*\]", "", course.coursename)
@@ -113,7 +113,7 @@ def setdefault_for_overview(data, studentid):
 
         elif add_new_subject == True:
             data[course.classschedule] = {}
-            data[course.classschedule]["searchURL"] = "localhost:5000/tasklist/course/"+course.course_id
+            data[course.classschedule]["searchURL"] = app_login_url+course.course_id
             data[course.classschedule]["subject"] = course.coursename
             data[course.classschedule]["shortname"] = re.sub(
                 "\[.*\]", "", course.coursename)
@@ -152,7 +152,7 @@ def task_arrange_for_overview(tasks):
             else:
                 # 新しい教科を追加
                 task_arranged["others"].append({})
-                task_arranged["others"][index]["searchURL"] = "localhost:5000/tasklist/course/"+task["courseid"]
+                task_arranged["others"][index]["searchURL"] = app_login_url+task["courseid"]
                 task_arranged["others"][index]["subject"] = task["subject"]
                 task_arranged["others"][index]["shortname"] = re.sub(
                     "\[.*\]", "", task["subject"])
@@ -160,7 +160,7 @@ def task_arrange_for_overview(tasks):
 
         elif add_new_subject == True:
             task_arranged[task["classschedule"]] = {}
-            task_arranged[task["classschedule"]]["searchURL"] = "localhost:5000/tasklist/course/"+task["courseid"]
+            task_arranged[task["classschedule"]]["searchURL"] = app_login_url+task["courseid"]
             task_arranged[task["classschedule"]]["subject"] = task["subject"]
             task_arranged[task["classschedule"]]["shortname"] = re.sub(
                 "\[.*\]", "", task["subject"])

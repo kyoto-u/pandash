@@ -1,5 +1,5 @@
 from app.app import app
-from app.settings import engine
+from app.settings import engine, app_login_url, cas_url, cas_client
 import flask
 from sqlalchemy.orm import sessionmaker
 from app.index import *
@@ -7,9 +7,6 @@ from pprint import pprint
 from cas_client import CASClient
 from flask import Flask, redirect, request, session, url_for
 
-app_login_url = 'http://127.0.0.1:5000'
-cas_url = 'https://cas.ecs.kyoto-u.ac.jp/cas'
-cas_client = CASClient(cas_url, auth_prefix='')
 
 @app.route('/login')
 def login():
