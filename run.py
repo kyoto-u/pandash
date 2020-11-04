@@ -95,7 +95,6 @@ def tasklist_redirect():
 @app.route('/overview')
 def overview():
     studentid = "student1"
-    tasks = get_tasklist(studentid, mode=1)
     # tasks = [
     #     {'subject':'[2020前期月1]線形代数学', 'classschedule':'mon1','taskname':'課題1', 'status':'未', 'time_left': "あと50分", 'deadline':'2020-10-30T02:00:00Z','instructions':'なし'},
     #     {'subject':'[2020前期月1]線形代数学', 'classschedule':'mon1','taskname':'課題2', 'status':'未', 'time_left':'あと2時間', 'deadline':'2020-10-30T00:50:00Z','instructions':'なし'},
@@ -106,9 +105,17 @@ def overview():
     #     {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題7', 'status':'未', 'time_left':'あと1日', 'deadline':'2020-10-31T01:00:00Z','instructions':'なし'},
     #     {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題8', 'status':'未', 'time_left':'あと1日', 'deadline':'2020-10-31T00:00:00Z','instructions':'なし'}
     #     ]
-    data = task_arrange_for_overview(tasks)
-    data = setdefault_for_overview(data, studentid)
-    
+    data = setdefault_for_overview(studentid)
+    tasks = get_tasklist(studentid, mode=1)
+    data = task_arrange_for_overview(tasks,data)
+
+    days =["mon", "tue", "wed", "thu", "fri"]
+    for day in days:
+        for i in range(5):
+            data[day+str(i+1)]["tasks"] = sort_tasks(data[day+str(i+1)]["tasks"],show_only_unfinished = 1)
+    data.setdefault("others",[])
+    for i in range(len(data["others"])):
+        data["others"][i]["tasks"] = sort_tasks(data["others"][i]["tasks"],show_only_unfinished = 1)
     
     return flask.render_template('overview.htm',data = data)
 

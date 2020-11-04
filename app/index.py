@@ -3,6 +3,8 @@ from .settings import session, app_login_url
 import re
 from pprint import pprint
 
+
+
 def get_tasklist(studentid,courseid = None, day = None, mode=0):
     """
         mode
@@ -49,11 +51,11 @@ def get_tasklist(studentid,courseid = None, day = None, mode=0):
         task["deadline"] = assignmentdata[0].limit_at
         task["time_left"] = remain_time(assignmentdata[0].time_ms)
         if mode == 1:
+            # overviewのtooltipsに使用
             task["instructions"] = assignmentdata[0].instructions
         task["subject"] = coursedata[0].coursename
         if mode == 1:
             task["classschedule"] = coursedata[0].classschedule
-            task["courseid"] = coursedata[0].course_id
         tasks.append(task)
     return tasks
 
@@ -69,28 +71,30 @@ def get_courses_to_be_taken(studentid):
         data.append(coursedata[0])
     return data
 
-def setdefault_for_overview(data, studentid):
+def setdefault_for_overview(studentid):
+    data={}
     days =["mon", "tue", "wed", "thu", "fri"]
+    default = {"subject": "", "shortname": "", "searchURL": "","tasks": []}
     for day in days:
         for i in range(5):
-            data.setdefault(day+str(i+1),{"subject": "", "shortname": "", "searchURL": "","tasks": []})
-            data[day+str(i+1)]["tasks"] = sort_tasks(data[day+str(i+1)]["tasks"],show_only_unfinished = 1)
-    data.setdefault("others",[])
-    for subject in data["others"]:
-        subject["tasks"] = sort_tasks(subject["tasks"],show_only_unfinished = 1)
+            data[day+str(i+1)]=default
+    data["others"]=[]
     coursedata = get_courses_to_be_taken(studentid)
     for course in coursedata:
         add_in_others = False
-        add_new_subject = False
+        add_subject = False
         # 教科に時限情報がない場合
         if course.classschedule == "others":
             add_in_others = True
         else:
             if data[course.classschedule]["subject"] != "":
                 if course.coursename != data[course.classschedule]["subject"]:
+                    # 本来の時限に既に別科目が入っている
                     add_in_others = True
             else:
-                add_new_subject = True
+                # 本来の時限に科目を入れられる
+                add_subject = True
+
         if add_in_others == True:
             # othersは教科が複数あるので何番目の教科か判定する必要がある
             subject_exist = False
@@ -111,8 +115,7 @@ def setdefault_for_overview(data, studentid):
                     "\[.*\]", "", course.coursename)
                 data["others"][index]["tasks"] = []
 
-        elif add_new_subject == True:
-            data[course.classschedule] = {}
+        elif add_subject == True:
             data[course.classschedule]["searchURL"] = app_login_url+"/tasklist/course/"+course.course_id
             data[course.classschedule]["subject"] = course.coursename
             data[course.classschedule]["shortname"] = re.sub(
@@ -121,14 +124,10 @@ def setdefault_for_overview(data, studentid):
     return data
 
 
-def task_arrange_for_overview(tasks):
-    task_arranged = {"others": []}
+def task_arrange_for_overview(tasks,task_arranged):
 
     for task in tasks:
-        # if task["status"] != "未":
-        #     continue
         add_in_others = False
-        add_new_subject = False
         # 教科に時限情報がない場合
         if task["classschedule"] == "others":
             add_in_others = True
@@ -137,7 +136,7 @@ def task_arrange_for_overview(tasks):
                 if task["subject"] != task_arranged[task["classschedule"]]["subject"]:
                     add_in_others = True
             else:
-                add_new_subject = True
+                add_in_others = True
         if add_in_others == True:
             # othersは教科が複数あるので何番目の教科か判定する必要がある
             subject_exist = False
@@ -150,21 +149,14 @@ def task_arrange_for_overview(tasks):
             if subject_exist:
                 task_arranged["others"][index]["tasks"].append(task)
             else:
-                # 新しい教科を追加
+                # 新しい教科を追加(本来ここに到達することはない)
                 task_arranged["others"].append({})
-                task_arranged["others"][index]["searchURL"] = app_login_url+"/tasklist/course/"+task["courseid"]
+                task_arranged["others"][index]["searchURL"] = ""
                 task_arranged["others"][index]["subject"] = task["subject"]
                 task_arranged["others"][index]["shortname"] = re.sub(
                     "\[.*\]", "", task["subject"])
                 task_arranged["others"][index]["tasks"] = [task]
 
-        elif add_new_subject == True:
-            task_arranged[task["classschedule"]] = {}
-            task_arranged[task["classschedule"]]["searchURL"] = app_login_url+"/tasklist/course/"+task["courseid"]
-            task_arranged[task["classschedule"]]["subject"] = task["subject"]
-            task_arranged[task["classschedule"]]["shortname"] = re.sub(
-                "\[.*\]", "", task["subject"])
-            task_arranged[task["classschedule"]]["tasks"] = [task]
         else:
             task_arranged[task["classschedule"]]["tasks"].append(task)
     return task_arranged
