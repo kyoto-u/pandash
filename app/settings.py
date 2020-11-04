@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, orm
 from sqlalchemy.ext.declarative import declarative_base
+from cas_client import CASClient
 
 app_login_url = 'http://127.0.0.1:5000'
 cas_url = 'https://cas.ecs.kyoto-u.ac.jp/cas'
