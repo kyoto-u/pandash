@@ -141,7 +141,7 @@ def tasklist_day(day,show_only_unfinished,max_time_left):
     #     ]
     tasks = sort_tasks(tasks, show_only_unfinished = show_only_unfinished, max_time_left = max_time_left)
     data ={"others":[]}
-    data = setdefault_for_overview(data,studentid)
+    data = setdefault_for_overview(studentid)
     return flask.render_template('tasklist.htm', tasks=tasks, data=data)
 
 
@@ -160,7 +160,7 @@ def tasklist_course(courseid,show_only_unfinished,max_time_left):
     tasks = sort_tasks(tasks, show_only_unfinished = show_only_unfinished, max_time_left = max_time_left)
 
     data ={"others":[]}
-    data = setdefault_for_overview(data,studentid)
+    data = setdefault_for_overview(studentid)
     return flask.render_template('tasklist.htm', tasks=tasks, data=data)
 
 @app.route('/tasklist/<int:show_only_unfinished>/<int:max_time_left>')
@@ -178,7 +178,7 @@ def tasklist(show_only_unfinished,max_time_left):
     tasks = sort_tasks(tasks, show_only_unfinished = show_only_unfinished, max_time_left = max_time_left)
 
     data ={"others":[]}
-    data = setdefault_for_overview(data,studentid)
+    data = setdefault_for_overview(studentid)
     return flask.render_template('tasklist.htm', tasks=tasks, data=data)
 
 
