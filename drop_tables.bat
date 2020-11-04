@@ -1,4 +1,4 @@
-use pandash00;
+use pandash;
 drop table assignments;
 drop table assignment_attachments;
 drop table courses;
