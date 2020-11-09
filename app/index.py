@@ -187,13 +187,13 @@ def get_resource_list(studentid, course_id=None, day=None):
 
 def resource_arrange(resource_list:list, coursename:str):
     course = {"folders":[],"files":[],"name":coursename}
-    # list_f = course["folders"]
     folderlist = []
+    html = ""
     for r in resource_list:
         container = r['container']
         container_spilt = container.split('/')
         del container_spilt[-1]
-        for i in range(4):
+        for i in range(3):
             del container_spilt[0]
         for folder in folderlist:
             if folder == container_spilt:
@@ -202,6 +202,8 @@ def resource_arrange(resource_list:list, coursename:str):
             folderlist.append(container_spilt)
     for foldername in folderlist:
         list_f = course["folders"]
+        str_place = 0
+        folderindex = 1
         for f in foldername:
             index = 0
             isExist = False
@@ -209,31 +211,41 @@ def resource_arrange(resource_list:list, coursename:str):
                 if lf["name"] == f:
                     list_f = list_f[index]["folders"]
                     isExist = True
+                    break
                 index += 1
             if isExist:
+                html_1 = re.search(f'><i class="far fa-folder-plus">{f}</i><ul>', html[str_place:])
+                str_place += html_1.end()
+                folderindex += 1
                 continue
+            folder_id = '/'.join(foldername[:folderindex])
+            html = html[:str_place] + f'''
+            <li id="{folder_id}"><i class="far fa-folder-plus">{f}</i><ul></ul></li>''' + html[str_place:]
+            html_1 = re.search(f'><i class="far fa-folder-plus">{f}</i><ul>', html[str_place:])
+            str_place += html_1.end()
             list_f.append({'folders':[],'files':[],'name':f})
             list_len = len(list_f)
             list_f = list_f[list_len-1]["folders"]
+            folderindex += 1
     for r in resource_list:
         list_f = course["folders"]
         container = r['container']
         container_spilt = container.split('/')
         del container_spilt[-1]
-        for i in range(4):
-            del container_spilt[0]        
-        container_spilt_len = len(container_spilt)
-        for cl in range(container_spilt_len):
-            for lf in list_f:
-                if lf["name"] == container_spilt[cl]:
-                    if container_spilt_len == cl + 1:
-                        list_f = lf["files"]
-                        list_f.append({r['title']:r['resource_url']})
-                        break
-                    else:
-                        list_f = lf["folders"]
-    return course
-
+        for i in range(3):
+            del container_spilt[0]     
+        folder_id = '/'.join(container_spilt)
+        folder = re.search(f'<li id="{folder_id}">',html)
+        search_num = folder.end()
+        folder_i = re.search(f'</i><ul>',html[search_num:])
+        html = html[:folder_i.end()+search_num] + f"""
+        <li>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id={r["resource_url"]} />
+                <label class="form-check-label" for={r["resource_url"]}><a href={r["resource_url"]}>{r["title"]}</a></label>
+            </div>
+        </li>""" + html[folder_i.end()+search_num:]
+    return html
 
 
 def add_student(studentid, fullname):
@@ -390,7 +402,7 @@ def add_resource(resourceurl, title, container, modifieddate, course_id):
         need_student_resource = session.query(studentresource.Student_Resource).filter(
             studentresource.Student_Resource.resource_url==resourceurl).all()
         for sr in need_student_resource:
-            sr.status = '未dl'
+            sr.status = 0
             session.add(sr)
         session.commit()
     return

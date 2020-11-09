@@ -1,5 +1,6 @@
 from app.app import app
-from app.settings import engine, app_login_url, cas_url, cas_client
+from app.settings import engine, app_login_url, cas_url
+from app.settings import cas_client
 import flask
 from sqlalchemy.orm import sessionmaker
 from app.index import *
@@ -89,10 +90,9 @@ def controller():
     add_student_resource('url6', 'student1', '未')
     add_student_resource('url7', 'student1', '未')
 
-
-    pprint(resource_arrange(get_resource_list('student1', 'course1'), 'コース名'))
-    # get_tasklist('student1')
     return ''
+
+
 
 @app.route('/tasklist')
 def tasklist_redirect():
@@ -186,6 +186,11 @@ def tasklist(show_only_unfinished,max_time_left):
     data ={"others":[]}
     data = setdefault_for_overview(studentid)
     return flask.render_template('tasklist.htm', tasks=tasks, data=data)
+
+@app.route('/resources_sample')
+def resources_sample():
+    html = resource_arrange(get_resource_list('student1', 'course1'), 'コース名')
+    return flask.render_template('resources_sample.htm', html=html)
 
 
 if __name__ == '__main__':
