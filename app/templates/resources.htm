@@ -6,7 +6,7 @@
         <th>授業名</th>
         <th>未ダウンロード授業資料数</th>
     </tr>
-
+    {#
     {{% for ressubject in ressubjects %}}
     <tr>
         <th>{{ ressubject.name }}</th>
@@ -14,6 +14,7 @@
     </tr>
     {{% endfor %}}
 
+#}
 </table>
 
 {% endblock %}

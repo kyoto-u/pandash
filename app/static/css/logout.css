@@ -16,6 +16,15 @@ html{
     color: black;
     margin-top:10vh;
 }
+
+@-moz-document url-prefix(){
+ .card{
+    width: 500;
+    color: black;
+    margin-top:10vh;
+}
+}
+
 .card-header{
     background-color: black;
     color: white;
