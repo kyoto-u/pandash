@@ -8,6 +8,7 @@ from pprint import pprint
 from cas_client import CASClient
 from flask import Flask, redirect, request, session, url_for
 
+app.secret_key ='pandash'
 
 @app.route('/login')
 def login():
@@ -18,14 +19,14 @@ def login():
                 ticket=ticket,
                 service_url=app_login_url,
                 )
-            print('success')
         except:
             # CAS server is currently broken, try again later.
             return redirect(url_for('root'))
         if cas_response and cas_response.success:
             session['logged-in'] = True
             return redirect(url_for('root'))
-   #  del(session['logged-in'])
+    if "logged-in" in session and session["logged-in"]:
+        del(session['logged-in'])
     cas_login_url = cas_client.get_login_url(service_url=app_login_url)
     return redirect(cas_login_url)
 
