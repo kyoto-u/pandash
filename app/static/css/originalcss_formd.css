@@ -26,17 +26,47 @@ body {
 }
 
 footer {
-  margin-top: auto;
+    margin-top: auto;
+    width: 100%;
 }
 
-.navbar-nav{
-   display:inline-flex;
-    flex-direction: row;
+#footercont{
+    background-color: silver;
 }
 
-#logout_button{
-  padding-right: 10;
+@media screen and (min-width: 600px) {
+/* 480pxまでの幅の場合に適応される */
+#kyoudailogo{
+    width:250;
+    height:125;
+    margin-left: calc(50vw - 250px);
 }
+
+#KIMClogo{
+    width:250;
+    height:125;
+    margin-right: calc(50vw - 250px);
+}
+}
+
+@media screen and (max-width: 600px) {
+/* 320pxまでの幅の場合に適応される */
+#kyoudailogo{
+    width:40vw;
+    height:20vw;
+    margin-left: 10vw;
+}
+
+#KIMClogo{
+    width:40vw;
+    height:20vw;
+    margin-right: 10vw;
+}
+}
+
+
+
+
 
 /*時間割表示ページ*/
 .table-responsive{

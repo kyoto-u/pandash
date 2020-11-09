@@ -29,6 +29,24 @@ body {
 
 footer {
     margin-top: auto;
+    width: 100%;
+}
+
+#footercont{
+    background-color: silver;
+}
+
+
+#kyoudailogo{
+    width:250;
+    height:125;
+    margin-left: calc(50vw - 280px);
+}
+
+#KIMClogo{
+    width:250;
+    height:125;
+    margin-right: calc(50vw - 280px);
 }
 
 .navbar-nav{
@@ -39,8 +57,8 @@ footer {
 /*一覧表示ページ*/
 #ScrollSearchbar{
    background-color:silver;
-   height:60vh;
-   top:30vh;
+   height:45vh;
+   top:25vh;
    position:fixed;
 }
 

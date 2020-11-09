@@ -32,7 +32,7 @@
         </button>
       </div>
       <div class="modal-body">
-
+        {#
         <div class="table-responsive table-considered">
           <table class="table table-sm modaltable">
             <thead>
@@ -115,7 +115,7 @@
           </table>
 
         </div>
-
+#}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">とじる</button>
@@ -177,7 +177,8 @@
         </div>
       </nav>
     -->
-      <nav class="navbar navbar-expand md_fixed navbar-dark bg-dark">
+
+      <nav class="navbar navbar-expand navbar-dark bg-dark">
         <div class="container" id="menubar">
           <a class="navbar-brand " href="/"></a>
           <button id="logotoggle" class="navbar-toggler" type="button" data-toggle="collapse"
@@ -202,13 +203,13 @@
               </li>
             </ul>
 
-            <ul class="navbar-nav toggle_rights">
+            <ul class="navbar-nav ml-auto pr-3 toggle_rights">
               <li class="nav-item d-none d-md-block">
-                <a class="nav-link" href="#" data-container='body' 　data-placement="left" data-toggle="tooltip"
+                <a class="btn btn-dark mr-3" href="#" data-container='body' 　data-placement="left" data-toggle="tooltip"
                   title="iCalファイルをダウンロードします">iCalと共有</a>
               </li>
-              <li id="logout_button" class="nav-item">
-                <a class="nav-link" href="#">ログアウト</a>
+              <li id="logout_button" class="nav-item mr-auto">
+                <a class="btn btn-light" href="#">ログアウト</a>
               </li>
             </ul>
 
@@ -216,6 +217,7 @@
         </div>
       </nav>
     </div>
+
   </header>
 
   <div id="wrapper">
@@ -226,15 +228,55 @@
         {% endblock %}
       </div>
     </main>
-
-    <footer>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <h2>京都大学 KYOTO UNIVERSITY 京都大学情報環境機構</h2>
-          </div>
-        </div>
-      </div>
-    </footer>
   </div>
+
+  <footer>
+    <div id="footercont" class="container-fluid">
+      <div class="row">
+        <a href="https://www.kyoto-u.ac.jp/ja"><img id="kyoudailogo"
+            src="{{ url_for('static', filename='images/kyoudai_logo.png') }}"></a>
+        <a href="http://www.iimc.kyoto-u.ac.jp/ja/"><img id="KIMClogo"
+            src="{{ url_for('static', filename='images/KIMC_logo.png') }}"></a>
+      </div>
+      <div class="mx-auto" style="width: fit-content;">
+        <small>Copyright 2020 Institute for Information Management and Communication. All rights
+          reserved.</small><br>
+        <small>PandAsh</small>
+      </div>
+      <div class="row ml-auto mr-1" style="width: fit-content;">
+        <small>サーバーシステム時間：</small>
+        <small>
+          <span id="view_clock"></span>
+
+          <script type="text/javascript">
+            timerID = setInterval('clock()', 500); //0.5秒毎にclock()を実行
+
+            function clock() {
+              document.getElementById("view_clock").innerHTML = getNow();
+            }
+
+            function getNow() {
+              var now = new Date();
+              var year = now.getFullYear();
+              var mon = now.getMonth(); //１を足すこと
+              var day = now.getDate();
+              var hour = now.getHours();
+              var min = now.getMinutes();
+              var sec = now.getSeconds();
+              var you = now.getDay();
+
+              //曜日の選択肢
+              var youbi = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
+              //月名の選択肢
+              var month = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+
+              //出力用
+              var s = youbi[you] + ', ' + day + ' ' + month[mon] + ' ' + year + ' ' + hour + ':' + min + ':' + sec + ' JST';
+              return s;
+            }
+          </script>
+        </small>
+      </div>
+    </div>
+  </footer>
 </body>

@@ -6,17 +6,63 @@ html{
     right: 20;
 }
 
+#menubar{
+    max-width: 100%;
+}
+
 #sitename{
     padding-top:8;
 }
+
+
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     padding-top: 160;
-    width:98%;
+    width:100vw;
+}
+
+nav{
+    width:100vw;
+    margin-left: 0;
 }
 
 footer {
     margin-top: auto;
+    width: 100%;
+}
+
+#footercont{
+    background-color: silver;
+}
+
+@media screen and (min-width: 600px) {
+/* 480pxまでの幅の場合に適応される */
+#kyoudailogo{
+    width:250;
+    height:125;
+    margin-left: calc(50vw - 250px);
+}
+
+#KIMClogo{
+    width:250;
+    height:125;
+    margin-right: calc(50vw - 250px);
+}
+}
+
+@media screen and (max-width: 600px) {
+/* 320pxまでの幅の場合に適応される */
+#kyoudailogo{
+    width:40vw;
+    height:20vw;
+    margin-left: 10vw;
+}
+
+#KIMClogo{
+    width:40vw;
+    height:20vw;
+    margin-right: 10vw;
+}
 }
