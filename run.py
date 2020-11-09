@@ -18,6 +18,7 @@ def login():
                 ticket=ticket,
                 service_url=app_login_url,
                 )
+            print('success')
         except:
             # CAS server is currently broken, try again later.
             return redirect(url_for('root'))
@@ -193,8 +194,10 @@ def tasklist(show_only_unfinished,max_time_left):
 
 @app.route('/resources_sample')
 def resources_sample():
+    studentid = "student1"
+    data = setdefault_for_overview(studentid, mode='resourcelist')
     html = resource_arrange(get_resource_list('student1', 'course1'), 'コース名')
-    return flask.render_template('resources_sample.htm', html=html)
+    return flask.render_template('resources_sample.htm', html=html, data=data)
 
 
 if __name__ == '__main__':
