@@ -4,7 +4,7 @@
   <div class="row">
     <div class="col-sm-12 col-md-10">
       <h2>あなたの課題</h2>
-
+      {#
       <div class="table-responsive">
 
         <table class="table table-sm" id="overviewtable">
@@ -438,13 +438,13 @@
         </table>
 
       </div>
-
+#}
 
 
       <h4>その他の科目</h4>
-
+      {#
       <div class="card-columns">
-
+      
         {% for sbj in data.others %}
         <div class="card elsesbjcard">
           <div class="card-header">{{sbj.shortname}}</div>
@@ -465,6 +465,22 @@
           </div>
         </div>
         {% endfor %}
+      </div>
+#}
+      <div class="card-columns">
+        <div class="card elsesbjcard">
+          <div class="card-header">sbj.shortname</div>
+          <div class="card-body">
+            <div class="card taskcard" draggable="true">
+              <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                title="task.tooltip">task.taskname</a>
+            </div>
+            <div class="card taskcard" draggable="true">
+              <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
+                title="task.tooltip">task.taskname</a>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
