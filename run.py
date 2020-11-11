@@ -57,7 +57,6 @@ def main():
 @app.route('/controller')
 def controller():
     # ex
-    add_student('student1','s_fullname1')
     add_instructor('instructor1', 'i_fullname', 'i_mailadress')
     add_assignment("assignmentid1", "url","課題1", "2020-10-30T01:55:00Z", "<p>説明<p>", 11111111111, 1111, "course1" )
     add_assignment("assignmentid2", "ur2","課題2", "2020-10-30T01:50:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
@@ -66,23 +65,10 @@ def controller():
     add_assignment("assignmentid5", "ur5","課題5", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, "course2" )
     add_assignment("assignmentid6", "ur6","課題6", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
     add_assignment("assignmentid7", "ur7","課題7", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
-    add_student_assignment('assignmentid1', 'student1', '未')
-    add_student_assignment('assignmentid2', 'student1', '未')
-    add_student_assignment('assignmentid3', 'student1', '未')
-    add_student_assignment('assignmentid4', 'student1', '未')
-    add_student_assignment('assignmentid5', 'student1', '未')
-    add_student_assignment('assignmentid6', 'student1', '未')
-    add_student_assignment('assignmentid7', 'student1', '未')
-    add_studentcourse("student1","course1")
-    add_studentcourse("student1","course2")
-    add_studentcourse("student1","course3")
-    add_studentcourse("student1","course4")
     for i in range(30):
         add_course(f'dummy{i}', 'teacher1', f'[2020前期他他]ダミー{i}', 20200, f'thu{(i%5)+1}')
-        add_studentcourse("student1",f"dummy{i}")
         for j in range(10):
             add_assignment(f"dummyassignment{i}-{j}", "url",f"課題{i}-{j}", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, f"dummy{i}" )
-            add_student_assignment(f'dummyassignment{i}-{j}', 'student1', '未')
     
     add_course('course1', 'teacher1', 'コース1', 20200, 'wed2')
     add_course('course2', 'teacher1', 'コース2', 20200, 'mon2')
@@ -95,16 +81,35 @@ def controller():
     add_resource('url5', '資料５', '/content/group/2020-888-N150-017/講義/講義動画/', 222, 'course1')
     add_resource('url6', '資料６', '/content/group/2020-888-N150-017/講義/講義ノート/', 222, 'course1')
     add_resource('url7', '資料７', '/content/group/2020-888-N150-017/演義/演義動画/', 222, 'course2')
-    add_student_resource('url1', 'student1', '0')
-    add_student_resource('url2', 'student1', '0')
-    add_student_resource('url3', 'student1', '0')
-    add_student_resource('url4', 'student1', '0')
-    add_student_resource('url5', 'student1', '0')
-    add_student_resource('url6', 'student1', '0')
-    add_student_resource('url7', 'student1', '0')
 
     return ''
 
+@app.route('/controller_for_students/<studentid>')
+def controller_for_students(studentid):
+    add_student(studentid,'s_fullname1')
+    add_student_assignment('assignmentid1', studentid, '未')
+    add_student_assignment('assignmentid2', studentid, '未')
+    add_student_assignment('assignmentid3', studentid, '未')
+    add_student_assignment('assignmentid4', studentid, '未')
+    add_student_assignment('assignmentid5', studentid, '未')
+    add_student_assignment('assignmentid6', studentid, '未')
+    add_student_assignment('assignmentid7', studentid, '未')
+    add_studentcourse("student1","course1")
+    add_studentcourse("student1","course2")
+    add_studentcourse("student1","course3")
+    add_studentcourse("student1","course4")
+    for i in range(30):
+        add_studentcourse(studentid,f"dummy{i}")
+        for j in range(10):
+            add_student_assignment(f'dummyassignment{i}-{j}', studentid, '未')
+    add_student_resource('url1', studentid, '0')
+    add_student_resource('url2', studentid, '0')
+    add_student_resource('url3', studentid, '0')
+    add_student_resource('url4', studentid, '0')
+    add_student_resource('url5', studentid, '0')
+    add_student_resource('url6', studentid, '0')
+    add_student_resource('url7', studentid, '0')
+    
 
 
 @app.route('/tasklist')
