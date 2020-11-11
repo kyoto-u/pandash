@@ -330,9 +330,9 @@ def add_course(courseid, instructorid, \
 
 
 def add_student_assignment(studentid, data):
-    '''
+    """
         data:assignment_id, student_id, status
-    '''
+    """
     sa = session.query(
         studentassignment.Student_Assignment.assignment_id).filter(studentassignment.Student_Assignment.student_id == studentid).all()
 
@@ -361,9 +361,9 @@ def add_instructor(instructorid, fullname, emailaddress):
     return
 
 def add_student_resource(studentid,data):
-    '''
+    """
         data: resourceurl, studentid, status
-    '''
+    """
     sr = session.query(studentresource.Student_Resource).filter(studentresource.Student_Resource.student_id ==studentid).all()
     for item in data:
         for i in sr:
@@ -409,9 +409,9 @@ def add_resource(resourceurl, title, container, modifieddate, course_id):
     return
 
 def add_studentcourse(studentid, data):
-    '''
+    """
         data:[{student_id:"", course_id:""},{}]
-    '''
+    """
     sc = session.query(studentcourse.Studentcourse).filter(studentcourse.Studentcourse.student_id == studentid).all()
     for item in data:
         for i in sc:
