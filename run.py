@@ -95,7 +95,7 @@ def controller():
 
 @app.route('/controller_for_students/<studentid>')
 def controller_for_students(studentid):
-    add_student(studentid,'s_fullname1')
+    add_student(studentid,'s_fullname')
     add_student_assignment('assignmentid1', studentid, '未')
     add_student_assignment('assignmentid2', studentid, '未')
     add_student_assignment('assignmentid3', studentid, '未')
@@ -103,10 +103,10 @@ def controller_for_students(studentid):
     add_student_assignment('assignmentid5', studentid, '未')
     add_student_assignment('assignmentid6', studentid, '未')
     add_student_assignment('assignmentid7', studentid, '未')
-    add_studentcourse("student1","course1")
-    add_studentcourse("student1","course2")
-    add_studentcourse("student1","course3")
-    add_studentcourse("student1","course4")
+    add_studentcourse(studentid, {"student_id":studentid,"course_id":"course1"})
+    add_studentcourse(studentid, {"student_id":studentid,"course_id":"course2"})
+    add_studentcourse(studentid, {"student_id":studentid,"course_id":"course3"})
+    add_studentcourse(studentid, {"student_id":studentid,"course_id":"course4"})
     for i in range(30):
         add_studentcourse(studentid,f"dummy{i}")
         for j in range(10):

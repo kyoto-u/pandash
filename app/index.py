@@ -417,26 +417,19 @@ def add_resource(resourceurl, title, container, modifieddate, course_id):
         session.commit()
     return
 
-def add_studentcourse(student_id, course_id):
-    sc_studentid = session.query(
-        studentcourse.Studentcourse.student_id).all()
-    sc_courseid = session.query(
-        studentcourse.Studentcourse.course_id).all()
-    isExist_studentid = False
-    isExist_courseid = False
-    for i in sc_courseid:
-        if list(i)[0] == course_id:
-            isExist_courseid = True
+def add_studentcourse(studentid, data):
+    '''
+        data:[{student_id:"", course_id:""},{}]
+    '''
+    sc = session.query(studentcourse.Studentcourse).filter(studentcourse.Studentcourse.student_id == studentid).all()
+    for item in data:
+        for i in sc:
+            if i.courseid == item["course_id"]:
+                continue
 
-    if isExist_courseid:
-        for i in sc_studentid:
-            if list(i)[0] == student_id:
-                isExist_studentid = True
-
-    if isExist_studentid == False:
-        new_sc = studentcourse.Studentcourse(student_id=student_id, course_id=course_id)
+        new_sc = studentcourse.Studentcourse(student_id=item["student_id"], course_id=item["course_id"])
         session.add(new_sc)
-        session.commit()
+    session.commit()
     return
 
 def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
