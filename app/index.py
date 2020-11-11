@@ -365,25 +365,21 @@ def add_instructor(instructorid, fullname, emailaddress):
         session.commit()
     return
 
-def add_student_resource(resourceurl, studentid, status):
-    sr_resourceurl = session.query(studentresource.Student_Resource.resource_url).all()
-    sr_studentid = session.query(studentresource.Student_Resource.student_id).all()
-    isExist_resourceurl = False
-    isExist_studentid = False
-    for i in sr_resourceurl:
-        if list(i)[0] == resourceurl:
-            isExist_resourceurl = True
-            break
-    if isExist_resourceurl:
-        for i in sr_studentid:
-            if list(i)[0] == studentid:
-                isExist_studentid = True
-                break
-    if isExist_studentid == False:
-        new_sc = studentresource.Student_Resource(resource_url=resourceurl, student_id=studentid, status=status)
-        session.add(new_sc)
-        session.commit()   
+def add_student_resource(studentid,data):
+    '''
+        data: resourceurl, studentid, status
+    '''
+    sr = session.query(studentresource.Student_Resource).filter(studentresource.Student_Resource.student_id ==studentid).all()
+    for item in data:
+        for i in sr:
+            if i.resource_url == item["resourceurl"]:
+                continue
+
+        new_sr = studentresource.Student_Resource(resource_url=item["resourceurl"], student_id=item["studentid"], status=item["status"])
+        session.add(new_sr)
+    session.commit()
     return
+
 
 def add_resource(resourceurl, title, container, modifieddate, course_id):
     resources = session.query(resource.Resource.resource_url).all()
