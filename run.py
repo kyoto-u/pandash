@@ -83,13 +83,6 @@ def controller():
     add_resource('url5', '資料５', '/content/group/2020-888-N150-017/講義/講義動画/', 222, 'course1')
     add_resource('url6', '資料６', '/content/group/2020-888-N150-017/講義/講義ノート/', 222, 'course1')
     add_resource('url7', '資料７', '/content/group/2020-888-N150-017/演義/演義動画/', 222, 'course2')
-    add_student_resource('url1', 'student1', 0)
-    add_student_resource('url2', 'student1', 0)
-    add_student_resource('url3', 'student1', 0)
-    add_student_resource('url4', 'student1', 0)
-    add_student_resource('url5', 'student1', 0)
-    add_student_resource('url6', 'student1', 0)
-    add_student_resource('url7', 'student1', 0)
 
     return ''
 
