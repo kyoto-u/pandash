@@ -329,26 +329,21 @@ def add_course(courseid, instructorid, \
     return
 
 
-def add_student_assignment(assignment_id, student_id, status):
-    enrollments_assignmentid = session.query(
-        studentassignment.Student_Assignment.assignment_id).all()
-    enrollments_studentid = session.query(
-        studentassignment.Student_Assignment.student_id).all()
-    isExist_assignmentid = False
-    isExist_studentid = False
-    for i in enrollments_assignmentid:
-        if list(i)[0] == assignment_id:
-            isExist_assignmentid = True
-            break
-    if isExist_assignmentid:
-        for i in enrollments_studentid:
-            if list(i)[0] == student_id:
-                isExist_studentid = True
-                break
-    if isExist_studentid == False:
-        new_enrollment = studentassignment.Student_Assignment(assignment_id=assignment_id, student_id=student_id, status=status)
-        session.add(new_enrollment)
-        session.commit()
+def add_student_assignment(studentid, data):
+    '''
+        data:assignment_id, student_id, status
+    '''
+    sa = session.query(
+        studentassignment.Student_Assignment.assignment_id).filter(studentassignment.Student_Assignment.student_id == studentid).all()
+
+    for item in data:
+        for i in sa:
+            if i.assignment_id == item["sassignment_id"]:
+                continue
+
+        new_sa = studentassignment.Student_Assignment(assignment_id=item["assignment_id"], student_id=item["student_id"], status=item["status"])
+        session.add(new_sa)
+    session.commit()
     return
 
 
