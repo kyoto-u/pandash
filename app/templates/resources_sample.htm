@@ -1,1 +1,51 @@
-{{ html | safe}}
+{% extends "_base.htm" %}
+{% block bodycontent %}
+<!--Modal-->
+<div class="row">
+    <div class="col-sm-12 col-md-2" id="ScrollSearchbar">
+      <div class="container">
+        <div class="d-flex flex-md-column">
+          <h6 id="searchlabel">しぼりこみ検索</h6>
+          <!--曜日しぼりこみ-->
+          <div class="form-group">
+            <label for="select0a">科目</label>
+            <select id="select0a" class="form-control">
+              <option>全ての曜日</option>
+              <option>月曜のみ</option>
+              <option>火曜のみ</option>
+              <option>水曜のみ</option>
+              <option>木曜のみ</option>
+              <option>金曜のみ</option>
+            </select>
+          </div>
+          <!--時間割検索機能-->
+          <button id="timesearchbutton" type="button" class="btn btn-dark" data-toggle="modal"
+            data-target="#modal_timeboard_select">時間割で検索</button>
+        </div>
+      </div>
+    </div>
+    <div id="taskmain" class="col-sm-12 col-md-10">
+      <!--タイトル-->
+      <h3>あなたの課題</h3>
+      <!--アラート-->
+      <div class="alert alert-danger" role="alert">
+        <div class="row">
+          未ダウンロードの課題が<div class="text-danger">2</div>件あります
+        </div>
+      </div>
+        <div class="col-4">
+            <button class="btn btn-secondary btn-lg">未入手資料を一括ダウンロード</button>
+            <button class="btn btn-success btn-sm mt-1">選択した資料をダウンロード</button>
+        </div>
+        <div class="col-12 pt-1" id="resdownload_body">
+            <h2>・授業資料</h2>
+        </div>
+        <div class="col-12">
+            <!-- <span><i class="far fa-folder">[2020前期月5]ILASセミナーのリソース</i></span> -->
+            <ul>
+                {{ html | safe}}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

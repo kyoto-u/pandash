@@ -72,7 +72,7 @@ def get_courses_to_be_taken(studentid):
         data.append(coursedata[0])
     return data
 
-def setdefault_for_overview(studentid):
+def setdefault_for_overview(studentid, mode='tasklist'):
     data={}
     days =["mon", "tue", "wed", "thu", "fri"]
     default = {"subject": "", "shortname": "", "searchURL": "","tasks": []}
@@ -110,14 +110,14 @@ def setdefault_for_overview(studentid):
             else:
                 # 新しい教科を追加
                 data["others"].append({})
-                data["others"][index]["searchURL"] = app_login_url+"/tasklist/course/"+course.course_id
+                data["others"][index]["searchURL"] = app_login_url+ f"/{mode}/course/"+course.course_id
                 data["others"][index]["subject"] = course.coursename
                 data["others"][index]["shortname"] = re.sub(
                     "\[.*\]", "", course.coursename)
                 data["others"][index]["tasks"] = []
 
         elif add_subject == True:
-            data[course.classschedule]["searchURL"] = app_login_url+"/tasklist/course/"+course.course_id
+            data[course.classschedule]["searchURL"] = app_login_url+ f"/{mode}/course/"+course.course_id
             data[course.classschedule]["subject"] = course.coursename
             data[course.classschedule]["shortname"] = re.sub(
                 "\[.*\]", "", course.coursename)
@@ -182,6 +182,7 @@ def get_resource_list(studentid, course_id=None, day=None):
         resource_dict["title"] = resourcedata[0].title
         resource_dict["container"] = resourcedata[0].container
         resource_dict["modifieddate"] = resourcedata[0].modifieddate
+        resource_dict["status"] = data.status
         resource_list.append(resource_dict)
     return resource_list
 
@@ -193,7 +194,7 @@ def resource_arrange(resource_list:list, coursename:str):
         container = r['container']
         container_spilt = container.split('/')
         del container_spilt[-1]
-        for i in range(3):
+        for i in range(4):
             del container_spilt[0]
         for folder in folderlist:
             if folder == container_spilt:
@@ -214,14 +215,14 @@ def resource_arrange(resource_list:list, coursename:str):
                     break
                 index += 1
             if isExist:
-                html_1 = re.search(f'><i class="far fa-folder-plus">{f}</i><ul>', html[str_place:])
+                html_1 = re.search(f'><i class="fas fa-folder-plus">{f}</i><ul>', html[str_place:])
                 str_place += html_1.end()
                 folderindex += 1
                 continue
             folder_id = '/'.join(foldername[:folderindex])
             html = html[:str_place] + f'''
-            <li id="{folder_id}"><i class="far fa-folder-plus">{f}</i><ul></ul></li>''' + html[str_place:]
-            html_1 = re.search(f'><i class="far fa-folder-plus">{f}</i><ul>', html[str_place:])
+            <li id="{folder_id}"><i class="fas fa-folder-plus">{f}</i><ul></ul></li>''' + html[str_place:]
+            html_1 = re.search(f'><i class="fas fa-folder-plus">{f}</i><ul>', html[str_place:])
             str_place += html_1.end()
             list_f.append({'folders':[],'files':[],'name':f})
             list_len = len(list_f)
@@ -232,7 +233,7 @@ def resource_arrange(resource_list:list, coursename:str):
         container = r['container']
         container_spilt = container.split('/')
         del container_spilt[-1]
-        for i in range(3):
+        for i in range(4):
             del container_spilt[0]     
         folder_id = '/'.join(container_spilt)
         folder = re.search(f'<li id="{folder_id}">',html)
@@ -245,8 +246,17 @@ def resource_arrange(resource_list:list, coursename:str):
                 <label class="form-check-label" for={r["resource_url"]}><a href={r["resource_url"]}>{r["title"]}</a></label>
             </div>
         </li>""" + html[folder_i.end()+search_num:]
+    html = f"""<span><i class="far fa-folder" style="font-size:medium;">{coursename}</i></span>
+            """ + html
     return html
 
+def get_coursename(courseid):
+    coursename = session.query(course.Course.coursename).filter(course.Course.course_id==courseid).first()
+    return coursename[0]
+
+def get_courseids(studentid):
+    course_ids = session.query(studentcourse.Studentcourse.course_id).filter(studentcourse.Studentcourse.student_id==studentid).all()
+    return list(course_ids)
 
 def add_student(studentid, fullname):
     students = session.query(student.Student.student_id).all()

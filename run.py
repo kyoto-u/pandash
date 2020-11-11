@@ -10,9 +10,11 @@ from flask import Flask, redirect, request, session, url_for
 
 app.secret_key ='pandash'
 
+
 @app.route('/login')
 def login():
     ticket = request.args.get('ticket')
+    print(ticket)
     if ticket:
         try:
             cas_response = cas_client.perform_service_validate(
@@ -88,13 +90,13 @@ def controller():
     add_resource('url5', '資料５', '/content/group/2020-888-N150-017/講義/講義動画/', 222, 'course1')
     add_resource('url6', '資料６', '/content/group/2020-888-N150-017/講義/講義ノート/', 222, 'course1')
     add_resource('url7', '資料７', '/content/group/2020-888-N150-017/演義/演義動画/', 222, 'course2')
-    add_student_resource('url1', 'student1', '未')
-    add_student_resource('url2', 'student1', '未')
-    add_student_resource('url3', 'student1', '未')
-    add_student_resource('url4', 'student1', '未')
-    add_student_resource('url5', 'student1', '未')
-    add_student_resource('url6', 'student1', '未')
-    add_student_resource('url7', 'student1', '未')
+    add_student_resource('url1', 'student1', 0)
+    add_student_resource('url2', 'student1', 0)
+    add_student_resource('url3', 'student1', 0)
+    add_student_resource('url4', 'student1', 0)
+    add_student_resource('url5', 'student1', 0)
+    add_student_resource('url6', 'student1', 0)
+    add_student_resource('url7', 'student1', 0)
 
     return ''
 
@@ -193,11 +195,23 @@ def tasklist(show_only_unfinished,max_time_left):
     data = setdefault_for_overview(studentid)
     return flask.render_template('tasklist.htm', tasks=tasks, data=data)
 
-@app.route('/resources_sample')
+@app.route('/resourcelist/course/<courseid>')
+def resource_course(courseid):
+    studentid = 'student1'
+    data = setdefault_for_overview(studentid, mode="resourcelist")
+    resource = get_resource_list(studentid, course_id=courseid)
+    coursename = get_coursename(courseid)
+    resource_html = resource_arrange(resource, coursename)
+    return flask.render_template('resources_sample.htm', html=resource_html, data=data)
+
+@app.route('/resourcelist')
 def resources_sample():
     studentid = "student1"
+    course_ids = get_courseids(studentid)
+    html = ""
+    for c_id in course_ids:
+        html = html + resource_arrange(get_resource_list(studentid, c_id[0]), get_coursename(c_id[0]))
     data = setdefault_for_overview(studentid, mode='resourcelist')
-    html = resource_arrange(get_resource_list('student1', 'course1'), 'コース名')
     return flask.render_template('resources_sample.htm', html=html, data=data)
 
 
