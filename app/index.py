@@ -205,9 +205,14 @@ def resource_arrange(resource_list:list, coursename:str):
         list_f = course["folders"]
         str_place = 0
         folderindex = 1
+        folder_num = 0
         for f in foldername:
+            folder_num += 1
             index = 0
             isExist = False
+            tag_class = "fas fa-folder-plus"
+            if folder_num == 1:
+                tag_class = "far fa-folder"
             for lf in list_f:
                 if lf["name"] == f:
                     list_f = list_f[index]["folders"]
@@ -215,14 +220,14 @@ def resource_arrange(resource_list:list, coursename:str):
                     break
                 index += 1
             if isExist:
-                html_1 = re.search(f'><i class="fas fa-folder-plus">{f}</i><ul>', html[str_place:])
+                html_1 = re.search(f'><i class="{tag_class}">{f}</i><ul>', html[str_place:])
                 str_place += html_1.end()
                 folderindex += 1
                 continue
             folder_id = '/'.join(foldername[:folderindex])
             html = html[:str_place] + f'''
-            <li id="{folder_id}"><i class="fas fa-folder-plus">{f}</i><ul></ul></li>''' + html[str_place:]
-            html_1 = re.search(f'><i class="fas fa-folder-plus">{f}</i><ul>', html[str_place:])
+            <li id="{folder_id}"><i class="{tag_class}">{f}</i><ul></ul></li>''' + html[str_place:]
+            html_1 = re.search(f'><i class="{tag_class}">{f}</i><ul>', html[str_place:])
             str_place += html_1.end()
             list_f.append({'folders':[],'files':[],'name':f})
             list_len = len(list_f)
@@ -239,15 +244,28 @@ def resource_arrange(resource_list:list, coursename:str):
         folder = re.search(f'<li id="{folder_id}">',html)
         search_num = folder.end()
         folder_i = re.search(f'</i><ul>',html[search_num:])
-        html = html[:folder_i.end()+search_num] + f"""
+        add_html = f"""
         <li>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id={r["resource_url"]} />
-                <label class="form-check-label" for={r["resource_url"]}><a href={r["resource_url"]}>{r["title"]}</a></label>
+                <input class="form-check-input" type="checkbox" id="{r["resource_url"]}" />
+                <label class="form-check-label" for="{r["resource_url"]}"><a href="{r["resource_url"]}">{r["title"]}</a></label>
             </div>
-        </li>""" + html[folder_i.end()+search_num:]
+        </li>"""
+        if r['status'] == 1:
+            add_html = f"""
+            <li>
+                <div class="d-inline-flex">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="{r["resource_url"]}" checked disabled />
+                        <label class="form-check-label" for="{r["resource_url"]}"><a href="{r["resource_url"]}" data-container="body" data-toggle="tooltip" title="このファイルを再ダウンロードする">{r["title"]}</a></label>
+                    </div>
+                </div>
+            </li>
+            """
+        html = html[:folder_i.end()+search_num] + add_html + html[folder_i.end()+search_num:]
     html = f"""<span><i class="far fa-folder" style="font-size:medium;">{coursename}</i></span>
             """ + html
+    print(html)
     return html
 
 def get_coursename(courseid):
