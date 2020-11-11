@@ -77,6 +77,13 @@ def controller():
     add_studentcourse("student1","course2")
     add_studentcourse("student1","course3")
     add_studentcourse("student1","course4")
+    for i in range(30):
+        add_course(f'dummy{i}', 'teacher1', f'[2020前期他他]ダミー{i}', 20200, f'thu{(j%5)+1}')
+        add_studentcourse("student1",f"dummy{i}")
+        for j in range(10):
+            add_assignment(f"dummyassignmentid{i}-{j}", "url",f"課題{i}-{j}", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, f"dummy{i}" )
+            add_student_assignment(f'dummyassignment{i}-{j}', 'student1', '未')
+    
     add_course('course1', 'teacher1', 'コース1', 20200, 'wed2')
     add_course('course2', 'teacher1', 'コース2', 20200, 'mon2')
     add_course('course3', 'teacher1', '[2020前期月1]線形代数学', 20200, 'mon1')
@@ -88,13 +95,13 @@ def controller():
     add_resource('url5', '資料５', '/content/group/2020-888-N150-017/講義/講義動画/', 222, 'course1')
     add_resource('url6', '資料６', '/content/group/2020-888-N150-017/講義/講義ノート/', 222, 'course1')
     add_resource('url7', '資料７', '/content/group/2020-888-N150-017/演義/演義動画/', 222, 'course2')
-    add_student_resource('url1', 'student1', '未')
-    add_student_resource('url2', 'student1', '未')
-    add_student_resource('url3', 'student1', '未')
-    add_student_resource('url4', 'student1', '未')
-    add_student_resource('url5', 'student1', '未')
-    add_student_resource('url6', 'student1', '未')
-    add_student_resource('url7', 'student1', '未')
+    add_student_resource('url1', 'student1', '0')
+    add_student_resource('url2', 'student1', '0')
+    add_student_resource('url3', 'student1', '0')
+    add_student_resource('url4', 'student1', '0')
+    add_student_resource('url5', 'student1', '0')
+    add_student_resource('url6', 'student1', '0')
+    add_student_resource('url7', 'student1', '0')
 
     return ''
 
