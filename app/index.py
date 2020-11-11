@@ -356,7 +356,7 @@ def add_student_assignment(studentid, data):
 
     for item in data:
         for i in sa:
-            if i.assignment_id == item["sassignment_id"]:
+            if i.assignment_id == item["assignment_id"]:
                 continue
 
         new_sa = studentassignment.Student_Assignment(assignment_id=item["assignment_id"], student_id=item["student_id"], status=item["status"])
@@ -433,7 +433,7 @@ def add_studentcourse(studentid, data):
     sc = session.query(studentcourse.Studentcourse).filter(studentcourse.Studentcourse.student_id == studentid).all()
     for item in data:
         for i in sc:
-            if i.courseid == item["course_id"]:
+            if i.course_id == item["course_id"]:
                 continue
 
         new_sc = studentcourse.Studentcourse(student_id=item["student_id"], course_id=item["course_id"])

@@ -101,16 +101,17 @@ def controller_for_students(studentid):
     add_studentcourse(studentid, [{"student_id":studentid,"course_id":"course3"}])
     add_studentcourse(studentid, [{"student_id":studentid,"course_id":"course4"}])
     for i in range(30):
-        add_studentcourse(studentid,f"dummy{i}")
+        add_studentcourse(studentid,[{"student_id":studentid,"course_id":f"dummy{i}"}])
         for j in range(10):
-            add_student_assignment(f'dummyassignment{i}-{j}', studentid, '未')
-    add_student_resource(studentid, [{"resourceurl":'url1', "student_id":studentid, "status":0}])
-    add_student_resource(studentid, [{"resourceurl":'url2', "student_id":studentid, "status":0}])
-    add_student_resource(studentid, [{"resourceurl":'url3', "student_id":studentid, "status":0}])
-    add_student_resource(studentid, [{"resourceurl":'url4', "student_id":studentid, "status":0}])
-    add_student_resource(studentid, [{"resourceurl":'url5', "student_id":studentid, "status":0}])
-    add_student_resource(studentid, [{"resourceurl":'url6', "student_id":studentid, "status":0}])
-    add_student_resource(studentid, [{"resourceurl":'url7', "student_id":studentid, "status":0}])
+            add_student_assignment(studentid,[{"assignment_id":f'dummyassignment{i}-{j}', "student_id":studentid, "status":'未'}])
+    add_student_resource(studentid, [{"resourceurl":'url1', "studentid":studentid, "status":0}])
+    add_student_resource(studentid, [{"resourceurl":'url2', "studentid":studentid, "status":0}])
+    add_student_resource(studentid, [{"resourceurl":'url3', "studentid":studentid, "status":0}])
+    add_student_resource(studentid, [{"resourceurl":'url4', "studentid":studentid, "status":0}])
+    add_student_resource(studentid, [{"resourceurl":'url5', "studentid":studentid, "status":0}])
+    add_student_resource(studentid, [{"resourceurl":'url6', "studentid":studentid, "status":0}])
+    add_student_resource(studentid, [{"resourceurl":'url7', "studentid":studentid, "status":0}])
+    return ''
     
 
 
