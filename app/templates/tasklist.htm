@@ -40,7 +40,7 @@
       </div>
     </div>
     <!--課題表-->
-    <div class="table-responsive">
+    <div class="table-responsive table-sm table-bordered">
       <table class="table">
         <thead>
           <tr class="d-flex">
@@ -66,11 +66,37 @@
           {% for task in tasks %}
           <tr class="d-flex tablecontents">
             <td class="col-3">{{task.subject}}</td>
-            <td class="col-3">{{task.taskname}}</td>
+            <td class="col-3"><a draggable="true">{{task.taskname}}</a></td>
             <td class="col-3">{{task.time_left}}</td>
             <td class="col-3">{{task.deadline}}</td>
           </tr>
           {% endfor %}
+
+          <tr class="d-flex tablecontents table-danger">
+            <td class="col-3">[2020前期水３　線形代数学A]</td>
+            <td class="col-3">演義課題No.1</td>
+            <td class="col-3">3日</td>
+            <td class="col-3">2020/07/11 23:59</td>
+          </tr>
+          <tr class="d-flex tablecontents table-warning">
+            <td class="col-3">[2020前期水３　線形代数学A]</td>
+            <td class="col-3">演義課題No.1</td>
+            <td class="col-3">3日</td>
+            <td class="col-3">2020/07/11 23:59</td>
+          </tr>
+          <tr class="d-flex tablecontents">
+            <td class="col-3">[2020前期水３　線形代数学A]</td>
+            <td class="col-3"><a draggable="true">演義課題No.1</a></td>
+            <td class="col-3">3日</td>
+            <td class="col-3">2020/07/11 23:59</td>
+          </tr>
+          <tr class="d-flex tablecontents">
+            <td class="col-3">[2020前期水３　線形代数学A]</td>
+            <td class="col-3"><a draggable="true">演義課題No.1</a></td>
+            <td class="col-3">3日</td>
+            <td class="col-3">2020/07/11 23:59</td>
+          </tr>
+
 
       </table>
     </div>

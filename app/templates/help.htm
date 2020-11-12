@@ -1,0 +1,26 @@
+{% extends "_homebase.htm" %}
+{% block homebodycontent %}
+<h1>FAQ</h1>
+
+{% macro faq(id,ques,ans) %}
+<div class="card">
+    <div class="card-header" id="header-4a">
+        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#{{ id }}" aria-expanded="true"
+            aria-controls="{{ id }}">
+            {{ ques }}
+        </button>
+    </div>
+    <div id="{{ id }}" class="collapse" aria-labelledby="header-4a" data-parent="#accordion-4">
+        <div class="card-body">
+            {{ ans }}
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+<div class="accordion" id="accordion-4">
+    {{ faq('q1','質問', '答え') }}
+    {{ faq('q2','PandAshは何ができますか', 'PandAshはPandAのダッシュボードです。未提出の課題を一覧で確認することができます。また、授業資料を一括でダウンロードできます。') }}
+</div>
+
+{% endblock %}

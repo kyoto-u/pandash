@@ -44,7 +44,7 @@
                             <a class="nav-link" href="#">ホーム</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">問い合わせホーム</a>
+                            <a class="nav-link" href="#">ヘルプ</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav ml-auto pr-3 toggle_rights">
@@ -57,21 +57,18 @@
         </nav>
     </div>
     <div class="col-12">
-        <h1>Welcome to PandAsh!</h1><br>
-        <h6>PandAsh is a service provided by Institution for Information Management in Kyoto University. You can
-            overview
-            your
-            assignments.</h6><br>
-        <h6>More home contents will be placed below.</h6>
+        {% block homebodycontent %}
+        Replace This
+        {% endblock %}
     </div>
 
     <footer>
         <div id="footercont" class="container-fluid">
             <div class="row">
                 <a href="https://www.kyoto-u.ac.jp/ja"><img id="kyoudailogo"
-                        src="{{ url_for('static', filename='images/kyoudai_logo.png') }}"></a>
+                        src="https://panda.ecs.kyoto-u.ac.jp/library/image/footer-1.png"></a>
                 <a href="http://www.iimc.kyoto-u.ac.jp/ja/"><img id="KIMClogo"
-                        src="{{ url_for('static', filename='images/KIMC_logo.png') }}"></a>
+                        src="https://panda.ecs.kyoto-u.ac.jp/library/image/footer-3.png"></a>
             </div>
             <div class="mx-auto" style="width: fit-content;">
                 <small>Copyright 2020 Institute for Information Management and Communication. All rights
