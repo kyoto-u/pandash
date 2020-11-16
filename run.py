@@ -8,10 +8,13 @@ from pprint import pprint
 from cas_client import CASClient
 from flask import Flask, redirect, request, session, url_for
 
+app.secret_key ='pandash'
+
 
 @app.route('/login')
 def login():
     ticket = request.args.get('ticket')
+    print(ticket)
     if ticket:
         try:
             cas_response = cas_client.perform_service_validate(
@@ -24,7 +27,8 @@ def login():
         if cas_response and cas_response.success:
             session['logged-in'] = True
             return redirect(url_for('root'))
-   #  del(session['logged-in'])
+    if "logged-in" in session and session["logged-in"]:
+        del(session['logged-in'])
     cas_login_url = cas_client.get_login_url(service_url=app_login_url)
     return redirect(cas_login_url)
 
@@ -55,7 +59,6 @@ def main():
 @app.route('/controller')
 def controller():
     # ex
-    add_student('student1','s_fullname1')
     add_instructor('instructor1', 'i_fullname', 'i_mailadress')
     add_assignment("assignmentid1", "url","課題1", "2020-10-30T01:55:00Z", "<p>説明<p>", 11111111111, 1111, "course1" )
     add_assignment("assignmentid2", "ur2","課題2", "2020-10-30T01:50:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
@@ -64,17 +67,11 @@ def controller():
     add_assignment("assignmentid5", "ur5","課題5", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, "course2" )
     add_assignment("assignmentid6", "ur6","課題6", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
     add_assignment("assignmentid7", "ur7","課題7", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
-    add_student_assignment('assignmentid1', 'student1', '未')
-    add_student_assignment('assignmentid2', 'student1', '未')
-    add_student_assignment('assignmentid3', 'student1', '未')
-    add_student_assignment('assignmentid4', 'student1', '未')
-    add_student_assignment('assignmentid5', 'student1', '未')
-    add_student_assignment('assignmentid6', 'student1', '未')
-    add_student_assignment('assignmentid7', 'student1', '未')
-    add_studentcourse("student1","course1")
-    add_studentcourse("student1","course2")
-    add_studentcourse("student1","course3")
-    add_studentcourse("student1","course4")
+    for i in range(30):
+        add_course(f'dummy{i}', 'teacher1', f'[2020前期他他]ダミー{i}', 20200, f'thu{(i%5)+1}')
+        for j in range(10):
+            add_assignment(f"dummyassignment{i}-{j}", "url",f"課題{i}-{j}", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, f"dummy{i}" )
+    
     add_course('course1', 'teacher1', 'コース1', 20200, 'wed2')
     add_course('course2', 'teacher1', 'コース2', 20200, 'mon2')
     add_course('course3', 'teacher1', '[2020前期月1]線形代数学', 20200, 'mon1')
@@ -86,16 +83,36 @@ def controller():
     add_resource('url5', '資料５', '/content/group/2020-888-N150-017/講義/講義動画/', 222, 'course1')
     add_resource('url6', '資料６', '/content/group/2020-888-N150-017/講義/講義ノート/', 222, 'course1')
     add_resource('url7', '資料７', '/content/group/2020-888-N150-017/演義/演義動画/', 222, 'course2')
-    add_student_resource('url1', 'student1', '未')
-    add_student_resource('url2', 'student1', '未')
-    add_student_resource('url3', 'student1', '未')
-    add_student_resource('url4', 'student1', '未')
-    add_student_resource('url5', 'student1', '未')
-    add_student_resource('url6', 'student1', '未')
-    add_student_resource('url7', 'student1', '未')
 
     return ''
 
+@app.route('/controller_for_students/<studentid>')
+def controller_for_students(studentid):
+    add_student(studentid,'s_fullname')
+    add_student_assignment(studentid,[{'assignment_id':'assignmentid1', 'student_id':studentid, 'status':'未'}])
+    add_student_assignment(studentid,[{'assignment_id':'assignmentid2', 'student_id':studentid, 'status':'未'}])
+    add_student_assignment(studentid,[{'assignment_id':'assignmentid3', 'student_id':studentid, 'status':'未'}])
+    add_student_assignment(studentid,[{'assignment_id':'assignmentid4', 'student_id':studentid, 'status':'未'}])
+    add_student_assignment(studentid,[{'assignment_id':'assignmentid5', 'student_id':studentid, 'status':'未'}])
+    add_student_assignment(studentid,[{'assignment_id':'assignmentid6', 'student_id':studentid, 'status':'未'}])
+    add_student_assignment(studentid,[{'assignment_id':'assignmentid7', 'student_id':studentid, 'status':'未'}])
+    add_studentcourse(studentid, [{"student_id":studentid,"course_id":"course1"}])
+    add_studentcourse(studentid, [{"student_id":studentid,"course_id":"course2"}])
+    add_studentcourse(studentid, [{"student_id":studentid,"course_id":"course3"}])
+    add_studentcourse(studentid, [{"student_id":studentid,"course_id":"course4"}])
+    for i in range(30):
+        add_studentcourse(studentid,[{"student_id":studentid,"course_id":f"dummy{i}"}])
+        for j in range(10):
+            add_student_assignment(studentid,[{"assignment_id":f'dummyassignment{i}-{j}', "student_id":studentid, "status":'未'}])
+    add_student_resource(studentid, [{"resourceurl":'url1', "studentid":studentid, "status":0}])
+    add_student_resource(studentid, [{"resourceurl":'url2', "studentid":studentid, "status":0}])
+    add_student_resource(studentid, [{"resourceurl":'url3', "studentid":studentid, "status":0}])
+    add_student_resource(studentid, [{"resourceurl":'url4', "studentid":studentid, "status":0}])
+    add_student_resource(studentid, [{"resourceurl":'url5', "studentid":studentid, "status":0}])
+    add_student_resource(studentid, [{"resourceurl":'url6', "studentid":studentid, "status":0}])
+    add_student_resource(studentid, [{"resourceurl":'url7', "studentid":studentid, "status":0}])
+    return ''
+    
 
 
 @app.route('/tasklist')
@@ -141,14 +158,6 @@ def tasklist_course_redirect(courseid):
 def tasklist_day(day,show_only_unfinished,max_time_left):
     studentid = "student1"
     tasks = get_tasklist(studentid ,day = day)
-    # tasks = [
-    #     {'subject':'[2020前期月1]線形代数学', 'classschedule':'mon1','taskname':'課題1', 'status':'未', 'time_left': "あと50分", 'deadline':'2020-10-30T00:50:00Z','instructions':'なし'},
-    #     {'subject':'[2020前期月1]線形代数学', 'classschedule':'mon1','taskname':'課題2', 'status':'未', 'time_left':'あと2時間', 'deadline':'2020-10-30T02:00:00Z','instructions':'なし'},
-    #     {'subject':'[2020前期月2]微分積分学', 'classschedule':'mon2','taskname':'課題3', 'status':'終了', 'time_left':'', 'deadline':'2020-10-29T23:00:00Z','instructions':'なし'},
-    #     {'subject':'[2020前期火1]英語リーディング', 'classschedule':'Tue1','taskname':'課題4', 'status':'未', 'time_left':'あと3日', 'deadline':'2020-11-02T03:00:00Z','instructions':'なし'},
-    #     {'subject':'[2020前期月2]微分積分学', 'classschedule':'mon2','taskname':'課題5', 'status':'済', 'time_left':'あと1時間', 'deadline':'2020-10-30T01:00:00Z','instructions':'なし'},
-    #     {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題6', 'status':'済', 'time_left':'あと1日', 'deadline':'2020-10-31T01:00:00Z','instructions':'なし'}
-    #     ]
     tasks = sort_tasks(tasks, show_only_unfinished = show_only_unfinished, max_time_left = max_time_left)
     data ={"others":[]}
     data = setdefault_for_overview(studentid)
@@ -159,14 +168,6 @@ def tasklist_day(day,show_only_unfinished,max_time_left):
 def tasklist_course(courseid,show_only_unfinished,max_time_left):
     studentid = "student1"
     tasks = get_tasklist(studentid ,courseid = courseid)
-    # tasks = [
-    #     {'subject':'[2020前期月1]線形代数学', 'classschedule':'mon1','taskname':'課題1', 'status':'未', 'time_left': "あと50分", 'deadline':'2020-10-30T00:50:00Z','instructions':'なし'},
-    #     {'subject':'[2020前期月1]線形代数学', 'classschedule':'mon1','taskname':'課題2', 'status':'未', 'time_left':'あと2時間', 'deadline':'2020-10-30T02:00:00Z','instructions':'なし'},
-    #     {'subject':'[2020前期月2]微分積分学', 'classschedule':'mon2','taskname':'課題3', 'status':'終了', 'time_left':'', 'deadline':'2020-10-29T23:00:00Z','instructions':'なし'},
-    #     {'subject':'[2020前期火1]英語リーディング', 'classschedule':'Tue1','taskname':'課題4', 'status':'未', 'time_left':'あと3日', 'deadline':'2020-11-02T03:00:00Z','instructions':'なし'},
-    #     {'subject':'[2020前期月2]微分積分学', 'classschedule':'mon2','taskname':'課題5', 'status':'済', 'time_left':'あと1時間', 'deadline':'2020-10-30T01:00:00Z','instructions':'なし'},
-    #     {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題6', 'status':'済', 'time_left':'あと1日', 'deadline':'2020-10-31T01:00:00Z','instructions':'なし'}
-    #     ]
     tasks = sort_tasks(tasks, show_only_unfinished = show_only_unfinished, max_time_left = max_time_left)
 
     data ={"others":[]}
@@ -191,10 +192,24 @@ def tasklist(show_only_unfinished,max_time_left):
     data = setdefault_for_overview(studentid)
     return flask.render_template('tasklist.htm', tasks=tasks, data=data)
 
-@app.route('/resources_sample')
+@app.route('/resourcelist/course/<courseid>')
+def resource_course(courseid):
+    studentid = 'student1'
+    data = setdefault_for_overview(studentid, mode="resourcelist")
+    resource = get_resource_list(studentid, course_id=courseid)
+    coursename = get_coursename(courseid)
+    resource_html = resource_arrange(resource, coursename)
+    return flask.render_template('resources_sample.htm', html=resource_html, data=data)
+
+@app.route('/resourcelist')
 def resources_sample():
-    html = resource_arrange(get_resource_list('student1', 'course1'), 'コース名')
-    return flask.render_template('resources_sample.htm', html=html)
+    studentid = "student1"
+    course_ids = get_courseids(studentid)
+    html = ""
+    for c_id in course_ids:
+        html = html + resource_arrange(get_resource_list(studentid, c_id[0]), get_coursename(c_id[0]))
+    data = setdefault_for_overview(studentid, mode='resourcelist')
+    return flask.render_template('resources_sample.htm', html=html, data=data)
 
 
 if __name__ == '__main__':

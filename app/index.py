@@ -72,7 +72,7 @@ def get_courses_to_be_taken(studentid):
         data.append(coursedata[0])
     return data
 
-def setdefault_for_overview(studentid):
+def setdefault_for_overview(studentid, mode='tasklist'):
     data={}
     days =["mon", "tue", "wed", "thu", "fri"]
     default = {"subject": "", "shortname": "", "searchURL": "","tasks": []}
@@ -110,14 +110,14 @@ def setdefault_for_overview(studentid):
             else:
                 # 新しい教科を追加
                 data["others"].append({})
-                data["others"][index]["searchURL"] = app_login_url+"/tasklist/course/"+course.course_id
+                data["others"][index]["searchURL"] = app_login_url+ f"/{mode}/course/"+course.course_id
                 data["others"][index]["subject"] = course.coursename
                 data["others"][index]["shortname"] = re.sub(
                     "\[.*\]", "", course.coursename)
                 data["others"][index]["tasks"] = []
 
         elif add_subject == True:
-            data[course.classschedule]["searchURL"] = app_login_url+"/tasklist/course/"+course.course_id
+            data[course.classschedule]["searchURL"] = app_login_url+ f"/{mode}/course/"+course.course_id
             data[course.classschedule]["subject"] = course.coursename
             data[course.classschedule]["shortname"] = re.sub(
                 "\[.*\]", "", course.coursename)
@@ -182,6 +182,7 @@ def get_resource_list(studentid, course_id=None, day=None):
         resource_dict["title"] = resourcedata[0].title
         resource_dict["container"] = resourcedata[0].container
         resource_dict["modifieddate"] = resourcedata[0].modifieddate
+        resource_dict["status"] = data.status
         resource_list.append(resource_dict)
     return resource_list
 
@@ -193,7 +194,7 @@ def resource_arrange(resource_list:list, coursename:str):
         container = r['container']
         container_spilt = container.split('/')
         del container_spilt[-1]
-        for i in range(3):
+        for i in range(4):
             del container_spilt[0]
         for folder in folderlist:
             if folder == container_spilt:
@@ -204,9 +205,14 @@ def resource_arrange(resource_list:list, coursename:str):
         list_f = course["folders"]
         str_place = 0
         folderindex = 1
+        folder_num = 0
         for f in foldername:
+            folder_num += 1
             index = 0
             isExist = False
+            tag_class = "fas fa-folder-plus"
+            if folder_num == 1:
+                tag_class = "far fa-folder"
             for lf in list_f:
                 if lf["name"] == f:
                     list_f = list_f[index]["folders"]
@@ -214,14 +220,14 @@ def resource_arrange(resource_list:list, coursename:str):
                     break
                 index += 1
             if isExist:
-                html_1 = re.search(f'><i class="far fa-folder-plus">{f}</i><ul>', html[str_place:])
+                html_1 = re.search(f'><i class="{tag_class}">{f}</i><ul>', html[str_place:])
                 str_place += html_1.end()
                 folderindex += 1
                 continue
             folder_id = '/'.join(foldername[:folderindex])
             html = html[:str_place] + f'''
-            <li id="{folder_id}"><i class="far fa-folder-plus">{f}</i><ul></ul></li>''' + html[str_place:]
-            html_1 = re.search(f'><i class="far fa-folder-plus">{f}</i><ul>', html[str_place:])
+            <li id="{folder_id}"><i class="{tag_class}">{f}</i><ul></ul></li>''' + html[str_place:]
+            html_1 = re.search(f'><i class="{tag_class}">{f}</i><ul>', html[str_place:])
             str_place += html_1.end()
             list_f.append({'folders':[],'files':[],'name':f})
             list_len = len(list_f)
@@ -232,21 +238,43 @@ def resource_arrange(resource_list:list, coursename:str):
         container = r['container']
         container_spilt = container.split('/')
         del container_spilt[-1]
-        for i in range(3):
+        for i in range(4):
             del container_spilt[0]     
         folder_id = '/'.join(container_spilt)
         folder = re.search(f'<li id="{folder_id}">',html)
         search_num = folder.end()
         folder_i = re.search(f'</i><ul>',html[search_num:])
-        html = html[:folder_i.end()+search_num] + f"""
+        add_html = f"""
         <li>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id={r["resource_url"]} />
-                <label class="form-check-label" for={r["resource_url"]}><a href={r["resource_url"]}>{r["title"]}</a></label>
+                <input class="form-check-input" type="checkbox" id="{r["resource_url"]}" />
+                <label class="form-check-label" for="{r["resource_url"]}"><a href="{r["resource_url"]}">{r["title"]}</a></label>
             </div>
-        </li>""" + html[folder_i.end()+search_num:]
+        </li>"""
+        if r['status'] == 1:
+            add_html = f"""
+            <li>
+                <div class="d-inline-flex">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="{r["resource_url"]}" checked disabled />
+                        <label class="form-check-label" for="{r["resource_url"]}"><a href="{r["resource_url"]}" data-container="body" data-toggle="tooltip" title="このファイルを再ダウンロードする">{r["title"]}</a></label>
+                    </div>
+                </div>
+            </li>
+            """
+        html = html[:folder_i.end()+search_num] + add_html + html[folder_i.end()+search_num:]
+    html = f"""<span><i class="far fa-folder" style="font-size:medium;">{coursename}</i></span>
+            """ + html
+    print(html)
     return html
 
+def get_coursename(courseid):
+    coursename = session.query(course.Course.coursename).filter(course.Course.course_id==courseid).first()
+    return coursename[0]
+
+def get_courseids(studentid):
+    course_ids = session.query(studentcourse.Studentcourse.course_id).filter(studentcourse.Studentcourse.student_id==studentid).all()
+    return list(course_ids)
 
 def add_student(studentid, fullname):
     students = session.query(student.Student.student_id).all()
@@ -319,26 +347,22 @@ def add_course(courseid, instructorid, \
     return
 
 
-def add_student_assignment(assignment_id, student_id, status):
-    enrollments_assignmentid = session.query(
-        studentassignment.Student_Assignment.assignment_id).all()
-    enrollments_studentid = session.query(
-        studentassignment.Student_Assignment.student_id).all()
-    isExist_assignmentid = False
-    isExist_studentid = False
-    for i in enrollments_assignmentid:
-        if list(i)[0] == assignment_id:
-            isExist_assignmentid = True
-            break
-    if isExist_assignmentid:
-        for i in enrollments_studentid:
-            if list(i)[0] == student_id:
-                isExist_studentid = True
+def add_student_assignment(studentid, data):
+    """
+        data:assignment_id, student_id, status
+    """
+    sa = session.query(
+        studentassignment.Student_Assignment.assignment_id).filter(studentassignment.Student_Assignment.student_id == studentid).all()
+    assignment_exist = False
+    for item in data:
+        for i in sa:
+            if i.assignment_id == item["assignment_id"]:
+                assignment_exist = True
                 break
-    if isExist_studentid == False:
-        new_enrollment = studentassignment.Student_Assignment(assignment_id=assignment_id, student_id=student_id, status=status)
-        session.add(new_enrollment)
-        session.commit()
+        if assignment_exist == False:
+            new_sa = studentassignment.Student_Assignment(assignment_id=item["assignment_id"], student_id=item["student_id"], status=item["status"])
+            session.add(new_sa)
+    session.commit()
     return
 
 
@@ -355,25 +379,23 @@ def add_instructor(instructorid, fullname, emailaddress):
         session.commit()
     return
 
-def add_student_resource(resourceurl, studentid, status):
-    sr_resourceurl = session.query(studentresource.Student_Resource.resource_url).all()
-    sr_studentid = session.query(studentresource.Student_Resource.student_id).all()
-    isExist_resourceurl = False
-    isExist_studentid = False
-    for i in sr_resourceurl:
-        if list(i)[0] == resourceurl:
-            isExist_resourceurl = True
-            break
-    if isExist_resourceurl:
-        for i in sr_studentid:
-            if list(i)[0] == studentid:
-                isExist_studentid = True
+def add_student_resource(studentid,data):
+    """
+        data: resourceurl, studentid, status
+    """
+    resource_exist = False
+    sr = session.query(studentresource.Student_Resource).filter(studentresource.Student_Resource.student_id ==studentid).all()
+    for item in data:
+        for i in sr:
+            if i.resource_url == item["resourceurl"]:
+                resource_exist = True
                 break
-    if isExist_studentid == False:
-        new_sc = studentresource.Student_Resource(resource_url=resourceurl, student_id=studentid, status=status)
-        session.add(new_sc)
-        session.commit()   
+        if resource_exist == False:
+            new_sr = studentresource.Student_Resource(resource_url=item["resourceurl"], student_id=item["studentid"], status=item["status"])
+            session.add(new_sr)
+    session.commit()
     return
+
 
 def add_resource(resourceurl, title, container, modifieddate, course_id):
     resources = session.query(resource.Resource.resource_url).all()
@@ -407,26 +429,21 @@ def add_resource(resourceurl, title, container, modifieddate, course_id):
         session.commit()
     return
 
-def add_studentcourse(student_id, course_id):
-    sc_studentid = session.query(
-        studentcourse.Studentcourse.student_id).all()
-    sc_courseid = session.query(
-        studentcourse.Studentcourse.course_id).all()
-    isExist_studentid = False
-    isExist_courseid = False
-    for i in sc_courseid:
-        if list(i)[0] == course_id:
-            isExist_courseid = True
-
-    if isExist_courseid:
-        for i in sc_studentid:
-            if list(i)[0] == student_id:
-                isExist_studentid = True
-
-    if isExist_studentid == False:
-        new_sc = studentcourse.Studentcourse(student_id=student_id, course_id=course_id)
-        session.add(new_sc)
-        session.commit()
+def add_studentcourse(studentid, data):
+    """
+        data:[{student_id:"", course_id:""},{}]
+    """
+    sc = session.query(studentcourse.Studentcourse).filter(studentcourse.Studentcourse.student_id == studentid).all()
+    course_exist = False
+    for item in data:
+        for i in sc:
+            if i.course_id == item["course_id"]:
+                coure_exist = True
+                break
+        if course_exist == False:
+            new_sc = studentcourse.Studentcourse(student_id=item["student_id"], course_id=item["course_id"])
+            session.add(new_sc)
+    session.commit()
     return
 
 def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
