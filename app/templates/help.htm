@@ -1,5 +1,7 @@
 {% extends "_homebase.htm" %}
 {% block homebodycontent %}
+<a href="#"><i class="far fa-question-circle">PandAshをはじめてお使いになる方はこちら</i></a>
+
 <h1>FAQ</h1>
 
 {% macro faq(id,ques,ans) %}
@@ -7,20 +9,38 @@
     <div class="card-header" id="header-4a">
         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#{{ id }}" aria-expanded="true"
             aria-controls="{{ id }}">
+            <small>{{ id }}</small>
             {{ ques }}
         </button>
     </div>
-    <div id="{{ id }}" class="collapse" aria-labelledby="header-4a" data-parent="#accordion-4">
+    <div id="{{ id }}" class="collapse" aria-labelledby="header-4a">
         <div class="card-body">
             {{ ans }}
         </div>
     </div>
 </div>
 {% endmacro %}
-
-<div class="accordion" id="accordion-4">
-    {{ faq('q1','質問', '答え') }}
-    {{ faq('q2','PandAshは何ができますか', 'PandAshはPandAのダッシュボードです。未提出の課題を一覧で確認することができます。また、授業資料を一括でダウンロードできます。') }}
+<i class="fas fa-chevron-circle-right">PandAshについて</i>
+<div class="accordion" id="que_acc1">
+    {{ faq('Q1','質問', '答え') }}
+    {{ faq('Q2','PandAshは何ができますか', 'PandAshはPandAのダッシュボードです。未提出の課題を一覧で確認することができます。また、授業資料を一括でダウンロードできます。') }}
 </div>
+<i class="fas fa-chevron-circle-right">課題の一覧表示について</i>
+<div class="accordion" id="que_acc2">
+    {{ faq('Q3','PandAで提出した課題はPandAshで自動的に「完了済」になりますか', 'なりません。未提出課題を「完了済」にするためにはPandAsh上で手動で操作する必要があります。しかし今後のアップデートでPandAで提出した課題を自動で「完了済」にする機能を追加する予定です') }}
+    {{ faq('Q4','表示される課題はどのようなものですか', 'PandAshはPandAと連携をとっています。あなたがPandA上で登録した科目から出された課題のうち、未提出のものを表示しています') }}
+    {{ faq('Q5','質問', '答え') }}
+    {{ faq('Q6','質問', '答え') }}
+    {{ faq('Q6','質問', '答え') }}
+    {{ faq('Q6','質問', '答え') }}
+    {{ faq('Q6','質問', '答え') }}
+    {{ faq('Q6','質問', '答え') }}
+    {{ faq('Q6','質問', '答え') }}
+    {{ faq('Q6','質問', '答え') }}
+    {{ faq('Q6','質問', '答え') }}
+    {{ faq('Q6','質問', '答え') }}
+</div>
+
+
 
 {% endblock %}

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <title>Scrollspy Example</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tutrial.css') }}" type="text/css">
+    <script>
+        $(function () {
+            $('#example-main').scrollspy({ offset: $(window).height() / 2 });
+        });
+    </script>
+
+<body>
+    <h4>サンプル</h4>
+    <div id="example-menu" class="list-group">
+        <h6>チュートリアル</h6>
+        <a class="list-group-item list-group-item-action active" href="#section-1">PandAshでできること</a>
+        <a class="list-group-item list-group-item-action" href="#section-2">課題表：一覧表示</a>
+        <a class="list-group-item list-group-item-action" href="#section-3">課題表：時間割表示</a>
+        <a class="list-group-item list-group-item-action" href="#section-4">授業資料ダウンロード</a>
+        <a class="list-group-item list-group-item-action" href="#section-5">iCalと共有</a>
+        <a class="list-group-item list-group-item-action" href="#section-6">分からないことがあるときは</a>
+    </div>
+    <div id="example-main">
+        <p>
+        <h1>PandAshチュートリアル</h1>
+        </p>
+        <h2 id="section-1">・PandAshでできること</h2>
+        <div class="tutrialtext">
+            <p>
+                PandAshはPandAと連携したサービスです。PandA上の<strong>あなたの課題をひと目で確認することができます</strong>。
+                複数の科目の課題を一度にチェックできるだけでなく、曜日や締切までの時間でしぼりこんで検索することも可能です。
+            </p>
+            <p>
+                また、PandA上にアップロードされた<strong>授業資料をダウンロードする機能</strong>もあります。
+                PandA上で授業資料をダウンロードしようとすれば、一つ一つ手作業で行わなければいけませんでした。PandAshでは、授業資料一覧からダウンロードしたいリソースを選び、<strong>一括でダウンロード</strong>することができます。
+            </p>
+        </div>
+        <h2 id="section-2">・課題表：一覧表示</h2>
+        <div class="tutrialtext">
+            <p>
+                未提出の課題を表形式で表示します。メニュー左の「一覧表示」ボタンを押してください。
+            </p>
+            <p>
+                表には課題の科目名、課題名、締め切りまでの時間、締切日が書かれています。
+            </p>
+            <p>
+                しぼりこみ検索ボックスから表示する課題をしぼりこむことができます。PC・タブレットなら画面左部、スマートフォンなら画面上部に表示されます。
+            </p>
+            <p>
+                <b>(PC・タブレットのみ)</b>すでに提出した課題が表示されている場合、その課題の課題名にカーソルを合わせ、画面左部の「ここに課題をドラッグ＆ドロップして完了済みにする」にドラッグ＆ドロップしてください。その課題は非表示になります。
+            </p>
+
+        </div>
+        <h2 id="section-3">・課題表：時間割表示</h2>
+        <div class="tutrialtext">
+            <p>未提出の課題を時間割形式で表示します。メニュー左の「時間割表示」ボタンを押してください。</p>
+            <p>時間割には一コマごとに科目名とその科目の課題が表示されます。表示される課題は<b>一科目につき２つまで</b>です。</p>
+            <p>時間割に表示しきれなかった科目は「その他の科目」欄に表示されます</p>
+            <p><b>(PC・タブレットのみ)</b>すでに提出した課題が表示されている場合、その課題の課題名にカーソルを合わせ、画面右部の「ここに課題をドラッグ＆ドロップして完了済みにする」にドラッグ＆ドロップしてください。その課題は非表示になります。
+            </p>
+        </div>
+        <div id="section-4">
+            <div class="row align-items-center">
+                <h2>・授業資料ダウンロード</h2>
+                <b>　(PC・タブレットのみ)</b>
+            </div>
+        </div>
+        <div class="tutrialtext">
+            <p>
+                PandA上にアップロードされた授業資料をダウンロードすることができます。
+            </p>
+            <p>
+                メニューバーの「授業資料」ボタンを押してください。科目一覧が表示されるので、資料をダウンロードしたい科目を選択してください。
+            </p>
+            <p>
+                授業資料が一覧で表示されます。各授業資料の左横にチェックボックスがあるので、ダウンロードしたい資料をチェックしてください。
+            </p>
+            <p>
+                チェックが終わったら、緑色の「選択した資料をダウンロード」のボタンを押してください。ダウンロードが始まります。
+            </p>
+            <p>
+                また、「未入手資料を一括ダウンロード」のボタンを押すと未入手の授業資料すべてを一度にダウンロードできます。
+            </p>
+        </div>
+        <div id="section-5">
+            <div class="row align-items-center">
+                <h2>・iCalと共有</h2>
+                <b>　(PC・タブレットのみ)</b>
+            </div>
+        </div>
+        <div class="tutrialtext">
+            <p>
+                カレンダーファイル (.iCal) をダウンロードして、課題の締め切りに関する情報をあなたのカレンダーに追加することができます。
+                メニューバー右上の「iCalと共有」を押してください。
+            </p>
+            <p>
+                iCalファイルの使い方はiCal公式サポートなどを参照してください。
+            </p>
+            <p>
+                <a href="#">iCal公式サポート</a>
+            </p>
+        </div>
+        <h2 id="section-6">・分からないことがあるときは</h2>
+        <div class="tutrialtext">
+            <p>
+                PandAshを使っていて、何かわからないことがあるときはFAQを参照してください。
+            </p>
+            <a href="#">PandAsh ヘルプ</a>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

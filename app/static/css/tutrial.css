@@ -1,0 +1,25 @@
+ body {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+}
+
+#example-menu {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 10vw;
+    z-index: 1;
+    background-color: #f6f6f6;
+    font-size: small;
+ }
+
+#example-main {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    padding-left: 15vw;
+    overflow-y: scroll;
+}
