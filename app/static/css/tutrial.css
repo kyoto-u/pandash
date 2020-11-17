@@ -15,11 +15,18 @@
     font-size: small;
  }
 
+ #section-1,#section-2,#section-3,#section-4,#section-5,#section-6{
+    padding-top:0px;
+}
+
 #example-main {
     position: absolute;
     top: 0;
     bottom: 0;
     width: 100%;
+    padding-top:20;
     padding-left: 15vw;
+    padding-right: 3vw;
     overflow-y: scroll;
 }
+
