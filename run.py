@@ -1,5 +1,5 @@
 from app.app import app
-from app.settings import engine, app_login_url, cas_url
+from app.settings import engine, app_login_url, cas_url, proxy_url
 from app.settings import cas_client
 import flask
 from sqlalchemy.orm import sessionmaker
@@ -7,19 +7,20 @@ from app.index import *
 from pprint import pprint
 from cas_client import CASClient
 from flask import Flask, redirect, request, session, url_for
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
 app.secret_key ='pandash'
 
 
 @app.route('/login')
 def login():
     ticket = request.args.get('ticket')
-    print(ticket)
     if ticket:
         try:
             cas_response = cas_client.perform_service_validate(
                 ticket=ticket,
-                service_url=app_login_url,
+                service_url=app_login_url
                 )
         except:
             # CAS server is currently broken, try again later.

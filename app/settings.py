@@ -4,7 +4,9 @@ from cas_client import CASClient
 
 app_login_url = 'http://127.0.0.1:5000/login'
 cas_url = 'https://cas.ecs.kyoto-u.ac.jp/cas'
-cas_client = CASClient(cas_url, auth_prefix='')
+proxy_url = 'https://cas.ecs.kyoto-u.ac.jp/cas/proxy'
+targetService = f'{app_login_url}/proxy'
+cas_client = CASClient(cas_url, auth_prefix='', proxy_url=proxy_url, proxy_callback=targetService)
 
 # engine = create_engine(
 #     'mysql://pandash:pandash@localhost/pandash00?charset=utf8', echo=False)
