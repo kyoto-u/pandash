@@ -383,16 +383,17 @@ def add_student_resource(studentid,data):
     """
         data: resourceurl, studentid, status
     """
-    resource_exist = False
     sr = session.query(studentresource.Student_Resource).filter(studentresource.Student_Resource.student_id ==studentid).all()
+    resource_exist = False
+    new_sr = []
     for item in data:
         for i in sr:
-            if i.resource_url == item["resourceurl"]:
+            if i.resource_url == item["resource_url"]:
                 resource_exist = True
                 break
         if resource_exist == False:
-            new_sr = studentresource.Student_Resource(resource_url=item["resourceurl"], student_id=item["studentid"], status=item["status"])
-            session.add(new_sr)
+            new_sr.append(new_sr)
+    session.execute(studentresource.Student_Resource.__table__.insert(),new_sr)
     session.commit()
     return
 
