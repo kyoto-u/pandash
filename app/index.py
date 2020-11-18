@@ -435,14 +435,15 @@ def add_studentcourse(studentid, data):
     """
     sc = session.query(studentcourse.Studentcourse).filter(studentcourse.Studentcourse.student_id == studentid).all()
     course_exist = False
+    new_sc=[]
     for item in data:
         for i in sc:
             if i.course_id == item["course_id"]:
                 coure_exist = True
                 break
         if course_exist == False:
-            new_sc = studentcourse.Studentcourse(student_id=item["student_id"], course_id=item["course_id"])
-            session.add(new_sc)
+            new_sc.append(item)
+    session.execute(studentcourse.Studentcourse.__table__.insert(),new_sc)
     session.commit()
     return
 
