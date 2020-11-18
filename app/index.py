@@ -354,14 +354,15 @@ def add_student_assignment(studentid, data):
     sa = session.query(
         studentassignment.Student_Assignment.assignment_id).filter(studentassignment.Student_Assignment.student_id == studentid).all()
     assignment_exist = False
+    new_sa=[]
     for item in data:
         for i in sa:
             if i.assignment_id == item["assignment_id"]:
                 assignment_exist = True
                 break
         if assignment_exist == False:
-            new_sa = studentassignment.Student_Assignment(assignment_id=item["assignment_id"], student_id=item["student_id"], status=item["status"])
-            session.add(new_sa)
+            new_sa.append(item)
+    session.execute(studentassignment.Student_Assignment.__table__.insert(),new_sa)
     session.commit()
     return
 
