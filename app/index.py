@@ -353,14 +353,15 @@ def add_student_assignment(studentid, data):
     """
     sa = session.query(
         studentassignment.Student_Assignment.assignment_id).filter(studentassignment.Student_Assignment.student_id == studentid).all()
-
+    assignment_exist = False
     for item in data:
         for i in sa:
             if i.assignment_id == item["assignment_id"]:
-                continue
-
-        new_sa = studentassignment.Student_Assignment(assignment_id=item["assignment_id"], student_id=item["student_id"], status=item["status"])
-        session.add(new_sa)
+                assignment_exist = True
+                break
+        if assignment_exist == False:
+            new_sa = studentassignment.Student_Assignment(assignment_id=item["assignment_id"], student_id=item["student_id"], status=item["status"])
+            session.add(new_sa)
     session.commit()
     return
 
@@ -382,14 +383,16 @@ def add_student_resource(studentid,data):
     """
         data: resourceurl, studentid, status
     """
+    resource_exist = False
     sr = session.query(studentresource.Student_Resource).filter(studentresource.Student_Resource.student_id ==studentid).all()
     for item in data:
         for i in sr:
             if i.resource_url == item["resourceurl"]:
-                continue
-
-        new_sr = studentresource.Student_Resource(resource_url=item["resourceurl"], student_id=item["studentid"], status=item["status"])
-        session.add(new_sr)
+                resource_exist = True
+                break
+        if resource_exist == False:
+            new_sr = studentresource.Student_Resource(resource_url=item["resourceurl"], student_id=item["studentid"], status=item["status"])
+            session.add(new_sr)
     session.commit()
     return
 
@@ -431,13 +434,15 @@ def add_studentcourse(studentid, data):
         data:[{student_id:"", course_id:""},{}]
     """
     sc = session.query(studentcourse.Studentcourse).filter(studentcourse.Studentcourse.student_id == studentid).all()
+    course_exist = False
     for item in data:
         for i in sc:
             if i.course_id == item["course_id"]:
-                continue
-
-        new_sc = studentcourse.Studentcourse(student_id=item["student_id"], course_id=item["course_id"])
-        session.add(new_sc)
+                coure_exist = True
+                break
+        if course_exist == False:
+            new_sc = studentcourse.Studentcourse(student_id=item["student_id"], course_id=item["course_id"])
+            session.add(new_sc)
     session.commit()
     return
 

@@ -14,6 +14,10 @@ html{
     padding-top:8;
 }
 
+#faqque{
+    background-color: silver;
+    color: black;
+}
 
 body {
     display: flex;
@@ -37,32 +41,33 @@ footer {
     background-color: silver;
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 700px) {
 /* 480pxまでの幅の場合に適応される */
 #kyoudailogo{
     width:250;
     height:125;
-    margin-left: calc(50vw - 250px);
+    margin-left: calc(50vw - 310px);
+    margin-right: 30;
 }
 
 #KIMClogo{
-    width:250;
+    width:337;
     height:125;
-    margin-right: calc(50vw - 250px);
+    margin-right: calc(50vw - 310px);
 }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 700px) {
 /* 320pxまでの幅の場合に適応される */
 #kyoudailogo{
-    width:40vw;
-    height:20vw;
-    margin-left: 10vw;
+    width:30vw;
+    height:15vw;
+    margin-left: 15vw;
 }
 
 #KIMClogo{
     width:40vw;
-    height:20vw;
-    margin-right: 10vw;
+    height:15vw;
+    margin-right: 15vw;
 }
 }
