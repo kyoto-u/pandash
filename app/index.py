@@ -1,3 +1,5 @@
+from math import *
+import time
 from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment
 from .settings import session, app_login_url
 import re
@@ -5,8 +7,7 @@ from pprint import pprint
 import copy
 
 
-
-def get_tasklist(studentid,courseid = None, day = None, mode=0):
+def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):
     """
         mode
         0:tasklist
@@ -31,32 +32,50 @@ def get_tasklist(studentid,courseid = None, day = None, mode=0):
     # session.add(new_student)
     # session.commit()
 
-    enrollments = session.query(studentassignment.Student_Assignment).filter(
-        studentassignment.Student_Assignment.student_id == studentid).all()
+    if show_only_unfinished == False:
+        enrollments = session.query(studentassignment.Student_Assignment).filter(
+            studentassignment.Student_Assignment.student_id == studentid).all()
+    else:
+        enrollments = session.query(studentassignment.Student_Assignment).filter(
+            studentassignment.Student_Assignment.student_id == studentid).filter(
+                studentassignment.Student_Assignment.status == "未").all()
+    assignmentids =[i.assignmnet_id for i in enrollments]
+    course_to_be_taken=get_courses_to_be_taken(studentid)
+    courseids = [i.course_id for i in course_to_be_taken]
+    assignmentdata = session.query(assignment.Assignment).filter(
+        assignment.Assignment.assignment_id.in_(assignmentids)).all()
+    
+    coursedata = session.query(course.Course).filter(
+            course.Course.course_id.in_(courseids)).all()
+    
     tasks = []
     for data in enrollments:
-        assignmentdata = session.query(assignment.Assignment).filter(
-            assignment.Assignment.assignment_id == data.assignment_id).all()
+        if data["course_id"] not in courseids:
+            continue
+        asmdata = [i for i in assignmentdata if i.assignment_id == data.assignment_id]
+        crsdata = [i for i in coursedata if i.course_id == data.course_id]
+        
         if courseid != None:
-            if courseid != assignmentdata[0].course_id:
+            if courseid != asmdata[0].course_id:
                 continue
-        coursedata = session.query(course.Course).filter(
-            course.Course.course_id == assignmentdata[0].course_id).all()
-        if day !=None:
-            if day not in coursedata[0].classschedule:
+        if day != None:
+            if day not in crsdata[0].classschedule:
                 continue
+        
         task = {}
         task["status"] = data.status
-        task["taskname"] = assignmentdata[0].title
+        task["taskname"] = asmdata[0].title
         task["assignmentid"] = data.assignment_id
-        task["deadline"] = assignmentdata[0].limit_at
-        task["time_left"] = remain_time(assignmentdata[0].time_ms)
+        task["deadline"] = asmdata[0].limit_at
+        task["time_left"] = remain_time(asmdata[0].time_ms)
         if mode == 1:
             # overviewのtooltipsに使用
-            task["instructions"] = assignmentdata[0].instructions
-        task["subject"] = coursedata[0].coursename
+            task["instructions"] = asmdata[0].instructions
+
+        task["subject"] = crsdata[0].coursename
         if mode == 1:
-            task["classschedule"] = coursedata[0].classschedule
+            task["classschedule"] = crsdata[0].classschedule
+
         tasks.append(task)
     return tasks
 
@@ -162,13 +181,14 @@ def task_arrange_for_overview(tasks,task_arranged):
             task_arranged[task["classschedule"]]["tasks"].append(task)
     return task_arranged
 
+
 def get_resource_list(studentid, course_id=None, day=None):
     resource_list = []
     resources = session.query(studentresource.Student_Resource).filter(
         studentresource.Student_Resource.student_id == studentid).all()
     for data in resources:
         resourcedata = session.query(resource.Resource).filter(
-            resource.Resource.resource_url == data.resource_url).all()       
+            resource.Resource.resource_url == data.resource_url).all()
         if course_id != None:
             if course_id != resourcedata[0].course_id:
                 continue
@@ -185,6 +205,7 @@ def get_resource_list(studentid, course_id=None, day=None):
         resource_dict["status"] = data.status
         resource_list.append(resource_dict)
     return resource_list
+
 
 def resource_arrange(resource_list:list, coursename:str):
     course = {"folders":[],"files":[],"name":coursename}
@@ -239,7 +260,7 @@ def resource_arrange(resource_list:list, coursename:str):
         container_spilt = container.split('/')
         del container_spilt[-1]
         for i in range(4):
-            del container_spilt[0]     
+            del container_spilt[0]
         folder_id = '/'.join(container_spilt)
         folder = re.search(f'<li id="{folder_id}">',html)
         search_num = folder.end()
@@ -317,7 +338,7 @@ def add_assignment(assignmentid, url,
             break
     if isExist == False:
         new_assignment = assignment.Assignment(assignment_id=assignmentid, url=url, title=title, \
-            limit_at=limit_at, instructions=instructions, time_ms=time_ms/1000, modifieddate=modifieddate, course_id=courseid)
+                                               limit_at=limit_at, instructions=instructions, time_ms=time_ms/1000, modifieddate=modifieddate, course_id=courseid)
         session.add(new_assignment)
         session.commit()
     elif need_update:
@@ -332,7 +353,7 @@ def add_assignment(assignmentid, url,
     return
 
 def add_course(courseid, instructorid, \
-                    coursename, yearsemester, classschedule):
+               coursename, yearsemester, classschedule):
     courses = session.query(course.Course.course_id).all()
     isExist = False
     for i in courses:
@@ -341,7 +362,7 @@ def add_course(courseid, instructorid, \
             break
     if isExist == False:
         new_course = course.Course(course_id=courseid, instructor_id=instructorid, \
-            coursename=coursename, yearsemester=yearsemester, classschedule=classschedule)
+                                   coursename=coursename, yearsemester=yearsemester, classschedule=classschedule)
         session.add(new_course)
         session.commit()
     return
@@ -492,8 +513,6 @@ def order_status(status):
     else:
         return 3
 
-from math import *
-import time
 def remain_time(time_ms):
     ato = 'あと'
     now = floor(time.time())
