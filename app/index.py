@@ -39,7 +39,7 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
         enrollments = session.query(studentassignment.Student_Assignment).filter(
             studentassignment.Student_Assignment.student_id == studentid).filter(
                 studentassignment.Student_Assignment.status == "未").all()
-    assignmentids =[i.assignmnet_id for i in enrollments]
+    assignmentids =[i.assignment_id for i in enrollments]
     course_to_be_taken=get_courses_to_be_taken(studentid)
     courseids = [i.course_id for i in course_to_be_taken]
     assignmentdata = session.query(assignment.Assignment).filter(
@@ -50,10 +50,8 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
     
     tasks = []
     for data in enrollments:
-        if data["course_id"] not in courseids:
-            continue
         asmdata = [i for i in assignmentdata if i.assignment_id == data.assignment_id]
-        crsdata = [i for i in coursedata if i.course_id == data.course_id]
+        crsdata = [i for i in coursedata if i.course_id == asmdata[0].course_id]
         
         if courseid != None:
             if courseid != asmdata[0].course_id:
@@ -61,6 +59,8 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
         if day != None:
             if day not in crsdata[0].classschedule:
                 continue
+        if asmdata[0].course_id not in courseids:
+            continue
         
         task = {}
         task["status"] = data.status
@@ -414,7 +414,7 @@ def add_student_resource(studentid,data):
                 resource_exist = True
                 break
         if resource_exist == False:
-            new_sr.append(new_sr)
+            new_sr.append(item)
     session.execute(studentresource.Student_Resource.__table__.insert(),new_sr)
     session.commit()
     return
