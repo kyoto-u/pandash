@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PandAsh</title>
+    <!-- BootstrapのCSS読み込み -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <!-- jQuery読み込み -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
+    <!-- BootstrapのJS読み込み -->
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+    <script src="https://kit.fontawesome.com/7bb95e7ca3.js" crossorigin="anonymous"></script>
+    <script>
+        $(function () {
+            $('#example-main').scrollspy({ offset: $(window).height() / 2 });
+        });
+    </script>
+
+    <style>
+        body {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            bottom: 0;
+        }
+
+        #example-menu {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 10vw;
+            z-index: 1;
+            background-color: #f6f6f6;
+            font-size: small;
+        }
+
+
+        #example-main {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            padding-top: 20;
+            padding-left: 15vw;
+            padding-right: 3vw;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="example-menu" class="list-group">
+        <div class="mx-auto">チュートリアル</div>
+        <a class="list-group-item list-group-item-action active" href="#section-outline">PandAshについて</a>
+        <a class="list-group-item list-group-item-action" href="#section-tasklist">課題表：一覧表示について</a>
+        <a class="list-group-item list-group-item-action" href="#section-iCal">iCalについて</a>
+    </div>
+    <div class="example-menu">
+        <section id="section-outline">
+            {% include "tutrial_outline.htm" %}
+
+        </section>
+        <section id="section-tasklist">
+            {% include "tutrial_tasklist.htm" %}
+
+        </section>
+        <section id="section-iCal">
+            {% include "tutrial_iCal.htm" %}
+
+        </section>
+    </div>
+</body>
+
+</html>

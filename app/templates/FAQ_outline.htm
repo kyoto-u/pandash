@@ -1,0 +1,27 @@
+{% set qnum = namespace(cnt = 1) %}
+{% macro faq(ques,ans) %}
+<div class="card">
+    <div class="card-header" id="header-4a">
+        <button id="faqque" class="btn btn-link" type="button" data-toggle="collapse" data-target="#B{{ qnum.cnt }}"
+            aria-expanded="true" aria-controls="B{{ qnum.cnt }}" style="background-color: #00000008;
+    color: black;">
+            <small>◯</small>
+            {{ ques }}
+        </button>
+    </div>
+    <div id="B{{ qnum.cnt }}" class="collapse" aria-labelledby="header-4a">
+        <div class="card-body">
+            {{ ans }}
+        </div>
+    </div>
+</div>
+{% set qnum.cnt = qnum.cnt + 1 %}
+{% endmacro %}
+<section id="section-outline">
+    <i class="fas fa-chevron-circle-right">PandAshについて</i>
+    <div class="accordion mb-3" id="que_acc1">
+        {{ faq('PandAshは何ができますか', 'PandAshはPandAのダッシュボードです。未提出の課題を一覧で確認することができます。また、授業資料を一括でダウンロードできます。') }}
+        {{ faq('使い方がわからないのですが','このページ上部のリンクからPandAshチュートリアルを参照してください') }}
+        {{ faq('スマホ版だとメニューの項目が少ないのですが','授業資料のダウンロードと iCal ファイルのダウンロードは PC でのみ行うことができます') }}
+    </div>
+</section>

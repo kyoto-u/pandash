@@ -1,0 +1,24 @@
+{% extends "_homebase.htm" %}
+{% block homebodycontent %}
+
+{% set qnum = namespace(cnt = 1) %}
+
+<a class="my-5" href="#"><i class="far fa-question-circle">PandAshをはじめてお使いになる方はこちら</i></a>
+
+<h1 class="mt-4 mb-3">FAQ</h1>
+
+
+
+
+{% include "FAQ_outline.htm" %}
+
+{% include "FAQ_tasklist.htm" %}
+
+{% include "FAQ_overview.htm" %}
+
+{% include "FAQ_resdownload.htm" %}
+
+{% include "FAQ_other.htm" %}
+
+
+{% endblock %}

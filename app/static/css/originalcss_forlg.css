@@ -13,6 +13,10 @@ html{
     padding-top: 13;
 }
 
+#help_button{
+    color:skyblue;
+}
+
 #wrapper {
     display: flex;
     flex-direction: column;
