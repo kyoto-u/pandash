@@ -34,18 +34,28 @@
         </div>
       </div>
         <div class="col-4">
-            <button class="btn btn-secondary btn-lg">未入手資料を一括ダウンロード</button>
-            <button class="btn btn-success btn-sm mt-1">選択した資料をダウンロード</button>
+            <button class="btn btn-secondary btn-lg">
+              <a href="#" onclick="return all_click();">
+                未入手資料を一括ダウンロード
+              </a>
+            </button>
+            <button class="btn btn-success btn-sm mt-1">
+              <a href="#" onclick="return checkedlist_click();">
+                選択した資料をダウンロード
+              </a>
+            </button>
         </div>
-        <div class="col-12 pt-1" id="resdownload_body">
+        <!-- <div class="col-12 pt-1" id="resdownload_body">
             <h2>・授業資料</h2>
-        </div>
+        </div> -->
         <div class="col-12">
             <!-- <span><i class="far fa-folder">[2020前期月5]ILASセミナーのリソース</i></span> -->
-            <ul>
+            <ul class="list-group list-group-horizontal">
                 {{ html | safe}}
             </ul>
         </div>
     </div>
 </div>
+<!-- <script src="{{ url_for('static', filename='js/resource.js') }}"></script> -->
+<script type="text/javascript" src="/static/js/resource.js"></script>
 {% endblock %}

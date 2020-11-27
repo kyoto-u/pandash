@@ -16,12 +16,15 @@ app.secret_key ='pandash'
 @app.route('/login')
 def login():
     ticket = request.args.get('ticket')
+    pgt = ""
     if ticket:
         try:
             cas_response = cas_client.perform_service_validate(
                 ticket=ticket,
                 service_url=app_login_url
                 )
+            # pgt = cas_response.data['proxyGrantingTicket']
+            print(cas_response.data)
         except:
             # CAS server is currently broken, try again later.
             return redirect(url_for('root'))
@@ -214,7 +217,9 @@ def resources_sample():
     course_ids = get_courseids(studentid)
     html = ""
     for c_id in course_ids:
-        html = html + resource_arrange(get_resource_list(studentid, c_id[0]), get_coursename(c_id[0]))
+        resource_list = get_resource_list(studentid, c_id[0])
+        if resource_list != []:
+            html += resource_arrange(resource_list, get_coursename(c_id[0]))
     data = setdefault_for_overview(studentid, mode='resourcelist')
     return flask.render_template('resources_sample.htm', html=html, data=data)
 
