@@ -379,14 +379,15 @@ def add_student_assignment(studentid, data):
     sa = session.query(
         studentassignment.Student_Assignment.assignment_id).filter(studentassignment.Student_Assignment.student_id == studentid).all()
     assignment_exist = False
+    new_sa = []
     for item in data:
         for i in sa:
             if i.assignment_id == item["assignment_id"]:
                 assignment_exist = True
                 break
         if assignment_exist == False:
-            new_sa = studentassignment.Student_Assignment(assignment_id=item["assignment_id"], student_id=item["student_id"], status=item["status"])
-            session.add(new_sa)
+            new_sa.append(item)
+    session.execute(studentassignment.Student_Assignment.__table__.insert(),new_sa)
     session.commit()
     return
 
@@ -410,6 +411,7 @@ def add_student_resource(studentid,data):
     """
     resource_exist = False
     sr = session.query(studentresource.Student_Resource).filter(studentresource.Student_Resource.student_id ==studentid).all()
+    new_sr = []
     for item in data:
         for i in sr:
             if i.resource_url == item["resourceurl"]:
@@ -460,14 +462,15 @@ def add_studentcourse(studentid, data):
     """
     sc = session.query(studentcourse.Studentcourse).filter(studentcourse.Studentcourse.student_id == studentid).all()
     course_exist = False
+    new_sc = []
     for item in data:
         for i in sc:
             if i.course_id == item["course_id"]:
-                coure_exist = True
+                course_exist = True
                 break
         if course_exist == False:
-            new_sc = studentcourse.Studentcourse(student_id=item["student_id"], course_id=item["course_id"])
-            session.add(new_sc)
+            new_sc.append(item)
+    session.excute(studentcourse.Studentcourse.__table__.insert(),new_sc)
     session.commit()
     return
 
