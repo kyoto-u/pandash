@@ -10,20 +10,20 @@
         <!--曜日しぼりこみ-->
         <div class="form-group">
           <label for="select0a">科目</label>
-          <select id="select0a" class="form-control">
-            <option>全ての曜日</option>
-            <option>月曜のみ</option>
-            <option>火曜のみ</option>
-            <option>水曜のみ</option>
-            <option>木曜のみ</option>
-            <option>金曜のみ</option>
+          <select id="select0a" class="form-control" onchange="location.href=value;">
+            <option value="/tasklist">全ての曜日</option>
+            <option value="/tasklist/day/mon" {% if day=='mon' %}selected{% endif %}>月曜のみ</option>
+            <option value="/tasklist/day/tue" {% if day=='tue' %}selected{% endif %}>火曜のみ</option>
+            <option value="/tasklist/day/wed" {% if day=='wed' %}selected{% endif %}>水曜のみ</option>
+            <option value="/tasklist/day/thu" {% if day=='thu' %}selected{% endif %}>木曜のみ</option>
+            <option value="/tasklist/day/fri" {% if day=='fri' %}selected{% endif %}>金曜のみ</option>
           </select>
         </div>
         <!--時間割検索機能-->
         <button id="timesearchbutton" type="button" class="btn btn-dark" data-toggle="modal"
           data-target="#modal_timeboard_select">時間割で検索</button>
         <div class="d-none d-md-block" id="tali_flag">
-          <div class="container">
+          <div class="container" id="finish_tasks" ondragover="f_dragover(event)" ondrop="f_drop(event)">
             <i class="fas fa-flag-checkered">ここに課題をドラッグ＆ドロップして完了済みにする</i>
           </div>
         </div>
@@ -101,4 +101,5 @@
       </table>
     </div>
   </div>
+  <script type="text/javascript" src="/static/js/f_tasks.js"></script>
   {% endblock %}
