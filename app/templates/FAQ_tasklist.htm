@@ -17,9 +17,9 @@
 </div>
 {% set qnum.cnt = qnum.cnt + 1 %}
 {% endmacro %}
-<section id="section-tasklist">
+<section id="faq-tasklist">
     <i class="fas fa-chevron-circle-right">課題の一覧表示について</i>
-    <div class="accordion mb-3" id="que_acc2">
+    <div class="accordion" id="que_acc2">
         {{ faq('表示される課題はどのようなものですか','PandAshはPandAと連携をとっています。あなたがPandA上で登録した科目から出された課題のうち、未提出のものを表示しています') }}
         {{ faq('課題を「完了済」にするためにはどうすればよいですか','課題を「完了済」にする機能はPC・タブレット版のみに実装されています。ページ左部の「ここに課題をドラッグ&ドロップして完了済みにする」に、完了済にしたい課題名の書かれた文字をドラッグ＆ドロップしてください。') }}
         {{ faq('PandAで提出した課題はPandAshで自動的に「完了済」になりますか','なりません。未提出課題を「完了済」にするためにはPandAsh上で手動で操作する必要があります。') }}

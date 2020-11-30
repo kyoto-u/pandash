@@ -17,9 +17,9 @@
 </div>
 {% set qnum.cnt = qnum.cnt + 1 %}
 {% endmacro %}
-<section id="section-overview">
+<section id="faq-overview">
     <i class="fas fa-chevron-circle-right">課題の時間割表示について</i>
-    <div class="accordion mb-3" id="que_acc3">
+    <div class="accordion" id="que_acc3">
         {{ faq('その他の科目とはなんですか','時間割に表示することができなかった科目です。たとえば１時限に２つの授業が重なっている場合、一方のみが時間割内に表示され、もう一方はその他の科目に表示されます。また、「教職課程オリエンテーション」などのページもその他の科目に表示されます。') }}
         {{ faq('全ての課題が表示されていないのですが','時間割表示画面では、表示される課題数は１つの科目につき最大2つまでです。表示された課題を完了済みにすると、未完了の課題が新たに表示されます') }}
         {{ faq('表示される課題はどのようなものですか','PandAshはPandAと連携をとっています。あなたがPandA上で登録した科目から出された課題のうち、未提出のものを表示しています') }}

@@ -2,80 +2,47 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PandAsh</title>
-    <!-- BootstrapのCSS読み込み -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-    <!-- jQuery読み込み -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
-    <!-- BootstrapのJS読み込み -->
-    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <title>PandAsh Tutrial</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flexible_help.css') }}" type="text/css">
     <script src="https://kit.fontawesome.com/7bb95e7ca3.js" crossorigin="anonymous"></script>
     <script>
         $(function () {
             $('#example-main').scrollspy({ offset: $(window).height() / 2 });
         });
     </script>
-
-    <style>
-        body {
-            position: absolute;
-            width: 100%;
-            top: 0;
-            bottom: 0;
-        }
-
-        #example-menu {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 10vw;
-            z-index: 1;
-            background-color: #f6f6f6;
-            font-size: small;
-        }
-
-
-        #example-main {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 100%;
-            padding-top: 20;
-            padding-left: 15vw;
-            padding-right: 3vw;
-            overflow-y: scroll;
-        }
-    </style>
 </head>
 
 <body>
-    <div id="example-menu" class="list-group">
+    <div id="example-menu" class="list-group d-none d-md-block">
         <div class="mx-auto">チュートリアル</div>
-        <a class="list-group-item list-group-item-action active" href="#section-outline">PandAshについて</a>
-        <a class="list-group-item list-group-item-action" href="#section-tasklist">課題表：一覧表示について</a>
-        <a class="list-group-item list-group-item-action" href="#section-iCal">iCalについて</a>
+        <a class="list-group-item list-group-item-action active" href="#section-outline">PandAshでできること</a>
+        <a class="list-group-item list-group-item-action" href="#section-tasklist">課題表：一覧表示</a>
+        <a class="list-group-item list-group-item-action" href="#section-iCal">iCalと共有</a>
     </div>
-    <div class="example-menu">
-        <section id="section-outline">
-            {% include "tutrial_outline.htm" %}
+    <div id="example-main">
+        <p>
+        <h1 class="mb-5">PandAshチュートリアル</h1>
+        </p>
+        {% include "tutrial_outline.htm" %}
+        {% include "FAQ_outline.htm" %}
 
-        </section>
-        <section id="section-tasklist">
-            {% include "tutrial_tasklist.htm" %}
+        {% include "tutrial_tasklist.htm" %}
 
-        </section>
-        <section id="section-iCal">
-            {% include "tutrial_iCal.htm" %}
+        {% include "tutrial_iCal.htm" %}
 
-        </section>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

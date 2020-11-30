@@ -41,9 +41,10 @@ body {
     height:50px;    
 }
 
-.tutrialtext{
-    height:300px;
+#tutrialtext{
+    height:200px;
 }
+
 
 #example-main {
     position: absolute;
