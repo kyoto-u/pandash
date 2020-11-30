@@ -1,7 +1,7 @@
 from math import *
 import time
 from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment
-from .settings import session, app_login_url
+from .settings import session, app_url
 import re
 from pprint import pprint
 import copy
@@ -129,14 +129,14 @@ def setdefault_for_overview(studentid, mode='tasklist'):
             else:
                 # 新しい教科を追加
                 data["others"].append({})
-                data["others"][index]["searchURL"] = app_login_url+ f"/{mode}/course/"+course.course_id
+                data["others"][index]["searchURL"] = app_url+ f"/{mode}/course/"+course.course_id
                 data["others"][index]["subject"] = course.coursename
                 data["others"][index]["shortname"] = re.sub(
                     "\[.*\]", "", course.coursename)
                 data["others"][index]["tasks"] = []
 
         elif add_subject == True:
-            data[course.classschedule]["searchURL"] = app_login_url+ f"/{mode}/course/"+course.course_id
+            data[course.classschedule]["searchURL"] = app_url+ f"/{mode}/course/"+course.course_id
             data[course.classschedule]["subject"] = course.coursename
             data[course.classschedule]["shortname"] = re.sub(
                 "\[.*\]", "", course.coursename)

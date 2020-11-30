@@ -1,5 +1,5 @@
 from app.app import app
-from app.settings import engine, app_login_url, cas_url, proxy_url
+from app.settings import engine, app_url,app_login_url, cas_url, proxy_url
 from app.settings import cas_client
 import flask
 from sqlalchemy.orm import sessionmaker
