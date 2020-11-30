@@ -37,12 +37,12 @@
 
     <div class="col-4">
       <button class="btn btn-secondary btn-lg">
-        <a href="#" onclick="return all_click();">
+        <a style="color: white;" href="#" onclick="return all_click();">
           未入手資料を一括ダウンロード
         </a>
       </button>
       <button class="btn btn-success btn-sm mt-1">
-        <a href="#" onclick="return checkedlist_click();">
+        <a style="color: white;" href="#" onclick="return checkedlist_click();">
           選択した資料をダウンロード
         </a>
       </button>
@@ -54,6 +54,80 @@
       <!-- <span><i class="far fa-folder">[2020前期月5]ILASセミナーのリソース</i></span> -->
       <ul class="list-group list-group-horizontal">
         {{ html | safe}}
+        <!--サンプルコード-->
+        <div class="card-columns">
+          <div class="card">
+            <div class="card-body">
+              <a href="#">[2020前期月5]ILASセミナーのリソース</a>
+              <span><i class="far fa-folder">[2020前期月5]ILASセミナーのリソース</i></span>
+              <ul>
+                <li><i class="far fa-folder">第一回</i>
+                  <ul>
+                    <li>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="check1a" />
+                        <label class="form-check-label" for="check1a">sample1.pdf</label>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="check1b" />
+                        <label class="form-check-label" for="check1b">sample1.docx</label>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="check1c" />
+                        <label class="form-check-label" for="check1c">課題１.pdf</label>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+                <li><i class="far fa-folder">第二回</i>
+                  <ul>
+                    <li>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="check1d" />
+                        <label class="form-check-label" for="check1d">sample2.pdf</label>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="check1e" />
+                        <label class="form-check-label" for="check1e">sample2.docx</label>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="check1f" />
+                        <label class="form-check-label" for="check1f">課題2.pdf</label>
+                      </div>
+                    </li>
+                    <li><i class="fas fa-folder-plus">ソースサンプル</i>
+                      <ul>
+                        <li>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="check1g" />
+                            <label class="form-check-label" for="check1g">index.py</label>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="d-inline-flex">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="check1h" checked disabled />
+                              <label class="form-check-label" for="check1h"><a href="#" data-container='body'
+                                  data-toggle="tooltip" title="このファイルを再ダウンロードする">page1.htm</a></label>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </ul>
     </div>
   </div>
