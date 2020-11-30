@@ -1,5 +1,5 @@
 from app.app import app
-from app.settings import engine, app_login_url, cas_url
+from app.settings import engine, app_url,app_login_url, cas_url, proxy_url
 from app.settings import cas_client
 import flask
 from sqlalchemy.orm import sessionmaker
@@ -7,20 +7,24 @@ from app.index import *
 from pprint import pprint
 from cas_client import CASClient
 from flask import Flask, redirect, request, session, url_for
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
 app.secret_key ='pandash'
 
 
 @app.route('/login')
 def login():
     ticket = request.args.get('ticket')
-    print(ticket)
+    pgt = ""
     if ticket:
         try:
             cas_response = cas_client.perform_service_validate(
                 ticket=ticket,
-                service_url=app_login_url,
+                service_url=app_login_url
                 )
+            # pgt = cas_response.data['proxyGrantingTicket']
+            print(cas_response.data)
         except:
             # CAS server is currently broken, try again later.
             return redirect(url_for('root'))
@@ -89,28 +93,34 @@ def controller():
 @app.route('/controller_for_students/<studentid>')
 def controller_for_students(studentid):
     add_student(studentid,'s_fullname')
-    add_student_assignment(studentid,[{'assignment_id':'assignmentid1', 'student_id':studentid, 'status':'未'}])
-    add_student_assignment(studentid,[{'assignment_id':'assignmentid2', 'student_id':studentid, 'status':'未'}])
-    add_student_assignment(studentid,[{'assignment_id':'assignmentid3', 'student_id':studentid, 'status':'未'}])
-    add_student_assignment(studentid,[{'assignment_id':'assignmentid4', 'student_id':studentid, 'status':'未'}])
-    add_student_assignment(studentid,[{'assignment_id':'assignmentid5', 'student_id':studentid, 'status':'未'}])
-    add_student_assignment(studentid,[{'assignment_id':'assignmentid6', 'student_id':studentid, 'status':'未'}])
-    add_student_assignment(studentid,[{'assignment_id':'assignmentid7', 'student_id':studentid, 'status':'未'}])
-    add_studentcourse(studentid, [{"student_id":studentid,"course_id":"course1"}])
-    add_studentcourse(studentid, [{"student_id":studentid,"course_id":"course2"}])
-    add_studentcourse(studentid, [{"student_id":studentid,"course_id":"course3"}])
-    add_studentcourse(studentid, [{"student_id":studentid,"course_id":"course4"}])
+    sc_data=[]
+    sa_data=[]
+    sr_data=[]
+    sa_data.append({'assignment_id':'assignmentid1', 'student_id':studentid, 'status':'未'})
+    sa_data.append({'assignment_id':'assignmentid2', 'student_id':studentid, 'status':'未'})
+    sa_data.append({'assignment_id':'assignmentid3', 'student_id':studentid, 'status':'未'})
+    sa_data.append({'assignment_id':'assignmentid4', 'student_id':studentid, 'status':'未'})
+    sa_data.append({'assignment_id':'assignmentid5', 'student_id':studentid, 'status':'未'})
+    sa_data.append({'assignment_id':'assignmentid6', 'student_id':studentid, 'status':'未'})
+    sa_data.append({'assignment_id':'assignmentid7', 'student_id':studentid, 'status':'未'})
+    sc_data.append({"student_id":studentid,"course_id":"course1"})
+    sc_data.append({"student_id":studentid,"course_id":"course2"})
+    sc_data.append({"student_id":studentid,"course_id":"course3"})
+    sc_data.append({"student_id":studentid,"course_id":"course4"})
     for i in range(30):
-        add_studentcourse(studentid,[{"student_id":studentid,"course_id":f"dummy{i}"}])
+        sc_data.append({"student_id":studentid,"course_id":f"dummy{i}"})
         for j in range(10):
-            add_student_assignment(studentid,[{"assignment_id":f'dummyassignment{i}-{j}', "student_id":studentid, "status":'未'}])
-    add_student_resource(studentid, [{"resourceurl":'url1', "studentid":studentid, "status":0}])
-    add_student_resource(studentid, [{"resourceurl":'url2', "studentid":studentid, "status":0}])
-    add_student_resource(studentid, [{"resourceurl":'url3', "studentid":studentid, "status":0}])
-    add_student_resource(studentid, [{"resourceurl":'url4', "studentid":studentid, "status":0}])
-    add_student_resource(studentid, [{"resourceurl":'url5', "studentid":studentid, "status":0}])
-    add_student_resource(studentid, [{"resourceurl":'url6', "studentid":studentid, "status":0}])
-    add_student_resource(studentid, [{"resourceurl":'url7', "studentid":studentid, "status":0}])
+            sa_data.append({"assignment_id":f'dummyassignment{i}-{j}', "student_id":studentid, "status":'未'})
+    sr_data.append({"resource_url":'url1', "student_id":studentid, "status":0})
+    sr_data.append({"resource_url":'url2', "student_id":studentid, "status":0})
+    sr_data.append({"resource_url":'url3', "student_id":studentid, "status":0})
+    sr_data.append({"resource_url":'url4', "student_id":studentid, "status":0})
+    sr_data.append({"resource_url":'url5', "student_id":studentid, "status":0})
+    sr_data.append({"resource_url":'url6', "student_id":studentid, "status":0})
+    sr_data.append({"resource_url":'url7', "student_id":studentid, "status":0})
+    add_studentcourse(studentid,sc_data)
+    add_student_assignment(studentid,sa_data)
+    add_student_resource(studentid, sr_data)
     return ''
     
 
@@ -207,7 +217,9 @@ def resources_sample():
     course_ids = get_courseids(studentid)
     html = ""
     for c_id in course_ids:
-        html = html + resource_arrange(get_resource_list(studentid, c_id[0]), get_coursename(c_id[0]))
+        resource_list = get_resource_list(studentid, c_id[0])
+        if resource_list != []:
+            html += resource_arrange(resource_list, get_coursename(c_id[0]))
     data = setdefault_for_overview(studentid, mode='resourcelist')
     return flask.render_template('resources_sample.htm', html=html, data=data)
 
