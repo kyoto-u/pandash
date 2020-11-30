@@ -22,7 +22,7 @@
     <div id="example-menu" class="list-group d-none d-md-block">
         <div class="mx-auto">チュートリアル</div>
         <a class="list-group-item list-group-item-action active" href="#section-outline">PandAshでできること</a>
-        <a class="list-group-item list-group-item-action" href="#section-tasklist">課題表：一覧表示</a>
+        <a class="list-group-item list-group-item-action" href="#section-overview">課題表：時間割表示</a>
         <a class="list-group-item list-group-item-action" href="#section-iCal">iCalと共有</a>
     </div>
     <div id="example-main">
@@ -32,9 +32,11 @@
         {% include "tutrial_outline.htm" %}
         {% include "FAQ_outline.htm" %}
 
-        {% include "tutrial_tasklist.htm" %}
+        {% include "tutrial_overview.htm" %}
+        {% include "FAQ_overview.htm" %}
 
         {% include "tutrial_iCal.htm" %}
+        {% include "FAQ_other.htm" %}
 
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"

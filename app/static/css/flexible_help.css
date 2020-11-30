@@ -41,10 +41,14 @@ body {
     height:50px;    
 }
 
-#tutrialtext{
-    height:200px;
+.tutrialtext{
+    height:250px;
 }
 
+.faqboard{
+    z-index: 1;
+    padding-bottom: 50px;
+}
 
 #example-main {
     position: absolute;
@@ -80,5 +84,10 @@ body {
 h2{
     font-size: x-large;
     font-weight: bolder;
+}
+
+.faqboard{
+    z-index: 1;
+    padding-bottom: 50px;
 }
 }
