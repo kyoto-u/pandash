@@ -1,4 +1,4 @@
-@media (min-width: 768px) {
+@media (min-width: 992px) {
 
 body {
     position: absolute;
@@ -42,7 +42,7 @@ body {
 }
 
 .tutrialtext{
-    height:250px;
+    height:280px;
 }
 
 .faqboard{
@@ -64,7 +64,7 @@ body {
 }
 
 
-@media  (max-width:768px){
+@media  (max-width:991px){
 #example-main {
     position: absolute;
     top: 0;
