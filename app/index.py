@@ -470,7 +470,7 @@ def add_studentcourse(studentid, data):
                 break
         if course_exist == False:
             new_sc.append(item)
-    session.excute(studentcourse.Studentcourse.__table__.insert(),new_sc)
+    session.execute(studentcourse.Studentcourse.__table__.insert(),new_sc)
     session.commit()
     return
 
