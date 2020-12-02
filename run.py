@@ -75,6 +75,8 @@ def controller():
         add_course(f'dummy{i}', 'teacher1', f'[2020前期他他]ダミー{i}', 20200, f'thu{(i%5)+1}')
         for j in range(10):
             add_assignment(f"dummyassignment{i}-{j}", "url",f"課題{i}-{j}", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, f"dummy{i}" )
+            add_resource(f'resource{i}-{j}','teacher1','/content/group/2020-888-N150-017/演義/',111,f'dummy{i}')
+    
     
     add_course('course1', 'teacher1', 'コース1', 20200, 'wed2')
     add_course('course2', 'teacher1', 'コース2', 20200, 'mon2')
@@ -87,7 +89,6 @@ def controller():
     add_resource('url5', '資料５', '/content/group/2020-888-N150-017/講義/講義動画/', 222, 'course1')
     add_resource('url6', '資料６', '/content/group/2020-888-N150-017/講義/講義ノート/', 222, 'course1')
     add_resource('url7', '資料７', '/content/group/2020-888-N150-017/演義/演義動画/', 222, 'course2')
-
     return ''
 
 @app.route('/controller_for_students/<studentid>')
@@ -111,6 +112,7 @@ def controller_for_students(studentid):
         sc_data.append({"student_id":studentid,"course_id":f"dummy{i}"})
         for j in range(10):
             sa_data.append({"assignment_id":f'dummyassignment{i}-{j}', "student_id":studentid, "status":'未'})
+            sr_data.append({"resource_url":f"resource{i}-{j}","student_id":studentid,"status":0})
     sr_data.append({"resource_url":'url1', "student_id":studentid, "status":0})
     sr_data.append({"resource_url":'url2', "student_id":studentid, "status":0})
     sr_data.append({"resource_url":'url3', "student_id":studentid, "status":0})
@@ -208,7 +210,7 @@ def resource_course(courseid):
     data = setdefault_for_overview(studentid, mode="resourcelist")
     resource = get_resource_list(studentid, course_id=courseid)
     coursename = get_coursename(courseid)
-    resource_html = resource_arrange(resource, coursename)
+    resource_html = resource_arrange(resource, coursename, courseid)
     return flask.render_template('resources_sample.htm', html=resource_html, data=data)
 
 @app.route('/resourcelist')
@@ -219,9 +221,18 @@ def resources_sample():
     for c_id in course_ids:
         resource_list = get_resource_list(studentid, c_id[0])
         if resource_list != []:
-            html += resource_arrange(resource_list, get_coursename(c_id[0]))
+            html += resource_arrange(resource_list, get_coursename(c_id[0]), c_id[0])
     data = setdefault_for_overview(studentid, mode='resourcelist')
     return flask.render_template('resources_sample.htm', html=html, data=data)
+
+# 資料ページのダウンロード時のstatus変更
+@app.route('/checkedclick')
+def checkedclick():
+    return 'checkedclick'
+
+@app.route('/allclick')
+def allclick():
+    return 'allclick'
 
 
 if __name__ == '__main__':

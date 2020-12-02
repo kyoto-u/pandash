@@ -35,6 +35,17 @@ function checkedlist_click(){
     return false;
 }
 
+$(function(){
+    $('a#checkedclick').on('click',function(e){
+        e.preventDefault()
+        $.getJSON('/checkedclick',
+            function(data){
+                //do nothing
+            });
+        return false;
+    });
+});
+
 function all_click(){
     var resources = document.querySelectorAll("input");
     if (0 < resources.length){
@@ -50,3 +61,14 @@ function all_click(){
     }
     return false;
 }
+
+$(function(){
+    $('a#allclick').on('click',function(e){
+        e.preventDefault()
+        $.getJSON('/allclick',
+            function(data){
+                //do nothing
+            });
+        return false;
+    });
+});

@@ -6,7 +6,6 @@ import re
 from pprint import pprint
 import copy
 
-
 def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):
     """
         mode
@@ -207,7 +206,7 @@ def get_resource_list(studentid, course_id=None, day=None):
     return resource_list
 
 
-def resource_arrange(resource_list:list, coursename:str):
+def resource_arrange(resource_list:list, coursename:str, courseid):
     course = {"folders":[],"files":[],"name":coursename}
     folderlist = []
     html = ""
@@ -281,7 +280,7 @@ def resource_arrange(resource_list:list, coursename:str):
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="{r["resource_url"]}" value="1" disabled checked/>
                         <label class="form-check-label" for="{r["resource_url"]}">
-                            <a href="{r["resource_url"]}" download="{r["title"]}" data-container="body" data-toggle="tooltip" title="このファイルを再ダウンロードする" name="{r["resource_url"]}">{r["title"]}</a>
+                                <a href="{r["resource_url"]}" download="{r["title"]}" data-container="body" data-toggle="tooltip" title="このファイルを再ダウンロードする" name="{r["resource_url"]}">{r["title"]}</a>                     
                         </label>
                     </div>
                 </div>
@@ -290,7 +289,14 @@ def resource_arrange(resource_list:list, coursename:str):
         html = html[:folder_i.end()+search_num] + add_html + html[folder_i.end()+search_num:]
     # html = f"""<span><i class="far fa-folder" style="font-size:medium;">{coursename}</i></span>
     #         """ + html
-    html = f'<li class="list-group-item">{coursename}<ul>' + html + '</ul></li>'
+    # html = f'<li class="list-group-item">{coursename}<ul>' + html + '</ul></li>'
+    html = f"""
+        <div class="card">
+            <div class="card-body ressubs">
+        <span><i class="far fa-folder">
+            <a href="/resourcelist/course/{courseid}">{coursename}</a>
+        </i><span>
+        """ + html + "</div></div>"
     return html
 
 def get_coursename(courseid):
@@ -414,7 +420,7 @@ def add_student_resource(studentid,data):
     new_sr = []
     for item in data:
         for i in sr:
-            if i.resource_url == item["resourceurl"]:
+            if i.resource_url == item["resource_url"]:
                 resource_exist = True
                 break
         if resource_exist == False:

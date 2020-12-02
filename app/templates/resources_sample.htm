@@ -36,16 +36,20 @@
 
 
     <div class="col-4">
-      <button class="btn btn-secondary btn-lg">
-        <a style="color: white; text-decoration: none;" href="#" onclick="return all_click();">
-          未入手資料を一括ダウンロード
+      <form>
+        <a href="#" id="allclick" style="color: white;" onclick="return all_click();">      
+          <button class="btn btn-secondary btn-lg">
+            未入手資料を一括ダウンロード
+          </button>
         </a>
-      </button>
-      <button class="btn btn-success btn-sm mt-1">
-        <a style="color: white; text-decoration: none;" href="#" onclick="return checkedlist_click();">
-          選択した資料をダウンロード
+      </form>
+      <form>
+        <a href="#" id="checkedclick" style="color: white;" onclick="return checkedlist_click();"></a>
+          <button class="btn btn-success btn-sm mt-1">  
+              選択した資料をダウンロード
+          </button>          
         </a>
-      </button>
+      </form>
     </div>
     <!-- <div class="col-12 pt-1" id="resdownload_body">
             <h2>・授業資料</h2>
@@ -53,8 +57,10 @@
     <div class="col-12">
       <!-- <span><i class="far fa-folder">[2020前期月5]ILASセミナーのリソース</i></span> -->
 
-      {{ html | safe}}
-      <!--サンプルコード-->
+      <div class="card-columns">
+        {{ html | safe}}
+      </div>
+      <!-- サンプルコード
       {% macro card() %}
       <div class="card">
         <div class="card-body ressubs">
@@ -134,7 +140,7 @@
         {{ card() }}
         {{ card() }}
         {{ card() }}
-      </div>
+      </div> -->
 
     </div>
 
