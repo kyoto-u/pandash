@@ -10,6 +10,7 @@ html{
     max-width: 100%;
 }
 
+
 #sitename{
     padding-top:8;
 }
@@ -17,6 +18,10 @@ html{
 #faqque{
     background-color: silver;
     color: black;
+}
+
+.faqboard{
+    padding-bottom: 20px;
 }
 
 body {
