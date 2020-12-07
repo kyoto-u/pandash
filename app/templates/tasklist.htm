@@ -22,9 +22,11 @@
         <!--時間割検索機能-->
         <button id="timesearchbutton" type="button" class="btn btn-dark" data-toggle="modal"
           data-target="#modal_timeboard_select">時間割で検索</button>
-        <div class="d-none d-md-block" id="tali_flag">
+        <div ondragover="return false" class="d-none d-md-block" id="tali_flag">
           <div class="container" id="finish_tasks" ondragover="f_dragover(event)" ondrop="f_drop(event)">
-            <i class="fas fa-flag-checkered">ここに課題をドラッグ＆ドロップして完了済みにする</i>
+            <div class="d-flex align-items-center">
+              <i class="fas fa-flag-checkered">ここに課題をドラッグ＆ドロップして完了済みにする</i>
+            </div>
           </div>
         </div>
       </div>

@@ -107,10 +107,18 @@ footer {
 
 #tali_flag{
     background-color: whitesmoke;
-    margin-top: 30px;
-    padding-top: 30;
-    padding-bottom: 20;
+    font-size: x-small;
+    margin-top: 10;
+    max-height: 30vh;
+    min-height: 10vh; 
 }
+
+#flagimage{
+    height:fit-content;
+    width: fit-content;
+}
+
+
 
 /*時間割表示ページ*/
 #dastshoot{
