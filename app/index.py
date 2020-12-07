@@ -183,24 +183,33 @@ def task_arrange_for_overview(tasks,task_arranged):
 
 def get_resource_list(studentid, course_id=None, day=None):
     resource_list = []
-    resources = session.query(studentresource.Student_Resource).filter(
+    srs = session.query(studentresource.Student_Resource).filter(
         studentresource.Student_Resource.student_id == studentid).all()
-    for data in resources:
-        resourcedata = session.query(resource.Resource).filter(
-            resource.Resource.resource_url == data.resource_url).all()
+    
+    resource_urls = [i.resource_url for i in srs]
+
+    resourcedata = session.query(resource.Resource).filter(
+        resource.Resource.resource_url in resource_urls).all()
+    course_to_be_taken=get_courses_to_be_taken(studentid)
+    courseids = [i.course_id for i in course_to_be_taken]
+    coursedata = session.query(course.Course).filter(
+        course.Course.course_id.in_(courseids)).all()
+    
+    for data in srs:
+        rscdata = [i for i in resourcedata if i.resource_url == data.resource_url]
+        crsdata = [i for i in coursedata if i.course_id == rscdata[0].course_id]
+        
         if course_id != None:
-            if course_id != resourcedata[0].course_id:
+            if course_id != rscdata[0].course_id:
                 continue
-        coursedata = session.query(course.Course).filter(
-            course.Course.course_id == resourcedata[0].course_id).all()
         if day !=None:
-            if day not in coursedata.classschedule:
+            if day not in crsdata.classschedule:
                 continue
         resource_dict = {}
         resource_dict["resource_url"] = data.resource_url
-        resource_dict["title"] = resourcedata[0].title
-        resource_dict["container"] = resourcedata[0].container
-        resource_dict["modifieddate"] = resourcedata[0].modifieddate
+        resource_dict["title"] = rscdata[0].title
+        resource_dict["container"] = rscdata[0].container
+        resource_dict["modifieddate"] = rscdata[0].modifieddate
         resource_dict["status"] = data.status
         resource_list.append(resource_dict)
     return resource_list
