@@ -13,6 +13,24 @@ logging.basicConfig(level=logging.DEBUG)
 app.secret_key ='pandash'
 
 
+# url list
+# 
+# "/login" ログイン画面
+# "/logout" ログアウト画面
+# "/tasklist" 課題の一覧を取得
+# "/tasklist/day/<str:day>" 曜日で絞り込み <day>にはmon,tue,wed,thu,friのいずれかが入る
+# "/tasklist/course/<str:courceid>" 教科で絞り込み <courceid>にはデータベースで登録した教科idが入る
+# "/"
+# tasklistについては、末尾に　"/<int>/<int>"を追加すると課題の取り組み状況、締め切りまでの残り時間で絞り込み
+# 詳細は関数参照
+# 
+# "/overview" 時間割表示
+# 
+# "/resourcelist" 授業資料一覧を取得
+# "/resourcelist/course/<str:courseid>" 教科で絞り込み <courceid>にはデータベースで登録した教科idが入る
+# 
+
+
 @app.route('/login')
 def login():
     ticket = request.args.get('ticket')
