@@ -234,12 +234,13 @@ def resource_course(courseid):
 @app.route('/resourcelist')
 def resources_sample():
     studentid = "student1"
-    course_ids = get_courseids(studentid)
+    courses = get_courses_to_be_taken(studentid)
     html = ""
-    for c_id in course_ids:
-        resource_list = get_resource_list(studentid, c_id[0])
-        if resource_list != []:
-            html += resource_arrange(resource_list, get_coursename(c_id[0]), c_id[0])
+    resource_list = get_resource_list(studentid, None)
+    for c in courses:
+        
+        if resource_course != []:
+            html += resource_arrange(resource_course, c.coursename, c.course_id)
     data = setdefault_for_overview(studentid, mode='resourcelist')
     return flask.render_template('resources_sample.htm', html=html, data=data)
 

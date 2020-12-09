@@ -182,19 +182,19 @@ def task_arrange_for_overview(tasks,task_arranged):
 
 
 def get_resource_list(studentid, course_id=None, day=None):
-    resource_list = []
     srs = session.query(studentresource.Student_Resource).filter(
         studentresource.Student_Resource.student_id == studentid).all()
     
     resource_urls = [i.resource_url for i in srs]
-
+    
     resourcedata = session.query(resource.Resource).filter(
-        resource.Resource.resource_url in resource_urls).all()
+        resource.Resource.resource_url.in_(resource_urls)).all()
     course_to_be_taken=get_courses_to_be_taken(studentid)
     courseids = [i.course_id for i in course_to_be_taken]
     coursedata = session.query(course.Course).filter(
         course.Course.course_id.in_(courseids)).all()
-    
+    resourcelist={i:[] for i in courseids}
+
     for data in srs:
         rscdata = [i for i in resourcedata if i.resource_url == data.resource_url]
         crsdata = [i for i in coursedata if i.course_id == rscdata[0].course_id]
@@ -203,7 +203,7 @@ def get_resource_list(studentid, course_id=None, day=None):
             if course_id != rscdata[0].course_id:
                 continue
         if day !=None:
-            if day not in crsdata.classschedule:
+            if day not in crsdata[0].classschedule:
                 continue
         resource_dict = {}
         resource_dict["resource_url"] = data.resource_url
@@ -211,7 +211,7 @@ def get_resource_list(studentid, course_id=None, day=None):
         resource_dict["container"] = rscdata[0].container
         resource_dict["modifieddate"] = rscdata[0].modifieddate
         resource_dict["status"] = data.status
-        resource_list.append(resource_dict)
+        resource_list[rscdata[0].courseid].append(resource_dict)
     return resource_list
 
 
