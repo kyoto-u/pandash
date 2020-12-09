@@ -191,7 +191,8 @@ def tasklist_day(day,show_only_unfinished,max_time_left):
     tasks = sort_tasks(tasks, show_only_unfinished = show_only_unfinished, max_time_left = max_time_left)
     data ={"others":[]}
     data = setdefault_for_overview(studentid)
-    return flask.render_template('tasklist.htm', tasks=tasks, data=data, day=day)
+    search_condition = get_search_condition(show_only_unfinished, max_time_left, day=day)
+    return flask.render_template('tasklist.htm', tasks=tasks, data=data, day=day, search_condition=search_condition)
 
 
 @app.route('/tasklist/course/<courseid>/<int:show_only_unfinished>/<int:max_time_left>')
@@ -202,7 +203,8 @@ def tasklist_course(courseid,show_only_unfinished,max_time_left):
 
     data ={"others":[]}
     data = setdefault_for_overview(studentid)
-    return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth')
+    search_condition = get_search_condition(show_only_unfinished, max_time_left, course=courseid)
+    return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth', search_condition=search_condition)
 
 @app.route('/tasklist/<int:show_only_unfinished>/<int:max_time_left>')
 def tasklist(show_only_unfinished,max_time_left):
@@ -220,7 +222,8 @@ def tasklist(show_only_unfinished,max_time_left):
 
     data ={"others":[]}
     data = setdefault_for_overview(studentid)
-    return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth')
+    search_condition = get_search_condition(show_only_unfinished, max_time_left, course=courseid)
+    return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth', search_condition=search_condition)
 
 @app.route('/resourcelist/course/<courseid>')
 def resource_course(courseid):

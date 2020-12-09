@@ -561,3 +561,39 @@ def remain_time(time_ms):
                 str(remain_days) + '日'
     else:
         return ato + '4週間以上'
+
+
+def get_search_condition(show_only_unfinished ,max_time_left , course=None, day=None):
+    condition=[]
+    if course != None:
+        condition.append(f"{get_coursename(course)}のみ")
+    elif day !=None:
+        condition.append(f"{day_to_str(day)}のみ")
+    if show_only_unfinished == 1:
+        condition.append("未完了のみ")
+    if max_time_left == 0:
+        condition.append("一時間以内")
+    elif max_time_left == 1:
+        condition.append("二十四時間以内")
+    elif max_time_left == 2:
+        condition.append("一週間以内")
+    if len(condition) != 0:       
+        search_condition='・'.join(condition)
+    else:
+        search_condition="全て"
+    return search_condition
+
+def day_to_str(day):
+    if day == "mon":
+        day_str="月曜"
+    elif day == "tue":
+        day_str="火曜"
+    elif day == "wed":
+        day_str="水曜"
+    elif day == "thu":
+        day_str="木曜"
+    elif day == "fri":
+        day_str="金曜"
+    else: day_str="曜日設定がないもの"
+
+    return day_str
