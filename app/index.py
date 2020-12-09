@@ -193,7 +193,7 @@ def get_resource_list(studentid, course_id=None, day=None):
     courseids = [i.course_id for i in course_to_be_taken]
     coursedata = session.query(course.Course).filter(
         course.Course.course_id.in_(courseids)).all()
-    resourcelist={i:[] for i in courseids}
+    resource_list={i:[] for i in courseids}
 
     for data in srs:
         rscdata = [i for i in resourcedata if i.resource_url == data.resource_url]
@@ -211,7 +211,7 @@ def get_resource_list(studentid, course_id=None, day=None):
         resource_dict["container"] = rscdata[0].container
         resource_dict["modifieddate"] = rscdata[0].modifieddate
         resource_dict["status"] = data.status
-        resource_list[rscdata[0].courseid].append(resource_dict)
+        resource_list[rscdata[0].course_id].append(resource_dict)
     return resource_list
 
 
