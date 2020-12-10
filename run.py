@@ -1,6 +1,6 @@
 from app.app import app
 from app.settings import engine, app_url,app_login_url, cas_url, proxy_url
-from app.settings import cas_client
+# from app.settings import cas_client
 import flask
 from sqlalchemy.orm import sessionmaker
 from app.index import *
@@ -31,32 +31,51 @@ app.secret_key ='pandash'
 # 
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    ticket = request.args.get('ticket')
-    pgt = ""
-    if ticket:
-        try:
-            cas_response = cas_client.perform_service_validate(
-                ticket=ticket,
-                service_url=app_login_url
-                )
-            # pgt = cas_response.data['proxyGrantingTicket']
-            print(cas_response.data)
-        except:
-            # CAS server is currently broken, try again later.
-            return redirect(url_for('root'))
-        if cas_response and cas_response.success:
-            session['logged-in'] = True
-            return redirect(url_for('root'))
-    if "logged-in" in session and session["logged-in"]:
-        del(session['logged-in'])
-    cas_login_url = cas_client.get_login_url(service_url=app_login_url)
-    return redirect(cas_login_url)
+    if request.method == 'GET':
+        ticket = request.args.get('ticket')
+        pgt = ""
+        cas_client = CASClient(cas_url)
+        if ticket:
+            try:
+                cas_response = cas_client.perform_service_validate(
+                    ticket=ticket,
+                    service_url=app_login_url
+                    )
+                # pgt = cas_response.data['proxyGrantingTicket']
+                # print(cas_response.data)
+            except:
+                # CAS server is currently broken, try again later.
+                return redirect(url_for('root'))
+            if cas_response and cas_response.success:
+                session['logged-in'] = True
+                return redirect(url_for("proxy", ticket=ticket))
+        if "logged-in" in session and session["logged-in"]:
+            del(session['logged-in'])
+        cas_login_url = cas_client.get_login_url(service_url=app_login_url)
+        return redirect(cas_login_url)
+    elif request.method == 'POST':
+        print('pgt=')
+        pgt = request.form
+        print(pgt)
+        return ''
+
+@app.route('/login/proxy')
+def proxy(ticket):
+    s_ticket = request.args.get('ticket')
+    cas_client = CASClient(cas_url, proxy_url=proxy_url)
+    cas_response = cas_client.perform_service_validate(
+        ticket=s_ticket,
+        service_url=app_login_url
+    )
+    print(cas_response.data)
+    return
 
 @app.route('/logout')
 def logout():
     del(session['logged-in'])
+    cas_client = CASClient(cas_url, proxy_url=proxy_url)
     cas_logout_url = cas_client.get_logout_url(service_url=app_login_url)
     return redirect(cas_logout_url)
 
@@ -256,6 +275,20 @@ def checkedclick():
 def allclick():
     return 'allclick'
 
+@app.route('/r_status_change', methods=['POST'])
+def r_status_change():
+    studentid = 'student1'
+    r_links = request.json['r_links']
+    update_resource_status(studentid, r_links)
+    return 'success'
+
+
+@app.route('/pgtCallback', methods=['GET', 'POST'])
+def pgtCallback():
+    pgt = request.form
+    print(pgt)
+    return ''
+
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)

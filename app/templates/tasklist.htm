@@ -23,9 +23,12 @@
         <button id="timesearchbutton" type="button" class="btn btn-dark" data-toggle="modal"
           data-target="#modal_timeboard_select">時間割で検索</button>
         <div class="d-none d-md-block" id="tali_flag">
-          <div class="container" id="finish_tasks" ondragover="f_dragover(event)" ondrop="f_drop(event)">
-            <i class="fas fa-flag-checkered">ここに課題をドラッグ＆ドロップして完了済みにする</i>
-          </div>
+          <form>
+            <div class="container" id="finish_tasks">
+               <!-- ondragover="f_dragover(event)" ondrop="f_drop(event)" -->
+              <i class="fas fa-flag-checkered">ここに課題をドラッグ＆ドロップして完了済みにする</i>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -61,46 +64,20 @@
             <th class="col-3">締切日</th>
           </tr>
         </thead>
-        <tbody>
-
+        <tbody id="dragArea">
           <!--2020/12/03 trにidを追加しました。URLをそのままidとして使います。テンプレートに渡すデータに.searchURLを追加してください-->
           {% for task in tasks %}
-          <tr id='{{task.searchURL}}' draggable="true" class="d-flex tablecontents">
+          <tr id='{{task.searchURL}}' class="d-flex tablecontents acdrag">
             <td class="col-3">{{task.subject}}</td>
             <td class="col-3"><a>{{task.taskname}}</a></td>
             <td class="col-3">{{task.time_left}}</td>
             <td class="col-3">{{task.deadline}}</td>
           </tr>
           {% endfor %}
-
-          <tr draggable="true" class="d-flex tablecontents table-danger">
-            <td class="col-3">[2020前期水３　線形代数学A]</td>
-            <td class="col-3">演義課題No.1</td>
-            <td class="col-3">3日</td>
-            <td class="col-3">2020/07/11 23:59</td>
-          </tr>
-          <tr draggable="true" class="d-flex tablecontents table-warning">
-            <td class="col-3">[2020前期水３　線形代数学A]</td>
-            <td class="col-3">演義課題No.1</td>
-            <td class="col-3">3日</td>
-            <td class="col-3">2020/07/11 23:59</td>
-          </tr>
-          <tr draggable="true" class="d-flex tablecontents">
-            <td class="col-3">[2020前期水３　線形代数学A]</td>
-            <td class="col-3"><a draggable="true">演義課題No.1</a></td>
-            <td class="col-3">3日</td>
-            <td class="col-3">2020/07/11 23:59</td>
-          </tr>
-          <tr draggable="true" class="d-flex tablecontents">
-            <td class="col-3">[2020前期水３　線形代数学A]</td>
-            <td class="col-3"><a draggable="true">演義課題No.1</a></td>
-            <td class="col-3">3日</td>
-            <td class="col-3">2020/07/11 23:59</td>
-          </tr>
-
-
+        </tbody>
       </table>
     </div>
   </div>
+</div>
   <script type="text/javascript" src="/static/js/f_tasks.js"></script>
   {% endblock %}

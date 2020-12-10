@@ -278,7 +278,7 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="{r["resource_url"]}" value="0"/>
                 <label class="form-check-label" for="{r["resource_url"]}">
-                    <a href="{r["resource_url"]} target="_self" download="{r["title"]}" name="{r["resource_url"]}">{r["title"]}</a>
+                    <a href="{r["resource_url"]}" target="_self" download="{r["title"]}" name="{r["resource_url"]}">{r["title"]}</a>
                 </label>
             </div>
         </li>"""
@@ -469,6 +469,19 @@ def add_resource(resourceurl, title, container, modifieddate, course_id):
             sr.status = 0
             session.add(sr)
         session.commit()
+    return
+
+def update_resource_status(studentid, resourceids: list):
+    srs = session.query(studentresource.Student_Resource.resource_url, studentresource.Student_Resource.sr_id).filter(
+        studentresource.Student_Resource.student_id == studentid).all()
+    update_list = []
+    for r_id in resourceids:
+        for i in srs:
+            if i.resource_url == r_id:
+                update_list.append({"sr_id":i.sr_id, "status":1})
+                break
+    session.bulk_update_mappings(studentresource.Student_Resource, update_list)
+    session.commit()
     return
 
 def add_studentcourse(studentid, data):
