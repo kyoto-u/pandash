@@ -182,27 +182,36 @@ def task_arrange_for_overview(tasks,task_arranged):
 
 
 def get_resource_list(studentid, course_id=None, day=None):
-    resource_list = []
-    resources = session.query(studentresource.Student_Resource).filter(
+    srs = session.query(studentresource.Student_Resource).filter(
         studentresource.Student_Resource.student_id == studentid).all()
-    for data in resources:
-        resourcedata = session.query(resource.Resource).filter(
-            resource.Resource.resource_url == data.resource_url).all()
+    
+    resource_urls = [i.resource_url for i in srs]
+    
+    resourcedata = session.query(resource.Resource).filter(
+        resource.Resource.resource_url.in_(resource_urls)).all()
+    course_to_be_taken=get_courses_to_be_taken(studentid)
+    courseids = [i.course_id for i in course_to_be_taken]
+    coursedata = session.query(course.Course).filter(
+        course.Course.course_id.in_(courseids)).all()
+    resource_list={i:[] for i in courseids}
+
+    for data in srs:
+        rscdata = [i for i in resourcedata if i.resource_url == data.resource_url]
+        crsdata = [i for i in coursedata if i.course_id == rscdata[0].course_id]
+        
         if course_id != None:
-            if course_id != resourcedata[0].course_id:
+            if course_id != rscdata[0].course_id:
                 continue
-        coursedata = session.query(course.Course).filter(
-            course.Course.course_id == resourcedata[0].course_id).all()
         if day !=None:
-            if day not in coursedata.classschedule:
+            if day not in crsdata[0].classschedule:
                 continue
         resource_dict = {}
         resource_dict["resource_url"] = data.resource_url
-        resource_dict["title"] = resourcedata[0].title
-        resource_dict["container"] = resourcedata[0].container
-        resource_dict["modifieddate"] = resourcedata[0].modifieddate
+        resource_dict["title"] = rscdata[0].title
+        resource_dict["container"] = rscdata[0].container
+        resource_dict["modifieddate"] = rscdata[0].modifieddate
         resource_dict["status"] = data.status
-        resource_list.append(resource_dict)
+        resource_list[rscdata[0].course_id].append(resource_dict)
     return resource_list
 
 
@@ -269,7 +278,7 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="{r["resource_url"]}" value="0"/>
                 <label class="form-check-label" for="{r["resource_url"]}">
-                    <a href="{r["resource_url"]} target="_self" download="{r["title"]}" name="{r["resource_url"]}">{r["title"]}</a>
+                    <a href="{r["resource_url"]}" target="_self" download="{r["title"]}" name="{r["resource_url"]}">{r["title"]}</a>
                 </label>
             </div>
         </li>"""
@@ -462,6 +471,19 @@ def add_resource(resourceurl, title, container, modifieddate, course_id):
         session.commit()
     return
 
+def update_resource_status(studentid, resourceids: list):
+    srs = session.query(studentresource.Student_Resource.resource_url, studentresource.Student_Resource.sr_id).filter(
+        studentresource.Student_Resource.student_id == studentid).all()
+    update_list = []
+    for r_id in resourceids:
+        for i in srs:
+            if i.resource_url == r_id:
+                update_list.append({"sr_id":i.sr_id, "status":1})
+                break
+    session.bulk_update_mappings(studentresource.Student_Resource, update_list)
+    session.commit()
+    return
+
 def add_studentcourse(studentid, data):
     """
         data:[{student_id:"", course_id:""},{}]
@@ -552,3 +574,39 @@ def remain_time(time_ms):
                 str(remain_days) + '日'
     else:
         return ato + '4週間以上'
+
+
+def get_search_condition(show_only_unfinished ,max_time_left , course=None, day=None):
+    condition=[]
+    if course != None:
+        condition.append(f"{get_coursename(course)}のみ")
+    elif day !=None:
+        condition.append(f"{day_to_str(day)}のみ")
+    if show_only_unfinished == 1:
+        condition.append("未完了のみ")
+    if max_time_left == 0:
+        condition.append("一時間以内")
+    elif max_time_left == 1:
+        condition.append("二十四時間以内")
+    elif max_time_left == 2:
+        condition.append("一週間以内")
+    if len(condition) != 0:       
+        search_condition='・'.join(condition)
+    else:
+        search_condition="全て"
+    return search_condition
+
+def day_to_str(day):
+    if day == "mon":
+        day_str="月曜"
+    elif day == "tue":
+        day_str="火曜"
+    elif day == "wed":
+        day_str="水曜"
+    elif day == "thu":
+        day_str="木曜"
+    elif day == "fri":
+        day_str="金曜"
+    else: day_str="曜日設定がないもの"
+
+    return day_str

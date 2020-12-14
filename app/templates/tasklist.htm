@@ -71,11 +71,10 @@
             <th class="col-3">締切日</th>
           </tr>
         </thead>
-        <tbody>
-
+        <tbody id="dragArea">
           <!--2020/12/03 trにidを追加しました。URLをそのままidとして使います。テンプレートに渡すデータに.searchURLを追加してください-->
           {% for task in tasks %}
-          <tr id='{{task.searchURL}}' draggable="true" class="d-flex tablecontents">
+          <tr id='{{task.searchURL}}' class="d-flex tablecontents acdrag">
             <td class="col-3">{{task.subject}}</td>
             <td class="col-3"><a>{{task.taskname}}</a></td>
             <td class="col-3">{{task.time_left}}</td>

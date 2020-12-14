@@ -1,6 +1,6 @@
 from app.app import app
 from app.settings import engine, app_url,app_login_url, cas_url, proxy_url
-from app.settings import cas_client
+# from app.settings import cas_client
 import flask
 from sqlalchemy.orm import sessionmaker
 from app.index import *
@@ -13,32 +13,69 @@ logging.basicConfig(level=logging.DEBUG)
 app.secret_key ='pandash'
 
 
-@app.route('/login')
+# url list
+# 
+# "/login" ログイン画面
+# "/logout" ログアウト画面
+# "/tasklist" 課題の一覧を取得
+# "/tasklist/day/<str:day>" 曜日で絞り込み <day>にはmon,tue,wed,thu,friのいずれかが入る
+# "/tasklist/course/<str:courceid>" 教科で絞り込み <courceid>にはデータベースで登録した教科idが入る
+# "/"
+# tasklistについては、末尾に　"/<int>/<int>"を追加すると課題の取り組み状況、締め切りまでの残り時間で絞り込み
+# 詳細は関数参照
+# 
+# "/overview" 時間割表示
+# 
+# "/resourcelist" 授業資料一覧を取得
+# "/resourcelist/course/<str:courseid>" 教科で絞り込み <courceid>にはデータベースで登録した教科idが入る
+# 
+
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    ticket = request.args.get('ticket')
-    pgt = ""
-    if ticket:
-        try:
-            cas_response = cas_client.perform_service_validate(
-                ticket=ticket,
-                service_url=app_login_url
-                )
-            # pgt = cas_response.data['proxyGrantingTicket']
-            print(cas_response.data)
-        except:
-            # CAS server is currently broken, try again later.
-            return redirect(url_for('root'))
-        if cas_response and cas_response.success:
-            session['logged-in'] = True
-            return redirect(url_for('root'))
-    if "logged-in" in session and session["logged-in"]:
-        del(session['logged-in'])
-    cas_login_url = cas_client.get_login_url(service_url=app_login_url)
-    return redirect(cas_login_url)
+    if request.method == 'GET':
+        ticket = request.args.get('ticket')
+        pgt = ""
+        cas_client = CASClient(cas_url)
+        if ticket:
+            try:
+                cas_response = cas_client.perform_service_validate(
+                    ticket=ticket,
+                    service_url=app_login_url
+                    )
+                # pgt = cas_response.data['proxyGrantingTicket']
+                # print(cas_response.data)
+            except:
+                # CAS server is currently broken, try again later.
+                return redirect(url_for('root'))
+            if cas_response and cas_response.success:
+                session['logged-in'] = True
+                return redirect(url_for("proxy", ticket=ticket))
+        if "logged-in" in session and session["logged-in"]:
+            del(session['logged-in'])
+        cas_login_url = cas_client.get_login_url(service_url=app_login_url)
+        return redirect(cas_login_url)
+    elif request.method == 'POST':
+        print('pgt=')
+        pgt = request.form
+        print(pgt)
+        return ''
+
+@app.route('/login/proxy')
+def proxy(ticket):
+    s_ticket = request.args.get('ticket')
+    cas_client = CASClient(cas_url, proxy_url=proxy_url)
+    cas_response = cas_client.perform_service_validate(
+        ticket=s_ticket,
+        service_url=app_login_url
+    )
+    print(cas_response.data)
+    return
 
 @app.route('/logout')
 def logout():
     del(session['logged-in'])
+    cas_client = CASClient(cas_url, proxy_url=proxy_url)
     cas_logout_url = cas_client.get_logout_url(service_url=app_login_url)
     return redirect(cas_logout_url)
 
@@ -173,7 +210,8 @@ def tasklist_day(day,show_only_unfinished,max_time_left):
     tasks = sort_tasks(tasks, show_only_unfinished = show_only_unfinished, max_time_left = max_time_left)
     data ={"others":[]}
     data = setdefault_for_overview(studentid)
-    return flask.render_template('tasklist.htm', tasks=tasks, data=data, day=day)
+    search_condition = get_search_condition(show_only_unfinished, max_time_left, day=day)
+    return flask.render_template('tasklist.htm', tasks=tasks, data=data, day=day, search_condition=search_condition)
 
 
 @app.route('/tasklist/course/<courseid>/<int:show_only_unfinished>/<int:max_time_left>')
@@ -184,7 +222,8 @@ def tasklist_course(courseid,show_only_unfinished,max_time_left):
 
     data ={"others":[]}
     data = setdefault_for_overview(studentid)
-    return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth')
+    search_condition = get_search_condition(show_only_unfinished, max_time_left, course=courseid)
+    return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth', search_condition=search_condition)
 
 @app.route('/tasklist/<int:show_only_unfinished>/<int:max_time_left>')
 def tasklist(show_only_unfinished,max_time_left):
@@ -202,7 +241,8 @@ def tasklist(show_only_unfinished,max_time_left):
 
     data ={"others":[]}
     data = setdefault_for_overview(studentid)
-    return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth')
+    search_condition = get_search_condition(show_only_unfinished, max_time_left, course=courseid)
+    return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth', search_condition=search_condition)
 
 @app.route('/resourcelist/course/<courseid>')
 def resource_course(courseid):
@@ -210,18 +250,19 @@ def resource_course(courseid):
     data = setdefault_for_overview(studentid, mode="resourcelist")
     resource = get_resource_list(studentid, course_id=courseid)
     coursename = get_coursename(courseid)
-    resource_html = resource_arrange(resource, coursename, courseid)
+    resource_html = resource_arrange(resource[courseid], coursename, courseid)
     return flask.render_template('resources_sample.htm', html=resource_html, data=data)
 
 @app.route('/resourcelist')
 def resources_sample():
     studentid = "student1"
-    course_ids = get_courseids(studentid)
+    courses = get_courses_to_be_taken(studentid)
     html = ""
-    for c_id in course_ids:
-        resource_list = get_resource_list(studentid, c_id[0])
-        if resource_list != []:
-            html += resource_arrange(resource_list, get_coursename(c_id[0]), c_id[0])
+    resource_list = get_resource_list(studentid, None)
+    for c in courses:
+        
+        if resource_list[c.course_id] != []:
+            html += resource_arrange(resource_list[c.course_id], c.coursename, c.course_id)
     data = setdefault_for_overview(studentid, mode='resourcelist')
     return flask.render_template('resources_sample.htm', html=html, data=data)
 
@@ -234,6 +275,20 @@ def checkedclick():
 def allclick():
     return 'allclick'
 
+@app.route('/r_status_change', methods=['POST'])
+def r_status_change():
+    studentid = 'student1'
+    r_links = request.json['r_links']
+    update_resource_status(studentid, r_links)
+    return 'success'
+
+
+@app.route('/pgtCallback', methods=['GET', 'POST'])
+def pgtCallback():
+    pgt = request.form
+    print(pgt)
+    return ''
+
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
