@@ -35,13 +35,21 @@
   <div id="taskmain" class="col-sm-12 col-md-10">
     <!--タイトル-->
     <h3>あなたの課題</h3>
+    <b>検索条件：{{ search_condition }}</b>
+
     <!--アラート-->
+    {% set tasknum = namespace(cnt = 0) %}
+    {% for task in tasks %}
+    {% set tasknum.cnt = tasknum.cnt + 1 %}
+    {% endfor %}
+    {% if tasknum.cnt > 0 %}
     <div class="alert alert-danger" role="alert">
       <div class="row">
-        未完了の課題が<div class="text-danger">2</div>件あります
+
+        この条件での未完了課題が<div class="text-danger">{{ tasknum.cnt }}</div>件あります
+        未完了の課題が<div class="text-danger">{{ tasknum.cnt }}</div>件あります
       </div>
     </div>
-    <!--課題表-->
     <div class="table-responsive table-sm table-bordered">
       <table class="table">
         <thead>
@@ -75,34 +83,18 @@
           </tr>
           {% endfor %}
 
-          <tr draggable="true" class="d-flex tablecontents table-danger">
-            <td class="col-3">[2020前期水３　線形代数学A]</td>
-            <td class="col-3">演義課題No.1</td>
-            <td class="col-3">3日</td>
-            <td class="col-3">2020/07/11 23:59</td>
-          </tr>
-          <tr draggable="true" class="d-flex tablecontents table-warning">
-            <td class="col-3">[2020前期水３　線形代数学A]</td>
-            <td class="col-3">演義課題No.1</td>
-            <td class="col-3">3日</td>
-            <td class="col-3">2020/07/11 23:59</td>
-          </tr>
-          <tr draggable="true" class="d-flex tablecontents">
-            <td class="col-3">[2020前期水３　線形代数学A]</td>
-            <td class="col-3"><a draggable="true">演義課題No.1</a></td>
-            <td class="col-3">3日</td>
-            <td class="col-3">2020/07/11 23:59</td>
-          </tr>
-          <tr draggable="true" class="d-flex tablecontents">
-            <td class="col-3">[2020前期水３　線形代数学A]</td>
-            <td class="col-3"><a draggable="true">演義課題No.1</a></td>
-            <td class="col-3">3日</td>
-            <td class="col-3">2020/07/11 23:59</td>
-          </tr>
+
 
 
       </table>
     </div>
   </div>
+  {% else %}
+  <div class="alert alert-success" role="alert">
+    この条件で未完了課題はありません!
+  </div>
+  {% endif %}
+  <!--課題表-->
+
   <script type="text/javascript" src="/static/js/f_tasks.js"></script>
   {% endblock %}

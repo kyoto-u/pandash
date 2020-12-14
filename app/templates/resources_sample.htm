@@ -2,7 +2,7 @@
 {% block bodycontent %}
 <!--Modal-->
 <div class="row">
-  <div class="col-sm-12 col-md-2" id="ScrollSearchbar">
+  <div class="col-sm-12 col-md-2" id="ScrollSearchbar" style="height: 150px;">
     <div class="container">
       <div class="d-flex flex-md-column">
         <h6 id="searchlabel">しぼりこみ検索</h6>
@@ -21,36 +21,30 @@
         <!--時間割検索機能-->
         <button id="timesearchbutton" type="button" class="btn btn-dark" data-toggle="modal"
           data-target="#modal_timeboard_select">時間割で検索</button>
+        <form>
+          <a href="#" id="allclick" style="color: white;" onclick="return all_click();"
+            style="text-decoration: none;"></a>
+          <button class="btn btn-secondary btn mt-4 btn-block">
+            未入手資料を一括ダウンロード
+          </button>
+
+        </form>
+        <form>
+          <a href="#" id="checkedclick" style="color: white;" onclick="return checkedlist_click();"></a>
+          <button class="btn btn-success btn-sm btn-block">
+            選択した資料をダウンロード
+          </button>
+
+        </form>
       </div>
     </div>
   </div>
   <div id="taskmain" class="col-sm-12 col-md-10">
-    <!--タイトル-->
-    <h3>あなたの課題</h3>
-    <!--アラート-->
-    <div class="alert alert-danger" role="alert">
-      <div class="row">
-        未ダウンロードの課題が<div class="text-danger">2</div>件あります
-      </div>
-    </div>
+    <h2>未入手資料を選択しダウンロードできます</h2>
 
 
-    <div class="col-4">
-      <form>
-        <a href="#" id="allclick" style="color: white;" onclick="return all_click();">      
-          <button class="btn btn-secondary btn-lg">
-            未入手資料を一括ダウンロード
-          </button>
-        </a>
-      </form>
-      <form>
-        <a href="#" id="checkedclick" style="color: white;" onclick="return checkedlist_click();"></a>
-          <button class="btn btn-success btn-sm mt-1">  
-              選択した資料をダウンロード
-          </button>          
-        </a>
-      </form>
-    </div>
+
+
     <!-- <div class="col-12 pt-1" id="resdownload_body">
             <h2>・授業資料</h2>
         </div> -->
@@ -60,87 +54,6 @@
       <div class="card-columns">
         {{ html | safe}}
       </div>
-      <!-- サンプルコード
-      {% macro card() %}
-      <div class="card">
-        <div class="card-body ressubs">
-          <a href="#">[2020前期月5]ILASセミナーのリソース</a>
-          <span><i class="far fa-folder">[2020前期月5]ILASセミナーのリソース</i></span>
-          <ul>
-            <li><i class="far fa-folder">第一回</i>
-              <ul>
-                <li>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="check1a" />
-                    <label class="form-check-label" for="check1a">sample1.pdf</label>
-                  </div>
-                </li>
-                <li>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="check1b" />
-                    <label class="form-check-label" for="check1b">sample1.docx</label>
-                  </div>
-                </li>
-                <li>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="check1c" />
-                    <label class="form-check-label" for="check1c">課題１.pdf</label>
-                  </div>
-                </li>
-              </ul>
-            </li>
-            <li><i class="far fa-folder">第二回</i>
-              <ul>
-                <li>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="check1d" />
-                    <label class="form-check-label" for="check1d">sample2.pdf</label>
-                  </div>
-                </li>
-                <li>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="check1e" />
-                    <label class="form-check-label" for="check1e">sample2.docx</label>
-                  </div>
-                </li>
-                <li>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="check1f" />
-                    <label class="form-check-label" for="check1f">課題2.pdf</label>
-                  </div>
-                </li>
-                <li><i class="fas fa-folder-plus">ソースサンプル</i>
-                  <ul>
-                    <li>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="check1g" />
-                        <label class="form-check-label" for="check1g">index.py</label>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="d-inline-flex">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="check1h" checked disabled />
-                          <label class="form-check-label" for="check1h"><a href="#" data-container='body'
-                              data-toggle="tooltip" title="このファイルを再ダウンロードする">page1.htm</a></label>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      {% endmacro %}
-      <div class="card-columns">
-
-        {{ card() }}
-        {{ card() }}
-        {{ card() }}
-      </div> -->
 
     </div>
 

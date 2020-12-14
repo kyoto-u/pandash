@@ -95,6 +95,10 @@ footer {
     font-size:x-small;
 }
 
+.navbtns{
+    margin-left: 5px;
+}
+
 #taskmain{
     left:17vw;
 }

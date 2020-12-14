@@ -35,7 +35,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      {#
+
       <div class="modal-body">
         <div class="table-responsive table-considered">
           <table class="table table-sm modaltable">
@@ -120,7 +120,7 @@
 
         </div>
       </div>
-      #}
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">とじる</button>
       </div>
@@ -193,30 +193,38 @@
           <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown2">
             <ul class="navbar-nav mr-auto toggle_lefts">　
               <li class="nav-item">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-dark active">
-                    <input type="radio" name="options" id="option1" autocomplete="off" checked>一覧表示
-                  </label>
-                  <label class="btn btn-dark">
-                    <input type="radio" name="options" id="option2" autocomplete="off">時間割表示
-                  </label>
-                </div>
+                <a class="btn btn-info navbtns
+                {% if '/tasklist' in request.path  %}
+                active
+                {% endif %}
+                " href="#" role="button">
+
+                  一覧表示</a>
+              <li class="nav-item">
+                <a class="btn btn-info navbtns
+                {% if '/overview' in request.path  %}
+                active
+                {% endif %}
+                " href="#" role="button">時間割表示</a>
               </li>
-              <li class="nav-item d-none d-md-block">
-                <a class="btn btn-secondary" href="#" role="button">授業資料</a>
-              </li>
+              <li class="nav-item d-none d-md-block navbtns">
+                <a class="btn btn-info navbtns
+                {% if '/resourcelist' in request.path  %}
+                active
+                {% endif %}
+                " href="#" role="button">授業資料</a>
             </ul>
 
             <ul class="navbar-nav ml-auto pr-3 toggle_rights">
               <li class="nav-item d-none d-md-block">
-                <a class="btn  btn-outline-primary mr-3" href="#" data-container='body' 　data-placement="left"
+                <a class="btn  btn-outline-warning mr-3" href="#" data-container='body' 　data-placement="left"
                   data-toggle="tooltip" title="iCalファイルをダウンロードします">iCalと共有</a>
               </li>
               <li id="logout_button" class="nav-item mr-auto">
                 <a class="btn btn-light" href="#">ログアウト</a>
               </li>
               <li class="btn nav-item my-auto">
-                <a id="help_button" href="#"><i class="fas fa-question-circle"></i></a>
+                <a id="help_button" href="#"><i class="fas fa-2x fa-question-circle"></i></a>
               </li>
             </ul>
 

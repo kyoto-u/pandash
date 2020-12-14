@@ -13,7 +13,7 @@
 }
 
 html{
-  font-size: smaller;
+  font-size: x-small;
 }
 
 body {
@@ -78,13 +78,13 @@ footer {
   display: flex;
   flex-direction: column;  
   left:0;
-  width:94vw;
-  margin-left: 3vw;
-  margin-right: 3vw;
+  width:98vw;
+  margin-left: 1vw;
+  margin-right: 1vw;
 }
 
-.th,.td{
-  font-size: 1vw;
+th,td{
+  font-size: xx-small;
 }
 
 body{
@@ -125,6 +125,10 @@ body{
 /*一覧表示ページ*/
 .taskcard > a{
     color: black;
+}
+
+.navbtns{
+    margin-left: 5px;
 }
 
 #overviewtable{
