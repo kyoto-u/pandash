@@ -241,7 +241,7 @@ def tasklist(show_only_unfinished,max_time_left):
 
     data ={"others":[]}
     data = setdefault_for_overview(studentid)
-    search_condition = get_search_condition(show_only_unfinished, max_time_left, course=courseid)
+    search_condition = get_search_condition(show_only_unfinished, max_time_left)
     return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth', search_condition=search_condition)
 
 @app.route('/resourcelist/course/<courseid>')
