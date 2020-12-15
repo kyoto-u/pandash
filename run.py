@@ -8,6 +8,7 @@ from pprint import pprint
 from cas_client import CASClient
 from flask import Flask, redirect, request, session, url_for
 import logging
+import requests
 
 logging.basicConfig(level=logging.DEBUG)
 app.secret_key ='pandash'
@@ -35,22 +36,19 @@ app.secret_key ='pandash'
 def login():
     if request.method == 'GET':
         ticket = request.args.get('ticket')
-        pgt = ""
-        cas_client = CASClient(cas_url)
+        cas_client = CASClient(cas_url, auth_prefix='')
         if ticket:
             try:
                 cas_response = cas_client.perform_service_validate(
                     ticket=ticket,
-                    service_url=app_login_url
-                    )
-                # pgt = cas_response.data['proxyGrantingTicket']
-                # print(cas_response.data)
+                    service_url=app_login_url,
+                    )              
             except:
                 # CAS server is currently broken, try again later.
                 return redirect(url_for('root'))
             if cas_response and cas_response.success:
                 session['logged-in'] = True
-                return redirect(url_for("proxy", ticket=ticket))
+                return redirect(url_for('proxy', ticket=ticket))
         if "logged-in" in session and session["logged-in"]:
             del(session['logged-in'])
         cas_login_url = cas_client.get_login_url(service_url=app_login_url)
@@ -61,16 +59,16 @@ def login():
         print(pgt)
         return ''
 
-@app.route('/login/proxy')
-def proxy(ticket):
+@app.route('/login/proxy', methods=['GET'])
+def proxy():
     s_ticket = request.args.get('ticket')
-    cas_client = CASClient(cas_url, proxy_url=proxy_url)
-    cas_response = cas_client.perform_service_validate(
-        ticket=s_ticket,
-        service_url=app_login_url
-    )
-    print(cas_response.data)
-    return
+    cas_client = CASClient(cas_url,auth_prefix='',proxy_url=proxy_url)
+    # cas_response = cas_client.perform_service_validate(
+    #     ticket=s_ticket,
+    #     service_url=app_login_url
+    #     )
+    # print(cas_response.data)
+    return redirect(url_for('root'))
 
 @app.route('/logout')
 def logout():
@@ -241,7 +239,7 @@ def tasklist(show_only_unfinished,max_time_left):
 
     data ={"others":[]}
     data = setdefault_for_overview(studentid)
-    search_condition = get_search_condition(show_only_unfinished, max_time_left, course=courseid)
+    search_condition = get_search_condition(show_only_unfinished, max_time_left)
     return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth', search_condition=search_condition)
 
 @app.route('/resourcelist/course/<courseid>')
