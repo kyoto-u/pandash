@@ -35,7 +35,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-
+      {#
       <div class="modal-body">
         <div class="table-responsive table-considered">
           <table class="table table-sm modaltable">
@@ -120,7 +120,7 @@
 
         </div>
       </div>
-
+      #}
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">とじる</button>
       </div>
@@ -224,7 +224,9 @@
                 <a class="btn btn-light" href="#">ログアウト</a>
               </li>
               <li class="btn nav-item my-auto">
-                <a id="help_button" href="#"><i class="fas fa-2x fa-question-circle"></i></a>
+                <a id="help_button" href="#" target="_blank" role="button">
+                  <i class="fas fa-2x fa-question-circle"></i>
+                </a>
               </li>
             </ul>
 

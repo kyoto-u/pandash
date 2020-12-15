@@ -1,9 +1,23 @@
 {% extends "_homebase.htm" %}
 {% block homebodycontent %}
-<h1>Welcome to PandAsh!</h1><br>
-<h6>PandAsh is a service provided by Institution for Information Management in Kyoto University. You can
-    overview
-    your
-    assignments.</h6><br>
-<h6>More home contents will be placed below.</h6>
+<div class="row">
+    <div class="col-2 border-right border-bottom">
+        <button type="button" class="btn btn-light btn-lg btn-block 
+        {% if '/welcome' in request.path  %}
+            active
+        {% endif %}"><i class="far fa-file"></i> Welcome</button>
+        <button type="button" class="btn btn-light btn-lg btn-block
+        {% if '/update' in request.path  %}
+            active
+        {% endif %}"><i class="far fa-file"></i> Update log</button>
+        <a href="https://www.yahoo.co.jp/" target="_blank" role="button" class="btn btn-light btn-lg btn-block">
+            <i class="far fa-question-circle"></i>Help
+        </a>
+    </div>
+    <div class="col-10">
+        {% block home_homecontent %}
+        {% endblock %}
+    </div>
+</div>
+
 {% endblock %}
