@@ -1,6 +1,6 @@
 from app.app import app
 from app.settings import engine, app_url,app_login_url, cas_url, proxy_url
-# from app.settings import cas_client
+from app.settings import cas_client
 import flask
 from sqlalchemy.orm import sessionmaker
 from app.index import *
@@ -36,7 +36,6 @@ app.secret_key ='pandash'
 def login():
     if request.method == 'GET':
         ticket = request.args.get('ticket')
-        cas_client = CASClient(cas_url, auth_prefix='')
         if ticket:
             try:
                 cas_response = cas_client.perform_service_validate(
@@ -61,13 +60,9 @@ def login():
 
 @app.route('/login/proxy', methods=['GET'])
 def proxy():
-    s_ticket = request.args.get('ticket')
-    cas_client = CASClient(cas_url,auth_prefix='',proxy_url=proxy_url)
-    # cas_response = cas_client.perform_service_validate(
-    #     ticket=s_ticket,
-    #     service_url=app_login_url
-    #     )
-    # print(cas_response.data)
+    pgtid = session["pgtid"]
+    cas_response = cas_client.perform_proxy(proxy_ticket=pgtid)
+    print(cas_response.data)
     return redirect(url_for('root'))
 
 @app.route('/logout')
@@ -291,11 +286,10 @@ def task_finish():
 @app.route('/pgtCallback', methods=['GET', 'POST'])
 def pgtCallback():
     if request.method == 'GET':
-        print(pgtCallback)
         pgtiou = request.args.get('pgtIou')
-        pgtid = request.args.get('pgtid')
-        print(pgtid)
-        return redirect(url_for('root'))
+        pgtid = request.args.get('pgtId')
+        session["pgtid"] = pgtid
+        return redirect(url_for('proxy'))
     elif request.method == 'POST':
         pgt = request.form
         print(pgt)
