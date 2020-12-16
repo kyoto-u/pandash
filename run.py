@@ -13,6 +13,7 @@ import requests
 logging.basicConfig(level=logging.DEBUG)
 app.secret_key ='pandash'
 
+global pgtids
 
 # url list
 # 
@@ -47,7 +48,9 @@ def login():
                 return redirect(url_for('root'))
             if cas_response and cas_response.success:
                 session['logged-in'] = True
-                return redirect(url_for('proxy', ticket=ticket))
+                print(cas_response.data['proxyGrantingTicket'])
+                pgtiou= cas_response.data['proxyGrantingTicket']
+                return redirect(url_for('proxy', pgtiou=pgtiou))
         if "logged-in" in session and session["logged-in"]:
             del(session['logged-in'])
         cas_login_url = cas_client.get_login_url(service_url=app_login_url)
@@ -58,9 +61,9 @@ def login():
         print(pgt)
         return ''
 
-@app.route('/login/proxy', methods=['GET'])
-def proxy():
-    pgtid = session["pgtid"]
+@app.route('/login/proxy/<pgtiou>', methods=['GET'])
+def proxy(pgtiou=None):
+    pgtid = pgtids[pgtiou]
     cas_response = cas_client.perform_proxy(proxy_ticket=pgtid)
     print(cas_response.data)
     return redirect(url_for('root'))
@@ -288,8 +291,8 @@ def pgtCallback():
     if request.method == 'GET':
         pgtiou = request.args.get('pgtIou')
         pgtid = request.args.get('pgtId')
-        session["pgtid"] = pgtid
-        return redirect(url_for('proxy'))
+        pgtids[pgtiou] = pgtid
+        return ''
     elif request.method == 'POST':
         pgt = request.form
         print(pgt)
@@ -297,4 +300,5 @@ def pgtCallback():
 
 
 if __name__ == '__main__':
+    pgtids={}
     app.run(debug=True, host='0.0.0.0', port=5000)
