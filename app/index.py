@@ -491,7 +491,7 @@ def update_task_status(studentid, taskids: list):
     for t_id in taskids:
         for i in sas:
             if i.assignment_id == t_id:
-                update_list.append({"sa_id":i.sr_id, "status":"済"})
+                update_list.append({"sa_id":i.sa_id, "status":"済"})
                 break
     print(update_list)
     session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)

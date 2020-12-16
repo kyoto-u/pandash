@@ -74,11 +74,10 @@
           </tr>
         </thead>
         <tbody id="dragArea">
-          <!--2020/12/03 trにidを追加しました。URLをそのままidとして使います。テンプレートに渡すデータに.searchURLを追加してください-->
           {% for task in tasks %}
-          <tr id='{{task.searchURL}}' class="d-flex tablecontents acdrag">
+          <tr class="d-flex tablecontents acdrag">
             <td class="col-3">{{task.subject}}</td>
-            <td class="col-3 task_title"><a href="#" class="task_tag">{{task.taskname}}</a></td>
+            <td class="col-3 task_title"><a href="{{task.assignmentid}}" class="task_tag">{{task.taskname}}</a></td>
             <td class="col-3">{{task.time_left}}</td>
             <td class="col-3">{{task.deadline}}</td>
           </tr>
@@ -95,5 +94,5 @@
   <!--課題表-->
 </div>
 
-  <script type="text/javascript" src="/static/js/f_tasks.js"></script>
+  <script type="text/javascript" src="/static/js/task.js"></script>
   {% endblock %}
