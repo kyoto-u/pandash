@@ -280,14 +280,28 @@ def r_status_change():
     update_resource_status(studentid, r_links)
     return 'success'
 
+@app.route('/task_finish', methods=['POST'])
+def task_finish():
+    studentid = 'student1'
+    task_id = request.json['task_id']
+    update_task_status(studentid, task_id)
+    return 'success'
+
 
 @app.route('/pgtCallback', methods=['GET', 'POST'])
 def pgtCallback():
-    pgt = request.form
-    print(pgt)
-    return ''
+    if request.method == 'GET':
+        print(pgtCallback)
+        pgtiou = request.args.get('pgtIou')
+        pgtid = request.args.get('pgtid')
+        print(pgtid)
+        return redirect(url_for('root'))
+    elif request.method == 'POST':
+        pgt = request.form
+        print(pgt)
+        return ''
 
 
 if __name__ == '__main__':
-    #app.run(debug=True, host='0.0.0.0', port=5000)
+    # app.run(debug=True, host='0.0.0.0', port=5000)
     app.run(debug=True, host='0.0.0.0', port=80)

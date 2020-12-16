@@ -22,13 +22,15 @@
         <!--時間割検索機能-->
         <button id="timesearchbutton" type="button" class="btn btn-dark" data-toggle="modal"
           data-target="#modal_timeboard_select">時間割で検索</button>
-        <div ondragover="return false" class="d-none d-md-block" id="tali_flag">
-          <div class="container" id="finish_tasks" ondragover="f_dragover(event)" ondrop="f_drop(event)">
-            <div class="d-flex align-items-center">
-              <i class="fas fa-flag-checkered">ここに課題をドラッグ＆ドロップして完了済みにする</i>
-            </div>
+        <form id="finish_form">
+          <div class="d-none d-md-block" id="tali_flag">
+              <div class="container" id="finish_tasks">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-flag-checkered">ここに課題をドラッグ＆ドロップして完了済みにする</i>
+                </div>
+              </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>
@@ -76,15 +78,12 @@
           {% for task in tasks %}
           <tr id='{{task.searchURL}}' class="d-flex tablecontents acdrag">
             <td class="col-3">{{task.subject}}</td>
-            <td class="col-3"><a>{{task.taskname}}</a></td>
+            <td class="col-3 task_title"><a href="#" class="task_tag">{{task.taskname}}</a></td>
             <td class="col-3">{{task.time_left}}</td>
             <td class="col-3">{{task.deadline}}</td>
           </tr>
           {% endfor %}
-
-
-
-
+        </tbody>
       </table>
     </div>
   </div>
@@ -94,6 +93,7 @@
   </div>
   {% endif %}
   <!--課題表-->
+</div>
 
   <script type="text/javascript" src="/static/js/f_tasks.js"></script>
   {% endblock %}
