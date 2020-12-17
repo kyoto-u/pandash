@@ -24,12 +24,23 @@ html{
     padding-bottom: 20px;
 }
 
+@media screen and (min-width:760px){
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     padding-top: 160;
     width:100vw;
+}
+}
+@media screen and (max-width:760px){
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-top: 200;
+    width:100vw;
+}
 }
 
 nav{

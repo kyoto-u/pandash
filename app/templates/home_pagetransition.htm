@@ -1,0 +1,28 @@
+<div class="navbar navbar-expand-md navbar-light bg-light" style="padding:0px;">
+    <a class="navbar-brand　d-block d-md-none" href="#" style="color: black;">ページ切り替え</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
+        aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03" style="padding: 0px;">
+        <ul class="nav w-100 flex-column mx-auto" style="width:inherit;">
+            <li class="nav-item border-bottom">
+                <button type="button" class="btn btn-light btn-lg btn-block 
+        {% if '/welcome' in request.path  %}
+            active
+        {% endif %}"><i class="far fa-file"></i> Welcome</button>
+            </li>
+            <li class="nav-item border-bottom">
+                <button type="button" class="btn btn-light btn-lg btn-block
+        {% if '/update' in request.path  %}
+            active
+        {% endif %}"><i class="far fa-file"></i> Update log</button>
+            </li>
+            <li class="nav-item">
+                <a href="https://www.yahoo.co.jp/" target="_blank" role="button" class="btn btn-light btn-lg btn-block">
+                    <i class="far fa-question-circle"></i>Help
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

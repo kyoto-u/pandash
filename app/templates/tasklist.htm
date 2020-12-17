@@ -43,11 +43,14 @@
     {% set tasknum.cnt = tasknum.cnt + 1 %}
     {% endfor %}
     {% if tasknum.cnt > 0 %}
+
     <div class="alert alert-danger" role="alert">
       <div class="row">
-
-        この条件での未完了課題が<div class="text-danger">{{ tasknum.cnt }}</div>件あります
+        {% if search_condition == '全て' %}
         未完了の課題が<div class="text-danger">{{ tasknum.cnt }}</div>件あります
+        {% else %}
+        この条件での未完了課題が<div class="text-danger">{{ tasknum.cnt }}</div>件あります
+        {% endif %}
       </div>
     </div>
     <div class="table-responsive table-sm table-bordered">
@@ -81,16 +84,16 @@
             <td class="col-3">{{task.deadline}}</td>
           </tr>
           {% endfor %}
-
-
-
-
       </table>
     </div>
   </div>
   {% else %}
   <div class="alert alert-success" role="alert">
+    {% if search_condition == '全て' %}
+    未完了の課題はありません!
+    {% else %}
     この条件で未完了課題はありません!
+    {% endif %}
   </div>
   {% endif %}
   <!--課題表-->
