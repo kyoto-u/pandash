@@ -6,6 +6,43 @@ import re
 from pprint import pprint
 import copy
 
+def sync_student_contents(studentid):
+
+    # 更新をするのはstudent, student_assignment, student_course, student_resource
+    sync_student(studentid)
+    sync_student_assignment(studentid)
+    sync_student_course(studentid)
+    sync_student_resource(studentid)
+
+    return 0
+
+def sync_student_assignment(studentid):
+    # 以下主な方針
+    #
+    # 1　確実だが処理時間は厳しい
+    # APIで全課題を取得
+    # studentidとassignmentid を使って全書き換え
+    # 難点　うまくinsert, update を分けないと時間がかかる
+    #
+    #
+    # 2 1よりは早い
+    #
+    # studentテーブルにlast_updateを用意し、毎回update後に記録しておく
+    # APIで課題全取得
+    # opendateがlast_updateより後のもののみinsert
+    # modifieddateがlast_updateよりあとのもののみupdate
+    # 
+    return 0
+
+def sync_student_course(studentid):
+    return 0
+
+def sync_student_resource(studentid):
+    return 0
+
+def sync_student(studentid):
+    return 0
+
 def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):
     """
         mode
