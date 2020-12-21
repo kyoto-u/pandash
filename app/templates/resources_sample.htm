@@ -9,13 +9,13 @@
         <!--曜日しぼりこみ-->
         <div class="form-group">
           <label for="select0a">科目</label>
-          <select id="select0a" class="form-control">
-            <option>全ての曜日</option>
-            <option>月曜のみ</option>
-            <option>火曜のみ</option>
-            <option>水曜のみ</option>
-            <option>木曜のみ</option>
-            <option>金曜のみ</option>
+          <select id="select0a" class="form-control" onchange="location.href=value;">
+            <option value="/resourcelist">全ての曜日</option>
+            <option value="/resourcelist/day/mon" {% if day=='mon' %}selected{% endif %}>月曜のみ</option>
+            <option value="/resourcelist/day/tue" {% if day=='tue' %}selected{% endif %}>火曜のみ</option>
+            <option value="/resourcelist/day/wed" {% if day=='wed' %}selected{% endif %}>水曜のみ</option>
+            <option value="/resourcelist/day/thu" {% if day=='thu' %}selected{% endif %}>木曜のみ</option>
+            <option value="/resourcelist/day/fri" {% if day=='fri' %}selected{% endif %}>金曜のみ</option>
           </select>
         </div>
         <!--時間割検索機能-->
