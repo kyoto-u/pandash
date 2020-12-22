@@ -9,8 +9,9 @@ $(function() {
         dr_id = ui.draggable.find('.task_tag').attr("href");
         var add_f_task = $('<li></li>');
         add_f_task.html(dr_text);
+        add_f_task.addClass("new_task");
         $(this).append(add_f_task);
-        ui.draggable.remove();
+        ui.draggable.hide();
         var dr_ids = new Array();
         dr_ids.push(dr_id);
         var task_id = JSON.stringify({"task_id":dr_ids});
@@ -37,3 +38,34 @@ $(function() {
 
     // $( '#dragArea' ) . disableSelection();
 })
+
+function select3a_change(value){
+  var loc_str = location.href
+  var loc = location.href.split("/")
+  // var show_only_unfinished = loc[loc.length-2]
+  // var max_time_left = loc[loc.length-1]
+  new_loc = ''
+  new_location = ''
+  switch(value){
+    case "show-only-0":
+      // new_loc = '0/' + max_time_left;
+      new_loc = '0/3'
+      break;
+    case "show-only-1":
+      // new_loc = '1/' + max_time_left;
+      new_loc = '1/3'
+      break;
+    case "max-1":
+      // new_loc = show_only_unfinished + '/1';
+      new_loc = '0/1'
+      break;
+    case "max-2":
+      // new_loc = show_only_unfinished + '/2';
+      new_loc = '0/2'
+      break;
+  }
+  new_location = loc_str.substring(0, loc_str.length-3) + new_loc
+  console.log(new_location)
+  window.location.href = new_location
+  return false;
+}
