@@ -298,6 +298,12 @@ def task_finish():
     update_task_status(studentid, task_id)
     return 'success'
 
+@app.route('/task_unfinish', methods=['POST'])
+def task_unfinish():
+    studentid = 'student1'
+    task_id = request.json['task_id']
+    update_task_status(studentid, task_id, mode=1)
+    return 'success'
 
 @app.route('/pgtCallback', methods=['GET', 'POST'])
 def pgtCallback():

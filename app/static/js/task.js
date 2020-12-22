@@ -8,10 +8,14 @@ $(function() {
         dr_text = ui.draggable.find('.task_title').text();
         dr_id = ui.draggable.find('.task_tag').attr("href");
         var add_f_task = $('<li></li>');
-        add_f_task.html(dr_text);
         add_f_task.addClass("new_task");
+        add_f_task_a = $('<a></a>');
+        add_f_task_a.attr("href", dr_id);
+        add_f_task_a.html(dr_text);
+        add_f_task.append(add_f_task_a);
         $(this).append(add_f_task);
-        ui.draggable.hide();
+        ui.draggable.css("display", "none");
+        ui.draggable.find('td').css("display", "none")
         var dr_ids = new Array();
         dr_ids.push(dr_id);
         var task_id = JSON.stringify({"task_id":dr_ids});
@@ -33,10 +37,40 @@ $(function() {
       helper: "clone",
       revert: "invalid",
       stop: function(event, ui){
+        $('.new_task').draggable({
+          helper: "clone",
+          revert: "invalid"
+        });
       }
     });
 
-    // $( '#dragArea' ) . disableSelection();
+    $('#dragArea').droppable({
+      accept: ".new_task",
+      tolerance: "touch",
+      drop: function(event,ui){
+        dr_text = ui.draggable.find('a').text();
+        dr_id = ui.draggable.find('a').attr('href');
+        old_task = $('#' + dr_id);
+        old_task.css("display", "table");
+        old_task.find('td').css("display", "block");
+        ui.draggable.remove();
+        var dr_ids = new Array();
+        dr_ids.push(dr_id);
+        var task_id = JSON.stringify({"task_id":dr_ids});
+        $.ajax({
+          type: 'POST',
+          url: '/task_unfinish',
+          data: task_id,
+          contentType: 'application/json',
+          success: function(response){
+            console.log(response);
+          },
+          error: function(error){
+            console.log(error);
+          }
+        })
+      }
+    })
 })
 
 function select3a_change(value){

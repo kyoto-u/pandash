@@ -521,14 +521,17 @@ def update_resource_status(studentid, resourceids: list):
     session.commit()
     return
 
-def update_task_status(studentid, taskids: list):
+def update_task_status(studentid, taskids: list, mode=0):
     sas = session.query(studentassignment.Student_Assignment.assignment_id, studentassignment.Student_Assignment.sa_id).filter(
         studentassignment.Student_Assignment.student_id == studentid).all()
     update_list = []
+    status = "未"
+    if mode==0:
+        status = "済"
     for t_id in taskids:
         for i in sas:
             if i.assignment_id == t_id:
-                update_list.append({"sa_id":i.sa_id, "status":"済"})
+                update_list.append({"sa_id":i.sa_id, "status":status})
                 break
     session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
     session.commit()

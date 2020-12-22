@@ -75,7 +75,7 @@
         </thead>
         <tbody id="dragArea">
           {% for task in tasks %}
-          <tr class="d-flex tablecontents acdrag">
+          <tr class="d-flex tablecontents acdrag" id="{{task.assignmentid}}">
             <td class="col-3">{{task.subject}}</td>
             <td class="col-3 task_title"><a href="{{task.assignmentid}}" class="task_tag">{{task.taskname}}</a></td>
             <td class="col-3">{{task.time_left}}</td>
