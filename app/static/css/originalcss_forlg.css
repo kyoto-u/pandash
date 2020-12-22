@@ -99,9 +99,6 @@ footer {
     margin-left: 5px;
 }
 
-#taskmain{
-    left:17vw;
-}
 
 .modal-dialog-fluid {
     max-width: inherit;
@@ -109,29 +106,31 @@ footer {
     margin-left: 15px;
 }
 
-#tali_flag{
-    background-color: whitesmoke;
-    font-size: x-small;
-    margin-top: 10;
-    max-height: 30vh;
-    min-height: 10vh; 
-}
-
-#flagimage{
-    height:fit-content;
-    width: fit-content;
-}
-
 
 
 /*時間割表示ページ*/
 #dastshoot{
-    background-color: gray;
-    color: white;
-    position: fixed;
-    display: flex;
-    height: 300px;
+    background-color:transparent;
+    width:200px;
+    height: 400px;
+    font-size: x-small;
+    position:sticky;
+    top:150px;
+    overflow-y: hidden;
 }
+
+
+#finished_taskslist{
+    min-width: 200px;
+    max-height: 200px;
+    overflow-y: scroll;
+}
+
+.finished-list-item{
+    font-size: xx-small;
+    padding:none;
+}
+
 .taskcard > a{
     color: black;
 }

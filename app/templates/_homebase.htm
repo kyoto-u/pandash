@@ -56,7 +56,13 @@
                 </div>
             </div>
         </nav>
-        <div class="d-block d-md-none">
+        <div class="
+        {% if '/_help' in request.path  %}
+            d-none
+        {% else %}
+            d-block d-md-none
+        {% endif %}
+        ">
             {% include "home_pagetransition.htm" %}
         </div>
     </div>

@@ -1,11 +1,10 @@
 <!--一覧表示ページ-->
 {% extends "_base.htm" %}
 {% block bodycontent %}
-<!--Modal-->
 <div class="row">
-  <div class="col-sm-12 col-md-2" id="ScrollSearchbar">
+  <div id="taskmain" class="col-sm-12 col-md-10" style="left:1vw; overflow: hidden;">
     <div class="container">
-      <div class="d-flex flex-md-column">
+      <div class="d-flex">
         <h6 id="searchlabel">しぼりこみ検索</h6>
         <!--曜日しぼりこみ-->
         <div class="form-group">
@@ -22,17 +21,8 @@
         <!--時間割検索機能-->
         <button id="timesearchbutton" type="button" class="btn btn-dark" data-toggle="modal"
           data-target="#modal_timeboard_select">時間割で検索</button>
-        <div ondragover="return false" class="d-none d-md-block" id="tali_flag">
-          <div class="container" id="finish_tasks" ondragover="f_dragover(event)" ondrop="f_drop(event)">
-            <div class="d-flex align-items-center">
-              <i class="fas fa-flag-checkered">ここに課題をドラッグ＆ドロップして完了済みにする</i>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
-  </div>
-  <div id="taskmain" class="col-sm-12 col-md-10">
     <!--タイトル-->
     <h3>あなたの課題</h3>
     <b>検索条件：{{ search_condition }}</b>
@@ -77,7 +67,7 @@
         <tbody id="dragArea">
           <!--2020/12/03 trにidを追加しました。URLをそのままidとして使います。テンプレートに渡すデータに.searchURLを追加してください-->
           {% for task in tasks %}
-          <tr id='{{task.searchURL}}' class="d-flex tablecontents acdrag">
+          <tr id='{{task.searchURL}}' class="d-flex tablecontents" draggable="true">
             <td class="col-3">{{task.subject}}</td>
             <td class="col-3"><a>{{task.taskname}}</a></td>
             <td class="col-3">{{task.time_left}}</td>
@@ -86,17 +76,78 @@
           {% endfor %}
       </table>
     </div>
-  </div>
-  {% else %}
-  <div class="alert alert-success" role="alert">
-    {% if search_condition == '全て' %}
-    未完了の課題はありません!
+
     {% else %}
-    この条件で未完了課題はありません!
+    <div class="alert alert-success" role="alert">
+      {% if search_condition == '全て' %}
+      未完了の課題はありません!
+      {% else %}
+      この条件で未完了課題はありません!
+      {% endif %}
+    </div>
     {% endif %}
+    <!--課題表-->
   </div>
-  {% endif %}
-  <!--課題表-->
+
+  <div class="col-md-1 border-left d-none d-md-block">
+    <div ondragover="return false" class="container" id="dastshoot">
+      <div class="row">
+        <i class="fas fa-9x fa-dumpster mr-auto" style="color: black;"></i>
+        <div class="my-auto mr-auto" style="font-size:x-large; color: coral;"><b>6</b></div>
+        <div>ここに課題をドラッグ＆ドロップする</div>
+        <h5 class="text-nowrap pt-3 border-top">・完了済みにする課題</h5>
+        <ul class="list-group" id="finished_taskslist">
+          <div class="mx-auto">
+            <div class="row">
+              <li class="list-group-item finished-list-item">
+                [2020後期月3]線形代数学<br>
+                <b>課題No.6</b>
+              </li>
+              <button><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <div class="mx-auto">
+            <div class="row">
+              <li class="list-group-item finished-list-item">
+                [2020後期月3]線形代数学<br>
+                <b>課題No.6</b>
+              </li>
+              <button><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <div class="mx-auto">
+            <div class="row">
+              <li class="list-group-item finished-list-item">
+                [2020後期月3]線形代数学<br>
+                <b>課題No.6</b>
+              </li>
+              <button><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <div class="mx-auto">
+            <div class="row">
+              <li class="list-group-item finished-list-item">
+                [2020後期月3]線形代数学<br>
+                <b>課題No.6</b>
+              </li>
+              <button><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <div class="mx-auto">
+            <div class="row">
+              <li class="list-group-item finished-list-item">
+                [2020後期月3]線形代数学<br>
+                <b>課題No.6</b>
+              </li>
+              <button><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+        </ul>
+        <button type="button" class="btn btn-success btn-block mx-auto mt-3" style="font-size: smaller;">確定する</button>
+      </div>
+
+    </div>
+  </div>
 
   <script type="text/javascript" src="/static/js/f_tasks.js"></script>
   {% endblock %}
