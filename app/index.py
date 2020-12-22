@@ -628,23 +628,28 @@ def remain_time(time_ms):
 
 def get_search_condition(show_only_unfinished ,max_time_left , course=None, day=None):
     condition=[]
+    select3a_judge = 0
     if course != None:
         condition.append(f"{get_coursename(course)}のみ")
     elif day !=None:
         condition.append(f"{day_to_str(day)}のみ")
     if show_only_unfinished == 1:
         condition.append("未完了のみ")
+        select3a_judge = 1
     if max_time_left == 0:
         condition.append("一時間以内")
+        select3a_judge = 2
     elif max_time_left == 1:
         condition.append("二十四時間以内")
+        select3a_judge = 3
     elif max_time_left == 2:
         condition.append("一週間以内")
+        select3a_judge = 4
     if len(condition) != 0:       
         search_condition='・'.join(condition)
     else:
         search_condition="全て"
-    return search_condition
+    return {"search_condition":search_condition, "select3a_judge":select3a_judge}
 
 def day_to_str(day):
     if day == "mon":

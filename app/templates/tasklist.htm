@@ -37,7 +37,7 @@
   <div id="taskmain" class="col-sm-12 col-md-10">
     <!--タイトル-->
     <h3>あなたの課題</h3>
-    <b>検索条件：{{ search_condition }}</b>
+    <b>検索条件：{{ search_condition.search_condition }}</b>
 
     <!--アラート-->
     {% set tasknum = namespace(cnt = 0) %}
@@ -62,11 +62,11 @@
             <th class="col-3">
               <div class="form-group">
                 <label for="select3a">締め切りまで:</label>
-                <select id="select3a" class="form-control">
-                  <option>全て</option>
-                  <option>未完了のみ</option>
-                  <option>今日中</option>
-                  <option>1週間以内</option>
+                <select id="select3a" class="form-control" onchange="return select3a_change(this.value);">
+                  <option value="show-only-0" {% if search_condition.select3a_judge==0 %}selected{% endif %}>全て</option>
+                  <option value="show-only-1" {% if search_condition.select3a_judge==1 %}selected{% endif %}>未完了のみ</option>
+                  <option value="max-1" {% if search_condition.select3a_judge==3 %}selected{% endif %}>今日中</option>
+                  <option value="max-2" {% if search_condition.select3a_judge==4 %}selected{% endif %}>1週間以内</option>
                 </select>
               </div>
             </th>
