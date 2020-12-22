@@ -188,7 +188,6 @@ def overview():
     data.setdefault("others",[])
     for i in range(len(data["others"])):
         data["others"][i]["tasks"] = sort_tasks(data["others"][i]["tasks"],show_only_unfinished = 1)
-    
     return flask.render_template('overview.htm',data = data)
 
 @app.route('/tasklist/day/<day>')
