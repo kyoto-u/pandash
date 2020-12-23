@@ -99,6 +99,10 @@ def root():
 def main():
     return "Hello World!"
 
+@app.route('/help/<page>')
+def help(page):
+    return flask.render_template(f"FAQ_{page}.htm")
+
 
 # @app.route('/')
 # def root():
