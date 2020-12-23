@@ -197,7 +197,7 @@
                 {% if '/tasklist' in request.path  %}
                 active
                 {% endif %}
-                " href="#" role="button">
+                " href="/tasklist" role="button">
 
                   一覧表示</a>
               <li class="nav-item">
@@ -205,14 +205,14 @@
                 {% if '/overview' in request.path  %}
                 active
                 {% endif %}
-                " href="#" role="button">時間割表示</a>
+                " href="/overview" role="button">時間割表示</a>
               </li>
               <li class="nav-item d-none d-md-block navbtns">
                 <a class="btn btn-info navbtns
                 {% if '/resourcelist' in request.path  %}
                 active
                 {% endif %}
-                " href="#" role="button">授業資料</a>
+                " href="/resourcelist" role="button">授業資料</a>
             </ul>
 
             <ul class="navbar-nav ml-auto pr-3 toggle_rights">
