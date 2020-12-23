@@ -65,8 +65,20 @@ def login():
 def proxy(pgtiou=None):
     pgtid = pgtids[pgtiou]
     cas_response = cas_client.perform_proxy(proxy_ticket=pgtid)
-    print(cas_response.data)
-    return redirect(url_for('root'))
+    proxy_ticket = cas_response.data.get('proxyTicket')
+    return redirect(url_for('proxyticket', ticket=proxy_ticket))
+
+@app.route('/proxyticket', methods=["GET"])
+def proxyticket():
+    ticket = request.args.get('ticket')
+    if ticket:
+        cas_response = cas_client.perform_proxy_validate(proxied_service_ticket=ticket)
+        s = requests.Session()
+        api_response = s.get(f"https://pandax.ecs.kyoto-u.ac.jp/sakai-login-tool/container?ticket={ticket}")
+        print(api_response.status_code)
+        print(api_response.text)
+        return redirect(url_for("root"))
+    return redirect(url_for("root"))
 
 @app.route('/logout')
 def logout():
