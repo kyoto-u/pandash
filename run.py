@@ -90,9 +90,9 @@ def logout():
 @app.route('/')
 def root():
     if session.get('logged-in'):
-        return 'You Are Logged In'
+        return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
     else:
-        return 'You Are Not Logged In'
+        return flask.render_template('welcome.htm')
 
 
 @app.route('/hello')
