@@ -1,6 +1,6 @@
 from app.app import app
 from app.settings import engine, app_url,app_login_url, cas_url, proxy_url
-# from app.settings import cas_client
+from app.settings import cas_client
 import flask
 from sqlalchemy.orm import sessionmaker
 from app.index import *
@@ -13,6 +13,7 @@ import requests
 logging.basicConfig(level=logging.DEBUG)
 app.secret_key ='pandash'
 
+global pgtids
 
 # url list
 # 
@@ -36,7 +37,6 @@ app.secret_key ='pandash'
 def login():
     if request.method == 'GET':
         ticket = request.args.get('ticket')
-        cas_client = CASClient(cas_url, auth_prefix='')
         if ticket:
             try:
                 cas_response = cas_client.perform_service_validate(
@@ -48,7 +48,9 @@ def login():
                 return redirect(url_for('root'))
             if cas_response and cas_response.success:
                 session['logged-in'] = True
-                return redirect(url_for('proxy', ticket=ticket))
+                print(cas_response.data['proxyGrantingTicket'])
+                pgtiou= cas_response.data['proxyGrantingTicket']
+                return redirect(url_for('proxy', pgtiou=pgtiou))
         if "logged-in" in session and session["logged-in"]:
             del(session['logged-in'])
         cas_login_url = cas_client.get_login_url(service_url=app_login_url)
@@ -59,15 +61,11 @@ def login():
         print(pgt)
         return ''
 
-@app.route('/login/proxy', methods=['GET'])
-def proxy():
-    s_ticket = request.args.get('ticket')
-    cas_client = CASClient(cas_url,auth_prefix='',proxy_url=proxy_url)
-    # cas_response = cas_client.perform_service_validate(
-    #     ticket=s_ticket,
-    #     service_url=app_login_url
-    #     )
-    # print(cas_response.data)
+@app.route('/login/proxy/<pgtiou>', methods=['GET'])
+def proxy(pgtiou=None):
+    pgtid = pgtids[pgtiou]
+    cas_response = cas_client.perform_proxy(proxy_ticket=pgtid)
+    print(cas_response.data)
     return redirect(url_for('root'))
 
 @app.route('/logout')
@@ -251,6 +249,19 @@ def resource_course(courseid):
     resource_html = resource_arrange(resource[courseid], coursename, courseid)
     return flask.render_template('resources_sample.htm', html=resource_html, data=data)
 
+@app.route('/resourcelist/day/<day>')
+def resource_day(day):
+    studentid = 'student1'
+    courses = get_courses_to_be_taken(studentid)
+    data = setdefault_for_overview(studentid, mode="resourcelist")
+    html = ""
+    resource_list = get_resource_list(studentid, day=day)
+    for c in courses:
+        if resource_list[c.course_id] != []:
+            html += resource_arrange(resource_list[c.course_id], c.coursename, c.course_id)
+    data = setdefault_for_overview(studentid, mode='resourcelist')
+    return flask.render_template('resources_sample.htm', html=html, data=data, day=day)
+
 @app.route('/resourcelist')
 def resources_sample():
     studentid = "student1"
@@ -280,14 +291,27 @@ def r_status_change():
     update_resource_status(studentid, r_links)
     return 'success'
 
+@app.route('/task_finish', methods=['POST'])
+def task_finish():
+    studentid = 'student1'
+    task_id = request.json['task_id']
+    update_task_status(studentid, task_id)
+    return 'success'
+
 
 @app.route('/pgtCallback', methods=['GET', 'POST'])
 def pgtCallback():
-    pgt = request.form
-    print(pgt)
-    return ''
+    if request.method == 'GET':
+        pgtiou = request.args.get('pgtIou')
+        pgtid = request.args.get('pgtId')
+        pgtids[pgtiou] = pgtid
+        return ''
+    elif request.method == 'POST':
+        pgt = request.form
+        print(pgt)
+        return ''
 
 
 if __name__ == '__main__':
-    #app.run(debug=True, host='0.0.0.0', port=5000)
-    app.run(debug=True, host='0.0.0.0', port=80)
+    pgtids={}
+    app.run(debug=True, host='0.0.0.0', port=5000)

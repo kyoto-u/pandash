@@ -6,6 +6,43 @@ import re
 from pprint import pprint
 import copy
 
+def sync_student_contents(studentid):
+
+    # 更新をするのはstudent, student_assignment, student_course, student_resource
+    sync_student(studentid)
+    sync_student_assignment(studentid)
+    sync_student_course(studentid)
+    sync_student_resource(studentid)
+
+    return 0
+
+def sync_student_assignment(studentid):
+    # 以下主な方針
+    #
+    # 1　確実だが処理時間は厳しい
+    # APIで全課題を取得
+    # studentidとassignmentid を使って全書き換え
+    # 難点　うまくinsert, update を分けないと時間がかかる
+    #
+    #
+    # 2 1よりは早い
+    #
+    # studentテーブルにlast_updateを用意し、毎回update後に記録しておく
+    # APIで課題全取得
+    # opendateがlast_updateより後のもののみinsert
+    # modifieddateがlast_updateよりあとのもののみupdate
+    # 
+    return 0
+
+def sync_student_course(studentid):
+    return 0
+
+def sync_student_resource(studentid):
+    return 0
+
+def sync_student(studentid):
+    return 0
+
 def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):
     """
         mode
@@ -481,6 +518,19 @@ def update_resource_status(studentid, resourceids: list):
                 update_list.append({"sr_id":i.sr_id, "status":1})
                 break
     session.bulk_update_mappings(studentresource.Student_Resource, update_list)
+    session.commit()
+    return
+
+def update_task_status(studentid, taskids: list):
+    sas = session.query(studentassignment.Student_Assignment.assignment_id, studentassignment.Student_Assignment.sa_id).filter(
+        studentassignment.Student_Assignment.student_id == studentid).all()
+    update_list = []
+    for t_id in taskids:
+        for i in sas:
+            if i.assignment_id == t_id:
+                update_list.append({"sa_id":i.sa_id, "status":"済"})
+                break
+    session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
     session.commit()
     return
 
