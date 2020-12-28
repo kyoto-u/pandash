@@ -6,6 +6,98 @@ import re
 from pprint import pprint
 import copy
 
+class TimeLeft():
+    time_ms:int
+    language:str
+
+    def __init__(self, time_ms, language = 'en'):
+        self.time_ms = time_ms
+        self.language = language
+    
+    def add_ato(self, msg):
+        if self.language == 'ja':
+            msg = f'あと{msg}'
+        else:
+            msg = f'{msg} left'
+        return msg
+
+    def add_ijyou(self, msg):
+        if self.language == 'ja':
+            msg = f'{msg}以上'
+        else:
+            msg = f'more than {msg}'
+        return msg
+    
+    def add_miman(self, msg):
+        if self.language == 'ja':
+            msg = f'{msg}未満'
+        else:
+            msg = f'less than {msg}'
+        return msg
+
+    def time_left_to_str(self):
+        to = {'ja':'と','en':' and '}
+        unit_minute_single = {'ja':'分', 'en':' minute'}
+        unit_minute = {'ja':'分', 'en':' minutes'}
+        unit_hour_single = {'ja':'時間', 'en':' hour'}
+        unit_hour = {'ja':'時間', 'en':' hours'}
+        unit_day_single = {'ja':'日', 'en':' day'}
+        unit_day = {'ja':'日', 'en':' days'}
+        unit_week_single = {'ja':'週間', 'en':' week'}
+        unit_week = {'ja':'週間', 'en':' weeks'}
+        now = floor(time.time())
+        seconds = self.time_ms - now
+        minutes = seconds/60
+        hours = minutes/60
+        days = hours/24
+        weeks = days/7
+        months = weeks/4
+
+        msg =''
+
+        if seconds < 0:
+            return ''
+        elif minutes < 1:
+            # 一分未満
+            msg = self.add_miman('1'+ unit_minute_single[self.language])
+        elif hours < 1:
+            # 一時間未満
+            if floor(minutes) == 1:
+                msg = str(floor(minutes)) + unit_minute_single[self.language]
+            else:
+                msg = str(floor(minutes)) + unit_minute[self.language]
+        elif days < 1:
+            # 一日未満
+            if floor(minutes) == 1:
+                msg = str(floor(hours)) + unit_hour_single[self.language]
+            else:
+                msg = str(floor(hours)) + unit_hour[self.language]
+        elif weeks < 1:
+            # 一週間未満
+            if floor(days) == 1:
+                msg = str(floor(days)) + unit_day_single[self.language]
+            else:
+                msg = str(floor(days)) + unit_day[self.language]
+        elif months < 1:
+            # 一か月(4週間)未満
+            if floor(weeks) == 1:
+                msg = str(floor(weeks)) + unit_week_single[self.language]
+            else:
+                msg = str(floor(weeks)) + unit_week[self.language]
+
+            remain_days = floor(days) - floor(weeks)*7
+
+            if remain_days != 0:
+                if remain_days ==1:
+                    msg += to[self.language] + str(remain_days) + unit_day_single[self.language]
+                else:
+                    msg += to[self.language] + str(remain_days) + unit_day[self.language]
+        else:
+            # 一か月以上
+            msg = self.add_ijyou('4' + unit_week[self.language])
+        
+        return self.add_ato(msg)
+
 def sync_student_contents(studentid):
 
     # 更新をするのはstudent, student_assignment, student_course, student_resource
@@ -103,7 +195,7 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
         task["taskname"] = asmdata[0].title
         task["assignmentid"] = data.assignment_id
         task["deadline"] = asmdata[0].limit_at
-        task["time_left"] = remain_time(asmdata[0].time_ms)
+        task["time_left"] = TimeLeft(asmdata[0].time_ms).time_left_to_str()
         if mode == 1:
             # overviewのtooltipsに使用
             task["instructions"] = asmdata[0].instructions
@@ -521,14 +613,17 @@ def update_resource_status(studentid, resourceids: list):
     session.commit()
     return
 
-def update_task_status(studentid, taskids: list):
+def update_task_status(studentid, taskids: list, mode=0):
     sas = session.query(studentassignment.Student_Assignment.assignment_id, studentassignment.Student_Assignment.sa_id).filter(
         studentassignment.Student_Assignment.student_id == studentid).all()
     update_list = []
+    status = "未"
+    if mode==0:
+        status = "済"
     for t_id in taskids:
         for i in sas:
             if i.assignment_id == t_id:
-                update_list.append({"sa_id":i.sa_id, "status":"済"})
+                update_list.append({"sa_id":i.sa_id, "status":status})
                 break
     session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
     session.commit()
@@ -595,56 +690,31 @@ def order_status(status):
     else:
         return 3
 
-def remain_time(time_ms):
-    ato = 'あと'
-    now = floor(time.time())
-    seconds = time_ms - now
-    minutes = seconds/60
-    hours = minutes/60
-    days = hours/24
-    weeks = days/7
-    months = weeks/4
-
-    if seconds < 0:
-        return ''
-    elif minutes < 1:
-        return '1分未満'
-    elif hours < 1:
-        return ato + str(floor(minutes)) + '分'
-    elif days < 1:
-        return ato + str(floor(hours)) + '時間'
-    elif weeks < 1:
-        return ato + str(floor(days)) + '日'
-    elif months < 1:
-        remain_days = floor(days) - floor(weeks)*7
-        if remain_days == 0:
-            return ato + str(floor(weeks)) + '週間'
-        else:
-            return ato + str(floor(weeks)) + '週と' + \
-                str(remain_days) + '日'
-    else:
-        return ato + '4週間以上'
-
 
 def get_search_condition(show_only_unfinished ,max_time_left , course=None, day=None):
     condition=[]
+    select3a_judge = 0
     if course != None:
         condition.append(f"{get_coursename(course)}のみ")
     elif day !=None:
         condition.append(f"{day_to_str(day)}のみ")
     if show_only_unfinished == 1:
         condition.append("未完了のみ")
+        select3a_judge = 1
     if max_time_left == 0:
         condition.append("一時間以内")
+        select3a_judge = 2
     elif max_time_left == 1:
         condition.append("二十四時間以内")
+        select3a_judge = 3
     elif max_time_left == 2:
         condition.append("一週間以内")
+        select3a_judge = 4
     if len(condition) != 0:       
         search_condition='・'.join(condition)
     else:
         search_condition="全て"
-    return search_condition
+    return {"search_condition":search_condition, "select3a_judge":select3a_judge}
 
 def day_to_str(day):
     if day == "mon":

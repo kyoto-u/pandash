@@ -26,4 +26,4 @@ cd ..
 git clone https://github.com/discogs/python-cas-client
 
 cd python-cas-client
-pip install python-cas-client
+pip install .

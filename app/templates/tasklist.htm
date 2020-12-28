@@ -27,8 +27,8 @@
     </div>
 
     <!--タイトル-->
-    <h2>・あなたの課題</h2>
-    <b>検索条件：{{ search_condition }}</b>
+    <h3>あなたの課題</h3>
+    <b>検索条件：{{ search_condition.search_condition }}</b>
 
     <!--アラート-->
     {% set tasknum = namespace(cnt = 0) %}
@@ -56,11 +56,12 @@
             <th class="col-3">
               <div class="form-group">
                 <label for="select3a">締め切りまで:</label>
-                <select id="select3a" class="form-control">
-                  <option>全て</option>
-                  <option>未完了のみ</option>
-                  <option>今日中</option>
-                  <option>1週間以内</option>
+                <select id="select3a" class="form-control" onchange="return select3a_change(this.value);">
+                  <option value="show-only-0" {% if search_condition.select3a_judge==0 %}selected{% endif %}>全て</option>
+                  <option value="show-only-1" {% if search_condition.select3a_judge==1 %}selected{% endif %}>未完了のみ
+                  </option>
+                  <option value="max-1" {% if search_condition.select3a_judge==3 %}selected{% endif %}>今日中</option>
+                  <option value="max-2" {% if search_condition.select3a_judge==4 %}selected{% endif %}>1週間以内</option>
                 </select>
               </div>
             </th>
@@ -69,7 +70,7 @@
         </thead>
         <tbody id="dragArea" style="font-size: x-small;">
           {% for task in tasks %}
-          <tr id='{{task.searchURL}}' class="d-flex tablecontents" draggable="true">
+          <tr class="d-flex tablecontents acdrag" id="{{task.assignmentid}}">
             <td class="col-3">{{task.subject}}</td>
             <td class="col-3 task_title"><a href="{{task.assignmentid}}" class="task_tag">{{task.taskname}}</a></td>
             <td class="col-3">{{task.time_left}}</td>

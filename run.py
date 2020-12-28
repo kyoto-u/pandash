@@ -65,8 +65,20 @@ def login():
 def proxy(pgtiou=None):
     pgtid = pgtids[pgtiou]
     cas_response = cas_client.perform_proxy(proxy_ticket=pgtid)
-    print(cas_response.data)
-    return redirect(url_for('root'))
+    proxy_ticket = cas_response.data.get('proxyTicket')
+    return redirect(url_for('proxyticket', ticket=proxy_ticket))
+
+@app.route('/proxyticket', methods=["GET"])
+def proxyticket():
+    ticket = request.args.get('ticket')
+    if ticket:
+        cas_response = cas_client.perform_proxy_validate(proxied_service_ticket=ticket)
+        s = requests.Session()
+        api_response = s.get(f"https://pandax.ecs.kyoto-u.ac.jp/sakai-login-tool/container?ticket={ticket}")
+        print(api_response.status_code)
+        print(api_response.text)
+        return redirect(url_for("root"))
+    return redirect(url_for("root"))
 
 @app.route('/logout')
 def logout():
@@ -78,14 +90,18 @@ def logout():
 @app.route('/')
 def root():
     if session.get('logged-in'):
-        return 'You Are Logged In'
+        return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
     else:
-        return 'You Are Not Logged In'
+        return flask.render_template('welcome.htm')
 
 
 @app.route('/hello')
 def main():
     return "Hello World!"
+
+@app.route('/help/<page>')
+def help(page):
+    return flask.render_template(f"FAQ_{page}.htm")
 
 
 # @app.route('/')
@@ -188,7 +204,6 @@ def overview():
     data.setdefault("others",[])
     for i in range(len(data["others"])):
         data["others"][i]["tasks"] = sort_tasks(data["others"][i]["tasks"],show_only_unfinished = 1)
-    
     return flask.render_template('overview.htm',data = data)
 
 @app.route('/tasklist/day/<day>')
@@ -298,6 +313,12 @@ def task_finish():
     update_task_status(studentid, task_id)
     return 'success'
 
+@app.route('/task_unfinish', methods=['POST'])
+def task_unfinish():
+    studentid = 'student1'
+    task_id = request.json['task_id']
+    update_task_status(studentid, task_id, mode=1)
+    return 'success'
 
 @app.route('/pgtCallback', methods=['GET', 'POST'])
 def pgtCallback():
