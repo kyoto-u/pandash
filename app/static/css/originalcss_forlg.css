@@ -23,6 +23,8 @@ html{
     min-height: 100vh;
 }
 
+
+
 body {
     display: flex;
     flex-direction: column;
@@ -79,9 +81,7 @@ footer {
 /*一覧表示ページ*/
 #ScrollSearchbar{
    background-color:silver;
-   height:45vh;
-   top:25vh;
-   position:fixed;
+   height: fit-content;
 }
 
 #searchlabel{
@@ -149,6 +149,8 @@ footer {
     font-size: small;
 }
 
+
+
 /*資料ダウンロードページ*/
 label > a{
     color: gray;
@@ -157,4 +159,9 @@ label > a{
 .ressubs{
     height:200px;
     overflow-y: scroll;
+}
+
+#ResourcesScrolls{
+    top:200px;
+    position:sticky;
 }

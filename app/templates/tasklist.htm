@@ -2,12 +2,14 @@
 {% extends "_base.htm" %}
 {% block bodycontent %}
 <div class="row">
+
   <div id="taskmain" class="col-sm-12 col-md-10" style="left:1vw; overflow: hidden;">
-    <div class="container">
-      <div class="d-flex">
+
+    <div class="container" style="background-color: silver;">
+      <div class="d-flex mx-5 py-2 mb-2">
         <h6 id="searchlabel">しぼりこみ検索</h6>
         <!--曜日しぼりこみ-->
-        <div class="form-group">
+        <div class="form-group mx-5">
           <label for="select0a">科目</label>
           <select id="select0a" class="form-control" onchange="location.href=value;">
             <option value="/tasklist">全ての曜日</option>
@@ -23,8 +25,9 @@
           data-target="#modal_timeboard_select">時間割で検索</button>
       </div>
     </div>
+
     <!--タイトル-->
-    <h3>あなたの課題</h3>
+    <h2>・あなたの課題</h2>
     <b>検索条件：{{ search_condition }}</b>
 
     <!--アラート-->
@@ -43,10 +46,10 @@
         {% endif %}
       </div>
     </div>
-    <div class="table-responsive table-sm table-bordered">
+    <div class="table-responsive table-sm table-bordered" style="padding-bottom: 200;">
       <table class="table">
         <thead>
-          <tr class="d-flex">
+          <tr class="d-flex" style="font-size: x-small;">
             <th class="col-3">科目名</th>
             <th class="col-3">課題名</th>
 
@@ -64,7 +67,7 @@
             <th class="col-3">締切日</th>
           </tr>
         </thead>
-        <tbody id="dragArea">
+        <tbody id="dragArea" style="font-size: x-small;">
           {% for task in tasks %}
           <tr id='{{task.searchURL}}' class="d-flex tablecontents" draggable="true">
             <td class="col-3">{{task.subject}}</td>
@@ -89,7 +92,7 @@
   </div>
 
   <div class="col-md-1 border-left d-none d-md-block">
-    <div ondragover="return false" class="container" id="dastshoot">
+    <div class="container" id="dastshoot">
       <div class="row">
         <i class="fas fa-9x fa-dumpster mr-auto" style="color: black;"></i>
         <div class="my-auto mr-auto" style="font-size:x-large; color: coral;"><b>6</b></div>
