@@ -5,7 +5,7 @@
 
   <div id="taskmain" class="col-sm-12 col-md-10" style="left:1vw; overflow: hidden;">
 
-    <div class="container" style="background-color: silver;">
+    <div class="container" style="background-color: silver; pointer-events: all;">
       <div class="d-flex mx-5 py-2 mb-2">
         <h6 id="searchlabel">しぼりこみ検索</h6>
         <!--曜日しぼりこみ-->
@@ -46,7 +46,7 @@
         {% endif %}
       </div>
     </div>
-    <div class="table-responsive table-sm table-bordered" style="padding-bottom: 200;">
+    <div class="table-responsive table-sm table-bordered" style="padding-bottom: 200; pointer-events: all;">
       <table class="table">
         <thead>
           <tr class="d-flex" style="font-size: x-small;">
@@ -89,67 +89,12 @@
       {% endif %}
     </div>
     {% endif %}
-    <!--課題表-->
   </div>
 
-  <div class="col-md-1 border-left d-none d-md-block">
-    <div class="container" id="dastshoot">
-      <div class="row">
-        <i class="fas fa-9x fa-dumpster mr-auto" style="color: black;"></i>
-        <div class="my-auto mr-auto" style="font-size:x-large; color: coral;"><b>6</b></div>
-        <div>ここに課題をドラッグ＆ドロップする</div>
-        <h5 class="text-nowrap pt-3 border-top">・完了済みにする課題</h5>
-        <ul class="list-group" id="finished_taskslist">
-          <div class="mx-auto">
-            <div class="row">
-              <li class="list-group-item finished-list-item">
-                [2020後期月3]線形代数学<br>
-                <b>課題No.6</b>
-              </li>
-              <button><i class="fas fa-times"></i></button>
-            </div>
-          </div>
-          <div class="mx-auto">
-            <div class="row">
-              <li class="list-group-item finished-list-item">
-                [2020後期月3]線形代数学<br>
-                <b>課題No.6</b>
-              </li>
-              <button><i class="fas fa-times"></i></button>
-            </div>
-          </div>
-          <div class="mx-auto">
-            <div class="row">
-              <li class="list-group-item finished-list-item">
-                [2020後期月3]線形代数学<br>
-                <b>課題No.6</b>
-              </li>
-              <button><i class="fas fa-times"></i></button>
-            </div>
-          </div>
-          <div class="mx-auto">
-            <div class="row">
-              <li class="list-group-item finished-list-item">
-                [2020後期月3]線形代数学<br>
-                <b>課題No.6</b>
-              </li>
-              <button><i class="fas fa-times"></i></button>
-            </div>
-          </div>
-          <div class="mx-auto">
-            <div class="row">
-              <li class="list-group-item finished-list-item">
-                [2020後期月3]線形代数学<br>
-                <b>課題No.6</b>
-              </li>
-              <button><i class="fas fa-times"></i></button>
-            </div>
-          </div>
-        </ul>
-        <button type="button" class="btn btn-success btn-block mx-auto mt-3" style="font-size: smaller;">確定する</button>
-      </div>
-
-    </div>
+  <div class="col-md-1 border-left d-none d-md-block" style="position: relative; z-index: -20; pointer-events: all;">
+    {#
+    {% include "finished_box.htm" %}
+    #}
   </div>
 
   <script type="text/javascript" src="/static/js/task.js"></script>
