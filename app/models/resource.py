@@ -10,6 +10,6 @@ class Resource(settings.Base):
     title = Column(String(100))
     container = Column(String(500))
     modifieddate = Column(sqlalchemy.BigInteger())
-    course_id = Column(String(40))
+    course_id = Column(String(40),index=True)
 
 settings.Base.metadata.create_all(settings.engine)

@@ -453,7 +453,7 @@ def add_student(studentid, fullname):
             isExist = True
             break
     if isExist == False:
-        new_student = student.Student(student_id=studentid, fullname=fullname)
+        new_student = student.Student(student_id=studentid, fullname=fullname,last_update=time.time(),language='ja')
         session.add(new_student)
         session.commit()
     return

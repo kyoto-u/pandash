@@ -12,6 +12,6 @@ class Assignment(settings.Base):
     instructions = Column(String(1000))
     time_ms = Column(Integer())
     modifieddate = Column(sqlalchemy.BigInteger())
-    course_id = Column(sqlalchemy.String(40))
+    course_id = Column(sqlalchemy.String(40),index=True)
 
 settings.Base.metadata.create_all(settings.engine)
