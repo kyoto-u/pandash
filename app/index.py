@@ -532,15 +532,15 @@ def add_student_assignment(studentid, data, last_update):
     """
     sa = session.query(
         studentassignment.Student_Assignment.assignment_id).filter(studentassignment.Student_Assignment.student_id == studentid).all()
-    assignment_exist = False
-    update=False
     new_sa = []
     upd_sa = []
     for item in data:
+        assignment_exist = False
+        update=False
         for i in sa:
             if i.assignment_id == item["assignment_id"]:
                 assignment_exist = True
-                if i.modifieddate > last_update:
+                if i.modifieddate > last_update and i.status !='未':
                     update=True
                 break
         if assignment_exist == False:
@@ -548,6 +548,7 @@ def add_student_assignment(studentid, data, last_update):
         elif update == True:
             upd_sa.append(item)
     session.execute(studentassignment.Student_Assignment.__table__.insert(),new_sa)
+    session.bulk_update_mappings(studentassignment.Student_Assignment, upd_sa)
     session.commit()
     return
 
@@ -650,9 +651,9 @@ def add_studentcourse(studentid, data):
         data:[{student_id:"", course_id:""},{}]
     """
     sc = session.query(studentcourse.Studentcourse).filter(studentcourse.Studentcourse.student_id == studentid).all()
-    course_exist = False
     new_sc = []
     for item in data:
+        course_exist = False
         for i in sc:
             if i.course_id == item["course_id"]:
                 course_exist = True
