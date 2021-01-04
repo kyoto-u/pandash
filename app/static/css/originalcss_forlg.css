@@ -23,6 +23,11 @@ html{
     min-height: 100vh;
 }
 
+.table-responsive{
+    padding-bottom: 200; 
+    pointer-events: all;
+}
+
 
 
 body {
@@ -140,8 +145,17 @@ footer {
     overflow: visible;
 }
 
+#overviewtable > thead > tr {
+    height:60px;
+}
+
+#overviewtable > tbody > tr {
+    height:60px;
+}
+
 .elsesbjcard{
     font-size: smaller;
+    height: 150px;
 }
 
 /*授業資料ページ*/

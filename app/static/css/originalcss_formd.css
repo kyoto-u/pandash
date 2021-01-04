@@ -81,10 +81,11 @@ footer {
   width:98vw;
   margin-left: 1vw;
   margin-right: 1vw;
+  pointer-events: none;
 }
 
 th,td{
-  font-size: xx-small;
+  font-size: small;
 }
 
 body{
