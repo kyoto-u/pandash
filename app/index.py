@@ -108,7 +108,7 @@ def sync_student_contents(studentid):
 
     return 0
 
-def sync_student_assignment(studentid):
+def sync_student_assignment(studentid,last_update):
     # 以下主な方針
     #
     # 1　確実だが処理時間は厳しい
@@ -124,6 +124,16 @@ def sync_student_assignment(studentid):
     # opendateがlast_updateより後のもののみinsert
     # modifieddateがlast_updateよりあとのもののみupdate
     # 
+    #
+    # APIで課題全取得
+    api_data=''
+    assignments=[{},{}]
+    # 追加、更新をする
+    add_student_assignment(studentid,assignments,last_update)
+    
+    
+
+
     return 0
 
 def sync_student_course(studentid):
@@ -516,21 +526,27 @@ def add_course(courseid, instructorid, \
     return
 
 
-def add_student_assignment(studentid, data):
+def add_student_assignment(studentid, data, last_update):
     """
         data:assignment_id, student_id, status
     """
     sa = session.query(
         studentassignment.Student_Assignment.assignment_id).filter(studentassignment.Student_Assignment.student_id == studentid).all()
     assignment_exist = False
+    update=False
     new_sa = []
+    upd_sa = []
     for item in data:
         for i in sa:
             if i.assignment_id == item["assignment_id"]:
                 assignment_exist = True
+                if i.modifieddate > last_update:
+                    update=True
                 break
         if assignment_exist == False:
             new_sa.append(item)
+        elif update == True:
+            upd_sa.append(item)
     session.execute(studentassignment.Student_Assignment.__table__.insert(),new_sa)
     session.commit()
     return
