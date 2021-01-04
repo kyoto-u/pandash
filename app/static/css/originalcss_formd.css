@@ -92,6 +92,14 @@ body{
   padding-top: 140px;
 }
 
+#overviewtable > thead > tr {
+    height:60px;
+}
+
+#overviewtable > tbody > tr {
+    height:60px;
+}
+
 #ScrollSearchbar{
   padding-top:5;
   padding-bottom:0px;

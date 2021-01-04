@@ -23,8 +23,7 @@ html{
     min-height: 100vh;
 }
 
-.table-responsive{
-    padding-bottom: 200; 
+.table-responsive{ 
     pointer-events: all;
 }
 

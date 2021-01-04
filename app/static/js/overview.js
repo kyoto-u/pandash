@@ -8,13 +8,26 @@ $(function() {
       drop: function(event, ui){
         dr_text = ui.draggable.find("a").text();
         dr_id = ui.draggable.find("a").attr("href");
-        var add_f_task = $("<li></li>");
-        add_f_task.addClass("new_card");
-        add_f_task_a = $('<a></a>');
-        add_f_task_a.attr("href", dr_id);
-        add_f_task.html(dr_text);
-        add_f_task.append(add_f_task_a)
-        $(this).append(add_f_task);
+        dr_sub = ui.draggable.parent().find('.course').text();
+        if(dr_sub.length==0){
+          dr_sub = ui.draggable.parent().parent().find('.othcourse').text();
+        }
+        var add_div_1 = $('<div></div>');
+        var add_div_2 = $('<div></div>');
+        var add_li = $('<li></li>');
+        add_div_1.addClass("mx-auto new_card");
+        add_div_2.addClass("row");
+        add_li.addClass("list-group-item finished-list-item");
+        add_a = $('<a></a>');
+        add_a.attr("href", dr_id);
+        add_a.html(dr_text);
+        add_li.html(dr_sub);
+        add_li.append($('<br>'));
+        add_li.append(add_a);
+        add_div_2.append(add_li);
+        add_div_1.append(add_div_2);
+        console.log(add_div_1);
+        $("#finished_taskslist").append(add_div_1);
         ui.draggable.css("display", "none")
         var dr_ids = new Array();
         dr_ids.push(dr_id);
@@ -37,7 +50,14 @@ $(function() {
       helper: "clone",
       revert: "invalid",
       start: function(event, ui){
-        $("#overview_table").removeClass("table-responsive");
+        $("#overview_table").removeClass("table-responsive"),
+        $(ui.helper).css({
+          'width': $(this).width(),
+          'zIndex': 1000,
+          // 見やすいよう，背景色をつけておく
+          // card 2列目以降のdragの際tableの背面に回ってしまうので修正が必要
+          'background-color': "#99cc00"
+        })
       },
       stop: function(event, ui){
         $("#overview_table").addClass("table-responsive");
@@ -45,7 +65,11 @@ $(function() {
           helper: "clone",
           revert: "invalid",
           start: function(event, ui){
-            $("#overview_table").removeClass("table-responsive");
+            $("#overview_table").removeClass("table-responsive"),
+            $(ui.helper).css({
+              'width': $(this).width(),
+              'zIndex': 1000
+            })
           },
           stop: function(event, ui){
             $("#overview_table").addClass("table-responsive");

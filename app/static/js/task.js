@@ -7,13 +7,23 @@ $(function() {
       drop: function(event, ui){
         dr_text = ui.draggable.find('.task_title').text();
         dr_id = ui.draggable.find('.task_tag').attr("href");
-        var add_f_task = $('<li></li>');
-        add_f_task.addClass("new_task");
-        add_f_task_a = $('<a></a>');
-        add_f_task_a.attr("href", dr_id);
-        add_f_task_a.html(dr_text);
-        add_f_task.append(add_f_task_a);
-        $(this).append(add_f_task);
+        dr_sub = ui.draggable.find('.subject').text();
+        var add_div_1 = $('<div></div>');
+        var add_div_2 = $('<div></div>');
+        var add_li = $('<li></li>');
+        add_div_1.addClass("mx-auto new_task");
+        add_div_2.addClass("row");
+        add_li.addClass("list-group-item finished-list-item");
+        add_a = $('<a></a>');
+        add_a.attr("href", dr_id);
+        add_a.html(dr_text);
+        add_li.html(dr_sub);
+        add_li.append($('<br>'));
+        add_li.append(add_a);
+        add_div_2.append(add_li);
+        add_div_1.append(add_div_2);
+        console.log(add_div_1);
+        $("#finished_taskslist").append(add_div_1);
         ui.draggable.css("display", "none");
         ui.draggable.find('td').css("display", "none")
         var dr_ids = new Array();
@@ -36,11 +46,28 @@ $(function() {
     $('.acdrag').draggable({
       helper: "clone",
       revert: "invalid",
+      start: function(event, ui){
+        $("#table").removeClass("table-responsive"),
+        $(ui.helper).css({
+          'width': $(this).width(),
+          'zIndex': 1000
+        });
+      },
       stop: function(event, ui){
         $('.new_task').draggable({
           helper: "clone",
-          revert: "invalid"
-        });
+          revert: "invalid",
+          start: function(event, ui){
+            $(ui.helper).css({
+              'width': $(this).width(),
+              'zIndex': 1000
+            });
+          },
+          stop: function(event, ui){
+            $("#table").addClass("table-responsive")
+          }
+        }),
+        $("#table").addClass("table-responsive");
       }
     });
 

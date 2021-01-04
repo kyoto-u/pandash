@@ -128,10 +128,13 @@
   </div>
 </div>
 
-<body style="pointer-events: none;">
+<body>
+  <!-- pointer-eventsをnoneにする必要がない上に，
+    drag and dropをはじめとして予期しない動作をするので削除
+       style="pointer-events: none;" -->
   <header>
     <!-- ロゴとサイト名-->
-    <div class="fixed-top logos" style="pointer-events: all;">
+    <div class="fixed-top logos">
       <nav class="navbar navbar-light bg-light" id="logonav">
         <div class="row">
           <a href="#" class=navbar-brand>
