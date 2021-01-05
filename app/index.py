@@ -10,7 +10,7 @@ class TimeLeft():
     time_ms:int
     language:str
 
-    def __init__(self, time_ms, language = 'en'):
+    def __init__(self, time_ms, language = 'ja'):
         self.time_ms = time_ms
         self.language = language
     
@@ -467,7 +467,7 @@ def get_coursename(courseid):
 
 def get_courseids(studentid):
     course_ids = session.query(studentcourse.Studentcourse.course_id).filter(studentcourse.Studentcourse.student_id==studentid).all()
-    return list(course_ids)
+    return [i.course_id for i in course_ids]
 
 def add_student(studentid, fullname):
     students = session.query(student.Student.student_id).all()
@@ -516,32 +516,36 @@ def add_assignment(studentid, data, last_update):
             new_asm.append(item)
         elif update == True:
             upd_asm.append(item)
-    session.execute(assignment.Assignment.__table__.insert(),new_asm)
-    session.bulk_update_mappings(assignment.Assignment, upd_asm)
+    if len(new_asm) != 0:
+        session.execute(assignment.Assignment.__table__.insert(),new_asm)
+    if len(upd_asm) != 0:
+        session.bulk_update_mappings(assignment.Assignment, upd_asm)
     session.commit()
     return
 
-def add_courses(studentid, data, last_update):
+def add_course(studentid, data, last_update):
     course_ids = get_courseids(studentid)
     courses = session.query(
         course.Course).filter(course.Course.course_id.in_(course_ids)).all()
-    new_asm=[]
-    upd_asm = []
+    new_crs=[]
+    upd_crs = []
     for item in data:
-        assignment_exist = False
+        course_exist = False
         update=False
         if item["course_id"] not in course_ids:
             continue
         for i in courses:
             if i.course_id == item["course_id"]:
-                assignment_exist = True
+                course_exist = True
                 break
-        if assignment_exist == False:
-            new_asm.append(item)
+        if course_exist == False:
+            new_crs.append(item)
         elif update == True:
-            upd_asm.append(item)
-    session.execute(course.Course.__table__.insert(),new_asm)
-    session.bulk_update_mappings(course.Course, upd_asm)
+            upd_crs.append(item)
+    if len(new_crs) != 0:
+        session.execute(course.Course.__table__.insert(),new_crs)
+    if len(upd_crs) != 0:
+        session.bulk_update_mappings(course.Course, upd_crs)
     session.commit()
     return
 
@@ -567,8 +571,10 @@ def add_student_assignment(studentid, data, last_update):
             new_sa.append(item)
         elif update == True:
             upd_sa.append(item)
-    session.execute(studentassignment.Student_Assignment.__table__.insert(),new_sa)
-    session.bulk_update_mappings(studentassignment.Student_Assignment, upd_sa)
+    if len(new_sa) != 0:
+        session.execute(studentassignment.Student_Assignment.__table__.insert(),new_sa)
+    if len(upd_sa) != 0:
+        session.bulk_update_mappings(studentassignment.Student_Assignment, upd_sa)
     session.commit()
     return
 
@@ -600,7 +606,8 @@ def add_student_resource(studentid,data):
                 break
         if resource_exist == False:
             new_sr.append(item)
-    session.execute(studentresource.Student_Resource.__table__.insert(),new_sr)
+    if len(new_sr) != 0:
+        session.execute(studentresource.Student_Resource.__table__.insert(),new_sr)
     session.commit()
     return
 
@@ -626,8 +633,10 @@ def add_resource(studentid, data, last_update):
             new_res.append(item)
         elif update == True:
             upd_res.append(item)
-    session.execute(resource.Resource.__table__.insert(),new_res)
-    session.bulk_update_mappings(resource.Resource, upd_res)
+    if len(new_res) != 0:
+        session.execute(resource.Resource.__table__.insert(),new_res)
+    if len(upd_res) != 0:
+        session.bulk_update_mappings(resource.Resource, upd_res)
     session.commit()
     return
 

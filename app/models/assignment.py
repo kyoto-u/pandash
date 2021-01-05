@@ -10,7 +10,7 @@ class Assignment(settings.Base):
     title = Column(String(100))
     limit_at = Column(String(40))
     instructions = Column(String(1000))
-    time_ms = Column(Integer())
+    time_ms = Column(sqlalchemy.BigInteger())
     modifieddate = Column(sqlalchemy.BigInteger())
     course_id = Column(sqlalchemy.String(40),index=True)
 

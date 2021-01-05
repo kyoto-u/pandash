@@ -154,16 +154,16 @@ def controller_for_students(studentid):
         sc_data.append({"student_id":studentid,"course_id":f"dummy{i}"})
         crs_data.append({"course_id":f"dummy{i}","instructor_id":"instructor1", "coursename":f'[2020前期他他]ダミー{i}', "yearsemester":20200, "classschedule":f'thu{(i%5)+1}'})
         for j in range(10):
-            sa_data.append({"assignment_id":f'dummyassignment{i}-{j}', "student_id":studentid, "status":'未'})
-            asm_data.append({"assignment_id":f'dummyassignment{i}-{j}', "url":"url",f"title":"課題{i}-{j}", "limit_at":"2020-10-30T01:50:00Z", "instructions":"<p>説明<p>", "time_ms":11111111111, "modifieddate":1111, "cource_id":f"dummy{i}"})
+            sa_data.append({"sa_id":f"{studentid}:dummyassignment{i}-{j}", "assignment_id":f'dummyassignment{i}-{j}', "student_id":studentid, "status":'未'})
+            asm_data.append({"assignment_id":f'dummyassignment{i}-{j}', "url":"url","title":f"課題{i}-{j}", "limit_at":"2020-10-30T01:50:00Z", "instructions":"<p>説明<p>", "time_ms":11111111111, "modifieddate":1111, "course_id":f"dummy{i}"})
             sr_data.append({"resource_url":f"resource{i}-{j}","student_id":studentid,"status":0})
-            res_data.append({"resource_url":f"resource{i}-{j}", "title":f'資料{i}-{j}', "container":'/content/group/2020-888-N150-017/演義/', "modifieddate":222, "coursename":f"dummy{i}"})
+            res_data.append({"resource_url":f"resource{i}-{j}", "title":f'資料{i}-{j}', "container":'/content/group/2020-888-N150-017/演義/', "modifieddate":222, "course_id":f"dummy{i}"})
     add_studentcourse(studentid,sc_data)
-    add_student_assignment(studentid,sa_data)
+    add_student_assignment(studentid,sa_data, 0)
     add_student_resource(studentid, sr_data)
-    add_course(studentid, sr_data, 0)
-    add_assignment(studentid, sr_data, 0)
-    add_resource(studentid, sr_data, 0)
+    add_course(studentid, crs_data, 0)
+    add_assignment(studentid, asm_data, 0)
+    add_resource(studentid, res_data, 0)
     return ''
     
 
