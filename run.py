@@ -111,6 +111,7 @@ def help(page):
 
 @app.route('/controller')
 def controller():
+    # 現行のバージョンでは使えなくなりました
     # ex
     add_instructor('instructor1', 'i_fullname', 'i_mailadress')
     add_assignment("assignmentid1", "url","課題1", "2020-10-30T01:55:00Z", "<p>説明<p>", 11111111111, 1111, "course1" )
@@ -146,32 +147,23 @@ def controller_for_students(studentid):
     sc_data=[]
     sa_data=[]
     sr_data=[]
-    sa_data.append({'assignment_id':'assignmentid1', 'student_id':studentid, 'status':'未'})
-    sa_data.append({'assignment_id':'assignmentid2', 'student_id':studentid, 'status':'未'})
-    sa_data.append({'assignment_id':'assignmentid3', 'student_id':studentid, 'status':'未'})
-    sa_data.append({'assignment_id':'assignmentid4', 'student_id':studentid, 'status':'未'})
-    sa_data.append({'assignment_id':'assignmentid5', 'student_id':studentid, 'status':'未'})
-    sa_data.append({'assignment_id':'assignmentid6', 'student_id':studentid, 'status':'未'})
-    sa_data.append({'assignment_id':'assignmentid7', 'student_id':studentid, 'status':'未'})
-    sc_data.append({"student_id":studentid,"course_id":"course1"})
-    sc_data.append({"student_id":studentid,"course_id":"course2"})
-    sc_data.append({"student_id":studentid,"course_id":"course3"})
-    sc_data.append({"student_id":studentid,"course_id":"course4"})
+    crs_data=[]
+    asm_data=[]
+    res_data=[]
     for i in range(30):
         sc_data.append({"student_id":studentid,"course_id":f"dummy{i}"})
+        crs_data.append({"course_id":f"dummy{i}","instructor_id":"instructor1", "coursename":f'[2020前期他他]ダミー{i}', "yearsemester":20200, "classschedule":f'thu{(i%5)+1}'})
         for j in range(10):
             sa_data.append({"assignment_id":f'dummyassignment{i}-{j}', "student_id":studentid, "status":'未'})
+            asm_data.append({"assignment_id":f'dummyassignment{i}-{j}', "url":"url",f"title":"課題{i}-{j}", "limit_at":"2020-10-30T01:50:00Z", "instructions":"<p>説明<p>", "time_ms":11111111111, "modifieddate":1111, "cource_id":f"dummy{i}"})
             sr_data.append({"resource_url":f"resource{i}-{j}","student_id":studentid,"status":0})
-    sr_data.append({"resource_url":'url1', "student_id":studentid, "status":0})
-    sr_data.append({"resource_url":'url2', "student_id":studentid, "status":0})
-    sr_data.append({"resource_url":'url3', "student_id":studentid, "status":0})
-    sr_data.append({"resource_url":'url4', "student_id":studentid, "status":0})
-    sr_data.append({"resource_url":'url5', "student_id":studentid, "status":0})
-    sr_data.append({"resource_url":'url6', "student_id":studentid, "status":0})
-    sr_data.append({"resource_url":'url7', "student_id":studentid, "status":0})
+            res_data.append({"resource_url":f"resource{i}-{j}", "title":f'資料{i}-{j}', "container":'/content/group/2020-888-N150-017/演義/', "modifieddate":222, "coursename":f"dummy{i}"})
     add_studentcourse(studentid,sc_data)
     add_student_assignment(studentid,sa_data)
     add_student_resource(studentid, sr_data)
+    add_course(studentid, sr_data, 0)
+    add_assignment(studentid, sr_data, 0)
+    add_resource(studentid, sr_data, 0)
     return ''
     
 
