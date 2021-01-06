@@ -182,6 +182,14 @@ def get_resources_from_api(resources, course_id, student_id):
     resource_dict = {"student_resources":sr_list, "resources":resource_list}
     return resource_dict
 
+def get_student_id_from_api(membership):
+    mem_collection = membership.get('membership_collection')
+    student_id = ""
+    for member in mem_collection:
+        student_id = member.get('userId')
+        break
+    return student_id
+
 def get_course_id_from_api(membership):
     mem_collection = membership.get('membership_collection')
     student_id = ""
