@@ -1,5 +1,5 @@
 from app.app import app
-from app.settings import engine, app_url,app_login_url, cas_url, proxy_url
+from app.settings import engine,app_url,app_login_url,cas_url,proxy_url,proxy_callback,api_url
 from app.settings import cas_client
 import flask
 from sqlalchemy.orm import sessionmaker
@@ -72,11 +72,19 @@ def proxy(pgtiou=None):
 def proxyticket():
     ticket = request.args.get('ticket')
     if ticket:
-        cas_response = cas_client.perform_proxy_validate(proxied_service_ticket=ticket)
         s = requests.Session()
-        api_response = s.get(f"https://pandax.ecs.kyoto-u.ac.jp/sakai-login-tool/container?ticket={ticket}")
-        print(api_response.status_code)
-        print(api_response.text)
+        api_response = s.get(f"{proxy_callback}?ticket={ticket}")
+        if api_response.status_code == 200:
+            membership = s.get(f"{api_url}membership.json")
+            assignments = s.get(f"{api_url}assignment/my.json")
+            get_membership = get_course_id_from_api(membership.json())
+            student_id = get_membership["student_id"]
+            get_assignments = get_assignments_from_api(assignments.json(), student_id)
+            for courseid in get_membership["site_list"]:
+                site = s.get(f"{api_url}site/{courseid}.json")
+                resources = s.get(f"{api_url}content/site/{courseid}.json")
+                get_site = get_course_from_api(site.json(), student_id)
+                get_resource = get_resources_from_api(resources.json(),courseid,student_id)
         return redirect(url_for("root"))
     return redirect(url_for("root"))
 

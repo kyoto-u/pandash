@@ -159,6 +159,90 @@ def sync_student_resource(studentid, last_update):
 def sync_student(studentid):
     return 0
 
+
+def get_assignments_from_api(assignments, student_id):
+    assignment_list = []
+    sa_list = []
+    ass_colection = assignments.get("assignment_collection")
+    for assignment in ass_colection:
+        assignment_id = assignment.get('id')
+        url = assignment.get('entityURL')
+        title = assignment.get('title')
+        limit_at = assignment.get('dueTimeString')
+        instructions = assignment.get('instructions')
+        time_ms = assignment.get('dueTime').get('time')
+        course_id = assignment.get('context')
+        modifieddate = assignment.get('timeLastModified').get('time')
+        status = assignment.get('status')
+        assignment_list.append({"sa_id":f"{student_id}{assignment_id}","assigiment_id":assignment_id,"status":"未","student_id":student_id})
+        sa_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifidedate":modifieddate,"course_id":course_id})
+    assignment_dict = {"student_assignment":sa_list, "assignment":assignment_list}
+    return assignment_dict
+
+def get_resources_from_api(resources, course_id, student_id):
+    resource_list = []
+    sr_list = []
+    content_collection = resources.get("content_collection")
+    for content in content_collection:
+        resource_author = content.get('author')
+        resource_container = content.get('container')
+        resource_modified_date = content.get('modifiedDate')
+        resource_title = content.get('title')
+        resource_url = content.get('url')
+        container_split = resource_container.split('/')
+        resource_list.append({'course_id':course_id, 'container': resource_container, 'title': resource_title, \
+            'resource_url': resource_url, 'modifieddate': resource_modified_date})
+        sr_list.append({"sr_id":f"{student_id}{resource_url}", "resource_url":resource_url, "student_id":student_id, "status":0})
+    resource_dict = {"student_resources":sr_list, "resources":resource_list}
+    return resource_dict
+
+def get_course_id_from_api(membership):
+    mem_collection = membership.get('membership_collection')
+    student_id = ""
+    site_list = []
+    for member in mem_collection:
+        if student_id == "":
+            student_id = member.get('userId')
+        user_site_id = member.get('entityId')
+        site_id = user_site_id.replace(f'{student_id}::site:','')
+        site_list.append(site_id)
+    return {"student_id":student_id, "site_list":site_list}
+
+def get_course_from_api(site, student_id):
+    course_id = site.get('id')
+    instructor_id = site.get('siteOwner').get('usrId')
+    fullname = site.get('siteOwner').get('userDisplayName')
+    coursename = site.get('title')
+    yearsch = re.match(r'\[.*\]', coursename)
+    yearsemester = "20203"
+    classschedule = "oth"
+    try:
+        semnum = "2"
+        semester = yearsch.group()[5:7]
+        classsch = yearsch.group()[7:9]
+        if semester == '前期':
+            semnum = "0"
+        elif semester == '後期':
+            semnum = "1"
+        yearsemester = f"{yearsch.group()[1:5]}{semnum}"
+        week = "oth"
+        if classsch[0] == "月":
+            week = "mon"
+        elif classsch[0] == "火":
+            week = "tue"
+        elif classsch[0] == "水":
+            week = "wed"
+        elif classsch[0] == "木":
+            week = "thu"
+        elif classsch[0] == "金":
+            week = "fri"
+        classschedule = f"{week}{str(int(classsch[1]))}"
+    except:
+        pass
+    course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule}
+    student_course_dict = {"sc_id":f"{student_id}{course_id}","course_id":course_id,"student_id":student_id}
+    return {"course":course_dict, "student_course":student_course_dict}
+
 def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):
     """
         mode
