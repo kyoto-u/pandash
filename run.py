@@ -9,6 +9,7 @@ from cas_client import CASClient
 from flask import Flask, redirect, request, session, url_for
 import logging
 import requests
+import time
 
 logging.basicConfig(level=logging.DEBUG)
 app.secret_key ='pandash'
@@ -75,16 +76,18 @@ def proxyticket():
         s = requests.Session()
         api_response = s.get(f"{proxy_callback}?ticket={ticket}")
         if api_response.status_code == 200:
+            now = now = floor(time.time())
             membership = s.get(f"{api_url}membership.json")
             assignments = s.get(f"{api_url}assignment/my.json")
             get_membership = get_course_id_from_api(membership.json())
             student_id = get_membership["student_id"]
-            get_assignments = get_assignments_from_api(assignments.json(), student_id)
-            for courseid in get_membership["site_list"]:
-                site = s.get(f"{api_url}site/{courseid}.json")
-                resources = s.get(f"{api_url}content/site/{courseid}.json")
-                get_site = get_course_from_api(site.json(), student_id)
-                get_resource = get_resources_from_api(resources.json(),courseid,student_id)
+            if student_id != "":
+                get_assignments = get_assignments_from_api(assignments.json(), student_id)
+                for courseid in get_membership["site_list"]:
+                    site = s.get(f"{api_url}site/{courseid}.json")
+                    resources = s.get(f"{api_url}content/site/{courseid}.json")
+                    get_site = get_course_from_api(site.json(), student_id)
+                    get_resource = get_resources_from_api(resources.json(),courseid,student_id)
         return redirect(url_for("root"))
     return redirect(url_for("root"))
 
