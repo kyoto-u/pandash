@@ -98,7 +98,7 @@ class TimeLeft():
         
         return self.add_ato(msg)
 
-def sync_student_contents(studentid, sc, sa, sr, crs, asm, res, now):
+def sync_student_contents(studentid, crs, asm, res, now):
     # 以下主な方針
     #
     # studentテーブルにlast_updateを用意し、毎回update後に記録しておく
@@ -116,9 +116,9 @@ def sync_student_contents(studentid, sc, sa, sr, crs, asm, res, now):
         add_student(studentid, "Noname",last_update= now)
     # 更新をするのはstudent, student_assignment, student_course, student_resource
     # 加えて、assignment,course,resourceも同時に更新することにする。
-    sync_student_course(studentid, sc, crs, last_update)
-    sync_student_assignment(studentid, sa, asm, last_update)
-    sync_student_resource(studentid, sr, res, last_update)
+    sync_student_course(studentid, crs["studentcourse"], crs["courses"], last_update)
+    sync_student_assignment(studentid, asm["student_assignment"], asm["assignment"], last_update)
+    sync_student_resource(studentid, res["student_resources"], res["resources"], last_update)
 
     return 0
 

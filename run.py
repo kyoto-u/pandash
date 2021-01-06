@@ -88,6 +88,7 @@ def proxyticket():
                     resources = s.get(f"{api_url}content/site/{courseid}.json")
                     get_site = get_course_from_api(site.json(), student_id)
                     get_resource = get_resources_from_api(resources.json(),courseid,student_id)
+                sync_student_contents(student_id, get_site, get_assignments, get_resource, now)
         return redirect(url_for("root"))
     return redirect(url_for("root"))
 
