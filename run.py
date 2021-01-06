@@ -86,6 +86,7 @@ def proxyticket():
                 get_assignments = get_assignments_from_api(assignments.json(), student_id)
                 get_sites = {"courses":[],"student_courses":[]}
                 get_resources = {"resources":[],"student_resources":[]}
+                asyncio.set_event_loop(asyncio.SelectorEventLoop())
                 loop = asyncio.get_event_loop()
                 c_statements = []
                 s_statements = []
