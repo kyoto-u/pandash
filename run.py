@@ -113,15 +113,15 @@ def proxyticket():
                     get_site = get_course_from_api(sites[index], student_id)
                     get_sites["courses"].append(get_site["course"])
                     get_sites["student_courses"].append(get_site["student_course"])
-                    get_resources["resources"].append(get_resource["resources"])
-                    get_resources["student_resources"].append(get_resources["student_resources"])
+                    get_resources["resources"].extend(get_resource["resources"])
+                    get_resources["student_resources"].extend(get_resource["student_resources"])
                     index += 1
                 # student_id       student_id
                 # get_membership   {"student_id": , "site_list": []}
                 # get_assignments  {"assignments": [], student_assignments: []}
                 # get_sites        {"courses": [], "student_courses": []}
                 # get_resources    {"resources":[], "student_resources": []}
-                sync_student_contents(student_id, get_site, get_assignments, get_resources, now)
+                sync_student_contents(student_id, get_sites, get_assignments, get_resources, now)
             print(time.perf_counter()-start_time)
         return redirect(url_for("root"))
     return redirect(url_for("root"))
