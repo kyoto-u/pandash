@@ -6,8 +6,8 @@ from .. import settings
 
 class Student_Assignment(settings.Base):
     __tablename__ = 'studentassignments'
-    sa_id = sqlalchemy.Column(String(80), primary_key=True)
-    assignment_id = sqlalchemy.Column(String(40))
+    sa_id = sqlalchemy.Column(String(120), primary_key=True)
+    assignment_id = sqlalchemy.Column(String(80))
     student_id = sqlalchemy.Column(String(40),index=True)
     status = sqlalchemy.Column(String(8))
 

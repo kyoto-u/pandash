@@ -5,7 +5,7 @@ from .. import settings
 
 class Assignment(settings.Base):
     __tablename__ = 'assignments'
-    assignment_id = Column(String(40), primary_key=True)
+    assignment_id = Column(String(80), primary_key=True)
     url = Column(String(500))
     title = Column(String(100))
     limit_at = Column(String(40))
