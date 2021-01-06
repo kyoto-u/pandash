@@ -46,7 +46,7 @@ class TimeLeft():
         unit_week_single = {'ja':'週間', 'en':' week'}
         unit_week = {'ja':'週間', 'en':' weeks'}
         now = floor(time.time())
-        seconds = self.time_ms - now
+        seconds = self.time_ms/1000 - now
         minutes = seconds/60
         hours = minutes/60
         days = hours/24
@@ -153,7 +153,7 @@ def get_assignments_from_api(assignments, student_id):
     for assignment in ass_colection:
         assignment_id = assignment.get('id')
         url = assignment.get('entityURL')
-        title = assignment.get('title')
+        title = assignment.get('title')[:80]
         limit_at = assignment.get('dueTimeString')
         instructions = assignment.get('instructions')[:100]
         time_ms = assignment.get('dueTime').get('time')
@@ -173,7 +173,7 @@ def get_resources_from_api(resources, course_id, student_id):
         resource_author = content.get('author')
         resource_container = content.get('container')
         resource_modified_date = content.get('modifiedDate')
-        resource_title = content.get('title')
+        resource_title = content.get('title')[:80]
         resource_url = content.get('url')
         container_split = resource_container.split('/')
         resource_list.append({'course_id':course_id, 'container': resource_container, 'title': resource_title, \
@@ -392,7 +392,7 @@ def task_arrange_for_overview(tasks,task_arranged):
     for task in tasks:
         add_in_others = False
         # 教科に時限情報がない場合
-        if task["classschedule"] == "others" or course.classschedule == "oth":
+        if task["classschedule"] == "others" or task["classschedule"] == "oth":
             add_in_others = True
         else:
             if task["classschedule"] in task_arranged.keys():
