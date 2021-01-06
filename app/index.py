@@ -155,7 +155,7 @@ def get_assignments_from_api(assignments, student_id):
         url = assignment.get('entityURL')
         title = assignment.get('title')
         limit_at = assignment.get('dueTimeString')
-        instructions = assignment.get('instructions')
+        instructions = assignment.get('instructions')[:100]
         time_ms = assignment.get('dueTime').get('time')
         course_id = assignment.get('context')
         modifieddate = assignment.get('timeLastModified').get('time')
@@ -347,7 +347,7 @@ def setdefault_for_overview(studentid, mode='tasklist'):
         add_in_others = False
         add_subject = False
         # 教科に時限情報がない場合
-        if course.classschedule == "others":
+        if course.classschedule == "others" or course.classschedule == "oth":
             add_in_others = True
         else:
             if data[course.classschedule]["subject"] != "":
@@ -392,7 +392,7 @@ def task_arrange_for_overview(tasks,task_arranged):
     for task in tasks:
         add_in_others = False
         # 教科に時限情報がない場合
-        if task["classschedule"] == "others":
+        if task["classschedule"] == "others" or course.classschedule == "oth":
             add_in_others = True
         else:
             if task["classschedule"] in task_arranged.keys():
