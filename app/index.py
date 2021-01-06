@@ -98,66 +98,52 @@ class TimeLeft():
         
         return self.add_ato(msg)
 
-def sync_student_contents(studentid):
-
-    # 更新をするのはstudent, student_assignment, student_course, student_resource
-    # 加えて、assignment,course,resourceも同時に更新することにする。
-    sync_student(studentid)
-    sync_student_course(studentid)
-    sync_student_assignment(studentid)
-    sync_student_resource(studentid)
-
-    return 0
-
-def sync_student_assignment(studentid,last_update):
+def sync_student_contents(studentid, sc, sa, sr, crs, asm, res, now):
     # 以下主な方針
-    #
-    # 1　確実だが処理時間は厳しい
-    # APIで全課題を取得
-    # studentidとassignmentid を使って全書き換え
-    # 難点　うまくinsert, update を分けないと時間がかかる
-    #
-    #
-    # 2 1よりは早い
     #
     # studentテーブルにlast_updateを用意し、毎回update後に記録しておく
     # APIで課題全取得
-    # opendateがlast_updateより後のもののみinsert
+    # これまでにないものはinsert
     # modifieddateがlast_updateよりあとのもののみupdate
-    # 
     #
-    # APIで課題全取得
-    api_data=''
-    assignments=[{},{}]
+
+    studentdata= get_student(studentid)
+    if studentdata != None:
+        last_update = studentdata.last_update
+        add_student(studentid, studentdata.fullname,last_update= now, language = studentdata.language)
+    else:
+        last_update = 0
+        add_student(studentid, "Noname",last_update= now)
+    # 更新をするのはstudent, student_assignment, student_course, student_resource
+    # 加えて、assignment,course,resourceも同時に更新することにする。
+    sync_student_course(studentid, sc, crs, last_update)
+    sync_student_assignment(studentid, sa, asm, last_update)
+    sync_student_resource(studentid, sr, res, last_update)
+
+    return 0
+
+def sync_student_assignment(studentid, sa, asm,last_update): 
     # 追加、更新をする
-    add_student_assignment(studentid,[])
-    add_assignment([],last_update)
+    add_student_assignment(studentid,sa)
+    add_assignment(studentid, asm, last_update)
     
     
 
 
     return 0
 
-def sync_student_course(studentid, last_update):
-    # APIで資料全取得
-    
-
+def sync_student_course(studentid, sc, crs, last_update):
     # 追加、更新をする
-    add_studentcourse(studentid,[])
-    add_courses([],last_update)
+    add_studentcourse(studentid, sc)
+    add_course(studentid, crs, last_update)
     return 0
 
-def sync_student_resource(studentid, last_update):
-    # APIで資料全取得
-
-
+def sync_student_resource(studentid, sr, res, last_update):
     # 追加、更新をする
-    add_student_resource(studentid,[])
-    add_resource([],last_update)
+    add_student_resource(studentid, sr)
+    add_resource(studentid, res, last_update)
     return 0
 
-def sync_student(studentid):
-    return 0
 
 
 def get_assignments_from_api(assignments, student_id):
@@ -553,17 +539,27 @@ def get_courseids(studentid):
     course_ids = session.query(studentcourse.Studentcourse.course_id).filter(studentcourse.Studentcourse.student_id==studentid).all()
     return [i.course_id for i in course_ids]
 
-def add_student(studentid, fullname):
+def get_student(studentid):
+    studentdata = session.query(student.Student).filter(student.Student.student_id == studentid).all()
+    if len(studentdata) != 0:
+        studentdata = studentdata[0]
+    else:
+        studentdata = None
+    return studentdata
+
+def add_student(studentid, fullname, last_update = 0, language = "ja"):
     students = session.query(student.Student.student_id).all()
     isExist = False
     for i in students:
         if list(i)[0] == studentid:
             isExist = True
             break
+    new_student = {"student_id":studentid, "fullname":fullname,"last_update":last_update,"language":language}
     if isExist == False:
-        new_student = student.Student(student_id=studentid, fullname=fullname,last_update=time.time(),language='ja')
-        session.add(new_student)
-        session.commit()
+        session.execute(student.Student.__table__.insert(),new_student)
+    else:
+        session.bulk_update_mappings(assignment.Assignment, new_student)
+    session.commit()
     return
 
 def add_assignment_attachment(url, title, assignment_id):
