@@ -116,7 +116,7 @@ def sync_student_contents(studentid, crs, asm, res, now):
         add_student(studentid, "Noname",last_update= now)
     # 更新をするのはstudent, student_assignment, student_course, student_resource
     # 加えて、assignment,course,resourceも同時に更新することにする。
-    sync_student_course(studentid, crs["studentcourse"], crs["courses"], last_update)
+    sync_student_course(studentid, [crs["studentcourse"]], [crs["course"]], last_update)
     sync_student_assignment(studentid, asm["student_assignment"], asm["assignment"], last_update)
     sync_student_resource(studentid, res["student_resources"], res["resources"], last_update)
 
@@ -124,7 +124,7 @@ def sync_student_contents(studentid, crs, asm, res, now):
 
 def sync_student_assignment(studentid, sa, asm,last_update): 
     # 追加、更新をする
-    add_student_assignment(studentid,sa)
+    add_student_assignment(studentid,sa, last_update)
     add_assignment(studentid, asm, last_update)
     
     
@@ -763,7 +763,8 @@ def add_studentcourse(studentid, data):
                 break
         if course_exist == False:
             new_sc.append(item)
-    session.execute(studentcourse.Studentcourse.__table__.insert(),new_sc)
+    if len(new_sc)!=0:
+        session.execute(studentcourse.Studentcourse.__table__.insert(),new_sc)
     session.commit()
     return
 
