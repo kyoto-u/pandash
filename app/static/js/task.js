@@ -15,12 +15,17 @@ $(function() {
         add_div_2.addClass("row");
         add_li.addClass("list-group-item finished-list-item");
         add_a = $('<a></a>');
+        add_button = $('<button></button>');
+        add_i = $('<i></i>');
+        add_i.addClass("fas fa-times");
+        add_button.append(add_i);
         add_a.attr("href", dr_id);
         add_a.html(dr_text);
         add_li.html(dr_sub);
         add_li.append($('<br>'));
         add_li.append(add_a);
         add_div_2.append(add_li);
+        add_div_2.append(add_button);
         add_div_1.append(add_div_2);
         console.log(add_div_1);
         $("#finished_taskslist").append(add_div_1);
