@@ -116,8 +116,8 @@ def sync_student_contents(studentid, crs, asm, res, now):
         add_student(studentid, "Noname",last_update= now)
     # 更新をするのはstudent, student_assignment, student_course, student_resource
     # 加えて、assignment,course,resourceも同時に更新することにする。
-    sync_student_course(studentid, [crs["student_course"]], [crs["course"]], last_update)
-    sync_student_assignment(studentid, asm["student_assignment"], asm["assignment"], last_update)
+    sync_student_course(studentid, crs["student_courses"], crs["courses"], last_update)
+    sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"], last_update)
     sync_student_resource(studentid, res["student_resources"], res["resources"], last_update)
 
     return 0

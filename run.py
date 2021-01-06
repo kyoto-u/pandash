@@ -99,7 +99,7 @@ def proxyticket():
                 # get_assignments  {"assignments": [], student_assignments: []}
                 # get_sites        {"courses": [], "student_courses": []}
                 # get_resources    {"resources":[], "student_resources": []}
-                sync_student_contents(student_id, get_site, get_assignments, get_resources, now)
+                sync_student_contents(student_id, get_sites, get_assignments, get_resources, now)
         return redirect(url_for("root"))
     return redirect(url_for("root"))
 
