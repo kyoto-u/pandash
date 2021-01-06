@@ -331,7 +331,8 @@ def get_courses_to_be_taken(studentid):
         #     continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
-        data.append(coursedata[0])
+        if coursedata[0].yearsemester == 20201:
+            data.append(coursedata[0])
     return data
 
 def setdefault_for_overview(studentid, mode='tasklist'):
@@ -800,6 +801,12 @@ def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
         tasks = [task for task in tasks if task["status"] == "未"]
     if max_time_left in [0, 1, 2]:
         tasks = [task for task in tasks if timejudge(task, max_time_left)]
+    
+    for task in tasks:
+        if task["time_left"] = "":
+            task["status"]="期限切れ"
+
+    
     tasks = sorted(tasks, key=lambda x: x["deadline"])
     tasks = sorted(tasks, key=lambda x: order_status(x["status"]))
     return tasks
