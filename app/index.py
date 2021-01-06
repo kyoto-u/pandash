@@ -283,7 +283,8 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
             studentassignment.Student_Assignment.student_id == studentid).filter(
                 studentassignment.Student_Assignment.status == "未").all()
     assignmentids =[i.assignment_id for i in enrollments]
-    courseids = get_courseids(studentid)
+    course_to_be_taken=get_courses_to_be_taken(studentid)
+    courseids = [i.course_id for i in course_to_be_taken]
     assignmentdata = session.query(assignment.Assignment).filter(
         assignment.Assignment.assignment_id.in_(assignmentids)).all()
     
@@ -298,11 +299,11 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
         if courseid != None:
             if courseid != asmdata[0].course_id:
                 continue
+        if asmdata[0].course_id not in courseids:
+            continue
         if day != None:
             if day not in crsdata[0].classschedule:
                 continue
-        if asmdata[0].course_id not in courseids:
-            continue
         
         task = {}
         task["status"] = data.status
