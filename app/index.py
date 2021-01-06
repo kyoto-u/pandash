@@ -803,7 +803,7 @@ def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
         tasks = [task for task in tasks if timejudge(task, max_time_left)]
     
     for task in tasks:
-        if task["time_left"] = "":
+        if task["time_left"] == "":
             task["status"]="期限切れ"
 
     
