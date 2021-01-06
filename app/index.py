@@ -160,7 +160,7 @@ def get_assignments_from_api(assignments, student_id):
         course_id = assignment.get('context')
         modifieddate = assignment.get('timeLastModified').get('time')
         status = assignment.get('status')
-        sa_list.append({"sa_id":f"{student_id}{assignment_id}","assigiment_id":assignment_id,"status":"未","student_id":student_id})
+        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"status":"未","student_id":student_id})
         assignment_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifidedate":modifieddate,"course_id":course_id})
     assignment_dict = {"student_assignments":sa_list, "assignments":assignment_list}
     return assignment_dict
@@ -178,7 +178,7 @@ def get_resources_from_api(resources, course_id, student_id):
         container_split = resource_container.split('/')
         resource_list.append({'course_id':course_id, 'container': resource_container, 'title': resource_title, \
             'resource_url': resource_url, 'modifieddate': resource_modified_date})
-        sr_list.append({"sr_id":f"{student_id}{resource_url}", "resource_url":resource_url, "student_id":student_id, "status":0})
+        sr_list.append({"sr_id":f"{student_id}:{resource_url}", "resource_url":resource_url, "student_id":student_id, "status":0})
     resource_dict = {"student_resources":sr_list, "resources":resource_list}
     return resource_dict
 
@@ -234,7 +234,7 @@ def get_course_from_api(site, student_id):
     except:
         pass
     course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule}
-    student_course_dict = {"sc_id":f"{student_id}{course_id}","course_id":course_id,"student_id":student_id}
+    student_course_dict = {"sc_id":f"{student_id}:{course_id}","course_id":course_id,"student_id":student_id}
     return {"course":course_dict, "student_course":student_course_dict}
 
 def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):

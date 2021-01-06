@@ -7,7 +7,7 @@ class Course(settings.Base):
     __tablename__ = 'courses'
     course_id = Column(String(40), primary_key=True,index=True)
     instructor_id = Column(String(40))
-    coursename = Column(String(200))
+    coursename = Column(String(800))
     # 2020年前期：20200 2020年後期：20201
     yearsemester = Column(Integer())
     # mon1, wed2, ...   othe
