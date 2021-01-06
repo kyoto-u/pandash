@@ -237,6 +237,19 @@ def get_course_from_api(site, student_id):
     student_course_dict = {"sc_id":f"{student_id}:{course_id}","course_id":course_id,"student_id":student_id}
     return {"course":course_dict, "student_course":student_course_dict}
 
+import asyncio, requests
+async def async_get_content(site_id, ses):
+    url = f"https://panda.ecs.kyoto-u.ac.jp/direct/content/site/{site_id}.json"
+    loop = asyncio.get_event_loop()
+    res = await loop.run_in_executor(None, ses.get, url)
+    return res.json()
+
+async def async_get_site(site_id, ses):
+    url = f"https://panda.ecs.kyoto-u.ac.jp/direct/site/{site_id}.json"
+    loop = asyncio.get_event_loop()
+    res = await loop.run_in_executor(None, ses.get, url)
+    return res.json()
+
 def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):
     """
         mode

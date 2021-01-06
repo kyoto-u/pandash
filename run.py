@@ -72,34 +72,56 @@ def proxy(pgtiou=None):
 @app.route('/proxyticket', methods=["GET"])
 def proxyticket():
     ticket = request.args.get('ticket')
+    start_time = time.perf_counter()
     if ticket:
-        s = requests.Session()
-        api_response = s.get(f"{proxy_callback}?ticket={ticket}")
+        ses = requests.Session()
+        api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
         if api_response.status_code == 200:
             now = now = floor(time.time())
-            membership = s.get(f"{api_url}membership.json")
-            assignments = s.get(f"{api_url}assignment/my.json")
+            membership = ses.get(f"{api_url}membership.json")
+            assignments = ses.get(f"{api_url}assignment/my.json")
             get_membership = get_course_id_from_api(membership.json())
             student_id = get_membership["student_id"]
             if student_id != "":
                 get_assignments = get_assignments_from_api(assignments.json(), student_id)
                 get_sites = {"courses":[],"student_courses":[]}
                 get_resources = {"resources":[],"student_resources":[]}
+                loop = asyncio.get_event_loop()
+                c_statements = []
+                s_statements = []
                 for courseid in get_membership["site_list"]:
-                    site = s.get(f"{api_url}site/{courseid}.json")
-                    resources = s.get(f"{api_url}content/site/{courseid}.json")
-                    get_site = get_course_from_api(site.json(), student_id)
+                    c_statements.append(async_get_content(courseid, ses))
+                    s_statements.append(async_get_site(courseid, ses))
+                    # site = s.get(f"{api_url}site/{courseid}.json")
+                    # resources = s.get(f"{api_url}content/site/{courseid}.json")
+                    # get_site = get_course_from_api(site.json(), student_id)
+                    # get_sites["courses"].append(get_site["course"])
+                    # get_sites["student_courses"].append(get_site["student_course"])
+                    # get_resource = get_resources_from_api(resources.json(),courseid,student_id)
+                    # get_resources["resources"].append(get_resource["resources"])
+                    # get_resources["student_resources"].append(get_resources["student_resources"])
+                c_statements.extend(s_statements)
+                tasks = asyncio.gather(*c_statements)
+                content_site = loop.run_until_complete(tasks)
+                content_site_len = int(len(content_site))
+                contents = content_site[0:content_site_len//2]
+                sites = content_site[content_site_len//2:content_site_len]
+                index = 0
+                for courseid in get_membership["site_list"]:
+                    get_resource = get_resources_from_api(contents[index],courseid,student_id)
+                    get_site = get_course_from_api(sites[index], student_id)
                     get_sites["courses"].append(get_site["course"])
                     get_sites["student_courses"].append(get_site["student_course"])
-                    get_resource = get_resources_from_api(resources.json(),courseid,student_id)
-                    get_resources["resources"].extend(get_resource["resources"])
-                    get_resources["student_resources"].extend(get_resources["student_resources"])
+                    get_resources["resources"].append(get_resource["resources"])
+                    get_resources["student_resources"].append(get_resources["student_resources"])
+                    index += 1
                 # student_id       student_id
                 # get_membership   {"student_id": , "site_list": []}
                 # get_assignments  {"assignments": [], student_assignments: []}
                 # get_sites        {"courses": [], "student_courses": []}
                 # get_resources    {"resources":[], "student_resources": []}
-                sync_student_contents(student_id, get_sites, get_assignments, get_resources, now)
+                sync_student_contents(student_id, get_site, get_assignments, get_resources, now)
+            print(time.perf_counter()-start_time)
         return redirect(url_for("root"))
     return redirect(url_for("root"))
 
