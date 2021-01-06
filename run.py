@@ -83,12 +83,23 @@ def proxyticket():
             student_id = get_membership["student_id"]
             if student_id != "":
                 get_assignments = get_assignments_from_api(assignments.json(), student_id)
+                get_sites = {"courses":[],"student_courses":[]}
+                get_resources = {"resources":[],"student_resources":[]}
                 for courseid in get_membership["site_list"]:
                     site = s.get(f"{api_url}site/{courseid}.json")
                     resources = s.get(f"{api_url}content/site/{courseid}.json")
                     get_site = get_course_from_api(site.json(), student_id)
+                    get_sites["courses"].append(get_site["course"])
+                    get_sites["student_courses"].append(get_site["student_course"])
                     get_resource = get_resources_from_api(resources.json(),courseid,student_id)
-                sync_student_contents(student_id, get_site, get_assignments, get_resource, now)
+                    get_resources["resources"].append(get_resource["resources"])
+                    get_resources["student_resources"].append(get_resources["student_resources"])
+                # student_id       student_id
+                # get_membership   {"student_id": , "site_list": []}
+                # get_assignments  {"assignments": [], student_assignments: []}
+                # get_sites        {"courses": [], "student_courses": []}
+                # get_resources    {"resources":[], "student_resources": []}
+                sync_student_contents(student_id, get_site, get_assignments, get_resources, now)
         return redirect(url_for("root"))
     return redirect(url_for("root"))
 

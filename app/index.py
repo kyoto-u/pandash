@@ -162,7 +162,7 @@ def get_assignments_from_api(assignments, student_id):
         status = assignment.get('status')
         assignment_list.append({"sa_id":f"{student_id}{assignment_id}","assigiment_id":assignment_id,"status":"未","student_id":student_id})
         sa_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifidedate":modifieddate,"course_id":course_id})
-    assignment_dict = {"student_assignment":sa_list, "assignment":assignment_list}
+    assignment_dict = {"student_assignments":sa_list, "assignments":assignment_list}
     return assignment_dict
 
 def get_resources_from_api(resources, course_id, student_id):
