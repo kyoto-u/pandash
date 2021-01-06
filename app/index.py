@@ -610,7 +610,7 @@ def add_assignment(studentid, data, last_update):
         for i in assignments:
             if i.assignment_id == item["assignment_id"]:
                 assignment_exist = True
-                if i.modifieddate > last_update:
+                if item["modifieddate"] > last_update:
                     update=True
                 break
         if assignment_exist == False:
