@@ -246,11 +246,11 @@ def overview():
 
 @app.route('/tasklist/day/<day>')
 def tasklist_day_redirect(day):
-    return tasklist_day(day,0,3)
+    return flask.redirect(flask.url_for('tasklist_day', day=day, show_only_unfinished = 0,max_time_left = 3))
 
 @app.route('/tasklist/course/<courseid>')
 def tasklist_course_redirect(courseid):
-    return tasklist_course(courseid,0,3)
+    return flask.redirect(flask.url_for('tasklist_course', courseid=courseid, show_only_unfinished = 0,max_time_left = 3))
 
 @app.route('/tasklist/day/<day>/<int:show_only_unfinished>/<int:max_time_left>')
 def tasklist_day(day,show_only_unfinished,max_time_left):
