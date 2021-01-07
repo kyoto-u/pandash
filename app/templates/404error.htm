@@ -1,0 +1,32 @@
+{% extends "_homebase.htm" %}
+{% block homebodycontent %}
+<div class="container ml-5">
+    <div class="row mt-4">
+        <div class="col-sm-12 col-md-6 ml-5">
+            <div class="mx-auto mt-2 mb-5">
+                <h1 style="font-family:Lucida Console; font-size: xx-large;">404 Not Found</h1>
+                <h2>お探しのページが見つかりませんでした</h2>
+                <h3 class="mt-4">お探しのページは以下のいずれかの理由により見つかりませんでした</h3>
+                <ul>
+                    <li>ページが削除された</li>
+                    <li>ページのURLが変更された</li>
+                    <li>入力されたURLに誤りがある</li>
+                </ul>
+            </div>
+            <h3><i class="fas fa-lightbulb">解決方法</i></h3>
+            <ul>
+                <li>URLが正しく入力されているかご確認ください</li>
+                <li>ブックマークからこのページにやって来ましたか？<br> お手数ですが、<a href="#">トップページ</a>からもう一度お入りください</li>
+                <li><a href="#">トップページ</a>に戻る</li>
+                <li><a href="javascript:history.back();">前のページ</a>に戻る</li>
+                <li>解決しない場合はご気軽にお問い合わせください</li>
+            </ul>
+        </div>
+        <div class="col-sm-12 col-md-4 mr-md-5 ml-sm-5">
+            <img class="mt-5" src="{{ url_for('static', filename='images/panda_sleeping.jpg') }}" alt="ロゴ" width="300px"
+                height="300px">
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
