@@ -10,7 +10,7 @@ class TimeLeft():
     time_ms:int
     language:str
 
-    def __init__(self, time_ms, language = 'en'):
+    def __init__(self, time_ms, language = 'ja'):
         self.time_ms = time_ms
         self.language = language
     
@@ -46,7 +46,7 @@ class TimeLeft():
         unit_week_single = {'ja':'週間', 'en':' week'}
         unit_week = {'ja':'週間', 'en':' weeks'}
         now = floor(time.time())
-        seconds = self.time_ms - now
+        seconds = self.time_ms/1000 - now
         minutes = seconds/60
         hours = minutes/60
         days = hours/24
@@ -98,52 +98,157 @@ class TimeLeft():
         
         return self.add_ato(msg)
 
-def sync_student_contents(studentid):
-
-    # 更新をするのはstudent, student_assignment, student_course, student_resource
-    sync_student(studentid)
-    sync_student_assignment(studentid)
-    sync_student_course(studentid)
-    sync_student_resource(studentid)
-
-    return 0
-
-def sync_student_assignment(studentid,last_update):
+def sync_student_contents(studentid, crs, asm, res, now):
     # 以下主な方針
-    #
-    # 1　確実だが処理時間は厳しい
-    # APIで全課題を取得
-    # studentidとassignmentid を使って全書き換え
-    # 難点　うまくinsert, update を分けないと時間がかかる
-    #
-    #
-    # 2 1よりは早い
     #
     # studentテーブルにlast_updateを用意し、毎回update後に記録しておく
     # APIで課題全取得
-    # opendateがlast_updateより後のもののみinsert
+    # これまでにないものはinsert
     # modifieddateがlast_updateよりあとのもののみupdate
-    # 
     #
-    # APIで課題全取得
-    api_data=''
-    assignments=[{},{}]
+
+    studentdata= get_student(studentid)
+    if studentdata != None:
+        last_update = studentdata.last_update
+        add_student(studentid, studentdata.fullname,last_update= now, language = studentdata.language)
+    else:
+        last_update = 0
+        add_student(studentid, "Noname",last_update= now)
+    # 更新をするのはstudent, student_assignment, student_course, student_resource
+    # 加えて、assignment,course,resourceも同時に更新することにする。
+    sync_student_course(studentid, crs["student_courses"], crs["courses"], last_update)
+    sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"], last_update)
+    sync_student_resource(studentid, res["student_resources"], res["resources"], last_update)
+
+    return 0
+
+def sync_student_assignment(studentid, sa, asm,last_update): 
     # 追加、更新をする
-    add_student_assignment(studentid,assignments,last_update)
+    add_student_assignment(studentid,sa, last_update)
+    add_assignment(studentid, asm, last_update)
     
     
 
 
     return 0
 
-def sync_student_course(studentid):
+def sync_student_course(studentid, sc, crs, last_update):
+    # 追加、更新をする
+    add_studentcourse(studentid, sc)
+    add_course(studentid, crs, last_update)
     return 0
 
-def sync_student_resource(studentid):
+def sync_student_resource(studentid, sr, res, last_update):
+    # 追加、更新をする
+    add_student_resource(studentid, sr)
+    add_resource(studentid, res, last_update)
     return 0
 
-def sync_student(studentid):
-    return 0
+
+
+def get_assignments_from_api(assignments, student_id):
+    assignment_list = []
+    sa_list = []
+    ass_colection = assignments.get("assignment_collection")
+    for assignment in ass_colection:
+        assignment_id = assignment.get('id')
+        url = assignment.get('entityURL')
+        title = assignment.get('title')[:80]
+        limit_at = assignment.get('dueTimeString')
+        instructions = assignment.get('instructions')[:100]
+        time_ms = assignment.get('dueTime').get('time')
+        course_id = assignment.get('context')
+        modifieddate = assignment.get('timeLastModified').get('time')
+        status = assignment.get('status')
+        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"status":"未","student_id":student_id})
+        assignment_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifieddate":modifieddate,"course_id":course_id})
+    assignment_dict = {"student_assignments":sa_list, "assignments":assignment_list}
+    return assignment_dict
+
+def get_resources_from_api(resources, course_id, student_id):
+    resource_list = []
+    sr_list = []
+    content_collection = resources.get("content_collection")
+    for content in content_collection:
+        resource_author = content.get('author')
+        resource_container = content.get('container')
+        resource_modified_date = content.get('modifiedDate')
+        resource_title = content.get('title')[:80]
+        resource_url = content.get('url')
+        container_split = resource_container.split('/')
+        resource_list.append({'course_id':course_id, 'container': resource_container, 'title': resource_title, \
+            'resource_url': resource_url, 'modifieddate': resource_modified_date})
+        sr_list.append({"sr_id":f"{student_id}:{resource_url}", "resource_url":resource_url, "student_id":student_id, "status":0})
+    resource_dict = {"student_resources":sr_list, "resources":resource_list}
+    return resource_dict
+
+def get_student_id_from_api(membership):
+    mem_collection = membership.get('membership_collection')
+    student_id = ""
+    for member in mem_collection:
+        student_id = member.get('userId')
+        break
+    return student_id
+
+def get_course_id_from_api(membership):
+    mem_collection = membership.get('membership_collection')
+    student_id = ""
+    site_list = []
+    for member in mem_collection:
+        if student_id == "":
+            student_id = member.get('userId')
+        user_site_id = member.get('entityId')
+        site_id = user_site_id.replace(f'{student_id}::site:','')
+        site_list.append(site_id)
+    return {"student_id":student_id, "site_list":site_list}
+
+def get_course_from_api(site, student_id):
+    course_id = site.get('id')
+    instructor_id = site.get('siteOwner').get('usrId')
+    fullname = site.get('siteOwner').get('userDisplayName')
+    coursename = site.get('title')
+    yearsch = re.match(r'\[.*\]', coursename)
+    yearsemester = "20203"
+    classschedule = "oth"
+    try:
+        semnum = "2"
+        semester = yearsch.group()[5:7]
+        classsch = yearsch.group()[7:9]
+        if semester == '前期':
+            semnum = "0"
+        elif semester == '後期':
+            semnum = "1"
+        yearsemester = f"{yearsch.group()[1:5]}{semnum}"
+        week = "oth"
+        if classsch[0] == "月":
+            week = "mon"
+        elif classsch[0] == "火":
+            week = "tue"
+        elif classsch[0] == "水":
+            week = "wed"
+        elif classsch[0] == "木":
+            week = "thu"
+        elif classsch[0] == "金":
+            week = "fri"
+        classschedule = f"{week}{str(int(classsch[1]))}"
+    except:
+        pass
+    course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule}
+    student_course_dict = {"sc_id":f"{student_id}:{course_id}","course_id":course_id,"student_id":student_id}
+    return {"course":course_dict, "student_course":student_course_dict}
+
+import asyncio, requests
+async def async_get_content(site_id, ses):
+    url = f"https://panda.ecs.kyoto-u.ac.jp/direct/content/site/{site_id}.json"
+    loop = asyncio.get_event_loop()
+    res = await loop.run_in_executor(None, ses.get, url)
+    return res.json()
+
+async def async_get_site(site_id, ses):
+    url = f"https://panda.ecs.kyoto-u.ac.jp/direct/site/{site_id}.json"
+    loop = asyncio.get_event_loop()
+    res = await loop.run_in_executor(None, ses.get, url)
+    return res.json()
 
 def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):
     """
@@ -194,11 +299,11 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
         if courseid != None:
             if courseid != asmdata[0].course_id:
                 continue
+        if asmdata[0].course_id not in courseids:
+            continue
         if day != None:
             if day not in crsdata[0].classschedule:
                 continue
-        if asmdata[0].course_id not in courseids:
-            continue
         
         task = {}
         task["status"] = data.status
@@ -226,7 +331,8 @@ def get_courses_to_be_taken(studentid):
         #     continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
-        data.append(coursedata[0])
+        if coursedata[0].yearsemester == 20201:
+            data.append(coursedata[0])
     return data
 
 def setdefault_for_overview(studentid, mode='tasklist'):
@@ -242,7 +348,7 @@ def setdefault_for_overview(studentid, mode='tasklist'):
         add_in_others = False
         add_subject = False
         # 教科に時限情報がない場合
-        if course.classschedule == "others":
+        if course.classschedule == "others" or course.classschedule == "oth":
             add_in_others = True
         else:
             if data[course.classschedule]["subject"] != "":
@@ -287,7 +393,7 @@ def task_arrange_for_overview(tasks,task_arranged):
     for task in tasks:
         add_in_others = False
         # 教科に時限情報がない場合
-        if task["classschedule"] == "others":
+        if task["classschedule"] == "others" or task["classschedule"] == "oth":
             add_in_others = True
         else:
             if task["classschedule"] in task_arranged.keys():
@@ -453,19 +559,29 @@ def get_coursename(courseid):
 
 def get_courseids(studentid):
     course_ids = session.query(studentcourse.Studentcourse.course_id).filter(studentcourse.Studentcourse.student_id==studentid).all()
-    return list(course_ids)
+    return [i.course_id for i in course_ids]
 
-def add_student(studentid, fullname):
+def get_student(studentid):
+    studentdata = session.query(student.Student).filter(student.Student.student_id == studentid).all()
+    if len(studentdata) != 0:
+        studentdata = studentdata[0]
+    else:
+        studentdata = None
+    return studentdata
+
+def add_student(studentid, fullname, last_update = 0, language = "ja"):
     students = session.query(student.Student.student_id).all()
     isExist = False
     for i in students:
         if list(i)[0] == studentid:
             isExist = True
             break
+    new_student = {"student_id":studentid, "fullname":fullname,"last_update":last_update,"language":language}
     if isExist == False:
-        new_student = student.Student(student_id=studentid, fullname=fullname,last_update=time.time(),language='ja')
-        session.add(new_student)
-        session.commit()
+        session.execute(student.Student.__table__.insert(),new_student)
+    else:
+        session.bulk_update_mappings(assignment.Assignment, new_student)
+    session.commit()
     return
 
 def add_assignment_attachment(url, title, assignment_id):
@@ -481,48 +597,58 @@ def add_assignment_attachment(url, title, assignment_id):
         session.commit()
     return
 
-def add_assignment(assignmentid, url,
-                   title, limit_at, instructions, time_ms, modifieddate, courseid):
-    assignments = session.query(assignment.Assignment.assignment_id).all()
-    isExist = False
-    need_update = False
-    for i in assignments:
-        if list(i)[0] == assignmentid:
-            isExist = True
-            assignment_md = session.query(assignment.Assignment.modifieddate).filter(
-                assignment.Assignment.assignment_id == assignmentid).all()
-            if list(assignment_md[0])[0] != modifieddate:
-                need_update = True
-            break
-    if isExist == False:
-        new_assignment = assignment.Assignment(assignment_id=assignmentid, url=url, title=title, \
-                                               limit_at=limit_at, instructions=instructions, time_ms=time_ms/1000, modifieddate=modifieddate, course_id=courseid)
-        session.add(new_assignment)
-        session.commit()
-    elif need_update:
-        old_assignment = session.query(assignment.Assignment).filter(assignment.Assignment.assignment_id==assignmentid).first()
-        old_assignment.url = url
-        old_assignment.title = title
-        old_assignment.limit_at = limit_at
-        old_assignment.time_ms = time_ms
-        old_assignment.modifieddate = modifieddate
-        session.add(old_assignment)
-        session.commit()
+def add_assignment(studentid, data, last_update):
+    course_ids = get_courseids(studentid)
+    assignments = session.query(
+        assignment.Assignment).filter(assignment.Assignment.course_id.in_(course_ids)).all()
+    new_asm=[]
+    upd_asm = []
+    for item in data:
+        assignment_exist = False
+        update=False
+        if item["course_id"] not in course_ids:
+            continue
+        for i in assignments:
+            if i.assignment_id == item["assignment_id"]:
+                assignment_exist = True
+                if item["modifieddate"] > last_update:
+                    update=True
+                break
+        if assignment_exist == False:
+            new_asm.append(item)
+        elif update == True:
+            upd_asm.append(item)
+    if len(new_asm) != 0:
+        session.execute(assignment.Assignment.__table__.insert(),new_asm)
+    if len(upd_asm) != 0:
+        session.bulk_update_mappings(assignment.Assignment, upd_asm)
+    session.commit()
     return
 
-def add_course(courseid, instructorid, \
-               coursename, yearsemester, classschedule):
-    courses = session.query(course.Course.course_id).all()
-    isExist = False
-    for i in courses:
-        if list(i)[0] == courseid:
-            isExist = True
-            break
-    if isExist == False:
-        new_course = course.Course(course_id=courseid, instructor_id=instructorid, \
-                                   coursename=coursename, yearsemester=yearsemester, classschedule=classschedule)
-        session.add(new_course)
-        session.commit()
+def add_course(studentid, data, last_update):
+    course_ids = get_courseids(studentid)
+    courses = session.query(
+        course.Course).filter(course.Course.course_id.in_(course_ids)).all()
+    new_crs=[]
+    upd_crs = []
+    for item in data:
+        course_exist = False
+        update=False
+        if item["course_id"] not in course_ids:
+            continue
+        for i in courses:
+            if i.course_id == item["course_id"]:
+                course_exist = True
+                break
+        if course_exist == False:
+            new_crs.append(item)
+        elif update == True:
+            upd_crs.append(item)
+    if len(new_crs) != 0:
+        session.execute(course.Course.__table__.insert(),new_crs)
+    if len(upd_crs) != 0:
+        session.bulk_update_mappings(course.Course, upd_crs)
+    session.commit()
     return
 
 
@@ -531,23 +657,26 @@ def add_student_assignment(studentid, data, last_update):
         data:assignment_id, student_id, status
     """
     sa = session.query(
-        studentassignment.Student_Assignment.assignment_id).filter(studentassignment.Student_Assignment.student_id == studentid).all()
-    assignment_exist = False
-    update=False
+        studentassignment.Student_Assignment).filter(studentassignment.Student_Assignment.student_id == studentid).all()
     new_sa = []
     upd_sa = []
     for item in data:
+        assignment_exist = False
+        update=False
         for i in sa:
             if i.assignment_id == item["assignment_id"]:
                 assignment_exist = True
-                if i.modifieddate > last_update:
+                if i.status !='未':
                     update=True
                 break
         if assignment_exist == False:
             new_sa.append(item)
         elif update == True:
             upd_sa.append(item)
-    session.execute(studentassignment.Student_Assignment.__table__.insert(),new_sa)
+    if len(new_sa) != 0:
+        session.execute(studentassignment.Student_Assignment.__table__.insert(),new_sa)
+    if len(upd_sa) != 0:
+        session.bulk_update_mappings(studentassignment.Student_Assignment, upd_sa)
     session.commit()
     return
 
@@ -579,41 +708,38 @@ def add_student_resource(studentid,data):
                 break
         if resource_exist == False:
             new_sr.append(item)
-    session.execute(studentresource.Student_Resource.__table__.insert(),new_sr)
+    if len(new_sr) != 0:
+        session.execute(studentresource.Student_Resource.__table__.insert(),new_sr)
     session.commit()
     return
 
 
-def add_resource(resourceurl, title, container, modifieddate, course_id):
-    resources = session.query(resource.Resource.resource_url).all()
-    isExist = False
-    need_update = False
-    for i in resources:
-        if list(i)[0] == resourceurl:
-            isExist = True
-            resource_md = session.query(resource.Resource.modifieddate).filter(
-                resource.Resource.resource_url==resourceurl)
-            if list(resource_md[0])[0] != modifieddate:
-                need_update = True
-            break
-    if isExist == False:
-        new_resource = resource.Resource(resource_url=resourceurl, title=title, container=container, modifieddate=modifieddate, course_id=course_id)
-        session.add(new_resource)
-        session.commit()
-    elif need_update:
-        old_resource = session.query(resource.Resource).filter(
-            resource.Resource.resource_url==resourceurl).first()
-        old_resource.title = title
-        old_resource.container = container
-        old_resource.modifieddate = modifieddate
-        old_resource.course_id = course_id
-        session.add(old_resource)
-        need_student_resource = session.query(studentresource.Student_Resource).filter(
-            studentresource.Student_Resource.resource_url==resourceurl).all()
-        for sr in need_student_resource:
-            sr.status = 0
-            session.add(sr)
-        session.commit()
+def add_resource(studentid, data, last_update):
+    course_ids = get_courseids(studentid)
+    resources = session.query(
+        resource.Resource).filter(resource.Resource.course_id.in_(course_ids)).all()
+    new_res=[]
+    upd_res = []
+    for item in data:
+        resource_exist = False
+        update=False
+        if item["course_id"] not in course_ids:
+            continue
+        for i in resources:
+            if i.resource_url == item["resource_url"]:
+                resource_exist = True
+                if i.modifieddate > last_update:
+                    update=True
+                break
+        if resource_exist == False:
+            new_res.append(item)
+        elif update == True:
+            upd_res.append(item)
+    if len(new_res) != 0:
+        session.execute(resource.Resource.__table__.insert(),new_res)
+    if len(upd_res) != 0:
+        session.bulk_update_mappings(resource.Resource, upd_res)
+    session.commit()
     return
 
 def update_resource_status(studentid, resourceids: list):
@@ -650,16 +776,17 @@ def add_studentcourse(studentid, data):
         data:[{student_id:"", course_id:""},{}]
     """
     sc = session.query(studentcourse.Studentcourse).filter(studentcourse.Studentcourse.student_id == studentid).all()
-    course_exist = False
     new_sc = []
     for item in data:
+        course_exist = False
         for i in sc:
             if i.course_id == item["course_id"]:
                 course_exist = True
                 break
         if course_exist == False:
             new_sc.append(item)
-    session.execute(studentcourse.Studentcourse.__table__.insert(),new_sc)
+    if len(new_sc)!=0:
+        session.execute(studentcourse.Studentcourse.__table__.insert(),new_sc)
     session.commit()
     return
 
@@ -674,6 +801,12 @@ def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
         tasks = [task for task in tasks if task["status"] == "未"]
     if max_time_left in [0, 1, 2]:
         tasks = [task for task in tasks if timejudge(task, max_time_left)]
+    
+    for task in tasks:
+        if task["time_left"] == "":
+            task["status"]="期限切れ"
+
+    
     tasks = sorted(tasks, key=lambda x: x["deadline"])
     tasks = sorted(tasks, key=lambda x: order_status(x["status"]))
     return tasks

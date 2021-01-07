@@ -5,12 +5,12 @@ from .. import settings
 
 class Assignment(settings.Base):
     __tablename__ = 'assignments'
-    assignment_id = Column(String(40), primary_key=True)
+    assignment_id = Column(String(80), primary_key=True)
     url = Column(String(500))
-    title = Column(String(100))
+    title = Column(String(400))
     limit_at = Column(String(40))
     instructions = Column(String(1000))
-    time_ms = Column(Integer())
+    time_ms = Column(sqlalchemy.BigInteger())
     modifieddate = Column(sqlalchemy.BigInteger())
     course_id = Column(sqlalchemy.String(40),index=True)
 
