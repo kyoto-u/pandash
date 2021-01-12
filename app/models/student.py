@@ -9,5 +9,7 @@ class Student(settings.Base):
     fullname = sqlalchemy.Column(String(40))
     last_update = sqlalchemy.Column(sqlalchemy.BigInteger())
     language = sqlalchemy.Column(String(40))
+    # studentcourse table の更新が必要かどうか
+    need_to_update_sitelist = sqlalchemy.Column(Integer(), default=0)
 
 settings.Base.metadata.create_all(settings.engine)

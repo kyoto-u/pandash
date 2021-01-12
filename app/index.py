@@ -144,8 +144,6 @@ def sync_student_resource(studentid, sr, res, last_update):
     add_resource(studentid, res, last_update)
     return 0
 
-
-
 def get_assignments_from_api(assignments, student_id):
     assignment_list = []
     sa_list = []
@@ -242,6 +240,15 @@ def get_user_info_from_api(user):
     student_id = user.get('id')
     return {"student_id":student_id,"fullname":fullname}
 
+import asyncio, requests, json
+
+def get_session_json(ses):
+    res = ses.get("https://panda.ecs.kyoto-u.ac.jp/direct/session/current.json")
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
+
 def get_membership_json(ses):
     res = ses.get("https://panda.ecs.kyoto-u.ac.jp/direct/membership.json")
     try:
@@ -249,7 +256,7 @@ def get_membership_json(ses):
     except json.JSONDecodeError as e:
         return {}
 
-import asyncio, requests, json
+
 async def async_get_content(site_id, ses):
     url = f"https://panda.ecs.kyoto-u.ac.jp/direct/content/site/{site_id}.json"
     loop = asyncio.get_event_loop()
@@ -370,6 +377,19 @@ def get_courses_to_be_taken(studentid):
             course.Course.course_id == i.course_id).all()
         if coursedata[0].yearsemester == 20201:
             data.append(coursedata[0])
+    return data
+
+def get_courses_id_to_be_taken(studentid):
+    data=[]
+    courses = session.query(studentcourse.Studentcourse).filter(
+        studentcourse.Studentcourse.student_id == studentid).all()
+    for i in courses:
+        # if course.hide == 1:
+        #     continue
+        coursedata = session.query(course.Course).filter(
+            course.Course.course_id == i.course_id).all()
+        if coursedata[0].yearsemester == 20201:
+            data.append(coursedata[0].course_id)
     return data
 
 def setdefault_for_overview(studentid, mode='tasklist'):
@@ -776,6 +796,12 @@ def add_resource(studentid, data, last_update):
         session.execute(resource.Resource.__table__.insert(),new_res)
     if len(upd_res) != 0:
         session.bulk_update_mappings(resource.Resource, upd_res)
+    session.commit()
+    return
+
+def update_student_needs_to_update_sitelist(student_id):
+    st = session.query(student.Student).filter(student.Student.student_id==student_id).first()
+    st.need_to_update_sitelist = 1
     session.commit()
     return
 

@@ -77,13 +77,19 @@ def proxyticket():
         ses = requests.Session()
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
         if api_response.status_code == 200:
+            student_id = get_session_json(ses).get('userId')
+            student_is_exist = get_student(student_id)
+            need_to_update_sitelist = 0
+            if student_is_exist:
+                need_to_update_sitelist = student_is_exist.need_to_update_sitelist
+            get_membership = {"student_id": "", "site_list":[]}
             now = now = floor(time.time())
-            # user = ses.get(f"{api_url}user/current.json")
-            # user_info = get_user_info_from_api(user.json())
-            # assignments = ses.get(f"{api_url}assignment/my.json")
-            get_membership = get_course_id_from_api(get_membership_json(ses))
-            student_id = get_membership["student_id"]
-            session["student_id"] = student_id
+            if need_to_update_sitelist == 1:                
+                get_membership["student_id"] = student_id
+                get_membership["site_list"] = get_courses_id_to_be_taken(student_id)
+            else:
+                # 時間かかる
+                get_membership = get_course_id_from_api(get_membership_json(ses))
             if student_id != "":
                 # get_assignments = get_assignments_from_api(assignments.json(), student_id)
                 get_sites = {"courses":[],"student_courses":[]}
@@ -128,6 +134,7 @@ def proxyticket():
                 # get_resources    {"resources":[], "student_resources": []}
                 # user_info        {"student_id": , "fullname": }
                 sync_student_contents(student_id, get_sites, get_assignments, get_resources, now)
+                update_student_needs_to_update_sitelist(student_id)
             print(time.perf_counter()-start_time)
         return redirect(url_for("root"))
     return redirect(url_for("root"))
