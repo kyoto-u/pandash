@@ -237,18 +237,55 @@ def get_course_from_api(site, student_id):
     student_course_dict = {"sc_id":f"{student_id}:{course_id}","course_id":course_id,"student_id":student_id}
     return {"course":course_dict, "student_course":student_course_dict}
 
-import asyncio, requests
+def get_user_info_from_api(user):
+    fullname = user.get('displayName')
+    student_id = user.get('id')
+    return {"student_id":student_id,"fullname":fullname}
+
+def get_membership_json(ses):
+    res = ses.get("https://panda.ecs.kyoto-u.ac.jp/direct/membership.json")
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
+
+import asyncio, requests, json
 async def async_get_content(site_id, ses):
     url = f"https://panda.ecs.kyoto-u.ac.jp/direct/content/site/{site_id}.json"
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, ses.get, url)
-    return res.json()
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
 
 async def async_get_site(site_id, ses):
     url = f"https://panda.ecs.kyoto-u.ac.jp/direct/site/{site_id}.json"
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, ses.get, url)
-    return res.json()
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
+
+async def async_get_assignments(ses):
+    url = f"https://panda.ecs.kyoto-u.ac.jp/direct/assignment/my.json"
+    loop = asyncio.get_event_loop()
+    res = await loop.run_in_executor(None, ses.get, url)
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
+
+async def async_get_user_info(ses):
+    url = f"https://panda.ecs.kyoto-u.ac.jp/direct/user/current.json"
+    loop = asyncio.get_event_loop()
+    res = await loop.run_in_executor(None, ses.get, url)
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
+
 
 def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):
     """

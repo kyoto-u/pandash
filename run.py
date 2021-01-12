@@ -78,12 +78,14 @@ def proxyticket():
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
         if api_response.status_code == 200:
             now = now = floor(time.time())
-            membership = ses.get(f"{api_url}membership.json")
-            assignments = ses.get(f"{api_url}assignment/my.json")
-            get_membership = get_course_id_from_api(membership.json())
+            # user = ses.get(f"{api_url}user/current.json")
+            # user_info = get_user_info_from_api(user.json())
+            # assignments = ses.get(f"{api_url}assignment/my.json")
+            get_membership = get_course_id_from_api(get_membership_json(ses))
             student_id = get_membership["student_id"]
+            session["student_id"] = student_id
             if student_id != "":
-                get_assignments = get_assignments_from_api(assignments.json(), student_id)
+                # get_assignments = get_assignments_from_api(assignments.json(), student_id)
                 get_sites = {"courses":[],"student_courses":[]}
                 get_resources = {"resources":[],"student_resources":[]}
                 asyncio.set_event_loop(asyncio.SelectorEventLoop())
@@ -102,11 +104,14 @@ def proxyticket():
                     # get_resources["resources"].append(get_resource["resources"])
                     # get_resources["student_resources"].append(get_resources["student_resources"])
                 c_statements.extend(s_statements)
+                c_statements.extend([async_get_assignments(ses),async_get_user_info(ses)])
                 tasks = asyncio.gather(*c_statements)
                 content_site = loop.run_until_complete(tasks)
-                content_site_len = int(len(content_site))
+                content_site_len = int(len(content_site))-2
                 contents = content_site[0:content_site_len//2]
                 sites = content_site[content_site_len//2:content_site_len]
+                get_assignments = get_assignments_from_api(content_site[content_site_len],student_id)
+                user_info = get_user_info_from_api(content_site[content_site_len+1])
                 index = 0
                 for courseid in get_membership["site_list"]:
                     get_resource = get_resources_from_api(contents[index],courseid,student_id)
@@ -121,6 +126,7 @@ def proxyticket():
                 # get_assignments  {"assignments": [], student_assignments: []}
                 # get_sites        {"courses": [], "student_courses": []}
                 # get_resources    {"resources":[], "student_resources": []}
+                # user_info        {"student_id": , "fullname": }
                 sync_student_contents(student_id, get_sites, get_assignments, get_resources, now)
             print(time.perf_counter()-start_time)
         return redirect(url_for("root"))
