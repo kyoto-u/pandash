@@ -586,7 +586,7 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
         search_num = folder.end()
         folder_i = re.search(f'</i><ul>',html[search_num:])
         target = "_self"
-        if re.search(r'.*\.pdf' ,r["title"]):
+        if re.search(r'.*\.pdf' ,r["resource_url"]):
             target = "_blank"
         add_html = f"""
         <li>
