@@ -209,16 +209,16 @@ def get_course_from_api(site, student_id):
     yearsemester = "20203"
     classschedule = "oth"
     try:
-        # semnum = "2"
+        semnum = "2"
         semester = yearsch.group()[5:7]
         classsch = yearsch.group()[7:9]
         if semester == '前期':
             semnum = "0"
-            return None
+            # return None
         elif semester == '後期':
             semnum = "1"
-        else:
-            return None
+        # else:
+            # return None
         yearsemester = f"{yearsch.group()[1:5]}{semnum}"
         week = "oth"
         if classsch[0] == "月":
@@ -233,7 +233,8 @@ def get_course_from_api(site, student_id):
             week = "fri"
         classschedule = f"{week}{str(int(classsch[1]))}"
     except:
-        return None
+        # return None
+        pass
     course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule}
     student_course_dict = {"sc_id":f"{student_id}:{course_id}","course_id":course_id,"student_id":student_id}
     return {"course":course_dict, "student_course":student_course_dict}
