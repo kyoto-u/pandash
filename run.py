@@ -78,6 +78,7 @@ def proxyticket():
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
         if api_response.status_code == 200:
             student_id = get_session_json(ses).get('userId')
+            session["student_id"] = student_id
             student_is_exist = get_student(student_id)
             need_to_update_sitelist = 0
             if student_is_exist:
@@ -114,7 +115,7 @@ def proxyticket():
                 tasks = asyncio.gather(*c_statements)
                 content_site = loop.run_until_complete(tasks)
                 content_site_len = int(len(content_site))-2
-                contents = content_site[0:content_site_len//2]
+                contents = content_site[0:(content_site_len//2)-1]
                 sites = content_site[content_site_len//2:content_site_len]
                 get_assignments = get_assignments_from_api(content_site[content_site_len],student_id)
                 user_info = get_user_info_from_api(content_site[content_site_len+1])
