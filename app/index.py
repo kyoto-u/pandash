@@ -585,12 +585,15 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
         folder = re.search(f'<li id="{folder_id}">',html)
         search_num = folder.end()
         folder_i = re.search(f'</i><ul>',html[search_num:])
+        target = "_self"
+        if re.search(r'.*\.pdf' ,r["title"]):
+            target = "_blank"
         add_html = f"""
         <li>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="{r["resource_url"]}" value="0"/>
                 <label class="form-check-label" for="{r["resource_url"]}">
-                    <a href="{r["resource_url"]}" target="_self" download="{r["title"]}" name="{r["resource_url"]}">{r["title"]}</a>
+                    <a href="{r["resource_url"]}" target="{target}" download="{r["title"]}" name="{r["resource_url"]}">{r["title"]}</a>
                 </label>
             </div>
         </li>"""
