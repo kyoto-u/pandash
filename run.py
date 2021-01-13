@@ -124,11 +124,12 @@ def proxyticket():
                 for courseid in get_membership["site_list"]:
                     get_resource = get_resources_from_api(contents[index],courseid,student_id)
                     get_site = get_course_from_api(sites[index], student_id)
-                    get_sites["courses"].append(get_site["course"])
-                    get_sites["student_courses"].append(get_site["student_course"])
-                    get_resources["resources"].extend(get_resource["resources"])
-                    get_resources["student_resources"].extend(get_resource["student_resources"])
-                    index += 1
+                    if get_site:
+                        get_sites["courses"].append(get_site["course"])
+                        get_sites["student_courses"].append(get_site["student_course"])
+                        get_resources["resources"].extend(get_resource["resources"])
+                        get_resources["student_resources"].extend(get_resource["student_resources"])
+                        index += 1
                 # student_id       student_id
                 # get_membership   {"student_id": , "site_list": []}
                 # get_assignments  {"assignments": [], student_assignments: []}
