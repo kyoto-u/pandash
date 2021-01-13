@@ -531,7 +531,7 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
         container = r['container']
         container_spilt = container.split('/')
         del container_spilt[-1]
-        for i in range(4):
+        for i in range(3):
             del container_spilt[0]
         for folder in folderlist:
             if folder == container_spilt:
@@ -575,7 +575,7 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
         container = r['container']
         container_spilt = container.split('/')
         del container_spilt[-1]
-        for i in range(4):
+        for i in range(3):
             del container_spilt[0]
         folder_id = '/'.join(container_spilt)
         folder = re.search(f'<li id="{folder_id}">',html)
