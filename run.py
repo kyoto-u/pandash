@@ -115,8 +115,9 @@ def proxyticket():
                 tasks = asyncio.gather(*c_statements)
                 content_site = loop.run_until_complete(tasks)
                 content_site_len = int(len(content_site))-2
-                contents = content_site[0:(content_site_len//2)-1]
-                sites = content_site[content_site_len//2:content_site_len]
+                half_content_site_len = content_site_len//2
+                contents = content_site[0:half_content_site_len]
+                sites = content_site[half_content_site_len:content_site_len]
                 get_assignments = get_assignments_from_api(content_site[content_site_len],student_id)
                 user_info = get_user_info_from_api(content_site[content_site_len+1])
                 index = 0
