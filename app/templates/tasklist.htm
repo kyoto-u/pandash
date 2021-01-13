@@ -83,7 +83,7 @@
 
         <tbody id="dragArea" style="font-size: small;">
           {% for task in tasks %}
-          <tr class="d-flex tablecontents acdrag" id="https://panda.ecs.kyoto-u.ac.jp/direct/assignment/{{task.assignmentid}}">
+          <tr class="d-flex tablecontents acdrag" id="{{task.assignmentid}}">
             <td class="col-3 subject">{{task.subject}}</td>
             <td class="col-3 task_title"><a target="_blank" href="https://panda.ecs.kyoto-u.ac.jp/direct/assignment/{{task.assignmentid}}" class="task_tag">{{task.taskname}}</a></td>
             <td class="col-3">{{task.time_left}}</td>
