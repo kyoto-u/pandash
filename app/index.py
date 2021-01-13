@@ -508,6 +508,8 @@ def get_resource_list(studentid, course_id=None, day=None):
         if course_id != None:
             if course_id != rscdata[0].course_id:
                 continue
+        if rscdata[0].course_id not in courseids:
+            continue
         if day !=None:
             if day not in crsdata[0].classschedule:
                 continue
