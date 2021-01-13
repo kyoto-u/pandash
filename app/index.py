@@ -604,7 +604,7 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="{r["resource_url"]}" value="1" disabled checked/>
                         <label class="form-check-label" for="{r["resource_url"]}">
-                                <a href="{r["resource_url"]}" download="{r["title"]}" data-container="body" data-toggle="tooltip" title="このファイルを再ダウンロードする" name="{r["resource_url"]}">{r["title"]}</a>                     
+                                <a href="{r["resource_url"]}" download="{r["title"]}" data-container="body" data-toggle="tooltip" title="このファイルを再ダウンロードする" name="{r["resource_url"]}" target="{target}">{r["title"]}</a>                     
                         </label>
                     </div>
                 </div>
