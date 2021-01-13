@@ -1,5 +1,5 @@
 from app.app import app
-from app.settings import engine,app_url,app_login_url,cas_url,proxy_url,proxy_callback,api_url
+from app.settings import engine,app_url,app_logout_url,app_login_url,cas_url,proxy_url,proxy_callback,api_url
 from app.settings import cas_client
 import flask
 from sqlalchemy.orm import sessionmaker
@@ -146,7 +146,7 @@ def proxyticket():
 def logout():
     del(session['logged-in'])
     cas_client = CASClient(cas_url, proxy_url=proxy_url)
-    cas_logout_url = cas_client.get_logout_url(service_url=app_login_url)
+    cas_logout_url = cas_client.get_logout_url(service_url=app_logout_url)
     return redirect(cas_logout_url)
 
 @app.route('/')
@@ -249,7 +249,7 @@ def overview():
     #     ]
     if studentid:
         data = setdefault_for_overview(studentid)
-        tasks = get_tasklist(studentid, mode=1)
+        tasks = get_tasklist(studentid, show_only_unfinished=1, mode=1)
         data = task_arrange_for_overview(tasks,data)
 
         days =["mon", "tue", "wed", "thu", "fri"]

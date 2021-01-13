@@ -359,6 +359,8 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
         task["assignmentid"] = data.assignment_id
         task["deadline"] = asmdata[0].limit_at
         task["time_left"] = TimeLeft(asmdata[0].time_ms).time_left_to_str()
+        if task["time_left"] == "":
+            task["status"]="期限切れ"
         if mode == 1:
             # overviewのtooltipsに使用
             task["instructions"] = asmdata[0].instructions
@@ -366,7 +368,9 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
         task["subject"] = crsdata[0].coursename
         if mode == 1:
             task["classschedule"] = crsdata[0].classschedule
-
+        if show_only_unfinished==1:
+            if task["status"]!="未":
+                continue
         tasks.append(task)
     return tasks
 
