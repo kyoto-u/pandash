@@ -7,19 +7,21 @@
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03" style="padding: 0px;">
         <ul class="nav w-100 flex-column mx-auto" style="width:inherit;">
             <li class="nav-item border-bottom">
-                <button type="button" class="btn btn-light btn-lg btn-block 
-        {% if '/welcome' in request.path  %}
-            active
-        {% endif %}"><i class="far fa-file"></i> Welcome</button>
+                <a href="/" role="button" class="btn btn-light btn-lg btn-block 
+        {% if '/updatelog' in request.path   %}
+        {% else %}
+                active
+        {% endif %}"><i class="far fa-file"></i> Welcome</a>
             </li>
             <li class="nav-item border-bottom">
-                <button type="button" class="btn btn-light btn-lg btn-block
-        {% if '/update' in request.path  %}
+                <a href="/updatelog" role="button" class="btn btn-light btn-lg btn-block
+        {% if '/updatelog' in request.path  %}
             active
-        {% endif %}"><i class="far fa-file"></i> Update log</button>
+        {% endif %}"><i class="far fa-file"></i> Update log</a>
             </li>
             <li class="nav-item">
-                <a href="https://www.yahoo.co.jp/" target="_blank" role="button" class="btn btn-light btn-lg btn-block">
+                <a onclick="window.open('./tutrial', '', 'width=800,height=500'); return false;" role="button"
+                    class="btn btn-light btn-lg btn-block">
                     <i class="far fa-question-circle"></i>Help
                 </a>
             </li>

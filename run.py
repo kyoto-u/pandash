@@ -161,9 +161,24 @@ def root():
 def main():
     return "Hello World!"
 
+@app.route('/faq')
+def faq():
+    return flask.render_template("faq.htm")
+
+@app.route('/updatelog')
+def update():
+    return flask.render_template("update.htm")
+
+@app.route('/tutrial')
+def tutrial():
+    return flask.render_template("_tutrial.htm")
+
+
 @app.route('/help/<page>')
 def help(page):
-    return flask.render_template(f"FAQ_{page}.htm")
+    #2021/01/14 Shinji Akayama: 参照するhtmlが間違っていたので修正しました。FAQ_{page}は完全なhtmlではありません
+    return flask.render_template(f"_flexible_help_{page}.htm")
+
 
 
 # @app.route('/')

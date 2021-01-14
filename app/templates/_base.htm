@@ -228,7 +228,12 @@
                 <a class="btn btn-light" href="/logout">ログアウト</a>
               </li>
               <li class="btn nav-item my-auto">
-                <a id="help_button" href="#" target="_blank" role="button">
+                <a id="help_button" role="button" {% if '/tasklist' in request.path %}
+                  onclick="window.open('/help/tasklist', '', 'width=800,height=500'); return false;" {% elif '/overview'
+                  in request.path %} onclick="window.open('/help/overview', '', 'width=800,height=500'); return false;"
+                  {% elif '/resdownload' in request.path %}
+                  onclick="window.open('/help/resdownload', '', 'width=800,height=500'); return false;" {% endif %}
+                  role="button">
                   <i class="fas fa-2x fa-question-circle"></i>
                 </a>
               </li>
