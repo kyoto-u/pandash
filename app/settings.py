@@ -4,6 +4,7 @@ from cas_client import CASClient
 
 app_url ='https://pandash.ecs.kyoto-u.ac.jp'
 app_login_url = 'https://pandash.ecs.kyoto-u.ac.jp/login'
+app_logout_url = 'https://pandash.ecs.kyoto-u.ac.jp/logout'
 cas_url = 'https://cas.ecs.kyoto-u.ac.jp/cas'
 proxy_url = 'https://pandash.ecs.kyoto-u.ac.jp/pgtCallback'
 proxy_callback = 'https://panda.ecs.kyoto-u.ac.jp/sakai-login-tool/container'

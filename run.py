@@ -1,5 +1,5 @@
 from app.app import app
-from app.settings import engine,app_url,app_login_url,cas_url,proxy_url,proxy_callback,api_url
+from app.settings import engine,app_url,app_logout_url,app_login_url,cas_url,proxy_url,proxy_callback,api_url
 from app.settings import cas_client
 import flask
 from sqlalchemy.orm import sessionmaker
@@ -77,13 +77,20 @@ def proxyticket():
         ses = requests.Session()
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
         if api_response.status_code == 200:
-            now = now = floor(time.time())
-            # user = ses.get(f"{api_url}user/current.json")
-            # user_info = get_user_info_from_api(user.json())
-            # assignments = ses.get(f"{api_url}assignment/my.json")
-            get_membership = get_course_id_from_api(get_membership_json(ses))
-            student_id = get_membership["student_id"]
+            student_id = get_session_json(ses).get('userId')
             session["student_id"] = student_id
+            student_is_exist = get_student(student_id)
+            need_to_update_sitelist = 0
+            if student_is_exist:
+                need_to_update_sitelist = student_is_exist.need_to_update_sitelist
+            get_membership = {"student_id": "", "site_list":[]}
+            now = now = floor(time.time())
+            if need_to_update_sitelist == 1:                
+                get_membership["student_id"] = student_id
+                get_membership["site_list"] = get_courses_id_to_be_taken(student_id)
+            else:
+                # 時間かかる
+                get_membership = get_course_id_from_api(get_membership_json(ses))
             if student_id != "":
                 # get_assignments = get_assignments_from_api(assignments.json(), student_id)
                 get_sites = {"courses":[],"student_courses":[]}
@@ -108,19 +115,21 @@ def proxyticket():
                 tasks = asyncio.gather(*c_statements)
                 content_site = loop.run_until_complete(tasks)
                 content_site_len = int(len(content_site))-2
-                contents = content_site[0:content_site_len//2]
-                sites = content_site[content_site_len//2:content_site_len]
+                half_content_site_len = content_site_len//2
+                contents = content_site[0:half_content_site_len]
+                sites = content_site[half_content_site_len:content_site_len]
                 get_assignments = get_assignments_from_api(content_site[content_site_len],student_id)
                 user_info = get_user_info_from_api(content_site[content_site_len+1])
                 index = 0
                 for courseid in get_membership["site_list"]:
                     get_resource = get_resources_from_api(contents[index],courseid,student_id)
                     get_site = get_course_from_api(sites[index], student_id)
-                    get_sites["courses"].append(get_site["course"])
-                    get_sites["student_courses"].append(get_site["student_course"])
-                    get_resources["resources"].extend(get_resource["resources"])
-                    get_resources["student_resources"].extend(get_resource["student_resources"])
-                    index += 1
+                    if get_site:
+                        get_sites["courses"].append(get_site["course"])
+                        get_sites["student_courses"].append(get_site["student_course"])
+                        get_resources["resources"].extend(get_resource["resources"])
+                        get_resources["student_resources"].extend(get_resource["student_resources"])
+                        index += 1
                 # student_id       student_id
                 # get_membership   {"student_id": , "site_list": []}
                 # get_assignments  {"assignments": [], student_assignments: []}
@@ -128,15 +137,16 @@ def proxyticket():
                 # get_resources    {"resources":[], "student_resources": []}
                 # user_info        {"student_id": , "fullname": }
                 sync_student_contents(student_id, get_sites, get_assignments, get_resources, now)
+                update_student_needs_to_update_sitelist(student_id)
             print(time.perf_counter()-start_time)
         return redirect(url_for("root"))
     return redirect(url_for("root"))
 
 @app.route('/logout')
 def logout():
-    del(session['logged-in'])
-    cas_client = CASClient(cas_url, proxy_url=proxy_url)
-    cas_logout_url = cas_client.get_logout_url(service_url=app_login_url)
+    if "logged-in" in session and session["logged-in"]:
+        del(session['logged-in'])
+    cas_logout_url = cas_client.get_logout_url(service_url=app_logout_url)
     return redirect(cas_logout_url)
 
 @app.route('/')
@@ -226,7 +236,7 @@ def tasklist_redirect():
 
 @app.route('/overview')
 def overview():
-    studentid = "student1"
+    studentid = session.get('student_id')
     # tasks = [
     #     {'subject':'[2020前期月1]線形代数学', 'classschedule':'mon1','taskname':'課題1', 'status':'未', 'time_left': "あと50分", 'deadline':'2020-10-30T02:00:00Z','instructions':'なし'},
     #     {'subject':'[2020前期月1]線形代数学', 'classschedule':'mon1','taskname':'課題2', 'status':'未', 'time_left':'あと2時間', 'deadline':'2020-10-30T00:50:00Z','instructions':'なし'},
@@ -237,18 +247,21 @@ def overview():
     #     {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題7', 'status':'未', 'time_left':'あと1日', 'deadline':'2020-10-31T01:00:00Z','instructions':'なし'},
     #     {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題8', 'status':'未', 'time_left':'あと1日', 'deadline':'2020-10-31T00:00:00Z','instructions':'なし'}
     #     ]
-    data = setdefault_for_overview(studentid)
-    tasks = get_tasklist(studentid, mode=1)
-    data = task_arrange_for_overview(tasks,data)
+    if studentid:
+        data = setdefault_for_overview(studentid)
+        tasks = get_tasklist(studentid, show_only_unfinished=1, mode=1)
+        data = task_arrange_for_overview(tasks,data)
 
-    days =["mon", "tue", "wed", "thu", "fri"]
-    for day in days:
-        for i in range(5):
-            data[day+str(i+1)]["tasks"] = sort_tasks(data[day+str(i+1)]["tasks"],show_only_unfinished = 1)
-    data.setdefault("others",[])
-    for i in range(len(data["others"])):
-        data["others"][i]["tasks"] = sort_tasks(data["others"][i]["tasks"],show_only_unfinished = 1)
-    return flask.render_template('overview.htm',data = data)
+        days =["mon", "tue", "wed", "thu", "fri"]
+        for day in days:
+            for i in range(5):
+                data[day+str(i+1)]["tasks"] = sort_tasks(data[day+str(i+1)]["tasks"],show_only_unfinished = 1)
+        data.setdefault("others",[])
+        for i in range(len(data["others"])):
+            data["others"][i]["tasks"] = sort_tasks(data["others"][i]["tasks"],show_only_unfinished = 1)
+        return flask.render_template('overview.htm',data = data)
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/tasklist/day/<day>')
 def tasklist_day_redirect(day):
@@ -273,38 +286,47 @@ def tasklist(show_only_unfinished,max_time_left):
 
 @app.route('/resourcelist/course/<courseid>')
 def resource_course(courseid):
-    studentid = 'student1'
-    data = setdefault_for_overview(studentid, mode="resourcelist")
-    resource = get_resource_list(studentid, course_id=courseid)
-    coursename = get_coursename(courseid)
-    resource_html = resource_arrange(resource[courseid], coursename, courseid)
-    return flask.render_template('resources_sample.htm', html=resource_html, data=data)
+    studentid = session.get('student_id')
+    if studentid:
+        data = setdefault_for_overview(studentid, mode="resourcelist")
+        resource = get_resource_list(studentid, course_id=courseid)
+        coursename = get_coursename(courseid)
+        resource_html = resource_arrange(resource[courseid], coursename, courseid)
+        return flask.render_template('resources_sample.htm', html=resource_html, data=data)
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/resourcelist/day/<day>')
 def resource_day(day):
-    studentid = 'student1'
-    courses = get_courses_to_be_taken(studentid)
-    data = setdefault_for_overview(studentid, mode="resourcelist")
-    html = ""
-    resource_list = get_resource_list(studentid, day=day)
-    for c in courses:
-        if resource_list[c.course_id] != []:
-            html += resource_arrange(resource_list[c.course_id], c.coursename, c.course_id)
-    data = setdefault_for_overview(studentid, mode='resourcelist')
-    return flask.render_template('resources_sample.htm', html=html, data=data, day=day)
+    studentid = session.get("student_id")
+    if studentid:
+        courses = get_courses_to_be_taken(studentid)
+        data = setdefault_for_overview(studentid, mode="resourcelist")
+        html = ""
+        resource_list = get_resource_list(studentid, day=day)
+        for c in courses:
+            if resource_list[c.course_id] != []:
+                html += resource_arrange(resource_list[c.course_id], c.coursename, c.course_id)
+        data = setdefault_for_overview(studentid, mode='resourcelist')
+        return flask.render_template('resources_sample.htm', html=html, data=data, day=day)
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/resourcelist')
 def resources_sample():
-    studentid = "student1"
-    courses = get_courses_to_be_taken(studentid)
-    html = ""
-    resource_list = get_resource_list(studentid, None)
-    for c in courses:
-        
-        if resource_list[c.course_id] != []:
-            html += resource_arrange(resource_list[c.course_id], c.coursename, c.course_id)
-    data = setdefault_for_overview(studentid, mode='resourcelist')
-    return flask.render_template('resources_sample.htm', html=html, data=data)
+    studentid = session.get('student_id')
+    if studentid:
+        courses = get_courses_to_be_taken(studentid)
+        html = ""
+        resource_list = get_resource_list(studentid, None)
+        for c in courses:
+            
+            if resource_list[c.course_id] != []:
+                html += resource_arrange(resource_list[c.course_id], c.coursename, c.course_id)
+        data = setdefault_for_overview(studentid, mode='resourcelist')
+        return flask.render_template('resources_sample.htm', html=html, data=data)
+    else:
+        return redirect(url_for('login'))
 
 # 資料ページのダウンロード時のstatus変更
 @app.route('/checkedclick')
@@ -317,24 +339,33 @@ def allclick():
 
 @app.route('/r_status_change', methods=['POST'])
 def r_status_change():
-    studentid = 'student1'
-    r_links = request.json['r_links']
-    update_resource_status(studentid, r_links)
-    return 'success'
+    studentid = session.get('student_id')
+    if studentid:
+        r_links = request.json['r_links']
+        update_resource_status(studentid, r_links)
+        return 'success'
+    else:
+        return 'failed'
 
 @app.route('/task_finish', methods=['POST'])
 def task_finish():
-    studentid = 'student1'
-    task_id = request.json['task_id']
-    update_task_status(studentid, task_id)
-    return 'success'
+    studentid = session.get('student_id')
+    if studentid:
+        task_id = request.json['task_id']
+        update_task_status(studentid, task_id)
+        return 'success'
+    else:
+        return 'failed'
 
 @app.route('/task_unfinish', methods=['POST'])
 def task_unfinish():
-    studentid = 'student1'
-    task_id = request.json['task_id']
-    update_task_status(studentid, task_id, mode=1)
-    return 'success'
+    studentid = session.get('student_id')
+    if studentid:
+        task_id = request.json['task_id']
+        update_task_status(studentid, task_id, mode=1)
+        return 'success'
+    else:
+        return 'failed'
 
 @app.route('/pgtCallback', methods=['GET', 'POST'])
 def pgtCallback():
@@ -350,33 +381,36 @@ def pgtCallback():
 
 
 def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = None):
-    studentid = "student1"
-    if courseid != None:
-        tasks = get_tasklist(studentid,courseid=courseid)
-    elif day != None:
-        tasks = get_tasklist(studentid,day=day)
-    else:
-        tasks = get_tasklist(studentid)
-    # tasks = [
-    #     {'subject':'[2020前期月1]線形代数学', 'classschedule':'mon1','taskname':'課題1', 'status':'未', 'time_left': "あと50分", 'deadline':'2020-10-30T00:50:00Z','instructions':'なし'},
-    #     {'subject':'[2020前期月1]線形代数学', 'classschedule':'mon1','taskname':'課題2', 'status':'未', 'time_left':'あと2時間', 'deadline':'2020-10-30T02:00:00Z','instructions':'なし'},
-    #     {'subject':'[2020前期月2]微分積分学', 'classschedule':'mon2','taskname':'課題3', 'status':'終了', 'time_left':'', 'deadline':'2020-10-29T23:00:00Z','instructions':'なし'},
-    #     {'subject':'[2020前期火1]英語リーディング', 'classschedule':'Tue1','taskname':'課題4', 'status':'未', 'time_left':'あと3日', 'deadline':'2020-11-02T03:00:00Z','instructions':'なし'},
-    #     {'subject':'[2020前期月2]微分積分学', 'classschedule':'mon2','taskname':'課題5', 'status':'済', 'time_left':'あと1時間', 'deadline':'2020-10-30T01:00:00Z','instructions':'なし'},
-    #     {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題6', 'status':'済', 'time_left':'あと1日', 'deadline':'2020-10-31T01:00:00Z','instructions':'なし'}
-    #     ]
-    tasks = sort_tasks(tasks, show_only_unfinished = show_only_unfinished, max_time_left = max_time_left)
+    studentid = session.get('student_id')
+    if studentid:
+        if courseid != None:
+            tasks = get_tasklist(studentid,courseid=courseid)
+        elif day != None:
+            tasks = get_tasklist(studentid,day=day)
+        else:
+            tasks = get_tasklist(studentid)
+        # tasks = [
+        #     {'subject':'[2020前期月1]線形代数学', 'classschedule':'mon1','taskname':'課題1', 'status':'未', 'time_left': "あと50分", 'deadline':'2020-10-30T00:50:00Z','instructions':'なし'},
+        #     {'subject':'[2020前期月1]線形代数学', 'classschedule':'mon1','taskname':'課題2', 'status':'未', 'time_left':'あと2時間', 'deadline':'2020-10-30T02:00:00Z','instructions':'なし'},
+        #     {'subject':'[2020前期月2]微分積分学', 'classschedule':'mon2','taskname':'課題3', 'status':'終了', 'time_left':'', 'deadline':'2020-10-29T23:00:00Z','instructions':'なし'},
+        #     {'subject':'[2020前期火1]英語リーディング', 'classschedule':'Tue1','taskname':'課題4', 'status':'未', 'time_left':'あと3日', 'deadline':'2020-11-02T03:00:00Z','instructions':'なし'},
+        #     {'subject':'[2020前期月2]微分積分学', 'classschedule':'mon2','taskname':'課題5', 'status':'済', 'time_left':'あと1時間', 'deadline':'2020-10-30T01:00:00Z','instructions':'なし'},
+        #     {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題6', 'status':'済', 'time_left':'あと1日', 'deadline':'2020-10-31T01:00:00Z','instructions':'なし'}
+        #     ]
+        tasks = sort_tasks(tasks, show_only_unfinished = show_only_unfinished, max_time_left = max_time_left)
 
-    data ={"others":[]}
-    data = setdefault_for_overview(studentid)
-    if courseid != None:
-        search_condition = get_search_condition(show_only_unfinished, max_time_left, course=courseid)
-    elif day != None:
-        search_condition = get_search_condition(show_only_unfinished, max_time_left, day=day)
-        return flask.render_template('tasklist.htm', tasks=tasks, data=data, day=day, search_condition=search_condition)
+        data ={"others":[]}
+        data = setdefault_for_overview(studentid)
+        if courseid != None:
+            search_condition = get_search_condition(show_only_unfinished, max_time_left, course=courseid)
+        elif day != None:
+            search_condition = get_search_condition(show_only_unfinished, max_time_left, day=day)
+            return flask.render_template('tasklist.htm', tasks=tasks, data=data, day=day, search_condition=search_condition)
+        else:
+            search_condition = get_search_condition(show_only_unfinished, max_time_left)
+        return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth', search_condition=search_condition)
     else:
-        search_condition = get_search_condition(show_only_unfinished, max_time_left)
-    return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth', search_condition=search_condition)
+        return redirect(url_for('login'))
 
 
 if __name__ == '__main__':

@@ -144,8 +144,6 @@ def sync_student_resource(studentid, sr, res, last_update):
     add_resource(studentid, res, last_update)
     return 0
 
-
-
 def get_assignments_from_api(assignments, student_id):
     assignment_list = []
     sa_list = []
@@ -216,8 +214,11 @@ def get_course_from_api(site, student_id):
         classsch = yearsch.group()[7:9]
         if semester == '前期':
             semnum = "0"
+            # return None
         elif semester == '後期':
             semnum = "1"
+        # else:
+            # return None
         yearsemester = f"{yearsch.group()[1:5]}{semnum}"
         week = "oth"
         if classsch[0] == "月":
@@ -232,6 +233,7 @@ def get_course_from_api(site, student_id):
             week = "fri"
         classschedule = f"{week}{str(int(classsch[1]))}"
     except:
+        # return None
         pass
     course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule}
     student_course_dict = {"sc_id":f"{student_id}:{course_id}","course_id":course_id,"student_id":student_id}
@@ -242,6 +244,15 @@ def get_user_info_from_api(user):
     student_id = user.get('id')
     return {"student_id":student_id,"fullname":fullname}
 
+import asyncio, requests, json
+
+def get_session_json(ses):
+    res = ses.get("https://panda.ecs.kyoto-u.ac.jp/direct/session/current.json")
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
+
 def get_membership_json(ses):
     res = ses.get("https://panda.ecs.kyoto-u.ac.jp/direct/membership.json")
     try:
@@ -249,7 +260,7 @@ def get_membership_json(ses):
     except json.JSONDecodeError as e:
         return {}
 
-import asyncio, requests, json
+
 async def async_get_content(site_id, ses):
     url = f"https://panda.ecs.kyoto-u.ac.jp/direct/content/site/{site_id}.json"
     loop = asyncio.get_event_loop()
@@ -348,6 +359,8 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
         task["assignmentid"] = data.assignment_id
         task["deadline"] = asmdata[0].limit_at
         task["time_left"] = TimeLeft(asmdata[0].time_ms).time_left_to_str()
+        if task["time_left"] == "":
+            task["status"]="期限切れ"
         if mode == 1:
             # overviewのtooltipsに使用
             task["instructions"] = asmdata[0].instructions
@@ -355,7 +368,9 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
         task["subject"] = crsdata[0].coursename
         if mode == 1:
             task["classschedule"] = crsdata[0].classschedule
-
+        if show_only_unfinished==1:
+            if task["status"]!="未":
+                continue
         tasks.append(task)
     return tasks
 
@@ -370,6 +385,19 @@ def get_courses_to_be_taken(studentid):
             course.Course.course_id == i.course_id).all()
         if coursedata[0].yearsemester == 20201:
             data.append(coursedata[0])
+    return data
+
+def get_courses_id_to_be_taken(studentid):
+    data=[]
+    courses = session.query(studentcourse.Studentcourse).filter(
+        studentcourse.Studentcourse.student_id == studentid).all()
+    for i in courses:
+        # if course.hide == 1:
+        #     continue
+        coursedata = session.query(course.Course).filter(
+            course.Course.course_id == i.course_id).all()
+        if coursedata[0].yearsemester == 20201:
+            data.append(coursedata[0].course_id)
     return data
 
 def setdefault_for_overview(studentid, mode='tasklist'):
@@ -484,6 +512,8 @@ def get_resource_list(studentid, course_id=None, day=None):
         if course_id != None:
             if course_id != rscdata[0].course_id:
                 continue
+        if rscdata[0].course_id not in courseids:
+            continue
         if day !=None:
             if day not in crsdata[0].classschedule:
                 continue
@@ -505,7 +535,7 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
         container = r['container']
         container_spilt = container.split('/')
         del container_spilt[-1]
-        for i in range(4):
+        for i in range(3):
             del container_spilt[0]
         for folder in folderlist:
             if folder == container_spilt:
@@ -549,18 +579,21 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
         container = r['container']
         container_spilt = container.split('/')
         del container_spilt[-1]
-        for i in range(4):
+        for i in range(3):
             del container_spilt[0]
         folder_id = '/'.join(container_spilt)
         folder = re.search(f'<li id="{folder_id}">',html)
         search_num = folder.end()
         folder_i = re.search(f'</i><ul>',html[search_num:])
+        target = "_self"
+        if re.search(r'.*\.pdf' ,r["resource_url"]):
+            target = "_blank"
         add_html = f"""
         <li>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="{r["resource_url"]}" value="0"/>
                 <label class="form-check-label" for="{r["resource_url"]}">
-                    <a href="{r["resource_url"]}" target="_self" download="{r["title"]}" name="{r["resource_url"]}">{r["title"]}</a>
+                    <a href="{r["resource_url"]}" target="{target}" download="{r["title"]}" name="{r["resource_url"]}">{r["title"]}</a>
                 </label>
             </div>
         </li>"""
@@ -571,7 +604,7 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="{r["resource_url"]}" value="1" disabled checked/>
                         <label class="form-check-label" for="{r["resource_url"]}">
-                                <a href="{r["resource_url"]}" download="{r["title"]}" data-container="body" data-toggle="tooltip" title="このファイルを再ダウンロードする" name="{r["resource_url"]}">{r["title"]}</a>                     
+                                <a href="{r["resource_url"]}" download="{r["title"]}" data-container="body" data-toggle="tooltip" title="このファイルを再ダウンロードする" name="{r["resource_url"]}" target="{target}">{r["title"]}</a>                     
                         </label>
                     </div>
                 </div>
@@ -776,6 +809,12 @@ def add_resource(studentid, data, last_update):
         session.execute(resource.Resource.__table__.insert(),new_res)
     if len(upd_res) != 0:
         session.bulk_update_mappings(resource.Resource, upd_res)
+    session.commit()
+    return
+
+def update_student_needs_to_update_sitelist(student_id):
+    st = session.query(student.Student).filter(student.Student.student_id==student_id).first()
+    st.need_to_update_sitelist = 1
     session.commit()
     return
 

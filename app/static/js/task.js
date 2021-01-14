@@ -8,6 +8,7 @@ $(function() {
         dr_text = ui.draggable.find('.task_title').text();
         dr_id = ui.draggable.find('.task_tag').attr("href");
         dr_sub = ui.draggable.find('.subject').text();
+        assignment_id = ui.draggable.attr("id");
         var add_div_1 = $('<div></div>');
         var add_div_2 = $('<div></div>');
         var add_li = $('<li></li>');
@@ -20,6 +21,7 @@ $(function() {
         add_i.addClass("fas fa-times");
         add_button.append(add_i);
         add_a.attr("href", dr_id);
+        add_a.attr("id", assignment_id+"new");
         add_a.html(dr_text);
         add_li.html(dr_sub);
         add_li.append($('<br>'));
@@ -82,7 +84,9 @@ $(function() {
       drop: function(event,ui){
         dr_text = ui.draggable.find('a').text();
         dr_id = ui.draggable.find('a').attr('href');
-        old_task = $('#' + dr_id);
+        new_assignment_id = ui.draggable.find('a').attr('id');
+        assignment_id = new_assignment_id.slice(0,-3);
+        old_task = $('#' + assignment_id);
         old_task.css("display", "table");
         old_task.find('td').css("display", "block");
         ui.draggable.remove();
