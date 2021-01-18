@@ -20,10 +20,17 @@
         {% endif %}"><i class="far fa-file"></i> Update log</a>
             </li>
             <li class="nav-item">
-                <a onclick="window.open('./tutrial', '', 'width=800,height=500'); return false;" role="button"
-                    class="btn btn-light btn-lg btn-block">
-                    <i class="far fa-question-circle"></i>Help
-                </a>
+                <div class="d-block d-md-none" id="helpbutton_for_small">
+                    <a role="button" target="_blank" href="/tutrial" class="btn btn-light btn-lg btn-block">
+                        <i class="far fa-question-circle"></i>Help
+                    </a>
+                </div>
+                <div class="d-none d-md-block" id="helpbutton_for_medium">
+                    <a onclick="window.open('./tutrial', '', 'width=760,height=500'); return false;" role="button"
+                        class="btn btn-light btn-lg btn-block">
+                        <i class="far fa-question-circle"></i>Help
+                    </a>
+                </div>
             </li>
         </ul>
     </div>

@@ -7,10 +7,17 @@
     </section>
     <section class="col-md-6 col-sm-12">
         <h3 class="border-bottom border-dark"><i class="fas fa-info-circle">トピックス</i></h3>
+        <!--トピックメッセージのフォーマット-->
+        {% macro topicmess(txt, dat) %}
         <div class="my-4">
-            <b>サンプルメッセージ</b><br>
-            (YYYY/MM/DD HH:MM:SS)
+            <b>{{ txt }}</b><br>
+            ({{ dat }})
         </div>
+        {% endmacro %}
+        <!---->
+
+        {{ topicmess('サンプルメッセージ1', 'YYYY/MM/DD HH:MM:SS') }}
+        {{ topicmess('サンプルメッセージ2', 'YYYY/MM/DD HH:MM:SS') }}
     </section>
 </div>
 {% endblock %}
