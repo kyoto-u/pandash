@@ -202,7 +202,7 @@ def get_course_id_from_api(membership):
 
 def get_course_from_api(site, student_id):
     course_id = site.get('id')
-    instructor_id = site.get('siteOwner').get('usrId')
+    instructor_id = site.get('siteOwner').get('userId')
     fullname = site.get('siteOwner').get('userDisplayName')
     coursename = site.get('title')
     yearsch = re.match(r'\[.*\]', coursename)
@@ -268,7 +268,7 @@ async def async_get_content(site_id, ses):
     try:
         return res.json()
     except json.JSONDecodeError as e:
-        return {}
+        return {'content_collection':[]}
 
 async def async_get_site(site_id, ses):
     url = f"https://panda.ecs.kyoto-u.ac.jp/direct/site/{site_id}.json"
@@ -277,7 +277,7 @@ async def async_get_site(site_id, ses):
     try:
         return res.json()
     except json.JSONDecodeError as e:
-        return {}
+        return {'id':site_id}
 
 async def async_get_assignments(ses):
     url = f"https://panda.ecs.kyoto-u.ac.jp/direct/assignment/my.json"
