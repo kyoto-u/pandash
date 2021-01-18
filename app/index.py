@@ -208,6 +208,13 @@ def get_course_from_api(site, student_id):
     yearsch = re.match(r'\[.*\]', coursename)
     yearsemester = "20203"
     classschedule = "oth"
+    pages = site.get('sitePages')
+    page_id = ""
+    for page in pages:
+        page_title = page.get('title')
+        if re.search('課題', page_title) or re.search('assignment', page_title):
+            page_id = page.get('url')
+            break
     try:
         semnum = "2"
         semester = yearsch.group()[5:7]
@@ -235,7 +242,7 @@ def get_course_from_api(site, student_id):
     except:
         # return None
         pass
-    course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule}
+    course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule,"page_id":page_id}
     student_course_dict = {"sc_id":f"{student_id}:{course_id}","course_id":course_id,"student_id":student_id}
     return {"course":course_dict, "student_course":student_course_dict}
 
