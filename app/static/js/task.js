@@ -17,6 +17,8 @@ $(function() {
         add_li.addClass("list-group-item finished-list-item");
         add_a = $('<a></a>');
         add_button = $('<button></button>');
+        add_button.attr("id", assignment_id+"btn");
+        add_button.addClass("new_task_btn");
         add_i = $('<i></i>');
         add_i.addClass("fas fa-times");
         add_button.append(add_i);
@@ -61,6 +63,30 @@ $(function() {
         });
       },
       stop: function(event, ui){
+        $('.new_task_btn').on('click', function(){
+          dr_id = $(this).parent().parent().find('li').find('a').attr('href');
+          new_assignment_id = $(this).parent().parent().find('li').find('a').attr('id');
+          assignment_id = new_assignment_id.slice(0,-3);
+          old_task = $('#' + assignment_id);
+          old_task.css("display", "table");
+          old_task.find('td').css("display", "block");
+          $(this).parent().parent().remove();
+          var dr_ids = new Array();
+          dr_ids.push(dr_id);
+          var task_id = JSON.stringify({"task_id":dr_ids});
+          $.ajax({
+            type: 'POST',
+            url: '/task_unfinish',
+            data: task_id,
+            contentType: 'application/json',
+            success: function(response){
+              console.log(response);
+            },
+            error: function(error){
+              console.log(error);
+            }
+          })
+        })
         $('.new_task').draggable({
           helper: "clone",
           revert: "invalid",
@@ -106,7 +132,7 @@ $(function() {
           }
         })
       }
-    })
+    });
 })
 
 function select3a_change(value){
