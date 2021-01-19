@@ -592,9 +592,10 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
         folder = re.search(f'<li id="{folder_id}">',html)
         search_num = folder.end()
         folder_i = re.search(f'</i><ul>',html[search_num:])
-        target = "_self"
-        if re.search(r'.*\.pdf' ,r["resource_url"]):
-            target = "_blank"
+        # target = "_self"
+        target = "_blank"
+        # if re.search(r'.*\.pdf' ,r["resource_url"]):
+        #     target = "_blank"
         #2020/1/19 Shinji Akayama style = "poi"
         add_html = f"""
         <li>
@@ -840,17 +841,14 @@ def update_resource_status(studentid, resourceids: list):
     return
 
 def update_task_status(studentid, taskids: list, mode=0):
-    sas = session.query(studentassignment.Student_Assignment.assignment_id, studentassignment.Student_Assignment.sa_id).filter(
-        studentassignment.Student_Assignment.student_id == studentid).all()
     update_list = []
     status = "未"
     if mode==0:
         status = "済"
     for t_id in taskids:
-        for i in sas:
-            if i.assignment_id == t_id:
-                update_list.append({"sa_id":i.sa_id, "status":status})
-                break
+        assignment_id = t_id.replace('https://panda.ecs.kyoto-u.ac.jp/direct/assignment/', '')
+        sa_id = f'{studentid}:{assignment_id}'
+        update_list.append({"sa_id":sa_id, "status":status})
     session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
     session.commit()
     return
