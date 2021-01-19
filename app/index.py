@@ -595,12 +595,13 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
         target = "_self"
         if re.search(r'.*\.pdf' ,r["resource_url"]):
             target = "_blank"
+        #2020/1/19 Shinji Akayama style = "poi"
         add_html = f"""
         <li>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="{r["resource_url"]}" value="0"/>
-                <label class="form-check-label" for="{r["resource_url"]}">
-                    <a href="{r["resource_url"]}" target="{target}" download="{r["title"]}" name="{r["resource_url"]}">{r["title"]}</a>
+                <label class="form-check-label" for="{r["resource_url"]}"> 
+                    <a href="{r["resource_url"]}" target="{target}" download="{r["title"]}" name="{r["resource_url"]}"　style="pointer-events: none;">{r["title"]}</a>
                 </label>
             </div>
         </li>"""

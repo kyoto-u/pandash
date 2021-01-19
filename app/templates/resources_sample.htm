@@ -24,8 +24,9 @@
             data-target="#modal_timeboard_select">時間割で検索</button>
         </div>
         <form>
+          <!--このボタンは使用しません-->
           <a href="#" id="allclick" style="color: white; text-decoration: none;">
-            <button class="btn btn-secondary btn mt-4 btn-block">
+            <button class="btn btn-secondary btn mt-4 btn-block d-none">
               未入手資料を一括ダウンロード
             </button>
           </a>
@@ -54,6 +55,18 @@
 
       <div class="card-columns">
         {{ html | safe}}
+
+        <script>
+          var rescards = document.getElementsByClassName("ressub")
+          var url = location.href
+          for (var c in rescards) {
+            if (url.match('/resource/course')) {
+
+            } else {
+              c.setAttribute(style, "height: 200px; overflow-y: scroll;")
+            }
+          }
+        </script>
       </div>
 
     </div>
