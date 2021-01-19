@@ -242,7 +242,7 @@ def get_course_from_api(site, student_id):
     except:
         # return None
         pass
-    course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule,"page_id":page_id}
+    course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule,"page_id":""}
     student_course_dict = {"sc_id":f"{student_id}:{course_id}","course_id":course_id,"student_id":student_id}
     return {"course":course_dict, "student_course":student_course_dict}
 
@@ -250,6 +250,15 @@ def get_user_info_from_api(user):
     fullname = user.get('displayName')
     student_id = user.get('id')
     return {"student_id":student_id,"fullname":fullname}
+
+def get_page_from_api(pages):
+    page_id = ""
+    for page in pages:
+        title = page.get('title')
+        if re.search('課題', title) or re.search('assignment', title):
+            page_id = page.get('tools')[0].get('id')
+            break
+    return page_id
 
 import asyncio, requests, json
 
@@ -285,6 +294,15 @@ async def async_get_site(site_id, ses):
         return res.json()
     except json.JSONDecodeError as e:
         return {'id':site_id}
+
+async def async_get_site_pages(site_id, ses):
+    url = f"https://panda.ecs.kyoto-u.ac.jp/direct/site/{site_id}/pages.json"
+    loop = asyncio.get_event_loop()
+    res = await loop.run_in_executor(None, ses.get, url)
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
 
 async def async_get_assignments(ses):
     url = f"https://panda.ecs.kyoto-u.ac.jp/direct/assignment/my.json"

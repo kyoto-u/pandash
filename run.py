@@ -99,9 +99,11 @@ def proxyticket():
                 loop = asyncio.get_event_loop()
                 c_statements = []
                 s_statements = []
+                p_statements = []
                 for courseid in get_membership["site_list"]:
                     c_statements.append(async_get_content(courseid, ses))
                     s_statements.append(async_get_site(courseid, ses))
+                    p_statements.append(async_get_site_pages(courseid, ses))
                     # site = s.get(f"{api_url}site/{courseid}.json")
                     # resources = s.get(f"{api_url}content/site/{courseid}.json")
                     # get_site = get_course_from_api(site.json(), student_id)
@@ -111,13 +113,15 @@ def proxyticket():
                     # get_resources["resources"].append(get_resource["resources"])
                     # get_resources["student_resources"].append(get_resources["student_resources"])
                 c_statements.extend(s_statements)
+                c_statements.extend(p_statements)
                 c_statements.extend([async_get_assignments(ses),async_get_user_info(ses)])
                 tasks = asyncio.gather(*c_statements)
                 content_site = loop.run_until_complete(tasks)
                 content_site_len = int(len(content_site))-2
-                half_content_site_len = content_site_len//2
-                contents = content_site[0:half_content_site_len]
-                sites = content_site[half_content_site_len:content_site_len]
+                one_third_content_site_len = content_site_len//3
+                contents = content_site[0:one_third_content_site_len]
+                sites = content_site[one_third_content_site_len:one_third_content_site_len*2]
+                pages = content_site[one_third_content_site_len*2:content_site_len]
                 get_assignments = get_assignments_from_api(content_site[content_site_len],student_id)
                 user_info = get_user_info_from_api(content_site[content_site_len+1])
                 index = 0
@@ -125,6 +129,7 @@ def proxyticket():
                     get_resource = get_resources_from_api(contents[index],courseid,student_id)
                     get_site = get_course_from_api(sites[index], student_id)
                     if get_site:
+                        get_site["course"]["page_id"] = get_page_from_api(pages[index])
                         get_sites["courses"].append(get_site["course"])
                         get_sites["student_courses"].append(get_site["student_course"])
                         get_resources["resources"].extend(get_resource["resources"])
