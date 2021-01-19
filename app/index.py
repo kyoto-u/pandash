@@ -391,6 +391,8 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
             task["instructions"] = asmdata[0].instructions
 
         task["subject"] = crsdata[0].coursename
+        task["tool_id"] = crsdata[0].page_id
+        task["course_id"] = crsdata[0].course_id
         if mode == 1:
             task["classschedule"] = crsdata[0].classschedule
         if show_only_unfinished==1:
