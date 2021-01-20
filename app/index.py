@@ -672,7 +672,7 @@ def add_student(studentid, fullname, last_update = 0, language = "ja"):
     if isExist == False:
         session.execute(student.Student.__table__.insert(),new_student)
     else:
-        session.bulk_update_mappings(student.Student, new_student)
+        session.bulk_update_mappings(student.Student, [new_student])
     session.commit()
     return
 
