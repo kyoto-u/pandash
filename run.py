@@ -163,8 +163,7 @@ def logout():
     if "student_id" in session and session["student_id"]:
         del(session['student_id'])
     cas_logout_url = cas_client.get_logout_url(service_url=app_logout_url)
-    requests.get(cas_logout_url)
-    return redirect(url_for('root'))
+    return redirect(cas_logout_url)
 
 @app.route('/')
 def root():
