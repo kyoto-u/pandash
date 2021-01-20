@@ -65,6 +65,7 @@ def login():
 @app.route('/login/proxy/<pgtiou>', methods=['GET'])
 def proxy(pgtiou=None):
     pgtid = pgtids[pgtiou]
+    del(pgtids[pgtiou])
     cas_response = cas_client.perform_proxy(proxy_ticket=pgtid)
     proxy_ticket = cas_response.data.get('proxyTicket')
     return redirect(url_for('proxyticket', ticket=proxy_ticket))
