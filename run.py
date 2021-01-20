@@ -79,17 +79,23 @@ def proxyticket():
         if api_response.status_code == 200:
             student_id = get_session_json(ses).get('userId')
             session["student_id"] = student_id
-            student_is_exist = get_student(student_id)
-            need_to_update_sitelist = 1
-            if student_is_exist:
-                need_to_update_sitelist = student_is_exist.need_to_update_sitelist
-            get_membership = {"student_id": "", "site_list":[]}
             now = now = floor(time.time())
+            studentdata = get_student(student_id)
+            need_to_update_sitelist = 1
+            if studentdata:
+                need_to_update_sitelist = studentdata.need_to_update_sitelist
+                last_update = studentdata.last_update
+                add_student(student_id, studentdata.fullname,last_update= now, language = studentdata.language)
+            else:
+                last_update = 0
+                add_student(student_id, "Noname",last_update= now)
+            get_membership = {"student_id": "", "site_list":[]}
             if need_to_update_sitelist == 0:                
                 get_membership["student_id"] = student_id
                 get_membership["site_list"] = get_courses_id_to_be_taken(student_id)
             else:
                 # 時間かかる
+                last_update = 0
                 get_membership = get_course_id_from_api(get_membership_json(ses))
             if student_id != "":
                 # get_assignments = get_assignments_from_api(assignments.json(), student_id)
@@ -141,7 +147,7 @@ def proxyticket():
                 # get_sites        {"courses": [], "student_courses": []}
                 # get_resources    {"resources":[], "student_resources": []}
                 # user_info        {"student_id": , "fullname": }
-                sync_student_contents(student_id, get_sites, get_assignments, get_resources, now)
+                sync_student_contents(student_id, get_sites, get_assignments, get_resources, now, last_update=last_update)
                 update_student_needs_to_update_sitelist(student_id)
             print(time.perf_counter()-start_time)
         return redirect(url_for("root"))
