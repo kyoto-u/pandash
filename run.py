@@ -358,6 +358,13 @@ def resources_sample():
     else:
         return redirect(url_for('login'))
 
+@app.route('/ical')
+def ical():
+    studentid = session.get('student_id')
+    data = setdefault_for_overview(studentid)
+    return flask.render_template('coming_soon.htm',data=data)
+
+
 # 資料ページのダウンロード時のstatus変更
 @app.route('/checkedclick')
 def checkedclick():
