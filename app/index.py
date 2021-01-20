@@ -859,8 +859,7 @@ def update_task_status(studentid, taskids: list, mode=0):
     if mode==0:
         status = "済"
     for t_id in taskids:
-        assignment_id = t_id.replace('https://panda.ecs.kyoto-u.ac.jp/direct/assignment/', '')
-        sa_id = f'{studentid}:{assignment_id}'
+        sa_id = f'{studentid}:{t_id}'
         update_list.append({"sa_id":sa_id, "status":status})
     session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
     session.commit()
