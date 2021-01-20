@@ -38,9 +38,9 @@ $(function() {
         console.log(add_div_1);
         $("#finished_taskslist").append(add_div_1);
         ui.draggable.css("display", "none")
-        var dr_ids = new Array();
-        dr_ids.push(dr_id);
-        var task_id = JSON.stringify({"task_id":dr_ids});
+        var a_ids = new Array();
+        a_ids.push(assignment_id);
+        var task_id = JSON.stringify({"task_id":a_ids});
         $.ajax({
           type: "POST",
           url: "/task_finish",
@@ -76,9 +76,9 @@ $(function() {
           old_task.css("display", "table");
           old_task.find('td').css("display", "block");
           $(this).parent().parent().remove();
-          var dr_ids = new Array();
-          dr_ids.push(dr_id);
-          var task_id = JSON.stringify({"task_id":dr_ids});
+          var a_ids = new Array();
+          a_ids.push(assignment_id);
+          var task_id = JSON.stringify({"task_id":a_ids});
           $.ajax({
             type: 'POST',
             url: '/task_unfinish',
@@ -122,9 +122,9 @@ $(function() {
         old_task = $('#' + assignment_id);
         old_task.css("display", "block");
         ui.draggable.remove();
-        var dr_ids = new Array();
-        dr_ids.push(dr_id);
-        var task_id = JSON.stringify({"task_id":dr_ids});
+        var a_ids = new Array();
+        a_ids.push(assignment_id);
+        var task_id = JSON.stringify({"task_id":a_ids});
         $.ajax({
           type: 'POST',
           url: '/task_unfinish',
