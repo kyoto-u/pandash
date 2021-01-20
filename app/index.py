@@ -255,6 +255,13 @@ def get_page_from_api(pages):
 
 import asyncio, requests, json
 
+def get_user_json(ses):
+    res = ses.get("https://panda.ecs.kyoto-u.ac.jp/direct/user/current.json")
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
+
 def get_session_json(ses):
     res = ses.get("https://panda.ecs.kyoto-u.ac.jp/direct/session/current.json")
     try:

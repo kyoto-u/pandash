@@ -78,7 +78,9 @@ def proxyticket():
         ses = requests.Session()
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
         if api_response.status_code == 200:
-            student_id = get_session_json(ses).get('userId')
+            user=get_user_json(ses)
+            student_id = user.get('Id')
+            fullname = user.get('DisplayName')
             session["student_id"] = student_id
             now = now = floor(time.time())
             studentdata = get_student(student_id)
@@ -86,10 +88,10 @@ def proxyticket():
             if studentdata:
                 need_to_update_sitelist = studentdata.need_to_update_sitelist
                 last_update = studentdata.last_update
-                add_student(student_id, studentdata.fullname,last_update= now, language = studentdata.language)
+                add_student(student_id, fullname,last_update= now, language = studentdata.language)
             else:
                 last_update = 0
-                add_student(student_id, "Noname",last_update= now)
+                add_student(student_id, fullname,last_update= now)
             get_membership = {"student_id": "", "site_list":[]}
             if need_to_update_sitelist == 0:                
                 get_membership["student_id"] = student_id
