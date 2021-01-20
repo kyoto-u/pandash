@@ -57,14 +57,11 @@
         {{ html | safe}}
 
         <script>
-          var rescards = document.getElementsByClassName("ressub")
           var url = location.href
-          for (var c in rescards) {
-            if (url.match('/resource/course')) {
-
-            } else {
-              c.setAttribute(style, "height: 200px; overflow-y: scroll;")
-            }
+          if (url.match('/resourcelist/')) {
+            //横幅を広げてあげると良い
+          } else {
+            $('.ressubs').attr('style', 'height: 200px; overflow-y: scroll;')
           }
         </script>
       </div>
