@@ -439,7 +439,8 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
         #     {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題6', 'status':'済', 'time_left':'あと1日', 'deadline':'2020-10-31T01:00:00Z','instructions':'なし'}
         #     ]
         tasks = sort_tasks(tasks, show_only_unfinished = show_only_unfinished, max_time_left = max_time_left)
-
+        unfinished_task_num=sum((i["status"] == "未" for i in tasks))
+        logging.debug(f"studentid={studentid}の未完了課題:{unfinished_task_num}個")
         data ={"others":[]}
         data = setdefault_for_overview(studentid)
         if courseid != None:
@@ -449,7 +450,7 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
             return flask.render_template('tasklist.htm', tasks=tasks, data=data, day=day, search_condition=search_condition)
         else:
             search_condition = get_search_condition(show_only_unfinished, max_time_left)
-        return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth', search_condition=search_condition)
+        return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth', search_condition=search_condition, unfinished_task_num=unfinished_task_num)
     else:
         return redirect(url_for('login'))
 
