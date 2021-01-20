@@ -324,7 +324,7 @@ def resource_course(courseid):
         resource = get_resource_list(studentid, course_id=courseid)
         coursename = get_coursename(courseid)
         resource_html = resource_arrange(resource[courseid], coursename, courseid)
-        return flask.render_template('resources_sample.htm', html=resource_html, data=data)
+        return flask.render_template('resources_sample.htm', html=resource_html, data=data, numofcourses=1)
     else:
         return redirect(url_for('login'))
 
@@ -332,15 +332,17 @@ def resource_course(courseid):
 def resource_day(day):
     studentid = session.get("student_id")
     if studentid:
+        numofcourses = 0
         courses = get_courses_to_be_taken(studentid)
         data = setdefault_for_overview(studentid, mode="resourcelist")
         html = ""
         resource_list = get_resource_list(studentid, day=day)
         for c in courses:
             if resource_list[c.course_id] != []:
+                numofcourses += 1
                 html += resource_arrange(resource_list[c.course_id], c.coursename, c.course_id)
         data = setdefault_for_overview(studentid, mode='resourcelist')
-        return flask.render_template('resources_sample.htm', html=html, data=data, day=day)
+        return flask.render_template('resources_sample.htm', html=html, data=data, day=day, numofcourses=numofcourses)
     else:
         return redirect(url_for('login'))
 
@@ -348,15 +350,16 @@ def resource_day(day):
 def resources_sample():
     studentid = session.get('student_id')
     if studentid:
+        numofcourses = 0
         courses = get_courses_to_be_taken(studentid)
         html = ""
         resource_list = get_resource_list(studentid, None)
         for c in courses:
-            
             if resource_list[c.course_id] != []:
+                numofcourses += 1
                 html += resource_arrange(resource_list[c.course_id], c.coursename, c.course_id)
         data = setdefault_for_overview(studentid, mode='resourcelist')
-        return flask.render_template('resources_sample.htm', html=html, data=data)
+        return flask.render_template('resources_sample.htm', html=html, data=data, numofcourses=numofcourses)
     else:
         return redirect(url_for('login'))
 

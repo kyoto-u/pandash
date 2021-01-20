@@ -58,9 +58,7 @@
 
         <script>
           var url = location.href
-          if (url.match('/resourcelist/')) {
-            //横幅を広げてあげると良い
-          } else {
+          if ({{ numofcourses }} > 3 ) {
             $('.ressubs').attr('style', 'height: 200px; overflow-y: scroll;')
           }
         </script>
