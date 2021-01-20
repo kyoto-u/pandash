@@ -80,12 +80,12 @@ def proxyticket():
             student_id = get_session_json(ses).get('userId')
             session["student_id"] = student_id
             student_is_exist = get_student(student_id)
-            need_to_update_sitelist = 0
+            need_to_update_sitelist = 1
             if student_is_exist:
                 need_to_update_sitelist = student_is_exist.need_to_update_sitelist
             get_membership = {"student_id": "", "site_list":[]}
             now = now = floor(time.time())
-            if need_to_update_sitelist == 1:                
+            if need_to_update_sitelist == 0:                
                 get_membership["student_id"] = student_id
                 get_membership["site_list"] = get_courses_id_to_be_taken(student_id)
             else:

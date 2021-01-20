@@ -841,9 +841,9 @@ def add_resource(studentid, data, last_update):
     session.commit()
     return
 
-def update_student_needs_to_update_sitelist(student_id):
+def update_student_needs_to_update_sitelist(student_id,need_to_update_sitelist=0):
     st = session.query(student.Student).filter(student.Student.student_id==student_id).first()
-    st.need_to_update_sitelist = 1
+    st.need_to_update_sitelist = need_to_update_sitelist
     session.commit()
     return
 
