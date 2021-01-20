@@ -188,6 +188,9 @@ def get_course_id_from_api(membership):
     for member in mem_collection:
         if student_id == "":
             student_id = member.get('userId')
+        # roleがStudentでない場合はスルー
+        if member.get('memberRole') != "Student":
+            continue
         user_site_id = member.get('entityId')
         site_id = user_site_id.replace(f'{student_id}::site:','')
         site_list.append(site_id)
