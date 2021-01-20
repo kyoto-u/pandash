@@ -5,7 +5,7 @@ from .. import settings
 
 class Course(settings.Base):
     __tablename__ = 'courses'
-    course_id = Column(String(40), primary_key=True,index=True)
+    course_id = Column(String(80), primary_key=True,index=True)
     page_id = Column(String(80))
     instructor_id = Column(String(40))
     coursename = Column(String(800))

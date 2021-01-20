@@ -109,6 +109,8 @@ def sync_student_contents(studentid, crs, asm, res, now,last_update=0):
 
     # 更新をするのはstudent, student_assignment, student_course, student_resource
     # 加えて、assignment,course,resourceも同時に更新することにする。
+
+    # courseが最初!!!
     sync_student_course(studentid, crs["student_courses"], crs["courses"], last_update)
     sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"], last_update)
     sync_student_resource(studentid, res["student_resources"], res["resources"], last_update)
@@ -151,7 +153,7 @@ def get_assignments_from_api(assignments, student_id):
         course_id = assignment.get('context')
         modifieddate = assignment.get('timeLastModified').get('time')
         status = assignment.get('status')
-        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"status":"未","student_id":student_id})
+        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":"未","student_id":student_id})
         assignment_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifieddate":modifieddate,"course_id":course_id})
     assignment_dict = {"student_assignments":sa_list, "assignments":assignment_list}
     return assignment_dict
@@ -169,7 +171,7 @@ def get_resources_from_api(resources, course_id, student_id):
         container_split = resource_container.split('/')
         resource_list.append({'course_id':course_id, 'container': resource_container, 'title': resource_title, \
             'resource_url': resource_url, 'modifieddate': resource_modified_date})
-        sr_list.append({"sr_id":f"{student_id}:{resource_url}", "resource_url":resource_url, "student_id":student_id, "status":0})
+        sr_list.append({"sr_id":f"{student_id}:{resource_url}", "resource_url":resource_url, "student_id":student_id, "course_id":course_id, "status":0})
     resource_dict = {"student_resources":sr_list, "resources":resource_list}
     return resource_dict
 
@@ -753,15 +755,18 @@ def add_student_assignment(studentid, data, last_update):
     """
     sa = session.query(
         studentassignment.Student_Assignment).filter(studentassignment.Student_Assignment.student_id == studentid).all()
+    course_ids = get_courseids(studentid)
     new_sa = []
     upd_sa = []
     for item in data:
         assignment_exist = False
         update=False
+        if not item["course_id"] in course_ids:
+            continue
         for i in sa:
             if i.assignment_id == item["assignment_id"]:
                 assignment_exist = True
-                if i.status !='未':
+                if item["status"] !='未':
                     update=True
                 break
         if assignment_exist == False:
@@ -793,18 +798,29 @@ def add_student_resource(studentid,data):
     """
         data: resourceurl, studentid, status
     """
-    resource_exist = False
     sr = session.query(studentresource.Student_Resource).filter(studentresource.Student_Resource.student_id ==studentid).all()
+    course_ids = get_courseids(studentid)
     new_sr = []
+    upd_sr = []
     for item in data:
+        resource_exist = False
+        update = False
+        if item["course_id"] not in course_ids:
+            continue
         for i in sr:
             if i.resource_url == item["resource_url"]:
                 resource_exist = True
+                if item["status"] !=0:
+                    update=True
                 break
         if resource_exist == False:
             new_sr.append(item)
+        elif update == True:
+            upd_sr.append(item)
     if len(new_sr) != 0:
         session.execute(studentresource.Student_Resource.__table__.insert(),new_sr)
+    if len(upd_sr) != 0:
+        session.bulk_update_mappings(studentresource.Student_Resource, upd_sr)
     session.commit()
     return
 
