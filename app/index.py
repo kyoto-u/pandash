@@ -845,10 +845,8 @@ def update_resource_status(studentid, resourceids: list):
         studentresource.Student_Resource.student_id == studentid).all()
     update_list = []
     for r_id in resourceids:
-        for i in srs:
-            if i.resource_url == r_id:
-                update_list.append({"sr_id":i.sr_id, "status":1})
-                break
+        sr_id = f'{studentid}:{r_id}'
+        update_list.append({"sr_id":sr_id, "status":1})
     session.bulk_update_mappings(studentresource.Student_Resource, update_list)
     session.commit()
     return
