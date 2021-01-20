@@ -79,8 +79,8 @@ def proxyticket():
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
         if api_response.status_code == 200:
             user=get_user_json(ses)
-            student_id = user.get('Id')
-            fullname = user.get('DisplayName')
+            student_id = user.get('id')
+            fullname = user.get('displayName')
             session["student_id"] = student_id
             now = now = floor(time.time())
             studentdata = get_student(student_id)
