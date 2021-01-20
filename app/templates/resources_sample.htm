@@ -59,10 +59,8 @@
         <script>
           var rescards = document.getElementsByClassName("ressub")
           var url = location.href
-          for (var c in rescards) {
-            if (url.match('/resource/course')) {
-
-            } else {
+          if (url.lastIndexOf('/resourcelist/course') == -1) { //一つの授業について表示しているとき以外
+            for (c in rescards) {
               c.setAttribute(style, "height: 200px; overflow-y: scroll;")
             }
           }
