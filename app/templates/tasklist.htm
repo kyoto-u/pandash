@@ -50,18 +50,14 @@
     <b>検索条件：{{ search_condition.search_condition }}</b>
 
     <!--アラート-->
-    {% set tasknum = namespace(cnt = 0) %}
-    {% for task in tasks %}
-    {% set tasknum.cnt = tasknum.cnt + 1 %}
-    {% endfor %}
-    {% if tasknum.cnt > 0 %}
+    {% if unfinished_task_num > 0 %}
 
     <div class="alert alert-danger" role="alert">
       <div class="row">
         {% if search_condition == '全て' %}
-        未完了の課題が<div class="text-danger">{{ tasknum.cnt }}</div>件あります
+        未完了の課題が<div class="text-danger">{{ unfinished_task_num }}</div>件あります
         {% else %}
-        この条件での未完了課題が<div class="text-danger">{{ tasknum.cnt }}</div>件あります
+        この条件での未完了課題が<div class="text-danger">{{ unfinished_task_num }}</div>件あります
         {% endif %}
       </div>
     </div>
