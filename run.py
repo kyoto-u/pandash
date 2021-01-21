@@ -65,6 +65,7 @@ def login():
 @app.route('/login/proxy/<pgtiou>', methods=['GET'])
 def proxy(pgtiou=None):
     pgtid = pgtids[pgtiou]
+    del(pgtids[pgtiou])
     cas_response = cas_client.perform_proxy(proxy_ticket=pgtid)
     proxy_ticket = cas_response.data.get('proxyTicket')
     return redirect(url_for('proxyticket', ticket=proxy_ticket))
@@ -77,19 +78,27 @@ def proxyticket():
         ses = requests.Session()
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
         if api_response.status_code == 200:
-            student_id = get_session_json(ses).get('userId')
+            user=get_user_json(ses)
+            student_id = user.get('id')
+            fullname = user.get('displayName')
             session["student_id"] = student_id
-            student_is_exist = get_student(student_id)
-            need_to_update_sitelist = 0
-            if student_is_exist:
-                need_to_update_sitelist = student_is_exist.need_to_update_sitelist
-            get_membership = {"student_id": "", "site_list":[]}
             now = now = floor(time.time())
-            if need_to_update_sitelist == 1:                
+            studentdata = get_student(student_id)
+            need_to_update_sitelist = 1
+            if studentdata:
+                need_to_update_sitelist = studentdata.need_to_update_sitelist
+                last_update = studentdata.last_update
+                add_student(student_id, fullname,last_update= now, language = studentdata.language)
+            else:
+                last_update = 0
+                add_student(student_id, fullname,last_update= now)
+            get_membership = {"student_id": "", "site_list":[]}
+            if need_to_update_sitelist == 0:                
                 get_membership["student_id"] = student_id
                 get_membership["site_list"] = get_courses_id_to_be_taken(student_id)
             else:
                 # 時間かかる
+                last_update = 0
                 get_membership = get_course_id_from_api(get_membership_json(ses))
             if student_id != "":
                 # get_assignments = get_assignments_from_api(assignments.json(), student_id)
@@ -99,9 +108,11 @@ def proxyticket():
                 loop = asyncio.get_event_loop()
                 c_statements = []
                 s_statements = []
+                p_statements = []
                 for courseid in get_membership["site_list"]:
                     c_statements.append(async_get_content(courseid, ses))
                     s_statements.append(async_get_site(courseid, ses))
+                    p_statements.append(async_get_site_pages(courseid, ses))
                     # site = s.get(f"{api_url}site/{courseid}.json")
                     # resources = s.get(f"{api_url}content/site/{courseid}.json")
                     # get_site = get_course_from_api(site.json(), student_id)
@@ -111,13 +122,15 @@ def proxyticket():
                     # get_resources["resources"].append(get_resource["resources"])
                     # get_resources["student_resources"].append(get_resources["student_resources"])
                 c_statements.extend(s_statements)
+                c_statements.extend(p_statements)
                 c_statements.extend([async_get_assignments(ses),async_get_user_info(ses)])
                 tasks = asyncio.gather(*c_statements)
                 content_site = loop.run_until_complete(tasks)
                 content_site_len = int(len(content_site))-2
-                half_content_site_len = content_site_len//2
-                contents = content_site[0:half_content_site_len]
-                sites = content_site[half_content_site_len:content_site_len]
+                one_third_content_site_len = content_site_len//3
+                contents = content_site[0:one_third_content_site_len]
+                sites = content_site[one_third_content_site_len:one_third_content_site_len*2]
+                pages = content_site[one_third_content_site_len*2:content_site_len]
                 get_assignments = get_assignments_from_api(content_site[content_site_len],student_id)
                 user_info = get_user_info_from_api(content_site[content_site_len+1])
                 index = 0
@@ -125,6 +138,7 @@ def proxyticket():
                     get_resource = get_resources_from_api(contents[index],courseid,student_id)
                     get_site = get_course_from_api(sites[index], student_id)
                     if get_site:
+                        get_site["course"]["page_id"] = get_page_from_api(pages[index])
                         get_sites["courses"].append(get_site["course"])
                         get_sites["student_courses"].append(get_site["student_course"])
                         get_resources["resources"].extend(get_resource["resources"])
@@ -136,7 +150,7 @@ def proxyticket():
                 # get_sites        {"courses": [], "student_courses": []}
                 # get_resources    {"resources":[], "student_resources": []}
                 # user_info        {"student_id": , "fullname": }
-                sync_student_contents(student_id, get_sites, get_assignments, get_resources, now)
+                sync_student_contents(student_id, get_sites, get_assignments, get_resources, now, last_update=last_update)
                 update_student_needs_to_update_sitelist(student_id)
             print(time.perf_counter()-start_time)
         return redirect(url_for("root"))
@@ -146,6 +160,8 @@ def proxyticket():
 def logout():
     if "logged-in" in session and session["logged-in"]:
         del(session['logged-in'])
+    if "student_id" in session and session["student_id"]:
+        del(session['student_id'])
     cas_logout_url = cas_client.get_logout_url(service_url=app_logout_url)
     return redirect(cas_logout_url)
 
@@ -307,7 +323,7 @@ def resource_course(courseid):
         resource = get_resource_list(studentid, course_id=courseid)
         coursename = get_coursename(courseid)
         resource_html = resource_arrange(resource[courseid], coursename, courseid)
-        return flask.render_template('resources_sample.htm', html=resource_html, data=data)
+        return flask.render_template('resources_sample.htm', html=resource_html, data=data, numofcourses=1)
     else:
         return redirect(url_for('login'))
 
@@ -315,15 +331,17 @@ def resource_course(courseid):
 def resource_day(day):
     studentid = session.get("student_id")
     if studentid:
+        numofcourses = 0
         courses = get_courses_to_be_taken(studentid)
         data = setdefault_for_overview(studentid, mode="resourcelist")
         html = ""
         resource_list = get_resource_list(studentid, day=day)
         for c in courses:
             if resource_list[c.course_id] != []:
+                numofcourses += 1
                 html += resource_arrange(resource_list[c.course_id], c.coursename, c.course_id)
         data = setdefault_for_overview(studentid, mode='resourcelist')
-        return flask.render_template('resources_sample.htm', html=html, data=data, day=day)
+        return flask.render_template('resources_sample.htm', html=html, data=data, day=day, numofcourses=numofcourses)
     else:
         return redirect(url_for('login'))
 
@@ -331,17 +349,25 @@ def resource_day(day):
 def resources_sample():
     studentid = session.get('student_id')
     if studentid:
+        numofcourses = 0
         courses = get_courses_to_be_taken(studentid)
         html = ""
         resource_list = get_resource_list(studentid, None)
         for c in courses:
-            
             if resource_list[c.course_id] != []:
+                numofcourses += 1
                 html += resource_arrange(resource_list[c.course_id], c.coursename, c.course_id)
         data = setdefault_for_overview(studentid, mode='resourcelist')
-        return flask.render_template('resources_sample.htm', html=html, data=data)
+        return flask.render_template('resources_sample.htm', html=html, data=data, numofcourses=numofcourses)
     else:
         return redirect(url_for('login'))
+
+@app.route('/ical')
+def ical():
+    studentid = session.get('student_id')
+    data = setdefault_for_overview(studentid)
+    return flask.render_template('coming_soon.htm',data=data)
+
 
 # 資料ページのダウンロード時のstatus変更
 @app.route('/checkedclick')
@@ -413,7 +439,8 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
         #     {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題6', 'status':'済', 'time_left':'あと1日', 'deadline':'2020-10-31T01:00:00Z','instructions':'なし'}
         #     ]
         tasks = sort_tasks(tasks, show_only_unfinished = show_only_unfinished, max_time_left = max_time_left)
-
+        unfinished_task_num=sum((i["status"] == "未" for i in tasks))
+        logging.debug(f"studentid={studentid}の未完了課題:{unfinished_task_num}個")
         data ={"others":[]}
         data = setdefault_for_overview(studentid)
         if courseid != None:
@@ -423,7 +450,7 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
             return flask.render_template('tasklist.htm', tasks=tasks, data=data, day=day, search_condition=search_condition)
         else:
             search_condition = get_search_condition(show_only_unfinished, max_time_left)
-        return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth', search_condition=search_condition)
+        return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth', search_condition=search_condition, unfinished_task_num=unfinished_task_num)
     else:
         return redirect(url_for('login'))
 

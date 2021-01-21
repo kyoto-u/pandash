@@ -57,12 +57,9 @@
         {{ html | safe}}
 
         <script>
-          var rescards = document.getElementsByClassName("ressub")
           var url = location.href
-          if (url.lastIndexOf('/resourcelist/course') == -1) { //一つの授業について表示しているとき以外
-            for (c in rescards) {
-              c.setAttribute(style, "height: 200px; overflow-y: scroll;")
-            }
+          if ({{ numofcourses }} > 3 ) {
+            $('.ressubs').attr('style', 'height: 200px; overflow-y: scroll;');
           }
         </script>
       </div>

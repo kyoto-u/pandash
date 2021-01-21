@@ -98,7 +98,7 @@ class TimeLeft():
         
         return self.add_ato(msg)
 
-def sync_student_contents(studentid, crs, asm, res, now):
+def sync_student_contents(studentid, crs, asm, res, now,last_update=0):
     # 以下主な方針
     #
     # studentテーブルにlast_updateを用意し、毎回update後に記録しておく
@@ -107,15 +107,10 @@ def sync_student_contents(studentid, crs, asm, res, now):
     # modifieddateがlast_updateよりあとのもののみupdate
     #
 
-    studentdata= get_student(studentid)
-    if studentdata != None:
-        last_update = studentdata.last_update
-        add_student(studentid, studentdata.fullname,last_update= now, language = studentdata.language)
-    else:
-        last_update = 0
-        add_student(studentid, "Noname",last_update= now)
     # 更新をするのはstudent, student_assignment, student_course, student_resource
     # 加えて、assignment,course,resourceも同時に更新することにする。
+
+    # courseが最初!!!
     sync_student_course(studentid, crs["student_courses"], crs["courses"], last_update)
     sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"], last_update)
     sync_student_resource(studentid, res["student_resources"], res["resources"], last_update)
@@ -158,7 +153,7 @@ def get_assignments_from_api(assignments, student_id):
         course_id = assignment.get('context')
         modifieddate = assignment.get('timeLastModified').get('time')
         status = assignment.get('status')
-        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"status":"未","student_id":student_id})
+        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":"未","student_id":student_id})
         assignment_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifieddate":modifieddate,"course_id":course_id})
     assignment_dict = {"student_assignments":sa_list, "assignments":assignment_list}
     return assignment_dict
@@ -176,7 +171,7 @@ def get_resources_from_api(resources, course_id, student_id):
         container_split = resource_container.split('/')
         resource_list.append({'course_id':course_id, 'container': resource_container, 'title': resource_title, \
             'resource_url': resource_url, 'modifieddate': resource_modified_date})
-        sr_list.append({"sr_id":f"{student_id}:{resource_url}", "resource_url":resource_url, "student_id":student_id, "status":0})
+        sr_list.append({"sr_id":f"{student_id}:{resource_url}", "resource_url":resource_url, "student_id":student_id, "course_id":course_id, "status":0})
     resource_dict = {"student_resources":sr_list, "resources":resource_list}
     return resource_dict
 
@@ -195,6 +190,9 @@ def get_course_id_from_api(membership):
     for member in mem_collection:
         if student_id == "":
             student_id = member.get('userId')
+        # roleがStudentでない場合はスルー
+        if member.get('memberRole') != "Student":
+            continue
         user_site_id = member.get('entityId')
         site_id = user_site_id.replace(f'{student_id}::site:','')
         site_list.append(site_id)
@@ -208,13 +206,6 @@ def get_course_from_api(site, student_id):
     yearsch = re.match(r'\[.*\]', coursename)
     yearsemester = "20203"
     classschedule = "oth"
-    pages = site.get('sitePages')
-    page_id = ""
-    for page in pages:
-        page_title = page.get('title')
-        if re.search('課題', page_title) or re.search('assignment', page_title):
-            page_id = page.get('url')
-            break
     try:
         semnum = "2"
         semester = yearsch.group()[5:7]
@@ -242,7 +233,7 @@ def get_course_from_api(site, student_id):
     except:
         # return None
         pass
-    course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule,"page_id":page_id}
+    course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule,"page_id":""}
     student_course_dict = {"sc_id":f"{student_id}:{course_id}","course_id":course_id,"student_id":student_id}
     return {"course":course_dict, "student_course":student_course_dict}
 
@@ -251,7 +242,23 @@ def get_user_info_from_api(user):
     student_id = user.get('id')
     return {"student_id":student_id,"fullname":fullname}
 
+def get_page_from_api(pages):
+    page_id = ""
+    for page in pages:
+        title = page.get('title')
+        if re.search('課題', title) or re.search('assignment', title):
+            page_id = page.get('tools')[0].get('id')
+            break
+    return page_id
+
 import asyncio, requests, json
+
+def get_user_json(ses):
+    res = ses.get("https://panda.ecs.kyoto-u.ac.jp/direct/user/current.json")
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
 
 def get_session_json(ses):
     res = ses.get("https://panda.ecs.kyoto-u.ac.jp/direct/session/current.json")
@@ -285,6 +292,15 @@ async def async_get_site(site_id, ses):
         return res.json()
     except json.JSONDecodeError as e:
         return {'id':site_id}
+
+async def async_get_site_pages(site_id, ses):
+    url = f"https://panda.ecs.kyoto-u.ac.jp/direct/site/{site_id}/pages.json"
+    loop = asyncio.get_event_loop()
+    res = await loop.run_in_executor(None, ses.get, url)
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
 
 async def async_get_assignments(ses):
     url = f"https://panda.ecs.kyoto-u.ac.jp/direct/assignment/my.json"
@@ -373,6 +389,8 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
             task["instructions"] = asmdata[0].instructions
 
         task["subject"] = crsdata[0].coursename
+        task["tool_id"] = crsdata[0].page_id
+        task["course_id"] = crsdata[0].course_id
         if mode == 1:
             task["classschedule"] = crsdata[0].classschedule
         if show_only_unfinished==1:
@@ -592,9 +610,10 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
         folder = re.search(f'<li id="{folder_id}">',html)
         search_num = folder.end()
         folder_i = re.search(f'</i><ul>',html[search_num:])
-        target = "_self"
-        if re.search(r'.*\.pdf' ,r["resource_url"]):
-            target = "_blank"
+        # target = "_self"
+        target = "_blank"
+        # if re.search(r'.*\.pdf' ,r["resource_url"]):
+        #     target = "_blank"
         #2020/1/19 Shinji Akayama style = "poi"
         add_html = f"""
         <li>
@@ -658,7 +677,7 @@ def add_student(studentid, fullname, last_update = 0, language = "ja"):
     if isExist == False:
         session.execute(student.Student.__table__.insert(),new_student)
     else:
-        session.bulk_update_mappings(assignment.Assignment, new_student)
+        session.bulk_update_mappings(student.Student, [new_student])
     session.commit()
     return
 
@@ -736,15 +755,18 @@ def add_student_assignment(studentid, data, last_update):
     """
     sa = session.query(
         studentassignment.Student_Assignment).filter(studentassignment.Student_Assignment.student_id == studentid).all()
+    course_ids = get_courseids(studentid)
     new_sa = []
     upd_sa = []
     for item in data:
         assignment_exist = False
         update=False
+        if not item["course_id"] in course_ids:
+            continue
         for i in sa:
             if i.assignment_id == item["assignment_id"]:
                 assignment_exist = True
-                if i.status !='未':
+                if item["status"] !='未':
                     update=True
                 break
         if assignment_exist == False:
@@ -776,18 +798,29 @@ def add_student_resource(studentid,data):
     """
         data: resourceurl, studentid, status
     """
-    resource_exist = False
     sr = session.query(studentresource.Student_Resource).filter(studentresource.Student_Resource.student_id ==studentid).all()
+    course_ids = get_courseids(studentid)
     new_sr = []
+    upd_sr = []
     for item in data:
+        resource_exist = False
+        update = False
+        if item["course_id"] not in course_ids:
+            continue
         for i in sr:
             if i.resource_url == item["resource_url"]:
                 resource_exist = True
+                if item["status"] !=0:
+                    update=True
                 break
         if resource_exist == False:
             new_sr.append(item)
+        elif update == True:
+            upd_sr.append(item)
     if len(new_sr) != 0:
         session.execute(studentresource.Student_Resource.__table__.insert(),new_sr)
+    if len(upd_sr) != 0:
+        session.bulk_update_mappings(studentresource.Student_Resource, upd_sr)
     session.commit()
     return
 
@@ -820,9 +853,9 @@ def add_resource(studentid, data, last_update):
     session.commit()
     return
 
-def update_student_needs_to_update_sitelist(student_id):
+def update_student_needs_to_update_sitelist(student_id,need_to_update_sitelist=0):
     st = session.query(student.Student).filter(student.Student.student_id==student_id).first()
-    st.need_to_update_sitelist = 1
+    st.need_to_update_sitelist = need_to_update_sitelist
     session.commit()
     return
 
@@ -831,26 +864,20 @@ def update_resource_status(studentid, resourceids: list):
         studentresource.Student_Resource.student_id == studentid).all()
     update_list = []
     for r_id in resourceids:
-        for i in srs:
-            if i.resource_url == r_id:
-                update_list.append({"sr_id":i.sr_id, "status":1})
-                break
+        sr_id = f'{studentid}:{r_id}'
+        update_list.append({"sr_id":sr_id, "status":1})
     session.bulk_update_mappings(studentresource.Student_Resource, update_list)
     session.commit()
     return
 
 def update_task_status(studentid, taskids: list, mode=0):
-    sas = session.query(studentassignment.Student_Assignment.assignment_id, studentassignment.Student_Assignment.sa_id).filter(
-        studentassignment.Student_Assignment.student_id == studentid).all()
     update_list = []
     status = "未"
     if mode==0:
         status = "済"
     for t_id in taskids:
-        for i in sas:
-            if i.assignment_id == t_id:
-                update_list.append({"sa_id":i.sa_id, "status":status})
-                break
+        sa_id = f'{studentid}:{t_id}'
+        update_list.append({"sa_id":sa_id, "status":status})
     session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
     session.commit()
     return
