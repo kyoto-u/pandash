@@ -53,6 +53,7 @@ $(function() {
             console.log(error);
           }
         })
+        $('#finished_list_num').text($('#finished_taskslist > div').length);
       }
     });
     $(".taskcard").draggable({
@@ -63,7 +64,6 @@ $(function() {
         $(ui.helper).css({
           'width': $(this).width(),
           'zIndex': 1000,
-          // 見やすいよう，背景色をつけておく
           'background-color': "#99cc00"
         })
       },
@@ -90,8 +90,11 @@ $(function() {
             error: function(error){
               console.log(error);
             }
-          })
+          });
+          $('#finished_list_num').text($('#finished_taskslist > div').length);
+
         })
+
         $("#overview_table").addClass("table-responsive");
         $(".new_card").draggable({
           helper: "clone",
@@ -107,6 +110,7 @@ $(function() {
             $("#overview_table").addClass("table-responsive");
           }
         });
+
       }
     });
 
@@ -137,6 +141,7 @@ $(function() {
             console.log(error);
           }
         })
+        $('#finished_list_num').text($('#finished_taskslist > div').length -1);
       }
 
       

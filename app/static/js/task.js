@@ -50,6 +50,7 @@ $(function() {
             console.log(error);
           }
         })
+        $('#finished_list_num').text($('#finished_taskslist > div').length);
       }
     });
     $('.acdrag').draggable({
@@ -85,8 +86,10 @@ $(function() {
             error: function(error){
               console.log(error);
             }
-          })
-        })
+          });
+          $('#finished_list_num').text($('#finished_taskslist > div').length);
+
+        });
         $('.new_task').draggable({
           helper: "clone",
           revert: "invalid",
@@ -97,7 +100,7 @@ $(function() {
             });
           },
           stop: function(event, ui){
-            $("#table").addClass("table-responsive")
+            $("#table").addClass("table-responsive");
           }
         }),
         $("#table").addClass("table-responsive");
@@ -130,7 +133,8 @@ $(function() {
           error: function(error){
             console.log(error);
           }
-        })
+        });
+        $('#finished_list_num').text($('#finished_taskslist > div').length -1);
       }
     });
 })
