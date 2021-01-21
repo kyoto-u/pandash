@@ -11,7 +11,7 @@ import logging
 import requests
 import time
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 app.secret_key ='pandash'
 
 global pgtids
@@ -149,7 +149,7 @@ def proxyticket():
                 # user_info        {"student_id": , "fullname": }
                 sync_student_contents(student_id, get_sites, get_assignments, get_resources, now, last_update=last_update)
                 update_student_needs_to_update_sitelist(student_id)
-            logging.debug(f"TIME {student_id}:{time.perf_counter()-start_time}")
+            logging.info(f"TIME {student_id}:{time.perf_counter()-start_time}")
         return redirect(url_for("root"))
     return redirect(url_for("root"))
 
@@ -436,7 +436,7 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
         #     ]
         tasks = sort_tasks(tasks, show_only_unfinished = show_only_unfinished, max_time_left = max_time_left)
         unfinished_task_num=sum((i["status"] == "未" for i in tasks))
-        logging.debug(f"studentid={studentid}の未完了課題:{unfinished_task_num}個")
+        logging.info(f"studentid={studentid}の未完了課題:{unfinished_task_num}個")
         data ={"others":[]}
         data = setdefault_for_overview(studentid)
         if courseid != None:
