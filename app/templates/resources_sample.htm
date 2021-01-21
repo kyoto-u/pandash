@@ -57,10 +57,7 @@
         {{ html | safe}}
 
         <script>
-          var url = location.href
-          if ({{ numofcourses }} > 3 ) {
-            $('.ressubs').attr('style', 'height: 200px; overflow-y: scroll;')
-          }
+          var numofcourses = {{ numofcourses|tojson }};
         </script>
       </div>
 
