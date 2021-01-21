@@ -35,7 +35,6 @@ $(function() {
         add_div_2.append(add_li);
         add_div_2.append(add_button);
         add_div_1.append(add_div_2);
-        console.log(add_div_1);
         $("#finished_taskslist").append(add_div_1);
         ui.draggable.css("display", "none")
         var a_ids = new Array();

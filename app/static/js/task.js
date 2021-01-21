@@ -31,7 +31,6 @@ $(function() {
         add_div_2.append(add_li);
         add_div_2.append(add_button);
         add_div_1.append(add_div_2);
-        console.log(add_div_1);
         $("#finished_taskslist").append(add_div_1);
         ui.draggable.css("display", "none");
         ui.draggable.find('td').css("display", "none")
@@ -165,7 +164,6 @@ function select3a_change(value){
       break;
   }
   new_location = loc_str.substring(0, loc_str.length-3) + new_loc
-  console.log(new_location)
   window.location.href = new_location
   return false;
 }

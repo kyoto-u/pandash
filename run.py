@@ -49,7 +49,6 @@ def login():
                 return redirect(url_for('root'))
             if cas_response and cas_response.success:
                 session['logged-in'] = True
-                print(cas_response.data['proxyGrantingTicket'])
                 pgtiou= cas_response.data['proxyGrantingTicket']
                 return redirect(url_for('proxy', pgtiou=pgtiou))
         if "logged-in" in session and session["logged-in"]:
@@ -57,9 +56,7 @@ def login():
         cas_login_url = cas_client.get_login_url(service_url=app_login_url)
         return redirect(cas_login_url)
     elif request.method == 'POST':
-        print('pgt=')
         pgt = request.form
-        print(pgt)
         return ''
 
 @app.route('/login/proxy/<pgtiou>', methods=['GET'])
@@ -152,7 +149,7 @@ def proxyticket():
                 # user_info        {"student_id": , "fullname": }
                 sync_student_contents(student_id, get_sites, get_assignments, get_resources, now, last_update=last_update)
                 update_student_needs_to_update_sitelist(student_id)
-            print(time.perf_counter()-start_time)
+            logging.debug(f"TIME {student_id}:{time.perf_counter()-start_time}")
         return redirect(url_for("root"))
     return redirect(url_for("root"))
 
@@ -417,7 +414,6 @@ def pgtCallback():
         return ''
     elif request.method == 'POST':
         pgt = request.form
-        print(pgt)
         return ''
 
 

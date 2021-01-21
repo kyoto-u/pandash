@@ -18,7 +18,6 @@ $(document).ready(function(){
                     }
                 }
             }
-            console.log(r_links)
         }
         if (r_links.length==0){
             alert("ダウンロードする資料をチェックしてください");
