@@ -586,15 +586,17 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
                     break
                 index += 1
             if isExist:
-                html_1 = re.search(f'><i class="{tag_class}">{f}</i><ul>', html[str_place:])
-                str_place += html_1.end()
+                html_1 = re.search(f'><i class="fa.*">{f}</i><ul>', html[str_place:])
+                if html_1:
+                    str_place += html_1.end()
                 folderindex += 1
                 continue
             folder_id = '/'.join(foldername[:folderindex])
             html = html[:str_place] + f'''
             <li id="{folder_id}"><i class="{tag_class}">{f}</i><ul></ul></li>''' + html[str_place:]
-            html_1 = re.search(f'><i class="{tag_class}">{f}</i><ul>', html[str_place:])
-            str_place += html_1.end()
+            html_1 = re.search(f'><i class="fa.*">{f}</i><ul>', html[str_place:])
+            if html_1:
+                str_place += html_1.end()
             list_f.append({'folders':[],'files':[],'name':f})
             list_len = len(list_f)
             list_f = list_f[list_len-1]["folders"]
@@ -608,7 +610,9 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
             del container_spilt[0]
         folder_id = '/'.join(container_spilt)
         folder = re.search(f'<li id="{folder_id}">',html)
-        search_num = folder.end()
+        search_num = 0
+        if folder:
+            search_num = folder.end()
         folder_i = re.search(f'</i><ul>',html[search_num:])
         # target = "_self"
         target = "_blank"
@@ -637,7 +641,8 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
                 </div>
             </li>
             """
-        html = html[:folder_i.end()+search_num] + add_html + html[folder_i.end()+search_num:]
+        if folder_i:
+            html = html[:folder_i.end()+search_num] + add_html + html[folder_i.end()+search_num:]
     # html = f"""<span><i class="far fa-folder" style="font-size:medium;">{coursename}</i></span>
     #         """ + html
     # html = f'<li class="list-group-item">{coursename}<ul>' + html + '</ul></li>'
