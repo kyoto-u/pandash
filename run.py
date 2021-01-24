@@ -150,8 +150,8 @@ def proxyticket():
                 sync_student_contents(student_id, get_sites, get_assignments, get_resources, now, last_update=last_update)
                 update_student_needs_to_update_sitelist(student_id)
             logging.info(f"TIME {student_id}:{time.perf_counter()-start_time}")
-        return redirect(url_for("root"))
-    return redirect(url_for("root"))
+        return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
+    return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
 
 @app.route('/logout')
 def logout():
@@ -165,7 +165,7 @@ def logout():
 @app.route('/')
 def root():
     if session.get('logged-in'):
-        return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
+        return redirect(url_for("login"))
     else:
         return flask.render_template('welcome.htm')
 
