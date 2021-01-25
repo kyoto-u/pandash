@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/originalcss_formd.css') }}" type="text/css"
     media="screen and (max-width:767px)" />
 </head>
-
+{#
 <div class="modal fade" id="modal_timeboard_select" tabindex="-1" role="dialog" aria-labelledby="label1"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-fluid" role="document">
@@ -126,6 +126,7 @@
     </div>
   </div>
 </div>
+#}
 
 
 <body>
@@ -216,6 +217,7 @@
                 active
                 {% endif %}
                 " href="/resourcelist" role="button">授業資料</a>
+              </li>
             </ul>
 
             <ul class="navbar-nav ml-auto pr-3 toggle_rights">
@@ -235,6 +237,9 @@
                   role="button">
                   <i class="fas fa-2x fa-question-circle"></i>
                 </a>
+              </li>
+              <li class="nav-item my-auto">
+                <a id="ContactUs_link" class="nav-item" href="/ContactUs">お問い合わせ</a>
               </li>
             </ul>
 

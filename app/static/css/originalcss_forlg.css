@@ -17,6 +17,10 @@ html{
     color:skyblue;
 }
 
+#help_button:hover{
+    color:steelblue;
+}
+
 #wrapper {
     display: flex;
     flex-direction: column;
@@ -45,6 +49,20 @@ footer {
 #footercont{
     background-color: silver;
 }
+
+
+
+#ContactUs_link{
+    color:silver;
+    text-decoration: none;
+}
+
+
+#ContactUs_link:hover{
+    color:gray;
+    text-decoration: none;
+}
+
 
 @media screen and (min-width: 700px) {
 /* 480pxまでの幅の場合に適応される */

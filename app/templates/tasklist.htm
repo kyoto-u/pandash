@@ -49,10 +49,11 @@
     <div class="container">
       <div class="row">
         <h3>あなたの課題</h3>
-        <button type="button" id="reflesh_button" class="btn ml-auto btn-info">情報を更新</button>
+        <small class=" ml-auto mt-auto mr-3">YYYY年MM月DD日HH時MM分時点での課題を表示しています</small>
+        <button type="button" id="reflesh_button" class="btn  btn-info">情報を更新</button>
       </div>
     </div>
-
+    {#
     <b>検索条件：{{ search_condition.search_condition }}</b>
 
     <!--アラート-->
@@ -111,7 +112,7 @@
     </div>
     {% endif %}
   </div>
-
+  #}
 
   <div class="col-md-2 border-left d-none d-md-block" id="finish_form">
     {% include "finished_box.htm" %}

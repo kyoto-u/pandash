@@ -23,8 +23,25 @@
             </ul>
         </div>
         <div class="col-sm-12 col-md-4 mr-md-5 ml-sm-5">
-            <img class="mt-5" src="{{ url_for('static', filename='images/panda_sleeping.jpg') }}" alt="ロゴ" width="280px"
-                height="280px">
+            <img id="404image" class="mt-5" src="{{ url_for('static', filename='images/panda_sleeping.jpg') }}" alt="ロゴ"
+                width="280px" height="280px">
+            <script>
+                const target = document.getElementById('404image');
+
+                //マウスが要素上に入った時
+                target.addEventListener('mouseover', () => {
+
+                    target.setAttribute('src', "{{ url_for('static', filename='images/logo.jpg') }}")
+
+                }, false);
+
+                //マウスが要素上から離れた時
+                target.addEventListener('mouseleave', () => {
+
+                    target.setAttribute('src', "{{ url_for('static', filename='images/panda_sleeping.jpg') }}")
+
+                }, false);
+            </script>
         </div>
     </div>
 </div>
