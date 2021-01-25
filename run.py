@@ -453,21 +453,27 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
 
 @app.route('/forum', methods=['GET', 'POST'])
 def forum():
-    if request.method == 'GET':
-        return flask.render_template('ContactUs.htm', error=False)
-    elif request.method == 'POST':
-        try:
-            title = request.form["title"]
-            contents = request.form["contents"]
-            msg = f"""---FORUM---
-                   TITLE: {title},
-                   CONTENTS: {contents}
-                   --------------"""
-            logging.info(msg)
-            return flask.render_template('Contacted.htm')
-        except:
-            logging.info("FORUM: sending failed")
-            return flask.render_template('ContactUs.htm', error=True)
+    studentid = session.get('student_id')
+    if studentid:
+        data = setdefault_for_overview(studentid)
+        if request.method == 'GET':
+            return flask.render_template('ContactUs.htm', error=False, data=data)
+        elif request.method == 'POST':
+            try:
+                title = request.form["title"]
+                contents = request.form["contents"]
+                msg = f"""---FORUM---
+                    STUDENT: {studentid},
+                    TITLE: {title},
+                    CONTENTS: {contents}
+                    --------------"""
+                logging.info(msg)
+                return flask.render_template('Contacted.htm', data=data)
+            except:
+                logging.info(f"FORUM STUDENT:{studentid} sending failed")
+                return flask.render_template('ContactUs.htm', error=True, data=data)
+    else:
+        return redirect('/login')
 
 
 if __name__ == '__main__':
