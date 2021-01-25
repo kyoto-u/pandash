@@ -145,11 +145,11 @@ footer {
 }
 
 #overviewtable > thead > tr {
-    height:60px;
+    min-height:60px;
 }
 
 #overviewtable > tbody > tr {
-    height:60px;
+    min-height:60px;
 }
 
 .elsesbjcard{
