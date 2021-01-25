@@ -9,6 +9,7 @@ from cas_client import CASClient
 from flask import Flask, redirect, request, session, url_for
 import logging
 import requests
+import datetime
 import time
 
 logging.basicConfig(level=logging.INFO)
@@ -276,6 +277,13 @@ def overview():
     #     {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題8', 'status':'未', 'time_left':'あと1日', 'deadline':'2020-10-31T00:00:00Z','instructions':'なし'}
     #     ]
     if studentid:
+        # 課題の最終更新時間を取得
+        studentdata = get_student(studentid)
+        if studentdata == None:
+            # なければstudentの記録がないことになるので一度ログインへ
+            return redirect(url_for('login'))
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update))
+        logging.debug(f"last update = {last_update}\npage = overview")
         data = setdefault_for_overview(studentid)
         tasks = get_tasklist(studentid, show_only_unfinished=1, mode=1)
         data = task_arrange_for_overview(tasks,data)
@@ -287,7 +295,7 @@ def overview():
         data.setdefault("others",[])
         for i in range(len(data["others"])):
             data["others"][i]["tasks"] = sort_tasks(data["others"][i]["tasks"],show_only_unfinished = 1)
-        return flask.render_template('overview.htm',data = data)
+        return flask.render_template('overview.htm',data = data,last_update=last_update)
     else:
         return redirect(url_for('login'))
 
@@ -420,6 +428,13 @@ def pgtCallback():
 def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = None):
     studentid = session.get('student_id')
     if studentid:
+        # 課題の最終更新時間を取得
+        studentdata = get_student(studentid)
+        if studentdata == None:
+            # なければstudentの記録がないことになるので一度ログインへ
+            return redirect(url_for('login'))
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update))
+        logging.debug(f"last update = {last_update}\npage = tasklist")
         if courseid != None:
             tasks = get_tasklist(studentid,courseid=courseid)
         elif day != None:
@@ -446,7 +461,14 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
             return flask.render_template('tasklist.htm', tasks=tasks, data=data, day=day, search_condition=search_condition)
         else:
             search_condition = get_search_condition(show_only_unfinished, max_time_left)
-        return flask.render_template('tasklist.htm', tasks=tasks, data=data, day='oth', search_condition=search_condition, unfinished_task_num=unfinished_task_num)
+        return flask.render_template(
+            'tasklist.htm',
+            tasks = tasks,
+            data = data,
+            day = 'oth',
+            search_condition = search_condition,
+            unfinished_task_num = unfinished_task_num,
+            last_update = last_update)
     else:
         return redirect(url_for('login'))
 
