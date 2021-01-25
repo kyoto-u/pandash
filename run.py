@@ -452,7 +452,14 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
             search_condition = get_search_condition(show_only_unfinished, max_time_left, course=courseid)
         elif day != None:
             search_condition = get_search_condition(show_only_unfinished, max_time_left, day=day)
-            return flask.render_template('tasklist.htm', tasks=tasks, data=data, day=day, search_condition=search_condition)
+            return flask.render_template(
+                'tasklist.htm',
+                tasks = tasks,
+                data = data,
+                day = day,
+                search_condition = search_condition,
+                unfinished_task_num = unfinished_task_num,
+                last_update = last_update)
         else:
             search_condition = get_search_condition(show_only_unfinished, max_time_left)
         return flask.render_template(
