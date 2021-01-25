@@ -13,12 +13,12 @@
     <form action="/forum" method="POST">
         <div class="mt-5 form-group">
             <label for="form-title">件名：</label>
-            <input type="text" name="title" id="form-title" placeholder="件名を入力してください" class="form-control">
+            <input type="text" name="title" id="form-title" placeholder="件名を入力してください" class="form-control" required>
         </div>
         <div class="form-group">
             <label for="form-main">お問い合わせ内容：</label>
             <textarea type="text" name="contents" placeholder="お問い合わせ内容をご入力ください" 　id="form-main" class="form-control"
-                style="height: 30vh;"></textarea>
+                style="height: 30vh;" required></textarea>
         </div>
         <div class="row ml-1 mr-auto col-12 mt-5">
             <button type="submit" class="btn ml-1 mr-auto btn-block btn-secondary">送信する</button>

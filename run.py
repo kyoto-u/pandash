@@ -471,11 +471,12 @@ def forum():
             try:
                 title = request.form["title"]
                 contents = request.form["contents"]
-                msg = f"""---FORUM---
-                    STUDENT: {studentid},
-                    TITLE: {title},
-                    CONTENTS: {contents}
-                    --------------"""
+                # msg = f"""---FORUM---
+                #     STUDENT: {studentid},
+                #     TITLE: {title},
+                #     CONTENTS: {contents}
+                #     --------------"""
+                msg = add_forum(studentid,title,contents)
                 logging.info(msg)
                 return flask.render_template('Contacted.htm', data=data)
             except:
