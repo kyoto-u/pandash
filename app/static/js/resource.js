@@ -1,4 +1,8 @@
 $(document).ready(function(){
+    if (numofcourses > 3 ) {
+        $('.ressubs').attr('style', 'height: 200px; overflow-y: scroll;')
+    }
+
     $('a#checkedclick').on('click',function(e){
         e.preventDefault()
         var input_resources = document.querySelectorAll("input:checked");
@@ -14,7 +18,6 @@ $(document).ready(function(){
                     }
                 }
             }
-            console.log(r_links)
         }
         if (r_links.length==0){
             alert("ダウンロードする資料をチェックしてください");

@@ -11,7 +11,7 @@ import logging
 import requests
 import time
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 app.secret_key ='pandash'
 
 global pgtids
@@ -49,7 +49,6 @@ def login():
                 return redirect(url_for('root'))
             if cas_response and cas_response.success:
                 session['logged-in'] = True
-                print(cas_response.data['proxyGrantingTicket'])
                 pgtiou= cas_response.data['proxyGrantingTicket']
                 return redirect(url_for('proxy', pgtiou=pgtiou))
         if "logged-in" in session and session["logged-in"]:
@@ -57,9 +56,7 @@ def login():
         cas_login_url = cas_client.get_login_url(service_url=app_login_url)
         return redirect(cas_login_url)
     elif request.method == 'POST':
-        print('pgt=')
         pgt = request.form
-        print(pgt)
         return ''
 
 @app.route('/login/proxy/<pgtiou>', methods=['GET'])
@@ -152,9 +149,9 @@ def proxyticket():
                 # user_info        {"student_id": , "fullname": }
                 sync_student_contents(student_id, get_sites, get_assignments, get_resources, now, last_update=last_update)
                 update_student_needs_to_update_sitelist(student_id)
-            print(time.perf_counter()-start_time)
-        return redirect(url_for("root"))
-    return redirect(url_for("root"))
+            logging.info(f"TIME {student_id}:{time.perf_counter()-start_time}")
+        return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
+    return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
 
 @app.route('/logout')
 def logout():
@@ -168,7 +165,7 @@ def logout():
 @app.route('/')
 def root():
     if session.get('logged-in'):
-        return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
+        return redirect(url_for("login"))
     else:
         return flask.render_template('welcome.htm')
 
@@ -417,7 +414,6 @@ def pgtCallback():
         return ''
     elif request.method == 'POST':
         pgt = request.form
-        print(pgt)
         return ''
 
 
@@ -440,7 +436,7 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
         #     ]
         tasks = sort_tasks(tasks, show_only_unfinished = show_only_unfinished, max_time_left = max_time_left)
         unfinished_task_num=sum((i["status"] == "未" for i in tasks))
-        logging.debug(f"studentid={studentid}の未完了課題:{unfinished_task_num}個")
+        logging.info(f"studentid={studentid}の未完了課題:{unfinished_task_num}個")
         data ={"others":[]}
         data = setdefault_for_overview(studentid)
         if courseid != None:
