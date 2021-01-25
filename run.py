@@ -393,6 +393,13 @@ def pgtCallback():
 def resourcelist_general(day = None,courseid = None):
     studentid = session.get('student_id')
     if studentid:
+        # 課題の最終更新時間を取得
+        studentdata = get_student(studentid)
+        if studentdata == None:
+            # なければstudentの記録がないことになるので一度ログインへ
+            return redirect(url_for('login'))
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update))
+        logging.debug(f"last update = {last_update}\npage = resourcelist")
         numofcourses = 0
         courses = get_courses_to_be_taken(studentid)
         html = ""
@@ -404,11 +411,11 @@ def resourcelist_general(day = None,courseid = None):
         data = setdefault_for_overview(studentid, mode='resourcelist')
 
         if courseid != None:
-            return flask.render_template('resources_sample.htm', html=html, data=data, numofcourses=1)
+            return flask.render_template('resources_sample.htm', html=html, data=data, numofcourses=1, last_update=last_update)
         if day != None:
-            return flask.render_template('resources_sample.htm', html=html, data=data, day=day, numofcourses=numofcourses)
+            return flask.render_template('resources_sample.htm', html=html, data=data, day=day, numofcourses=numofcourses, last_update=last_update)
         else:
-            return flask.render_template('resources_sample.htm', html=html, data=data, numofcourses=numofcourses)
+            return flask.render_template('resources_sample.htm', html=html, data=data, numofcourses=numofcourses, last_update=last_update)
     else:
         return redirect(url_for('login'))
 
