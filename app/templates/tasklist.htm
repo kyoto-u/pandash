@@ -56,7 +56,7 @@
     <b>検索条件：{{ search_condition.search_condition }}</b>
 
     <!--アラート-->
-    {% if unfinished_task_num > 0 %}
+    {% if tasks|length > 0 %}
 
     <div class="alert alert-danger" role="alert">
       <div class="row">
