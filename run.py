@@ -474,7 +474,7 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
         return redirect(url_for('login'))
 
 
-@app.route('/forum', methods=['GET', 'POST'])
+@app.route('/ContactUs', methods=['GET', 'POST'])
 def forum():
     studentid = session.get('student_id')
     if studentid:
