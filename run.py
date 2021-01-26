@@ -499,7 +499,23 @@ def forum():
     else:
         return redirect('/login')
 
+# HTTP error 処理 debag=Trueとすると無効になる
+@app.errorhandler(500)
+def internal_server_error(error):
+    msg = "---INTERNAL SERVER ERROR---\n"
+    try:
+        msg += f'description:{error.description},\nmessage:{error.message},\
+            \nresponse:{error.response},\nwrap:{error.wrap}'
+    except:
+        msg += 'failed to get the details of the error'
+    logging.error(msg)    
+    return flask.render_template('error_500.htm'),500
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return flask.render_template('error_404.htm'),404
+
 
 if __name__ == '__main__':
     pgtids={}
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=False, host='0.0.0.0', port=5000)
