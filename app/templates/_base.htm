@@ -226,7 +226,7 @@
                   data-toggle="tooltip" title="iCalファイルをダウンロードします">iCalと共有</a>
               </li>
               <li id="logout_button" class="nav-item mr-auto">
-                <a class="btn btn-light" href="/logout">ログアウト</a>
+                <a class="btn btn-light" href="/logout" data-toggle="tooltip" title="ログアウトします">ログアウト</a>
               </li>
               <li class="btn nav-item my-auto">
                 <a id="help_button" role="button" {% if '/tasklist' in request.path %}
@@ -234,12 +234,13 @@
                   in request.path %} onclick="window.open('/help/overview', '', 'width=800,height=500'); return false;"
                   {% elif '/resdownload' in request.path %}
                   onclick="window.open('/help/resdownload', '', 'width=800,height=500'); return false;" {% endif %}
-                  role="button">
+                  role="button" 　data-toggle="tooltip" title="ヘルプ">
                   <i class="fas fa-2x fa-question-circle"></i>
                 </a>
               </li>
               <li class="nav-item my-auto">
-                <a id="ContactUs_link" class="nav-item" href="/ContactUs">お問い合わせ</a>
+                <a id="ContactUs_link" class="nav-item" href="/ContactUs" 　data-toggle="tooltip"
+                  title="疑問点がございます場合はこちらをクリックしてください">お問い合わせ</a>
               </li>
             </ul>
 

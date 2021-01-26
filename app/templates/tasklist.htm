@@ -45,11 +45,13 @@
       </div>
     </div>
 
+    {% set last_update = "2021-01-25 18:37:33" %}
+
     <!--タイトル-->
     <div class="container">
       <div class="row">
         <h3>あなたの課題</h3>
-        <small class=" ml-auto mt-auto mr-3">YYYY年MM月DD日HH時MM分時点での課題を表示しています</small>
+        <small class=" ml-auto mt-auto mr-3">最終更新：{{last_update}}</small>
         <button type="button" id="reflesh_button" class="btn  btn-info">情報を更新</button>
       </div>
     </div>
