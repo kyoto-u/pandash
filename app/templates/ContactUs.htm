@@ -5,19 +5,25 @@
     <h1>お問い合わせ</h1>
     <div>
         下記のフォームにご入力いただき、内容をご確認のうえ送信してください。
+        {% if error %}
+            <br>無効な文字列が入力されているため送信に失敗しました。
+            <br>件名、内容ともに入力の上送信してください。
+        {% endif %}
     </div>
-    <div class="mt-5 form-group">
-        <label for="form-title">件名：</label>
-        <input type="text" id="form-title" placeholder="件名を入力してください" class="form-control">
-    </div>
-    <div class="form-group">
-        <label for="form-main">お問い合わせ内容：</label>
-        <textarea type="text" placeholder="お問い合わせ内容をご入力ください" 　id="form-main" class="form-control"
-            style="height: 30vh;"></textarea>
-    </div>
-    <div class="row ml-1 mr-auto col-12 mt-5">
-        <button type="button" class="btn ml-1 mr-auto btn-block btn-secondary">送信する</button>
-    </div>
+    <form action="/forum" method="POST">
+        <div class="mt-5 form-group">
+            <label for="form-title">件名：</label>
+            <input type="text" name="title" id="form-title" placeholder="件名を入力してください" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="form-main">お問い合わせ内容：</label>
+            <textarea type="text" name="contents" placeholder="お問い合わせ内容をご入力ください" 　id="form-main" class="form-control"
+                style="height: 30vh;" required></textarea>
+        </div>
+        <div class="row ml-1 mr-auto col-12 mt-5">
+            <button type="submit" class="btn ml-1 mr-auto btn-block btn-secondary">送信する</button>
+        </div>
+    </form>
 </div>
 
 {% endblock %}

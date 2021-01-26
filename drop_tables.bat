@@ -8,3 +8,4 @@ drop table students;
 drop table studentassignments;
 drop table studentcourses;
 drop table studentresources;
+drop table forums;

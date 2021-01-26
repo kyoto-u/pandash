@@ -1,6 +1,6 @@
 from math import *
 import time
-from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment
+from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment, forum
 from .settings import session, app_url
 import re
 from pprint import pprint
@@ -995,3 +995,16 @@ def day_to_str(day):
     else: day_str="曜日設定がないもの"
 
     return day_str
+
+def add_forum(studentid,title,contents):
+    inq = forum.Forum()
+    inq.student_id = studentid
+    inq.title = title
+    inq.contents = contents
+    session.add(inq)
+    session.commit()
+    return f"""---FORUM---
+                STUDENT: {studentid},
+                TITLE: {title},
+                CONTENTS: {contents}
+                --------------"""
