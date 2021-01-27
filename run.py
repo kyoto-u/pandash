@@ -16,6 +16,7 @@ logging.basicConfig(level=logging.INFO)
 app.secret_key ='pandash'
 
 global pgtids
+global redirect_pages
 
 # url list
 # 
@@ -49,15 +50,17 @@ def login():
                 # CAS server is currently broken, try again later.
                 return redirect(url_for('root'))
             if cas_response and cas_response.success:
-                # ログイン後のページを指定しておく
-                redirect_page = request.args.get('page')
-                if not redirect_page:
-                    redirect_page =""
                 session['logged-in'] = True
                 pgtiou= cas_response.data['proxyGrantingTicket']
-                return redirect(url_for('proxy', pgtiou=pgtiou,redirect_page=redirect_page))
+                return redirect(url_for('proxy', pgtiou=pgtiou))
         if "logged-in" in session and session["logged-in"]:
             del(session['logged-in'])
+        if "student_id" in session:
+            # ログイン後のページを指定しておく
+            redirect_page = request.args.get('page')
+            if not redirect_page:
+                redirect_page =""
+            redirect_pages[session['student_id']] = redirect_page
         cas_login_url = cas_client.get_login_url(service_url=app_login_url)
         return redirect(cas_login_url)
     elif request.method == 'POST':
@@ -70,10 +73,7 @@ def proxy(pgtiou=None):
     del(pgtids[pgtiou])
     cas_response = cas_client.perform_proxy(proxy_ticket=pgtid)
     proxy_ticket = cas_response.data.get('proxyTicket')
-    redirect_page = request.args.get('redirect_page')
-    if not redirect_page:
-        redirect_page =""
-    return redirect(url_for('proxyticket', ticket=proxy_ticket,redirect_page=redirect_page))
+    return redirect(url_for('proxyticket', ticket=proxy_ticket))
 
 @app.route('/proxyticket', methods=["GET"])
 def proxyticket():
@@ -159,16 +159,15 @@ def proxyticket():
                 update_student_needs_to_update_sitelist(student_id)
             logging.info(f"TIME {student_id}:{time.perf_counter()-start_time}")
     
-    redirect_page = request.args.get('redirect_page')
-    if not redirect_page:
-        redirect_page =""
-    redirect_page = app_url + "/" + redirect_page
-    if re.match(app_login_url,redirect_page):
-        logging.info(f"Requested redirect '{redirect_page}' is invalid because it is login page")
-    elif redirect_page == app_url + "/":
-        logging.info(f"Requested redirect '{redirect_page}' is invalid because it is portal page")
-    else:
-        return flask.redirect(redirect_page)
+    if 'student_id' in session and session['student_id'] in redirect_pages:
+        redirect_page = redirect_pages[session['student_id']]
+        redirect_page = app_url + "/" + redirect_page
+        if re.match(app_login_url,redirect_page):
+            logging.info(f"Requested redirect '{redirect_page}' is invalid because it is login page")
+        elif redirect_page == app_url + "/":
+            logging.info(f"Requested redirect '{redirect_page}' is invalid because it is portal page")
+        else:
+            return flask.redirect(redirect_page)
     return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
 
 @app.route('/logout')
@@ -554,4 +553,5 @@ def favicon():
 
 if __name__ == '__main__':
     pgtids={}
+    redirect_pages={}
     app.run(debug=True, host='0.0.0.0', port=5000)
