@@ -86,13 +86,13 @@
 
         <tbody id="dragArea" style="font-size: small;">
           {% for task in tasks %}
-          {% set taskstatus = 'nonetype' %}
           {% if task.status == "未" %}
-            {% set taskstatus = 'unfinished' %}
+          <tr class="d-flex tablecontents acdrag unfinished" id="{{task.assignmentid}}">
           {% elif task.status == "済" %}
-            {% set taskstatus = 'finished' %}
+          <tr class="d-flex tablecontents acdrag finished" id="{{task.assignmentid}}">
+          {% else %}
+          <tr class="d-flex tablecontents acdrag nonetype" id="{{task.assignmentid}}">
           {% endif %}
-          <tr class="d-flex tablecontents acdrag {{taskstatus}}" id="{{task.assignmentid}}">
             <td class="col-3 subject">{{task.subject}}</td>
             <td class="col-3 task_title"><a target="_blank"
                 href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
