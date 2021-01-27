@@ -149,3 +149,14 @@ body{
     font-size: x-small;
 }
 
+.nonetype{
+  background-color: #FFFFCC;
+}
+
+.unfinished{
+  background-color: #FFDDFF;
+}
+
+.finished{
+  background-color: #CCFFFF;
+}

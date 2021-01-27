@@ -193,3 +193,15 @@ label > a{
     top:200px;
     position:sticky;
 }
+
+.nonetype{
+    background-color: #FFFFCC;
+}
+
+.unfinished{
+    background-color: #FFDDFF;
+}
+
+.finished{
+    background-color: #CCFFFF;
+}
