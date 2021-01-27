@@ -195,13 +195,13 @@ label > a{
 }
 
 .nonetype{
-    background-color: #808080;
+    background-color: #C0C0C0;
 }
-
+  
 .unfinished{
     background-color: #FFFF99;
 }
-
+  
 .finished{
-    background-color: #C0C0C0;
+    background-color: white;
 }

@@ -150,7 +150,7 @@ body{
 }
 
 .nonetype{
-  background-color: #808080;
+  background-color: #C0C0C0;
 }
 
 .unfinished{
@@ -158,5 +158,5 @@ body{
 }
 
 .finished{
-  background-color: #C0C0C0;
+  background-color: white;
 }
