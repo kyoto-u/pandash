@@ -150,13 +150,13 @@ body{
 }
 
 .nonetype{
-  background-color: #FFFFCC;
+  background-color: #808080;
 }
 
 .unfinished{
-  background-color: #FFDDFF;
+  background-color: #FFFF99;
 }
 
 .finished{
-  background-color: #CCFFFF;
+  background-color: #C0C0C0;
 }
