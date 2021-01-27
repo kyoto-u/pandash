@@ -515,6 +515,20 @@ def internal_server_error(error):
 def page_not_found(error):
     return flask.render_template('error_404.htm'),404
 
+# MySQL server has gone away の対策
+from sqlalchemy import exc
+from sqlalchemy import event
+from sqlalchemy.pool import Pool
+
+@event.listens_for(Pool, "checkout")
+def ping_connection(dbapi_connection, connection_record, connection_proxy):
+    cursor = dbapi_connection.cursor()
+    try:
+        cursor.execute("SELECT 1")
+    except:
+        raise exc.DisconnectionError()
+    cursor.close()
+
 
 if __name__ == '__main__':
     pgtids={}
