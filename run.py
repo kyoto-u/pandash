@@ -51,11 +51,11 @@ def login():
             if cas_response and cas_response.success:
                 # ログイン後のページを指定しておく
                 redirect_page = request.args.get('page')
-                if redirect_page:
-                    session['redirect_page'] = redirect_page
+                if not redirect_page:
+                    redirect_page =""
                 session['logged-in'] = True
                 pgtiou= cas_response.data['proxyGrantingTicket']
-                return redirect(url_for('proxy', pgtiou=pgtiou))
+                return redirect(url_for('proxy', pgtiou=pgtiou,redrect_page=redirect_page))
         if "logged-in" in session and session["logged-in"]:
             del(session['logged-in'])
         cas_login_url = cas_client.get_login_url(service_url=app_login_url)
@@ -70,7 +70,10 @@ def proxy(pgtiou=None):
     del(pgtids[pgtiou])
     cas_response = cas_client.perform_proxy(proxy_ticket=pgtid)
     proxy_ticket = cas_response.data.get('proxyTicket')
-    return redirect(url_for('proxyticket', ticket=proxy_ticket))
+    redirect_page = request.args.get('redirect_page')
+    if not redirect_page:
+        redirect_page =""
+    return redirect(url_for('proxyticket', ticket=proxy_ticket,redirect_page=redirect_page))
 
 @app.route('/proxyticket', methods=["GET"])
 def proxyticket():
@@ -156,17 +159,16 @@ def proxyticket():
                 update_student_needs_to_update_sitelist(student_id)
             logging.info(f"TIME {student_id}:{time.perf_counter()-start_time}")
     
-    if 'redirect_page' in session:
-        # 正常なurlかどうか調べる。
-        page= session['redirect_page']
-        del(session['redirect_page'])
-        page = app_url + "/" + page
-        if re.match(app_login_url,page):
-            logging.info(f"Requested redirect '{page}' is invalid because it is login page")
-        elif page == app_url + "/":
-            logging.info(f"Requested redirect '{page}' is invalid because it is portal page")
-        else:
-            return flask.redirect(page)
+    redirect_page = request.args.get('redirect_page')
+    if not redirect_page:
+        redirect_page =""
+    redirect_page = app_url + "/" + redirect_page
+    if re.match(app_login_url,redirect_page):
+        logging.info(f"Requested redirect '{redirect_page}' is invalid because it is login page")
+    elif redirect_page == app_url + "/":
+        logging.info(f"Requested redirect '{redirect_page}' is invalid because it is portal page")
+    else:
+        return flask.redirect(redirect_page)
     return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
 
 @app.route('/logout')
