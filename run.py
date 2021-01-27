@@ -155,14 +155,15 @@ def proxyticket():
                 sync_student_contents(student_id, get_sites, get_assignments, get_resources, now, last_update=last_update)
                 update_student_needs_to_update_sitelist(student_id)
             logging.info(f"TIME {student_id}:{time.perf_counter()-start_time}")
+    
     if 'redirect_page' in session:
         # 正常なurlかどうか調べる。
         page= session['redirect_page']
         del(session['redirect_page'])
-        page = app_url + page
+        page = app_url + "/" + page
         if re.match(app_login_url,page):
             logging.info(f"Requested redirect '{page}' is invalid because it is login page")
-        elif page == app_url:
+        elif page == app_url + "/":
             logging.info(f"Requested redirect '{page}' is invalid because it is portal page")
         else:
             return flask.redirect(page)
