@@ -73,7 +73,9 @@ def proxy(pgtiou=None):
     del(pgtids[pgtiou])
     cas_response = cas_client.perform_proxy(proxy_ticket=pgtid)
     proxy_ticket = cas_response.data.get('proxyTicket')
-    return redirect(url_for('proxyticket', ticket=proxy_ticket))
+    # return redirect(url_for('proxyticket', ticket=proxy_ticket))
+    # 時間かかる通知を行う
+    return flask.render_template('loading.htm', ticket=proxy_ticket)
 
 @app.route('/proxyticket', methods=["GET"])
 def proxyticket():

@@ -1,0 +1,17 @@
+{% extends "_homebase.htm" %}
+{% block homebodycontent %}
+<div id="loading"></div>
+<div class="spinner-border text-primary" role="status" id="loading_spinner">
+    <span class="visually-hidden">Loading...</span>
+</div>
+<button id="loading_btn" onclick="loading();"></button>
+<script type="text/javascript">
+    $('#loading_btn').trigger('click');
+    function loading(){
+        $("#loading").show();
+        // $("#content").hide();
+        window.location.href = "https://pandash.ecs.kyoto-u.ac.jp/proxyticket?ticket={{ticket}}";
+        return false;
+    }
+</script>
+{% endblock %}
