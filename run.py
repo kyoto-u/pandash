@@ -49,6 +49,10 @@ def login():
                 # CAS server is currently broken, try again later.
                 return redirect(url_for('root'))
             if cas_response and cas_response.success:
+                # ログイン後のページを指定しておく
+                redirect_page = request.args.get('page')
+                if redirect_page:
+                    session['redirect_page'] = redirect_page
                 session['logged-in'] = True
                 pgtiou= cas_response.data['proxyGrantingTicket']
                 return redirect(url_for('proxy', pgtiou=pgtiou))
@@ -151,7 +155,17 @@ def proxyticket():
                 sync_student_contents(student_id, get_sites, get_assignments, get_resources, now, last_update=last_update)
                 update_student_needs_to_update_sitelist(student_id)
             logging.info(f"TIME {student_id}:{time.perf_counter()-start_time}")
-        return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
+    if 'redirect_page' in session:
+        # 正常なurlかどうか調べる。
+        page= session['redirect_page']
+        del(session['redirect_page'])
+        page = app_url + page
+        if re.match(app_login_url,page):
+            logging.info(f"Requested redirect '{page}' is invalid because it is login page")
+        elif page == app_url:
+            logging.info(f"Requested redirect '{page}' is invalid because it is portal page")
+        else:
+            return flask.redirect(page)
     return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
 
 @app.route('/logout')
