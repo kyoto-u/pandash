@@ -55,7 +55,7 @@ def login():
                     redirect_page =""
                 session['logged-in'] = True
                 pgtiou= cas_response.data['proxyGrantingTicket']
-                return redirect(url_for('proxy', pgtiou=pgtiou,redrect_page=redirect_page))
+                return redirect(url_for('proxy', pgtiou=pgtiou,redirect_page=redirect_page))
         if "logged-in" in session and session["logged-in"]:
             del(session['logged-in'])
         cas_login_url = cas_client.get_login_url(service_url=app_login_url)
