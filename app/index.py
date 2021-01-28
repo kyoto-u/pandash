@@ -1003,8 +1003,9 @@ def add_forum(studentid,title,contents):
     inq.contents = contents
     session.add(inq)
     session.commit()
-    return f"""---FORUM---
-                STUDENT: {studentid},
-                TITLE: {title},
-                CONTENTS: {contents}
-                --------------"""
+    return f"""
+    -----FORUM-----
+    STUDENT: {studentid},
+    TITLE: {title},
+    CONTENTS: {contents}
+    ---------------"""

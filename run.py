@@ -16,6 +16,7 @@ logging.basicConfig(level=logging.INFO)
 app.secret_key ='pandash'
 
 global pgtids
+global redirect_pages
 
 # url list
 # 
@@ -54,6 +55,12 @@ def login():
                 return redirect(url_for('proxy', pgtiou=pgtiou))
         if "logged-in" in session and session["logged-in"]:
             del(session['logged-in'])
+        if "student_id" in session:
+            # ログイン後のページを指定しておく
+            redirect_page = request.args.get('page')
+            if not redirect_page:
+                redirect_page =""
+            redirect_pages[session['student_id']] = redirect_page
         cas_login_url = cas_client.get_login_url(service_url=app_login_url)
         return redirect(cas_login_url)
     elif request.method == 'POST':
@@ -66,7 +73,9 @@ def proxy(pgtiou=None):
     del(pgtids[pgtiou])
     cas_response = cas_client.perform_proxy(proxy_ticket=pgtid)
     proxy_ticket = cas_response.data.get('proxyTicket')
-    return redirect(url_for('proxyticket', ticket=proxy_ticket))
+    # return redirect(url_for('proxyticket', ticket=proxy_ticket))
+    # 時間かかる通知を行う
+    return flask.render_template('loading.htm', ticket=proxy_ticket)
 
 @app.route('/proxyticket', methods=["GET"])
 def proxyticket():
@@ -151,7 +160,16 @@ def proxyticket():
                 sync_student_contents(student_id, get_sites, get_assignments, get_resources, now, last_update=last_update)
                 update_student_needs_to_update_sitelist(student_id)
             logging.info(f"TIME {student_id}:{time.perf_counter()-start_time}")
-        return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
+    
+    if 'student_id' in session and session['student_id'] in redirect_pages:
+        redirect_page = redirect_pages[session['student_id']]
+        redirect_page = app_url + "/" + redirect_page
+        if re.match(app_login_url,redirect_page):
+            logging.info(f"Requested redirect '{redirect_page}' is invalid because it is login page")
+        elif redirect_page == app_url + "/":
+            logging.info(f"Requested redirect '{redirect_page}' is invalid because it is portal page")
+        else:
+            return flask.redirect(redirect_page)
     return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
 
 @app.route('/logout')
@@ -282,7 +300,7 @@ def overview():
         if studentdata == None:
             # なければstudentの記録がないことになるので一度ログインへ
             return redirect(url_for('login'))
-        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update))
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         logging.debug(f"last update = {last_update}\npage = overview")
         data = setdefault_for_overview(studentid)
         tasks = get_tasklist(studentid, show_only_unfinished=1, mode=1)
@@ -398,7 +416,7 @@ def resourcelist_general(day = None,courseid = None):
         if studentdata == None:
             # なければstudentの記録がないことになるので一度ログインへ
             return redirect(url_for('login'))
-        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update))
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         logging.debug(f"last update = {last_update}\npage = resourcelist")
         numofcourses = 0
         courses = get_courses_to_be_taken(studentid)
@@ -427,7 +445,7 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
         if studentdata == None:
             # なければstudentの記録がないことになるので一度ログインへ
             return redirect(url_for('login'))
-        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update))
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         logging.debug(f"last update = {last_update}\npage = tasklist")
         if courseid != None:
             tasks = get_tasklist(studentid,courseid=courseid)
@@ -474,7 +492,7 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
         return redirect(url_for('login'))
 
 
-@app.route('/forum', methods=['GET', 'POST'])
+@app.route('/ContactUs', methods=['GET', 'POST'])
 def forum():
     studentid = session.get('student_id')
     if studentid:
@@ -499,7 +517,43 @@ def forum():
     else:
         return redirect('/login')
 
+# HTTP error 処理 debag=Trueとすると無効になる
+@app.errorhandler(500)
+def internal_server_error(error):
+    msg = "---INTERNAL SERVER ERROR---\n"
+    try:
+        msg += f'description:{error.description},\nmessage:{error.message},\
+            \nresponse:{error.response},\nwrap:{error.wrap}'
+    except:
+        msg += 'failed to get the details of the error'
+    logging.error(msg)    
+    return flask.render_template('error_500.htm'),500
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return flask.render_template('error_404.htm'),404
+
+# MySQL server has gone away の対策
+from sqlalchemy import exc
+from sqlalchemy import event
+from sqlalchemy.pool import Pool
+
+@event.listens_for(Pool, "checkout")
+def ping_connection(dbapi_connection, connection_record, connection_proxy):
+    cursor = dbapi_connection.cursor()
+    try:
+        cursor.execute("SELECT 1")
+    except:
+        raise exc.DisconnectionError()
+    cursor.close()
+
+import os
+@app.route('/favicon.ico')
+def favicon():
+    return flask.send_from_directory(os.path.join(app.root_path,'static'),'favicon.ico',mimetype='image/vnd.microsoft.icon')
+
 
 if __name__ == '__main__':
     pgtids={}
+    redirect_pages={}
     app.run(debug=True, host='0.0.0.0', port=5000)
