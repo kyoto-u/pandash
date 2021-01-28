@@ -63,6 +63,16 @@ footer {
     text-decoration: none;
 }
 
+#menu_dropdown_list{
+    background-color: royalblue;
+}
+
+.menu_link{
+    color:white;
+    background-color:royalblue;
+    border-bottom: white;
+}
+
 
 @media screen and (min-width: 700px) {
 /* 480pxまでの幅の場合に適応される */

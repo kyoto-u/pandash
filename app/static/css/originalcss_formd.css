@@ -38,6 +38,11 @@ footer {
     background-color: silver;
 }
 
+#ContactUs_link{
+    color:silver;
+    text-decoration: none;
+}
+
 @media screen and (min-width: 700px) {
 /* 480pxまでの幅の場合に適応される */
 #kyoudailogo{
