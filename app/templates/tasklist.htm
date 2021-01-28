@@ -50,10 +50,11 @@
       <div class="row">
         <h3>あなたの課題</h3>
         <small class=" ml-auto mt-auto mr-3">最終更新：{{last_update}}</small>
-        <button type="button" id="reflesh_button" class="btn  btn-info" onclick="location.href='/login?page=tasklist'">情報を更新</button>
+        <button type="button" id="reflesh_button" class="btn  btn-info"
+          onclick="location.href='/login?page=tasklist'">情報を更新</button>
       </div>
     </div>
-
+    {#
     <b>検索条件：{{ search_condition.search_condition }}</b>
 
     <!--アラート-->
@@ -88,11 +89,11 @@
           {% for task in tasks %}
           {% if task.status == "未" %}
           <tr class="d-flex tablecontents acdrag unfinished" id="{{task.assignmentid}}">
-          {% elif task.status == "済" %}
+            {% elif task.status == "済" %}
           <tr class="d-flex tablecontents acdrag finished" id="{{task.assignmentid}}">
-          {% else %}
+            {% else %}
           <tr class="d-flex tablecontents acdrag nonetype" id="{{task.assignmentid}}">
-          {% endif %}
+            {% endif %}
             <td class="col-3 subject">{{task.subject}}</td>
             <td class="col-3 task_title"><a target="_blank"
                 href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
@@ -118,7 +119,7 @@
     </div>
     {% endif %}
   </div>
-
+  #}
 
   <div class="col-md-2 border-left d-none d-md-block" id="finish_form">
     {% include "finished_box.htm" %}
