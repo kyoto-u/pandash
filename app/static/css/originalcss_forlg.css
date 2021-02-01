@@ -76,18 +76,18 @@ footer {
 
 @media screen and (min-width: 700px) {
 /* 480pxまでの幅の場合に適応される */
-#kyoudailogo{
+/* #kyoudailogo{
     width:250;
     height:125;
-    margin-left: calc(50vw - 330px);
+    margin-left: calc(10vw - 340px);
     margin-right: 30;
 }
 
 #KIMClogo{
     width:337;
     height:125;
-    margin-right: calc(50vw - 330px);
-}
+    margin-right: calc(10vw - 340px);
+} */
 }
 
 @media screen and (max-width: 700px) {
