@@ -1,35 +1,129 @@
-{% extends "_homebase.htm" %}
-{% block homebodycontent %}
-<div id="loading"></div>
-<div class="container mx-auto">
-    <div class="col-3">
-        <img id="loading_logo" src="{{ url_for('static', filename='images/logo.jpg') }}" width="300" height="300"
-            style="z-index: -20; position: relative;">
-        <h2 id="how_percent_loaded">Loading...</h2>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PandAsh</title>
+    <!-- BootstrapのCSS読み込み -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <!-- jQuery読み込み -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script
+        src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
+    <!-- BootstrapのJS読み込み -->
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='images/font/css/open-iconic-bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/originalcss_forlg.css') }}" type="text/css"
+        media="screen and (min-width:768px)" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/originalcss_formd.css') }}" type="text/css"
+        media="screen and (max-width:767px)" />
+    <script src="https://kit.fontawesome.com/7bb95e7ca3.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <header>
+        <!-- ロゴとサイト名-->
+        <div class="fixed-top logos">
+            <nav class="navbar navbar-light bg-light" id="logonav">
+                <div class="row">
+                    <a href="#" class=navbar-brand>
+                        <img id="siteface" src="{{ url_for('static', filename='images/headerlogo.jpg') }}" alt="ロゴ">
+                    </a>
+                    <h1 id="SiteNamelabel">PandAsh</h1>
+                </div>
+            </nav>
+            <nav class="navbar navbar-expand navbar-dark bg-dark">
+            </nav>
+        </div>
+    </header>
+
+
+    <div id="loading"></div>
+    <div class="container mx-auto">
+        <div class="mx-auto">
+            <img id="loading_logo" src="{{ url_for('static', filename='images/logo.jpg') }}" width="300" height="300"
+                style="z-index: -20; position: relative;">
+            <h2 id="how_percent_loaded">Loading...</h2>
+        </div>
     </div>
-</div>
 
-<button id="loading_btn" onclick="loading();"></button>
+    <button class="d-none" id="loading_btn" onclick="loading();"></button>
 
-<script>
-    var logo = document.getElementById("loading_logo");
-    var timer = document.getElementById("how_percent_loaded")
-    var d = 0
-    var divi = 0
-    var loat = setInterval(function () {
-        d = d + 10
-        logo.style.transform = "rotate(" + d + "deg)";
-    }, 100)
-</script>
+    <script>
+        var logo = document.getElementById("loading_logo");
+        var timer = document.getElementById("how_percent_loaded")
+        var d = 0
+        var divi = 0
+        var loat = setInterval(function () {
+            d = d + 10
+            logo.style.transform = "rotate(" + d + "deg)";
+        }, 100)
+    </script>
 
-<script type="text/javascript">
-    $('#loading_btn').trigger('click');
-    function loading() {
-        $("#loading").show();
-        // $("#content").hide();
-        window.location.href = "https://pandash.ecs.kyoto-u.ac.jp/proxyticket?ticket={{ticket}}";
-        return false;
-    }
-</script>
+    <script type="text/javascript">
+        $('#loading_btn').trigger('click');
+        function loading() {
+            $("#loading").show();
+            // $("#content").hide();
+            window.location.href = "https://pandash.ecs.kyoto-u.ac.jp/proxyticket?ticket={{ticket}}";
+            return false;
+        }
+    </script>
 
-{% endblock %}
+    <footer>
+        <div id="footercont" class="container-fluid">
+            <div class="mx-auto" style="width: fit-content;">
+                <div class="row">
+                    <a href="https://www.kyoto-u.ac.jp/ja"><img id="kyoudailogo"
+                            src="https://panda.ecs.kyoto-u.ac.jp/library/image/footer-1.png"></a>
+                    <a href="http://www.iimc.kyoto-u.ac.jp/ja/"><img id="KIMClogo"
+                            src="https://panda.ecs.kyoto-u.ac.jp/library/image/footer-3.png"></a>
+                </div>
+            </div>
+            <div class="mx-auto" style="width: fit-content;">
+                <small>Copyright 2020 Institute for Information Management and Communication. All rights
+                    reserved.</small><br>
+                <small>PandAsh</small>
+            </div>
+            <div class="row ml-auto mr-1" style="width: fit-content;">
+                <small>サーバーシステム時間：</small>
+                <small>
+                    <span id="view_clock"></span>
+
+                    <script type="text/javascript">
+                        timerID = setInterval('clock()', 500); //0.5秒毎にclock()を実行
+
+                        function clock() {
+                            document.getElementById("view_clock").innerHTML = getNow();
+                        }
+
+                        function getNow() {
+                            var now = new Date();
+                            var year = now.getFullYear();
+                            var mon = now.getMonth(); //１を足すこと
+                            var day = now.getDate();
+                            var hour = now.getHours();
+                            var min = now.getMinutes();
+                            var sec = now.getSeconds();
+                            var you = now.getDay();
+
+                            //曜日の選択肢
+                            var youbi = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
+                            //月名の選択肢
+                            var month = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+
+                            //出力用
+                            var s = youbi[you] + ', ' + day + ' ' + month[mon] + ' ' + year + ' ' + hour + ':' + min + ':' + sec + ' JST';
+                            return s;
+                        }
+                    </script>
+                </small>
+            </div>
+        </div>
+    </footer>
+</body>

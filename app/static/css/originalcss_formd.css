@@ -97,11 +97,11 @@ body{
   padding-top: 140px;
 }
 
-#overviewtable > thead > tr {
+#overview_table > thead > tr {
     min-height:60px;
 }
 
-#overviewtable > tbody > tr {
+#overview_table > tbody > tr {
     min-height:60px;
 }
 
