@@ -232,9 +232,9 @@
                 <a id="help_button" role="button" {% if '/tasklist' in request.path %}
                   onclick="window.open('/help/tasklist', '', 'width=800,height=500'); return false;" {% elif '/overview'
                   in request.path %} onclick="window.open('/help/overview', '', 'width=800,height=500'); return false;"
-                  {% elif '/resdownload' in request.path %}
-                  onclick="window.open('/help/resdownload', '', 'width=800,height=500'); return false;" {% endif %}
-                  role="button" 　data-toggle="tooltip" title="ヘルプ">
+                  {% elif '/resourcelist' in request.path %}
+                  onclick="window.open('/help/resdownload', '', 'width=800,height=500'); return false;" {% else %}
+                  class="d-none" {% endif %} role="button" 　data-toggle="tooltip" title="ヘルプ">
                   <i class="fas fa-2x fa-question-circle"></i>
                 </a>
               </li>
