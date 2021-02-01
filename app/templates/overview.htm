@@ -11,7 +11,8 @@
         <div class="row">
           <h3>あなたの課題</h3>
           <small class=" ml-auto mt-auto mr-3">最終更新：{{last_update}}</small>
-          <button type="button" id="reflesh_button" class="btn  btn-info" onclick="location.href='/login?page=overview'">情報を更新</button>
+          <button type="button" id="reflesh_button" class="btn  btn-info"
+            onclick="location.href='/login?page=overview'">情報を更新</button>
         </div>
       </div>
       <!--display_num：overview で表示される課題の数-->
@@ -545,7 +546,9 @@
       <!-- See file ?base.htm, line 132
         style="position: relative; z-index: -1; pointer-events: all;" -->
 
-      {% include "finished_box.htm" %}
+      <div style="position:sticky; top:130px;">
+        {% include "finished_box.htm" %}
+      </div>
 
     </div>
   </div>
