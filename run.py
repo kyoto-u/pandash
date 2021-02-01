@@ -550,7 +550,7 @@ def ping_connection(dbapi_connection, connection_record, connection_proxy):
 import os
 @app.route('/favicon.ico')
 def favicon():
-    return flask.send_from_directory(os.path.join(app.root_path,'static'),'favicon.ico',mimetype='image/vnd.microsoft.icon')
+    return flask.send_from_directory(os.path.join(app.root_path,'static/images'),'favicon.ico',mimetype='image/vnd.microsoft.icon')
 
 
 if __name__ == '__main__':
