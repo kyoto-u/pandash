@@ -1,173 +1,132 @@
 <!--一覧表示ページ-->
 {% extends "_base.htm" %}
 {% block bodycontent %}
-<div class = "row">
-    <div class = "col-sm-12 col-md-2" id = "ScrollSearchbar">
-        <div class = "container">
-            <div class = "d-flex flex-md-column">
-                    <h6 id ="searchlabel">しぼりこみ検索</h6>           
-                     <!--曜日しぼりこみ-->
-                    <div class="form-group">
-                      <label for="select0a">科目</label>
-                      <select id="select0a" class="form-control">
-                         <option>全ての曜日</option>
-                         <option>月曜のみ</option>
-                         <option>火曜のみ</option>
-                         <option>水曜のみ</option>
-                         <option>木曜のみ</option>
-                         <option>金曜のみ</option>
-                      </select>
-                    </div>
-                    <!--時間割検索機能-->
-                    <button id="timesearchbutton" type="button" class="btn btn-dark" data-toggle="modal" data-target="#modal_timeboard_select">時間割で検索</button>
-                    
-            </div>
-        </div>
-    </div>
-    <div id = "taskmain" class = "col-sm-12 col-md-10">
-      <!--タイトル-->
-       <h3>あなたの課題</h3>
-       <!--アラート-->
-         <div class="alert alert-danger" role="alert">
-           <div class="row">
-             未完了の課題が<div class = "text-danger">2</div>件あります
-           </div>
-         </div>
-        <!--課題表-->
-      <div class = "table-responsive">
-        <table class="table">
-          <thead>
-            <tr class = "d-flex">
-                <th class="col-3">科目名</th>
-                <th class="col-3">課題名</th>
-                <!--<th class="col-3">
-                  <div class="form-group">
-                    <label for="select2a">状態:</label>
-                    <select id="select2a" class="form-control">
-                      <option>全て</option>
-                      <option>未完了のみ</option>
-                    </select>
-                  </div>
-                </th>
-              -->
-                <th class="col-3">
-                  <div class="form-group">
-                    <label for="select3a">締め切りまで:</label>
-                    <select id="select3a" class="form-control">
-                      <option>全て</option>
-                      <option>未完了のみ</option>
-                      <option>今日中</option>
-                      <option>1週間以内</option>
-                    </select>
-                  </div>
-                </th>
-                <th class="col-3">締切日</th>
-            </tr>
-          </thead>
-          <tbody>
-           <!-- {% for task in tasks %}
-            <tr class = "d-flex tablecontents">
-                <td class="col-3">{{task.subject}}</td>
-                <td class="col-3">{{task.taskname}}</td>
-                <td class="col-3">{{task.time_left}}</td>
-                <td class="col-3">{{task.deadline}}</td>
-            </tr>
-            {% endfor %}
-            -->
-            <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
-             <tr class = "d-flex tablecontents">
-              <td class="col-3">[2020前期火２]線形代数学A</td>
-              <td class="col-3"> 課題１</td>
-              <td class="col-3">あと7時間</td>
-              <td class="col-3">2020/09/02/21:00</td>
-         　 </tr>
 
-          
-          
-        </table>
-       </div>
-     </div>
+{% macro deadline_selecter() %}
+<div class="form-group">
+  <label for="select3a">締め切りまで:</label>
+  <select id="select3a" class="form-control" onchange="return select3a_change(this.value);">
+    <option value="show-only-0" {% if search_condition.select3a_judge==0 %}selected{% endif %}>全て</option>
+    <option value="show-only-1" {% if search_condition.select3a_judge==1 %}selected{% endif %}>未完了のみ
+    </option>
+    <option value="max-1" {% if search_condition.select3a_judge==3 %}selected{% endif %}>今日中</option>
+    <option value="max-2" {% if search_condition.select3a_judge==4 %}selected{% endif %}>1週間以内</option>
+  </select>
+</div>
+{% endmacro %}
+
+
+<div class="row">
+
+  <div id="taskmain" class="col-sm-12 col-md-10">
+    <!-- drag and drop時に意図しない動作をするため削除
+         style="left:1vw; overflow: hidden;" -->
+
+    <div class="container" style="background-color: silver;">
+      <!-- See line 7 
+        pointer-events: all; -->
+      <div class="d-flex mx-5 py-2 mb-2">
+        <h6 id="searchlabel">しぼりこみ検索</h6>
+        <!--曜日しぼりこみ-->
+        <div class="form-group mx-5">
+          <label for="select0a">科目</label>
+          <select id="select0a" class="form-control" onchange="location.href=value;">
+            <option value="/tasklist">全ての曜日</option>
+            <option value="/tasklist/day/mon" {% if day=='mon' %}selected{% endif %}>月曜のみ</option>
+            <option value="/tasklist/day/tue" {% if day=='tue' %}selected{% endif %}>火曜のみ</option>
+            <option value="/tasklist/day/wed" {% if day=='wed' %}selected{% endif %}>水曜のみ</option>
+            <option value="/tasklist/day/thu" {% if day=='thu' %}selected{% endif %}>木曜のみ</option>
+            <option value="/tasklist/day/fri" {% if day=='fri' %}selected{% endif %}>金曜のみ</option>
+          </select>
+        </div>
+        <!--時間割検索機能-->
+        <button id="timesearchbutton" type="button" class="btn btn-dark" data-toggle="modal"
+          data-target="#modal_timeboard_select">時間割で検索</button>
+      </div>
+    </div>
+
+    <!--タイトル-->
+    <div class="container">
+      <div class="row">
+        <h3>あなたの課題</h3>
+        <small class=" ml-auto mt-auto mr-3">最終更新：{{last_update}}</small>
+        <button type="button" id="reflesh_button" class="btn  btn-info"
+          onclick="location.href='/login?page=tasklist'">情報を更新</button>
+      </div>
+    </div>
+
+    <b>検索条件：{{ search_condition.search_condition }}</b>
+
+    <!--アラート-->
+    {% if tasks|length > 0 %}
+
+    <div class="alert alert-danger" role="alert">
+      <div class="row">
+        {% if search_condition == '全て' %}
+        未完了の課題が<div class="text-danger">{{ unfinished_task_num }}</div>件あります
+        {% else %}
+        この条件での未完了課題が<div class="text-danger">{{ unfinished_task_num }}</div>件あります
+        {% endif %}
+      </div>
+    </div>
+    <div class="table-responsive table-sm table-bordered" style="padding-bottom: 200;" id="table">
+      <!-- See line
+        style="pointer-events: all;" -->
+      <table class="table">
+        <thead>
+          <tr class="d-flex" style="font-size: x-small;">
+            <th class="col-3">科目名</th>
+            <th class="col-3">課題名</th>
+
+            <th class="col-3">
+              {{ deadline_selecter() }}
+            </th>
+            <th class="col-3">締切日</th>
+          </tr>
+        </thead>
+
+        <tbody id="dragArea" style="font-size: small;">
+          {% for task in tasks %}
+          {% if task.status == "未" %}
+          <tr class="d-flex tablecontents acdrag unfinished" id="{{task.assignmentid}}">
+            {% elif task.status == "済" %}
+          <tr class="d-flex tablecontents acdrag finished" id="{{task.assignmentid}}">
+            {% else %}
+          <tr class="d-flex tablecontents acdrag nonetype" id="{{task.assignmentid}}">
+            {% endif %}
+            <td class="col-3 subject">{{task.subject}}</td>
+            <td class="col-3 task_title"><a target="_blank"
+                href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                class="task_tag">{{task.taskname}}</a></td>
+            <td class="col-3">{{task.time_left}}</td>
+            <td class="col-3">{{task.deadline}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% else %}
+    <div class="alert alert-success" role="alert">
+      {% if search_condition == '全て' %}
+      未完了の課題はありません!
+      {% else %}
+      この条件で未完了課題はありません!
+      {% endif %}
+    </div>
+    <div class="col-3 border" style="pointer-events: all">
+      {{ deadline_selecter() }}
+    </div>
+    {% endif %}
+  </div>
+
+
+  <div class="col-md-2 border-left d-none d-md-block" id="finish_form">
+    <div style="position:sticky; top:130px;">
+      {% include "finished_box.htm" %}
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="/static/js/task.js"></script>
 {% endblock %}

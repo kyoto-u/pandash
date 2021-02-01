@@ -5,12 +5,13 @@ from .. import settings
 
 class Assignment(settings.Base):
     __tablename__ = 'assignments'
-    AssignmentID = Column(String(40), primary_key=True)
-    AssignmentUrl = Column(String(500))
-    Title = Column(String(100))
-    Limit_at = Column(String(40))
-    Instructions = Column(String(65000))
-    Time_ms = Column(Integer())
-    ModifiedDate = Column(sqlalchemy.BigInteger())
+    assignment_id = Column(String(80), primary_key=True)
+    url = Column(String(500))
+    title = Column(String(400))
+    limit_at = Column(String(40))
+    instructions = Column(String(1000))
+    time_ms = Column(sqlalchemy.BigInteger())
+    modifieddate = Column(sqlalchemy.BigInteger())
+    course_id = Column(sqlalchemy.String(40),index=True)
 
 settings.Base.metadata.create_all(settings.engine)

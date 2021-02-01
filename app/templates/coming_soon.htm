@@ -1,0 +1,30 @@
+<!--応急手当-->
+{% extends "_base.htm" %}
+{% block bodycontent %}
+
+<div class="container">
+  <div class="container ml-md-5">
+    <div class="row mt-4">
+      <div class="col-sm-12 col-md-6 ml-md-5">
+        <div class="mx-auto mt-2 mb-5">
+          <div class="row">
+            <i class="fas fa-3x fa-wrench mr-2"></i>
+            <h1 style="font-family:Lucida Console; font-size: xx-large;">Under Development</h1>
+          </div>
+        </div>
+        <div>
+          こちらの機能は現在開発中です。リリースをお待ち下さい。
+        </div>
+
+      </div>
+      <div class="col-sm-12 col-md-4 mr-md-5 ml-sm-5">
+        <img id="404image" class="mt-5" src="{{ url_for('static', filename='images/logo.jpg') }}" alt="ロゴ" width="280px"
+          height="280px">
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+{% endblock %}

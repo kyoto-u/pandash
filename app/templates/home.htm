@@ -1,0 +1,13 @@
+{% extends "_homebase.htm" %}
+{% block homebodycontent %}
+<div class="row">
+    <div class="d-none d-md-block col-md-2 col-sm-11 border-right border-bottom">
+        {% include "home_pagetransition.htm" %}
+    </div>
+    <div class="col-md-10 col-sm-12">
+        {% block home_homecontent %}
+        {% endblock %}
+    </div>
+</div>
+
+{% endblock %}

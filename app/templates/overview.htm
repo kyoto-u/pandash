@@ -1,10 +1,26 @@
 {% extends "_base.htm" %}
 {% block bodycontent %}
 <div class="cotainer container-fluid">
+  <!-- See file _base.htm, line 132
+    style="pointer-events: none;" -->
   <div class="row">
-    <div class="col-sm-12 col-md-10">
-      <h2>あなたの課題</h2>
-      <div class="table-responsive">
+    <div class="col-sm-12 col-md-10" id="all_table">
+      <!-- See file _base.htm, line 132
+        style="pointer-events: none;" -->
+      <div class="container">
+        <div class="row">
+          <h3>あなたの課題</h3>
+          <small class=" ml-auto mt-auto mr-3">最終更新：{{last_update}}</small>
+          <button type="button" id="reflesh_button" class="btn  btn-info"
+            onclick="location.href='/login?page=overview'">情報を更新</button>
+        </div>
+      </div>
+      <!--display_num：overview で表示される課題の数-->
+      {% set display_num = 3 %}
+      <div id="overview_table" class="table-responsive">
+        <!-- See file _base.htm, line 132
+          style="pointer-events: all;" -->
+
         <table class="table table-sm" id="overviewtable">
           <thead>
             <tr class="d-flex">
@@ -20,329 +36,524 @@
             <tr class="d-flex">
               <td class="col-2">1</td>
               <td class="col-2">
-                <a href="#">月曜1限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
-                    title="近世の宗教改革においてどこが重要だと考えますか。300字程度で自由に論じなさい">課題１</a>
+                <a href="{{data.mon1.searchURL}}" class="course">{{data.mon1.shortname}}</a>
+                {% for task in data.mon1.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true" data-container='body' data-toggle="tooltip"
-                    title="近世の宗教改革においてどこが重要だと考えますか。300字程度で自由に論じなさい">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">火曜1限の科目を入力</a>
-                <div class="card taskcard" draggable="true" data-container='body' 　data-placement="left"
-                  data-toggle="tooltip" title="近世の宗教改革においてどこが重要だと考えますか。300字程度で自由に論じなさい">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.tue1.searchURL}}" class="course">{{data.tue1.shortname}}</a>
+                {% for task in data.tue1.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">水曜1限の科目を入力</a>
-                <div class="card taskcard" draggable="true" data-container='body' 　data-placement="right"
-                  data-toggle="tooltip" title="近世の宗教改革においてどこが重要だと考えますか。300字程度で自由に論じなさい">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.wed1.searchURL}}" class="course">{{data.wed1.shortname}}</a>
+                {% for task in data.wed1.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">木曜1限の科目を入力</a>
-                <div class="card taskcard" draggable="true" data-container='body' 　data-placement="bottom"
-                  data-toggle="tooltip" title="近世の宗教改革においてどこが重要だと考えますか。300字程度で自由に論じなさい">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.thu1.searchURL}}" class="course">{{data.thu1.shortname}}</a>
+                {% for task in data.thu1.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">金曜1限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.fri1.searchURL}}" class="course">{{data.fri1.shortname}}</a>
+                {% for task in data.fri1.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
             </tr>
             <tr class="d-flex">
               <td class="col-2">2</td>
               <td class="col-2">
-                <a href="#">月曜2限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.mon2.searchURL}}" class="course">{{data.mon2.shortname}}</a>
+                {% for task in data.mon2.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">火曜2限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.tue2.searchURL}}" class="course">{{data.tue2.shortname}}</a>
+                {% for task in data.tue2.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">水曜2限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.wed2.searchURL}}" class="course">{{data.wed2.shortname}}</a>
+                {% for task in data.wed2.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">木曜2限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.thu2.searchURL}}" class="course">{{data.thu2.shortname}}</a>
+                {% for task in data.thu2.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">金曜2限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.fri2.searchURL}}" class="course">{{data.fri2.shortname}}</a>
+                {% for task in data.fri2.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
             </tr>
             <tr class="d-flex">
               <td class="col-2">3</td>
               <td class="col-2">
-                <a href="#">月曜3限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.mon3.searchURL}}" class="course">{{data.mon3.shortname}}</a>
+                {% for task in data.mon3.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">火曜3限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.tue3.searchURL}}" class="course">{{data.tue3.shortname}}</a>
+                {% for task in data.tue3.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">水曜3限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.wed3.searchURL}}" class="course">{{data.wed3.shortname}}</a>
+                {% for task in data.wed3.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">木曜3限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.thu3.searchURL}}" class="course">{{data.thu3.shortname}}</a>
+                {% for task in data.thu3.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">金曜3限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.fri3.searchURL}}" class="course">{{data.fri3.shortname}}</a>
+                {% for task in data.fri3.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
             </tr>
             <tr class="d-flex">
               <td class="col-2">4</td>
               <td class="col-2">
-                <a href="#">月曜4限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.mon4.searchURL}}" class="course">{{data.mon4.shortname}}</a>
+                {% for task in data.mon4.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">火曜4限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.tue4.searchURL}}" class="course">{{data.tue4.shortname}}</a>
+                {% for task in data.tue4.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">水曜4限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.wed4.searchURL}}" class="course">{{data.wed4.shortname}}</a>
+                {% for task in data.wed4.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">木曜4限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.thu4.searchURL}}" class="course">{{data.thu4.shortname}}</a>
+                {% for task in data.thu4.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">金曜4限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.fri4.searchURL}}" class="course">{{data.fri4.shortname}}</a>
+                {% for task in data.fri4.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
             </tr>
             <tr class="d-flex">
               <td class="col-2">5</td>
               <td class="col-2">
-                <a href="#">月曜5限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.mon5.searchURL}}" class="course">{{data.mon5.shortname}}</a>
+                {% for task in data.mon5.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">火曜5限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.tue5.searchURL}}" class="course">{{data.tue5.shortname}}</a>
+                {% for task in data.tue5.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">水曜5限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.wed5.searchURL}}" class="course">{{data.wed5.shortname}}</a>
+                {% for task in data.wed5.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">木曜5限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.thu5.searchURL}}" class="course">{{data.thu5.shortname}}</a>
+                {% for task in data.thu5.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
               <td class="col-2">
-                <a href="#">金曜5限の科目を入力</a>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題１</a>
+                <a href="{{data.fri5.searchURL}}" class="course">{{data.fri5.shortname}}</a>
+                {% for task in data.fri5.tasks %}
+                {% if loop.index > display_num %}
+                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
-                <div class="card taskcard" draggable="true">
-                  <a href="#" draggable="true">課題2</a>
+                {% else %}
+                <div class="card taskcard" id="{{task.assignmentid}}">
+                  <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
+                {% endif %}
+                {% endfor %}
               </td>
             </tr>
           </tbody>
         </table>
+
       </div>
+
+
+
       <h4>その他の科目</h4>
-      <div class="card-columns">
-        <div class="card elsesbjcard">
-          <div class="card-header">科目名</div>
+
+
+      <!-- See file _base.htm, line 132
+          pointer-events: all; -->
+
+      <div class="row">
+        {% for sbj in data.others %}
+        <div class="card elsesbjcard col-md-3 ml-md-5 mr-md-4 my-md-2 mr-sm-5 my-sm-3" style="height:130px;">
+          <div class="card-header">
+            <a href="{{sbj.searchURL}}" class="othcourse">{{sbj.shortname}}</a>
+          </div>
           <div class="card-body">
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題１</a>
+            {% for task in sbj.tasks %}
+            {% if loop.index > display_num %}
+            <div class="card taskcard d-none" id="{{task.assignmentid}}">
+              <a target="_blank"
+                href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
             </div>
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題2</a>
+            {% else %}
+            <div class="card taskcard" id="{{task.assignmentid}}">
+              <a target="_blank"
+                href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
             </div>
+            {% endif %}
+            {% endfor %}
           </div>
         </div>
-        <div class="card elsesbjcard">
-          <div class="card-header">科目名</div>
-          <div class="card-body">
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題１</a>
-            </div>
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題2</a>
-            </div>
-          </div>
-        </div>
-        <div class="card elsesbjcard">
-          <div class="card-header">科目名</div>
-          <div class="card-body">
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題１</a>
-            </div>
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題2</a>
-            </div>
-          </div>
-        </div>
-        <div class="card elsesbjcard">
-          <div class="card-header">科目名</div>
-          <div class="card-body">
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題１</a>
-            </div>
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題2</a>
-            </div>
-          </div>
-        </div>
-        <div class="card elsesbjcard">
-          <div class="card-header">科目名</div>
-          <div class="card-body">
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題１</a>
-            </div>
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題2</a>
-            </div>
-          </div>
-        </div>
-        <div class="card elsesbjcard">
-          <div class="card-header">科目名</div>
-          <div class="card-body">
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題１</a>
-            </div>
-            <div class="card taskcard" draggable="true">
-              <a href="#" draggable="true">課題2</a>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
       </div>
+
+
+
     </div>
 
-    <div class="col-md-1 d-none d-md-block">
-      <div class="container" id="dastshoot">
-        <div class="d-flex align-items-center">
-          ここに課題を<br>ドラッグ＆ドロップして<br>完了済みにする
-        </div>
+    <div class="col-md-2 border-left d-none d-md-block" id="finish_form">
+      <!-- See file ?base.htm, line 132
+        style="position: relative; z-index: -1; pointer-events: all;" -->
+
+      <div style="position:sticky; top:130px;">
+        {% include "finished_box.htm" %}
       </div>
+
     </div>
   </div>
 </div>
+
+
+<script type="text/javascript" src="/static/js/overview.js"></script>
 {% endblock %}

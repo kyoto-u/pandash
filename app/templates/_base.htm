@@ -1,5 +1,5 @@
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PandAsh</title>
@@ -7,7 +7,10 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
   <!-- jQuery読み込み -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> -->
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js'></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
   <!-- BootstrapのJS読み込み -->
@@ -21,7 +24,6 @@
     media="screen and (max-width:767px)" />
 </head>
 
-<!--Modal-->
 <div class="modal fade" id="modal_timeboard_select" tabindex="-1" role="dialog" aria-labelledby="label1"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-fluid" role="document">
@@ -32,6 +34,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+
       <div class="modal-body">
         <div class="table-responsive table-considered">
           <table class="table table-sm modaltable">
@@ -48,51 +51,75 @@
             <tbody>
               <tr class="d-flex">
                 <td class="col-2">1</td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">英語リーディング</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">物理学基礎論</a></td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.mon1.searchURL}}">{{data.mon1.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.tue1.searchURL}}">{{data.tue1.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.wed1.searchURL}}">{{data.wed1.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.thu1.searchURL}}">{{data.thu1.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.fri1.searchURL}}">{{data.fri1.shortname}}</a>
+                </td>
               </tr>
               <tr class="d-flex">
                 <td class="col-2">2</td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">線形代数学A</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.mon2.searchURL}}">{{data.mon2.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.tue2.searchURL}}">{{data.tue2.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.wed2.searchURL}}">{{data.wed2.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.thu2.searchURL}}">{{data.thu2.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.fri2.searchURL}}">{{data.fri2.shortname}}</a>
+                </td>
               </tr>
               <tr class="d-flex">
                 <td class="col-2">3</td>
-                <td class="col-2"><a class="btn btn-link" href="#">微分積分学A</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">自然現象と数学</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">英語WL A</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">ドイツ語IA(演習)</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                　
+                <td class="col-2"><a class="btn btn-link" href="{{data.mon3.searchURL}}">{{data.mon3.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.tue3.searchURL}}">{{data.tue3.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.wed3.searchURL}}">{{data.wed3.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.thu3.searchURL}}">{{data.thu3.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.fri3.searchURL}}">{{data.fri3.shortname}}</a>
+                </td>
               </tr>
               　<tr class="d-flex">
                 <td class="col-2">4</td>
-                <td class="col-2"><a class="btn btn-link" href="#">ILAS</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">アルゴリズム入門</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">地球工学総論</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">基礎化学実験</a></td>
-                　　
+                <td class="col-2"><a class="btn btn-link" href="{{data.mon4.searchURL}}">{{data.mon4.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.tue4.searchURL}}">{{data.tue4.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.wed4.searchURL}}">{{data.wed4.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.thu4.searchURL}}">{{data.thu4.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.fri4.searchURL}}">{{data.fri4.shortname}}</a>
+                </td>
               </tr>
               　 <tr class="d-flex">
                 <td class="col-2">5</td>
-                <td class="col-2"><a class="btn btn-link" href="#">情報基礎演習</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#">計算機科学概論</a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                <td class="col-2"><a class="btn btn-link" href="#"></a></td>
-                　　
+                <td class="col-2"><a class="btn btn-link" href="{{data.mon5.searchURL}}">{{data.mon5.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.tue5.searchURL}}">{{data.tue5.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.wed5.searchURL}}">{{data.wed5.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.thu5.searchURL}}">{{data.thu5.shortname}}</a>
+                </td>
+                <td class="col-2"><a class="btn btn-link" href="{{data.fri5.searchURL}}">{{data.fri5.shortname}}</a>
+                </td>
               </tr>
             </tbody>
           </table>
+
         </div>
       </div>
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">とじる</button>
       </div>
@@ -100,20 +127,25 @@
   </div>
 </div>
 
+
+
 <body>
+  <!-- pointer-eventsをnoneにする必要がない上に，
+    drag and dropをはじめとして予期しない動作をするので削除
+       style="pointer-events: none;" -->
   <header>
     <!-- ロゴとサイト名-->
     <div class="fixed-top logos">
       <nav class="navbar navbar-light bg-light" id="logonav">
         <div class="row">
           <a href="#" class=navbar-brand>
-            <img id="siteface" src="{{ url_for('static', filename='images/popup.jpg') }}" alt="ロゴ" width="60px"
-              height="60px">
+            <img id="siteface" src="{{ url_for('static', filename='images/headerlogo.jpg') }}" alt="ロゴ">
           </a>
           <h1 id="SiteNamelabel">PandAsh</h1>
         </div>
       </nav>
       <!--メニュー-->
+      <!--
       <nav class="navbar navbar-expand-md md_fixed navbar-dark bg-dark">
         <div class="container" id="menubar">
           <a class="navbar-brand " href="/"></a>
@@ -141,7 +173,8 @@
 
             <ul class="navbar-nav toggle_rights">
               <li class="nav-item">
-                <a class="nav-link" href="#">iCalと共有</a>
+                <a class="nav-link" href="#" data-container='body' 　data-placement="left" data-toggle="tooltip"
+                  title="iCalファイルをダウンロードします">iCalと共有</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">ログアウト</a>
@@ -151,8 +184,91 @@
           </div>
         </div>
       </nav>
+    -->
+
+      <nav class="navbar navbar-expand navbar-dark bg-dark">
+        <div class="container" id="menubar">
+          <a class="navbar-brand " href="/"></a>
+          <button id="logotoggle" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown2" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown2">
+            <ul class="navbar-nav mr-auto toggle_lefts">　
+              <li class="nav-item">
+                <a class="btn btn-info navbtns
+                {% if '/tasklist' in request.path  %}
+                active
+                {% endif %}
+                " href="/tasklist" role="button">
+
+                  一覧表示</a>
+              <li class="nav-item">
+                <a class="btn btn-info navbtns
+                {% if '/overview' in request.path  %}
+                active
+                {% endif %}
+                " href="/overview" role="button">時間割表示</a>
+              </li>
+              <li class="nav-item d-none d-md-block navbtns">
+                <a class="btn btn-info navbtns
+                {% if '/resourcelist' in request.path  %}
+                active
+                {% endif %}
+                " href="/resourcelist" role="button">授業資料</a>
+              </li>
+            </ul>
+
+            <ul class="navbar-nav ml-auto pr-3 toggle_rights">
+              <li class="nav-item d-none d-md-block">
+                <a class="btn  btn-outline-warning mr-3" href="/ical" data-container='body' 　data-placement="left"
+                  data-toggle="tooltip" title="iCalファイルをダウンロードします">iCalと共有</a>
+              </li>
+              <li id="logout_button" class="nav-item mr-auto">
+                <a class="btn btn-danger" href="/logout" data-toggle="tooltip" title="ログアウトします">ログアウト</a>
+              </li>
+              <li class="btn nav-item my-auto">
+                <a id="help_button" role="button" {% if '/tasklist' in request.path %}
+                  onclick="window.open('/help/tasklist', '', 'width=800,height=500'); return false;" {% elif '/overview'
+                  in request.path %} onclick="window.open('/help/overview', '', 'width=800,height=500'); return false;"
+                  {% elif '/resourcelist' in request.path %}
+                  onclick="window.open('/help/resdownload', '', 'width=800,height=500'); return false;" {% else %}
+                  class="d-none" {% endif %} role="button" 　data-toggle="tooltip" title="ヘルプ">
+                  <i class="fas fa-2x fa-question-circle"></i>
+                </a>
+              </li>
+
+              <li class="nav-item my-auto">
+                <a id="ContactUs_link" class="nav-item" href="/ContactUs" 　data-toggle="tooltip"
+                  title="疑問点がございます場合はこちらをクリックしてください">お問い合わせ</a>
+              </li>
+
+              <!-- ページが増えたときのためにメニュードロップダウンを用意しました
+                <li class="nav-item my-auto">
+                <div class="dropdown">
+                  <button type="button" id="menu_dropdown" class="btn btn-outline-light dropdown-toggle"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    メニュー
+                  </button>
+                  <div id="menu_dropdown_list" class="dropdown-menu" aria-labelledby="menu_dropdown">
+                    <a class="dropdown-item menu_link border-bottom" href="#">お問い合わせ</a>
+                    <a class="dropdown-item menu_link border-bottom" href="#">言語設定</a>
+                    <a class="dropdown-item menu_link" href="#">その他のメニュー</a>
+                  </div>
+                </div>
+              </li>
+              -->
+
+            </ul>
+
+          </div>
+        </div>
+      </nav>
     </div>
+
   </header>
+
   <div id="wrapper">
     <main id="contents">
       <div id="bodycontent">
@@ -161,15 +277,57 @@
         {% endblock %}
       </div>
     </main>
+  </div>
 
-    <footer>
-      <div class="container-fluid">
+  <footer>
+    <div id="footercont" class="container-fluid">
+      <div class="mx-auto" style="width: fit-content;">
         <div class="row">
-          <div class="col-12">
-            <h2>京都大学 KYOTO UNIVERSITY 京都大学情報環境機構</h2>
-          </div>
+          <a href="https://www.kyoto-u.ac.jp/ja"><img id="kyoudailogo"
+              src="https://panda.ecs.kyoto-u.ac.jp/library/image/footer-1.png"></a>
+          <a href="http://www.iimc.kyoto-u.ac.jp/ja/"><img id="KIMClogo"
+              src="https://panda.ecs.kyoto-u.ac.jp/library/image/footer-3.png"></a>
         </div>
       </div>
-    </footer>
-  </div>
+      <div class="mx-auto" style="width: fit-content;">
+        <small>Copyright 2020 Institute for Information Management and Communication. All rights
+          reserved.</small><br>
+        <small>PandAsh</small>
+      </div>
+      <div class="row ml-auto mr-1" style="width: fit-content;">
+        <small>サーバーシステム時間：</small>
+        <small>
+          <span id="view_clock"></span>
+
+          <script type="text/javascript">
+            timerID = setInterval('clock()', 500); //0.5秒毎にclock()を実行
+
+            function clock() {
+              document.getElementById("view_clock").innerHTML = getNow();
+            }
+
+            function getNow() {
+              var now = new Date();
+              var year = now.getFullYear();
+              var mon = now.getMonth(); //１を足すこと
+              var day = now.getDate();
+              var hour = now.getHours();
+              var min = now.getMinutes();
+              var sec = now.getSeconds();
+              var you = now.getDay();
+
+              //曜日の選択肢
+              var youbi = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
+              //月名の選択肢
+              var month = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+
+              //出力用
+              var s = youbi[you] + ', ' + day + ' ' + month[mon] + ' ' + year + ' ' + hour + ':' + min + ':' + sec + ' JST';
+              return s;
+            }
+          </script>
+        </small>
+      </div>
+    </div>
+  </footer>
 </body>

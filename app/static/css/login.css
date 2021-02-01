@@ -1,0 +1,38 @@
+html{
+    font-size: medium;
+}
+
+#logo{
+    height:55px;
+    width:60px;
+}
+
+#loginface{
+    width:fit-content;
+    margin-bottom:15;
+}
+
+#sitename{
+    margin-top:4;
+}
+
+.card-header{
+    background-color: black;
+    color:white;
+}
+
+.card{
+    width:fit-content;
+    top:10vh;
+}
+
+.card-footer{
+    font-size: smaller;
+}
+
+#logi{
+    margin-top: auto;
+}
+
+
+

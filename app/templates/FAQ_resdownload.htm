@@ -1,0 +1,29 @@
+{% set qnum = namespace(cnt = 1) %}
+{% macro faq(ques,ans) %}
+<div class="card">
+    <div class="card-header" id="header-4a">
+        <button id="faqque" class="btn btn-link collapsed faqque" type="button" data-toggle="collapse"
+            data-target="#D{{ qnum.cnt }}" aria-expanded="true" aria-controls="D{{ qnum.cnt }}" style="background-color: #00000008;
+    color: black; font-size: small;">
+            <small>◯</small>
+            {{ ques }}
+        </button>
+    </div>
+    <div id="D{{ qnum.cnt }}" class="collapse" aria-labelledby="header-4a">
+        <div class="card-body" style="font-size: small;">
+            {{ ans }}
+        </div>
+    </div>
+</div>
+{% set qnum.cnt = qnum.cnt + 1 %}
+{% endmacro %}
+<section class="faqboard" id="faq-resdownload">
+    <i class="fas fa-chevron-circle-right">授業資料のダウンロードについて</i>
+    <div class="accordion" id="que_acc3">
+        {{
+        faq('灰色のチェックボックスが表示されているのですが、これは何ですか','その資料がダウンロード済みであることを示すマークです。ダウンロード済みの資料にチェックを入れることはできません。その資料をもう一度ダウンロードするには、資料名をクリックしてください')
+        }}
+        {{ faq('ダウンロード済み資料をもう一度ダウンロードしたいのですが、どうすればいいですか','ダウンロード済み資料をもう一度ダウンロードするには、資料名をクリックしてください') }}
+        {{ faq('授業資料のダウンロードでは、フォルダ構造を保存しますか','しません。複数の資料をダウンロードした場合、それぞれがバラバラになってダウンロードされます') }}
+    </div>
+</section>

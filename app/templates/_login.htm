@@ -1,0 +1,47 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PandAsh</title>
+    <!-- BootstrapのCSS読み込み -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <!-- jQuery読み込み -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
+    <!-- BootstrapのJS読み込み -->
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}" type="text/css">
+</head>
+
+<body>
+    <div class="card mx-auto">
+        <div class="card-header">ログイン/ Log in</div>
+        <div class="card-body">
+            <div class="mx-auto" id="loginface">
+                <div class="row">
+                    <img id="logo" src="{{ url_for('static', filename='images/loginlogo.jpg') }}" alt="ロゴ">
+                    <h1 id="sitename">PandAsh</h1>
+                </div>
+            </div>
+            <form class="form-inline">
+                <label for="text1">ECS-ID : 　　</label>
+                <input type="text" id="ecs-id" class="form-control ml-auto">
+            </form>
+            <form class="form-inline">
+                <label for="passwd1">Password : </label>
+                <input type="password" id="passwd" class="form-control ml-auto">
+            </form>
+            <button class="btn btn-dark btn-block" id="logi">ログイン</button>
+        </div>
+        <div class="card-footer">
+            <a href="#">ECS-IDを忘れた</a>
+            <a href="#">パスワードを忘れた</a>
+        </div>
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+{% extends "_homebase.htm" %}
+{% block homebodycontent %}
+<div class="container">
+    <div class="container ml-md-5">
+        <div class="row mt-4">
+            <div class="col-sm-12 col-md-6 ml-md-5">
+                <div class="mx-auto mt-2 mb-5">
+                    <h1 style="font-family:Lucida Console; font-size: xx-large;">500 Internal Server Error</h1>
+                    <h2>アクセスしようとしたページは表示できません</h2>
+                </div>
+                <div>
+                    システムエラーが発生しております。お手数ですが、時間をおいてから再度お試しください。
+                </div>
+
+            </div>
+            <div class="col-sm-12 col-md-4 mr-md-5 ml-sm-5">
+                <img id="404image" class="mt-5" src="{{ url_for('static', filename='images/error500logo.jpg') }}"
+                    alt="ロゴ" width="280px" height="280px">
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

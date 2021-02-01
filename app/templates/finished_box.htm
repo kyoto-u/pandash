@@ -1,0 +1,35 @@
+<!--ここにドラッグ＆ドロップ-->
+<!-- See file tasklist.htm, line 7
+    style="position: relative; z-index: -20; pointer-events: all;" -->
+<!--
+      row, container領域の再宣言によりnewtaskのdragが背面に回るため削除 
+      <div class="container" id="dastshoot">
+         <div class="row"> -->
+<!--ここにドラッグ＆ドロップ-->
+<!-- <script>
+    var finished_list = document.getElementById("finished_taskslist");
+    var finished_taskCount = finished_list.childElementCount;
+    var numeral_label = document.getElementById("finished_list_num")
+    numeral_label.insertAdjacentHTML("afterbegin", String(finished_taskCount))
+</script> -->
+
+<form id="finish_form_no">
+    <div class="row mx-auto">
+        <i class="fas fa-6x fa-dumpster" style="color: black;"></i>
+        <div class="my-auto mx-auto" style="font-size:x-large; color: coral;">
+            <b id="finished_list_num">
+                <!--ここに「完了済みにする課題」の要素数を表示する-->
+                0
+            </b>
+        </div>
+    </div>
+    <div>ここに課題をドラッグ＆ドロップする</div>
+</form>
+<h5 class="text-nowrap pt-3 border-top">・完了済みにする課題</h5>
+<ul class="list-group" id="finished_taskslist">
+
+</ul>
+<button type="button" class="btn btn-success btn-block mx-auto mt-3" style="font-size: smaller;"
+    onclick="window.location.reload()">更新</button>
+<!-- </div>
+        </div> -->

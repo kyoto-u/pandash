@@ -1,0 +1,32 @@
+html{
+    font-size: small;
+}
+
+#siteface{
+    width:60;
+    height: 60;
+}
+
+#sitename{
+    padding-top:10;
+}
+
+.card{
+    width: fit-content;
+    color: black;
+    margin-top:10vh;
+}
+
+@-moz-document url-prefix(){
+ .card{
+    width: 500;
+    color: black;
+    margin-top:10vh;
+}
+}
+
+.card-header{
+    background-color: black;
+    color: white;
+}
+
