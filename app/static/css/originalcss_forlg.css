@@ -172,11 +172,11 @@ footer {
     overflow: visible;
 }
 
-#overview_table > thead > tr {
+#overviewtable > thead > tr {
     min-height:60px;
 }
 
-#overview_table > tbody > tr {
+#overviewtable > tbody > tr {
     min-height:60px;
 }
 
