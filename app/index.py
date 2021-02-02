@@ -1,7 +1,7 @@
 from math import *
 import time
 from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment, forum
-from .settings import session, app_url
+from .settings import VALID_YEAR_SEMESTER, session, app_url
 import re
 from pprint import pprint
 import copy
@@ -414,7 +414,7 @@ def get_courses_to_be_taken(studentid):
         #     continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
-        if coursedata[0].yearsemester == 20201:
+        if coursedata[0].yearsemester in VALID_YEAR_SEMESTER:
             data.append(coursedata[0])
     return data
 
@@ -427,7 +427,7 @@ def get_courses_id_to_be_taken(studentid):
         #     continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
-        if coursedata[0].yearsemester == 20201:
+        if coursedata[0].yearsemester in VALID_YEAR_SEMESTER:
             data.append(coursedata[0].course_id)
     return data
 
