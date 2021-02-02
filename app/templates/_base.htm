@@ -197,7 +197,7 @@
           <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown2">
             <ul class="navbar-nav mr-auto toggle_lefts">　
               <li class="nav-item">
-                <a class="btn btn-info navbtns
+                <a class="btn btn-info navbtns text-nowrap
                 {% if '/tasklist' in request.path  %}
                 active
                 {% endif %}
@@ -205,14 +205,14 @@
 
                   一覧表示</a>
               <li class="nav-item">
-                <a class="btn btn-info navbtns
+                <a class="btn btn-info navbtns text-nowrap
                 {% if '/overview' in request.path  %}
                 active
                 {% endif %}
                 " href="/overview" role="button">時間割表示</a>
               </li>
               <li class="nav-item d-none d-md-block navbtns">
-                <a class="btn btn-info navbtns
+                <a class="btn btn-info navbtns text-nowrap
                 {% if '/resourcelist' in request.path  %}
                 active
                 {% endif %}
@@ -225,7 +225,7 @@
                 <a class="btn  btn-outline-warning mr-3" href="/ical" data-container='body' 　data-placement="left"
                   data-toggle="tooltip" title="iCalファイルをダウンロードします">iCalと共有</a>
               </li>
-              <li id="logout_button" class="nav-item mr-auto">
+              <li id="logout_button" class="nav-item mr-auto text-nowrap">
                 <a class="btn btn-danger" href="/logout" data-toggle="tooltip" title="ログアウトします">ログアウト</a>
               </li>
               <li class="btn nav-item my-auto">
@@ -240,7 +240,7 @@
               </li>
 
               <li class="nav-item my-auto">
-                <a id="ContactUs_link" class="nav-item" href="/ContactUs" 　data-toggle="tooltip"
+                <a id="ContactUs_link" class="nav-item text-nowrap" href="/ContactUs" 　data-toggle="tooltip"
                   title="疑問点がございます場合はこちらをクリックしてください">お問い合わせ</a>
               </li>
 

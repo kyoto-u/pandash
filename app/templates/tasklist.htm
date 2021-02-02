@@ -26,11 +26,11 @@
       <!-- See line 7 
         pointer-events: all; -->
       <div class="d-flex mx-5 py-2 mb-2">
-        <h6 id="searchlabel">しぼりこみ検索</h6>
+        <h6 id="searchlabel" class="text-nowrap">しぼりこみ検索</h6>
         <!--曜日しぼりこみ-->
         <div class="form-group mx-5">
-          <label for="select0a">科目</label>
-          <select id="select0a" class="form-control" onchange="location.href=value;">
+          <label for="select0a" class="text-nowrap">科目</label>
+          <select id="select0a" class="form-control text-nowrap" onchange="location.href=value;">
             <option value="/tasklist">全ての曜日</option>
             <option value="/tasklist/day/mon" {% if day=='mon' %}selected{% endif %}>月曜のみ</option>
             <option value="/tasklist/day/tue" {% if day=='tue' %}selected{% endif %}>火曜のみ</option>
@@ -40,7 +40,7 @@
           </select>
         </div>
         <!--時間割検索機能-->
-        <button id="timesearchbutton" type="button" class="btn btn-dark" data-toggle="modal"
+        <button id="timesearchbutton" type="button" class="btn btn-dark text-nowrap" data-toggle="modal"
           data-target="#modal_timeboard_select">時間割で検索</button>
       </div>
     </div>

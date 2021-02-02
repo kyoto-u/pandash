@@ -97,11 +97,11 @@ body{
   padding-top: 140px;
 }
 
-#overview_table > thead > tr {
+#overviewtable > thead > tr {
     min-height:60px;
 }
 
-#overview_table > tbody > tr {
+#overviewtable > tbody > tr {
     min-height:60px;
 }
 
@@ -114,19 +114,15 @@ body{
 }
 
 #searchlabel{
-  font-size:small;
-  padding-top:0;
-  padding-right:20;
+  font-size: xx-small;
 }
 
-#select1a{
-  font-size:x-small;
-}
+#select0a > option{
+  font-size: xx-small;
+} 
 
 #timesearchbutton{
-  margin-left:30;
-  margin-top:30;
-  margin-bottom: 20;
+  font-size: xx-small;
 }
 
 .modal-dialog-fluid {
