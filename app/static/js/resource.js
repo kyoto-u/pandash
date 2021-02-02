@@ -1,7 +1,26 @@
 $(document).ready(function(){
     if (numofcourses > 3 ) {
-        $('.ressubs').attr('style', 'height: 200px; overflow-y: scroll;')
+        $('.ressubs').attr('style', 'height: 200px; overflow-y: scroll;');
     }
+
+    $('a.resource').on('click', function(){
+        var r_links = new Array();
+        var link = $(this).attr('href');
+        r_links.push(link);
+        var resourcedata = JSON.stringify({"r_links":r_links});
+        $.ajax({
+            type: 'POST',
+            url: '/r_status_change',
+            data: resourcedata,
+            contentType: 'application/json',
+            success: function(response){
+                console.log(response);
+            },
+            error: function(error){
+                console.log(error);
+            }
+        });
+    });
 
     $('a#checkedclick').on('click',function(e){
         e.preventDefault()

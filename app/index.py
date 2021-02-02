@@ -619,12 +619,35 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
         # if re.search(r'.*\.pdf' ,r["resource_url"]):
         #     target = "_blank"
         #2020/1/19 Shinji Akayama style = "poi"
+        # checkbox あり
+        # add_html = f"""
+        # <li>
+        #     <div class="form-check">
+        #         <input class="form-check-input" type="checkbox" id="{r["resource_url"]}" value="0"/>
+        #         <label class="form-check-label" for="{r["resource_url"]}"> 
+        #             <a href="{r["resource_url"]}" target="{target}" download="{r["title"]}" name="{r["resource_url"]}"　style="pointer-events: none;">{r["title"]}</a>
+        #         </label>
+        #     </div>
+        # </li>"""
+        # if r['status'] == 1:
+        #     add_html = f"""
+        #     <li>
+        #         <div class="d-inline-flex">
+        #             <div class="form-check">
+        #                 <input class="form-check-input" type="checkbox" id="{r["resource_url"]}" value="1" disabled checked/>
+        #                 <label class="form-check-label" for="{r["resource_url"]}">
+        #                         <a href="{r["resource_url"]}" download="{r["title"]}" data-container="body" data-toggle="tooltip" title="このファイルを再ダウンロードする" name="{r["resource_url"]}" target="{target}">{r["title"]}</a>                     
+        #                 </label>
+        #             </div>
+        #         </div>
+        #     </li>
+        #     """
+        # checkbox なし
         add_html = f"""
         <li>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="{r["resource_url"]}" value="0"/>
                 <label class="form-check-label" for="{r["resource_url"]}"> 
-                    <a href="{r["resource_url"]}" target="{target}" download="{r["title"]}" name="{r["resource_url"]}"　style="pointer-events: none;">{r["title"]}</a>
+                    <a href="{r["resource_url"]}" target="{target}" download="{r["title"]}" name="{r["resource_url"]}" class="resource">{r["title"]}</a>
                 </label>
             </div>
         </li>"""
@@ -633,9 +656,8 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
             <li>
                 <div class="d-inline-flex">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="{r["resource_url"]}" value="1" disabled checked/>
                         <label class="form-check-label" for="{r["resource_url"]}">
-                                <a href="{r["resource_url"]}" download="{r["title"]}" data-container="body" data-toggle="tooltip" title="このファイルを再ダウンロードする" name="{r["resource_url"]}" target="{target}">{r["title"]}</a>                     
+                                <a href="{r["resource_url"]}" download="{r["title"]}" data-container="body" data-toggle="tooltip" title="このファイルを再ダウンロードする" name="{r["resource_url"]}" target="{target}" class="resource">{r["title"]}</a>                     
                         </label>
                     </div>
                 </div>
