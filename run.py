@@ -150,7 +150,7 @@ def proxyticket():
                         get_sites["student_courses"].append(get_site["student_course"])
                         get_resources["resources"].extend(get_resource["resources"])
                         get_resources["student_resources"].extend(get_resource["student_resources"])
-                        index += 1
+                    index += 1
                 # student_id       student_id
                 # get_membership   {"student_id": , "site_list": []}
                 # get_assignments  {"assignments": [], student_assignments: []}
