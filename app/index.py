@@ -210,19 +210,27 @@ def get_course_from_api(site, student_id):
     fullname = site.get('siteOwner').get('userDisplayName')
     coursename = site.get('title')
     yearsch = re.match(r'\[.*\]', coursename)
-    yearsemester = "20203"
+    yearsemester = "10009"
     classschedule = "oth"
     try:
-        semnum = "2"
+        semnum = "9"
         semester = yearsch.group()[5:7]
         classsch = yearsch.group()[7:9]
         if semester == '前期':
             semnum = "0"
-            # return None
-        elif semester == '後期':
+        elif semester == '前集':
             semnum = "1"
+        elif semester == '後期':
+            semnum = "2"
+        elif semester == '後集':
+            semnum = "3"
+        elif semester == '通年':
+            semnum = "4"
+        elif semester == '通集':
+            semnum = "5"
         # else:
             # return None
+        assert 1000 <= int(yearsch.group[1:5]) < 3000
         yearsemester = f"{yearsch.group()[1:5]}{semnum}"
         week = "oth"
         if classsch[0] == "月":
