@@ -1,6 +1,12 @@
 $(document).ready(function(){
-    if (numofcourses > 3 ) {
-        $('.ressubs').attr('style', 'height: 200px; overflow-y: scroll;');
+    window_load();
+    window.onresize = window_load;
+
+    function window_load(){
+        var display_width = $(window).width();
+        if (numofcourses > 3 && display_width>=768) {
+            $('.ressubs').attr('style', 'height: 200px; overflow-y: scroll;');
+        }
     }
 
     $('a.resource').on('click', function(){
