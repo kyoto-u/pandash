@@ -15,7 +15,7 @@ api_url = 'https://panda.ecs.kyoto-u.ac.jp/direct/'
 # 収集する教科の学期一覧
 # 前４ケタ:年度
 # 最後の一桁: 0-> 前期  1-> 後期  2-> 集中・通年など  3-> どれも取得できなかった場合
-VALID_YEAR_SEMESTER=[20201,20202]
+VALID_YEAR_SEMESTER=[20201]
 
 cas_client = CASClient(cas_url, auth_prefix='', proxy_url=proxy_url, proxy_callback=proxy_callback)
 
