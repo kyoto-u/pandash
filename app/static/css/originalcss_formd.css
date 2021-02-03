@@ -157,7 +157,36 @@ body{
 .unfinished{
     background-color: #ffdcbc;
 }
+.one_sec{
+  background-color: #ffdcbc;
+}
+.one_min{
+  background-color: #ffdcbc;
+}
+.one_hour{
+  background-color: #ffdcbc;
+}
+.one_day{
+  background-color: #ffdcbc;
+}
+.one_week{
+  background-color: #ffdcbc;
+}
+.one_month{
+  background-color: #ffdcbc;
+}
+.one_year{
+  background-color: #ffdcbc;
+}
   
 .finished{
     background-color: white;
 }
+
+/* div#loading {
+  width: 35px;
+  height: 35px;
+  display: none;
+  background: url(/static/loadingimage.gif) no-repeat;
+  cursor: wait;
+} */

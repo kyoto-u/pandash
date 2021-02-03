@@ -207,12 +207,34 @@ label > a{
 .nonetype{
     background-color: #f5f5f5;
 }
-  
+ 
+/* 廃止 */
 .unfinished{
     background-color: #ffdcbc;
 }
 /* #ffffbb
 #ffdcdd */
+.one_sec{
+    background-color: #ffdcbc;
+}
+.one_min{
+    background-color: #ffdcbc;
+}
+.one_hour{
+    background-color: #ffdcbc;
+}
+.one_day{
+    background-color: #ffdcbc;
+}
+.one_week{
+    background-color: #ffdcbc;
+}
+.one_month{
+    background-color: #ffdcbc;
+}
+.one_year{
+    background-color: #ffdcbc;
+}
   
 .finished{
     background-color: white;

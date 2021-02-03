@@ -52,34 +52,39 @@ class TimeLeft():
         days = hours/24
         weeks = days/7
         months = weeks/4
-
+        judge_style = 'one_sec'
         msg =''
 
         if seconds < 0:
-            return ''
+            return {'msg':'','judge':judge_style}
         elif minutes < 1:
             # 一分未満
             msg = self.add_miman('1'+ unit_minute_single[self.language])
+            judge_style = 'one_min'
         elif hours < 1:
             # 一時間未満
+            judge_style = 'one_hour'
             if floor(minutes) == 1:
                 msg = str(floor(minutes)) + unit_minute_single[self.language]
             else:
                 msg = str(floor(minutes)) + unit_minute[self.language]
         elif days < 1:
             # 一日未満
+            judge_style = 'one_day'
             if floor(minutes) == 1:
                 msg = str(floor(hours)) + unit_hour_single[self.language]
             else:
                 msg = str(floor(hours)) + unit_hour[self.language]
         elif weeks < 1:
             # 一週間未満
+            judge_style = 'one_week'
             if floor(days) == 1:
                 msg = str(floor(days)) + unit_day_single[self.language]
             else:
                 msg = str(floor(days)) + unit_day[self.language]
         elif months < 1:
             # 一か月(4週間)未満
+            judge_style = 'one_month'
             if floor(weeks) == 1:
                 msg = str(floor(weeks)) + unit_week_single[self.language]
             else:
@@ -94,9 +99,10 @@ class TimeLeft():
                     msg += to[self.language] + str(remain_days) + unit_day[self.language]
         else:
             # 一か月以上
+            judge_style = 'one_year'
             msg = self.add_ijyou('4' + unit_week[self.language])
         
-        return self.add_ato(msg)
+        return {'msg':self.add_ato(msg),'judge':judge_style}
 
 def sync_student_contents(studentid, crs, asm, res, now,last_update=0):
     # 以下主な方針
