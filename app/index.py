@@ -247,6 +247,8 @@ def get_course_from_api(site, student_id):
     except:
         # return None
         pass
+    if yearsemester not in VALID_YEAR_SEMESTER:
+        return None
     course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule,"page_id":""}
     student_course_dict = {"sc_id":f"{student_id}:{course_id}","course_id":course_id,"student_id":student_id}
     return {"course":course_dict, "student_course":student_course_dict}
@@ -772,8 +774,6 @@ def add_course(studentid, data, last_update):
     for item in data:
         course_exist = False
         update=False
-        if item["yearsemester"] not in VALID_YEAR_SEMESTER:
-            continue
         if item["course_id"] not in course_ids:
             continue
         for i in courses:
@@ -933,8 +933,6 @@ def add_studentcourse(studentid, data):
     new_sc = []
     for item in data:
         course_exist = False
-        if item["yearsemester"] not in VALID_YEAR_SEMESTER:
-            continue
         for i in sc:
             if i.course_id == item["course_id"]:
                 course_exist = True
