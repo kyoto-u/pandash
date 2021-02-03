@@ -388,7 +388,7 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
         task["assignmentid"] = data.assignment_id
         task["deadline"] = asmdata[0].limit_at
         task["time_left"] = TimeLeft(asmdata[0].time_ms).time_left_to_str()
-        if task["time_left"] == "":
+        if task["time_left"]["msg"] == "":
             task["status"]="期限切れ"
         if mode == 1:
             # overviewのtooltipsに使用
