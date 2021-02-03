@@ -246,7 +246,7 @@ def get_course_from_api(site, student_id):
     except:
         # return None
         pass
-    if yearsemester not in VALID_YEAR_SEMESTER:
+    if int(yearsemester) not in VALID_YEAR_SEMESTER:
         return None
     course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule,"page_id":""}
     student_course_dict = {"sc_id":f"{student_id}:{course_id}","course_id":course_id,"student_id":student_id}
