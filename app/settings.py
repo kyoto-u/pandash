@@ -20,7 +20,7 @@ VALID_YEAR_SEMESTER=[20201,20202,20203,20204,20205,20209,20211,20212,20213,20214
 # デフォルトで表示する教科の学期一覧
 # 前４ケタ:年度
 # 最後の一桁: 0-> 前期  2-> 後期  1->　前期集中　3 -> 後期集中　4 -> 通年  5 -> 通年集中  9-> どれも取得できなかった場合
-SHOW_YAER_SEMESTER =[20202,20203,20204,20205,20209]
+SHOW_YEAR_SEMESTER =[20202,20203,20204,20205,20209]
 
 cas_client = CASClient(cas_url, auth_prefix='', proxy_url=proxy_url, proxy_callback=proxy_callback)
 
