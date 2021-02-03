@@ -1,7 +1,7 @@
 from math import *
 import time
 from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment, forum
-from .settings import VALID_YEAR_SEMESTER, session, app_url
+from .settings import SHOW_YEAR_SEMESTER, VALID_YEAR_SEMESTER, session, app_url
 import re
 from pprint import pprint
 import copy
@@ -422,7 +422,7 @@ def get_courses_to_be_taken(studentid):
         #     continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
-        if coursedata[0].yearsemester in VALID_YEAR_SEMESTER:
+        if coursedata[0].yearsemester in SHOW_YEAR_SEMESTER:
             data.append(coursedata[0])
     return data
 
@@ -435,7 +435,7 @@ def get_courses_id_to_be_taken(studentid):
         #     continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
-        if coursedata[0].yearsemester in VALID_YEAR_SEMESTER:
+        if coursedata[0].yearsemester in SHOW_YEAR_SEMESTER:
             data.append(coursedata[0].course_id)
     return data
 
@@ -772,6 +772,8 @@ def add_course(studentid, data, last_update):
     for item in data:
         course_exist = False
         update=False
+        if item["yearsemester"] not in VALID_YEAR_SEMESTER:
+            continue
         if item["course_id"] not in course_ids:
             continue
         for i in courses:
@@ -931,6 +933,8 @@ def add_studentcourse(studentid, data):
     new_sc = []
     for item in data:
         course_exist = False
+        if item["yearsemester"] not in VALID_YEAR_SEMESTER:
+            continue
         for i in sc:
             if i.course_id == item["course_id"]:
                 course_exist = True
