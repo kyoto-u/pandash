@@ -230,7 +230,6 @@ def get_course_from_api(site, student_id):
             semnum = "5"
         # else:
             # return None
-        assert 1000 <= int(yearsch.group[1:5]) and int(yearsch.group[1:5]) < 3000
         yearsemester = f"{yearsch.group()[1:5]}{semnum}"
         week = "oth"
         if classsch[0] == "月":
