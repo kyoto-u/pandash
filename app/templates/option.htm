@@ -1,0 +1,17 @@
+{% extends "_base.htm" %}
+{% block bodycontent %}
+<div class="container">
+    <h1 class="mb-5">設定</h1>
+    <div class="row">
+        <div class="col-3">
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action">言語/Language</a>
+                <a href="#" class="list-group-item list-group-item-action">表示科目</a>
+            </div>
+        </div>
+        <div class="col-9">
+            {% include "Option_fragments/option_subject.htm" %}
+        </div>
+    </div>
+</div>
+{% endblock %}1

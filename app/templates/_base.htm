@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/originalcss_formd.css') }}" type="text/css"
     media="screen and (max-width:767px)" />
 </head>
-
+{#
 <div class="modal fade" id="modal_timeboard_select" tabindex="-1" role="dialog" aria-labelledby="label1"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-fluid" role="document">
@@ -126,7 +126,7 @@
     </div>
   </div>
 </div>
-
+#}
 
 
 <body>
@@ -221,14 +221,7 @@
             </ul>
 
             <ul class="navbar-nav ml-auto pr-3 toggle_rights">
-              <li class="nav-item d-none d-md-block">
-                <a class="btn  btn-outline-warning mr-3" href="/ical" data-container='body' 　data-placement="left"
-                  data-toggle="tooltip" title="iCalファイルをダウンロードします">iCalと共有</a>
-              </li>
-              <li id="logout_button" class="nav-item mr-auto text-nowrap">
-                <a class="btn btn-danger" href="/logout" data-toggle="tooltip" title="ログアウトします">ログアウト</a>
-              </li>
-              <li class="btn nav-item my-auto">
+              <li class="btn nav-item mr-3 my-auto">
                 <a id="help_button" role="button" {% if '/tasklist' in request.path %}
                   onclick="window.open('/help/tasklist', '', 'width=800,height=500'); return false;" {% elif '/overview'
                   in request.path %} onclick="window.open('/help/overview', '', 'width=800,height=500'); return false;"
@@ -238,27 +231,32 @@
                   <i class="fas fa-2x fa-question-circle"></i>
                 </a>
               </li>
-
-              <li class="nav-item my-auto">
-                <a id="ContactUs_link" class="nav-item text-nowrap" href="/ContactUs" 　data-toggle="tooltip"
-                  title="疑問点がございます場合はこちらをクリックしてください">お問い合わせ</a>
+              <li id="logout_button" class="nav-item mr-3 text-nowrap">
+                <a class="btn btn-danger" href="/logout" data-toggle="tooltip" title="ログアウトします">ログアウト</a>
               </li>
 
-              <!-- ページが増えたときのためにメニュードロップダウンを用意しました
-                <li class="nav-item my-auto">
+
+              <!-- <li class="nav-item my-auto">
+                <a id="ContactUs_link" class="nav-item text-nowrap" href="/ContactUs" 　data-toggle="tooltip"
+                  title="疑問点がございます場合はこちらをクリックしてください">お問い合わせ</a>
+              </li> -->
+
+
+              <li class="nav-item my-auto">
                 <div class="dropdown">
                   <button type="button" id="menu_dropdown" class="btn btn-outline-light dropdown-toggle"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     メニュー
                   </button>
                   <div id="menu_dropdown_list" class="dropdown-menu" aria-labelledby="menu_dropdown">
-                    <a class="dropdown-item menu_link border-bottom" href="#">お問い合わせ</a>
-                    <a class="dropdown-item menu_link border-bottom" href="#">言語設定</a>
-                    <a class="dropdown-item menu_link" href="#">その他のメニュー</a>
+                    <a class="dropdown-item menu_link border-bottom" href="/ical" data-toggle="tooltip"
+                      title="iCalファイルをダウンロードします">iCalと共有</a>
+                    <a class="dropdown-item menu_link border-bottom" href="#">設定</a>
+                    <a class="dropdown-item menu_link border-bottom" href="/ContactUs">お問い合わせ</a>
                   </div>
                 </div>
               </li>
-              -->
+
 
             </ul>
 
