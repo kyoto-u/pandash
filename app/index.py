@@ -658,26 +658,22 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
         #     </li>
         #     """
         # checkbox なし
+        status_class = "undownloaded"
+        resource_title = r["title"]
+        if r["status"] == 1:
+            status_class = "downloaded"
+            resource_title = "このファイルを再ダウンロードする"
         add_html = f"""
-        <li>
-            <div class="form-check">
-                <label class="form-check-label" for="{r["resource_url"]}"> 
-                    <a href="{r["resource_url"]}" target="{target}" download="{r["title"]}" name="{r["resource_url"]}" class="resource">{r["title"]}</a>
-                </label>
-            </div>
-        </li>"""
-        if r['status'] == 1:
-            add_html = f"""
             <li>
                 <div class="d-inline-flex">
                     <div class="form-check">
                         <label class="form-check-label" for="{r["resource_url"]}">
-                                <a href="{r["resource_url"]}" download="{r["title"]}" data-container="body" data-toggle="tooltip" title="このファイルを再ダウンロードする" name="{r["resource_url"]}" target="{target}" class="resource">{r["title"]}</a>                     
+                                <a href="{r["resource_url"]}" download="{r["title"]}" data-container="body" data-toggle="tooltip" title={resource_title} name="{r["resource_url"]}" target="{target}" class="resource {status_class}">{r["title"]}</a>                     
                         </label>
                     </div>
                 </div>
             </li>
-            """
+        """
         if folder_i:
             html = html[:folder_i.end()+search_num] + add_html + html[folder_i.end()+search_num:]
     # html = f"""<span><i class="far fa-folder" style="font-size:medium;">{coursename}</i></span>
