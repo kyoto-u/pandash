@@ -64,12 +64,12 @@ footer {
 }
 
 #menu_dropdown_list{
-    background-color: royalblue;
+    background-color: #63a3db;
 }
 
 .menu_link{
     color:white;
-    background-color:royalblue;
+    background-color:#63a3db;
     border-bottom: white;
 }
 
@@ -193,10 +193,13 @@ footer {
 
 
 /*資料ダウンロードページ*/
-label > a{
-    color: gray;
+label > a > .undownloaded{
+    color: skyblue;
 }
 
+label > a > .downloaded{
+    color: orchid;
+}
 
 
 #ResourcesScrolls{
@@ -208,32 +211,27 @@ label > a{
     background-color: #f5f5f5;
 }
  
-/* 廃止 */
-.unfinished{
-    background-color: #ffdcbc;
-}
-/* #ffffbb
-#ffdcdd */
+/*課題の色*/
 .one_sec{
-    background-color: #ffdcbc;
+    background-color: #ffdcdd;
 }
 .one_min{
-    background-color: #ffdcbc;
+    background-color: #ffdcdd;
 }
 .one_hour{
-    background-color: #ffdcbc;
+    background-color: #ffdcdd;
 }
 .one_day{
-    background-color: #ffdcbc;
+    background-color: #ffdcdd;
 }
 .one_week{
     background-color: #ffdcbc;
 }
 .one_month{
-    background-color: #ffdcbc;
+    background-color: #ffffbb;
 }
 .one_year{
-    background-color: #ffdcbc;
+    background-color: #ffffbb;
 }
   
 .finished{
