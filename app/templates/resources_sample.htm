@@ -60,7 +60,11 @@
     <div class="col-12">
       <!-- <span><i class="far fa-folder">[2020前期月5]ILASセミナーのリソース</i></span> -->
 
-      <div class="card-columns">
+      {% if numofcourses < 3 %}
+      <div class="card-columns" style="columns:{{numofcourses}}">
+      {% else %}
+      <div class="card-columns" style="columns:3">
+      {% endif %}
         {{ html | safe}}
 
         <script>
