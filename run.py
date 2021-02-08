@@ -158,7 +158,14 @@ def help(page):
 
 @app.route('/option')
 def option():
-    return flask.render_template(f"option.htm")
+    studentid = session.get('student_id')
+    if studentid:
+        data ={"others":[]}
+        data = setdefault_for_overview(studentid)
+        return flask.render_template(f"option.htm",data=data)
+    else:
+        return redirect(url_for('login'))
+
 
 
 # @app.route('/')
