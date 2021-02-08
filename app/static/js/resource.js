@@ -7,6 +7,9 @@ $(document).ready(function(){
         if (numofcourses > 3 && display_width>=768) {
             $('.ressubs').attr('style', 'height: 200px; overflow-y: scroll;');
         }
+        if (display_width<768){
+            $('#card-columns').attr('style', 'auto')
+        }
     }
 
     $('a.resource').on('click', function(){
