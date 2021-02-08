@@ -3,27 +3,37 @@
 <!--Modal-->
 <div class="row" style="pointer-events: all;">
   <div class="col-sm-12 col-md-2 border-right">
-    <div class="container" style="top:130px; position: sticky;">
-      <div class="d-flex flex-md-column">
-        <div class="px-3 py-2" style="background-color: silver;">
-          <h6 id="searchlabel">しぼりこみ検索</h6>
-          <!--曜日しぼりこみ-->
-          <div class="form-group">
-            <label for="select0a">科目</label>
-            <select id="select0a" class="form-control" onchange="location.href=value;">
-              <option value="/resourcelist">全ての曜日</option>
-              <option value="/resourcelist/day/mon" {% if day=='mon' %}selected{% endif %}>月曜のみ</option>
-              <option value="/resourcelist/day/tue" {% if day=='tue' %}selected{% endif %}>火曜のみ</option>
-              <option value="/resourcelist/day/wed" {% if day=='wed' %}selected{% endif %}>水曜のみ</option>
-              <option value="/resourcelist/day/thu" {% if day=='thu' %}selected{% endif %}>木曜のみ</option>
-              <option value="/resourcelist/day/fri" {% if day=='fri' %}selected{% endif %}>金曜のみ</option>
-            </select>
+    <div class="container" id="resources_searchBox">
+      <div class=" d-flex flex-md-column">
+        <div class="container" style="background-color: silver;">
+          <!-- See line 7 
+                pointer-events: all; -->
+          <div class="d-flex mx-5 py-2 mb-2">
+            <h6 id="searchlabel" class="text-nowrap">しぼりこみ検索</h6>
+            <!--曜日しぼりこみ-->
+            <div class="form-group mx-5">
+              <label for="select0a" class="text-nowrap">科目</label>
+              <select id="select0a" class="form-control text-nowrap" onchange="location.href=value;">
+                <option value="/tasklist">全ての曜日</option>
+                <option value="/tasklist/day/mon" {% if day=='mon' %}selected{% endif %}>月曜のみ</option>
+                <option value="/tasklist/day/tue" {% if day=='tue' %}selected{% endif %}>火曜のみ</option>
+                <option value="/tasklist/day/wed" {% if day=='wed' %}selected{% endif %}>水曜のみ</option>
+                <option value="/tasklist/day/thu" {% if day=='thu' %}selected{% endif %}>木曜のみ</option>
+                <option value="/tasklist/day/fri" {% if day=='fri' %}selected{% endif %}>金曜のみ</option>
+              </select>
+            </div>
+            <!--時間割検索機能-->
+            <button id="timesearchbutton" type="button" class="btn btn-dark text-nowrap" data-toggle="modal"
+              data-target="#modal_timeboard_select">時間割で検索</button>
           </div>
-          <!--時間割検索機能-->
-          <button id="timesearchbutton" type="button" class="btn btn-dark" data-toggle="modal"
-            data-target="#modal_timeboard_select">時間割で検索</button>
         </div>
-        <!-- <form>
+
+        <!--時間割検索機能-->
+        <button id="timesearchbutton" type="button" class="btn btn-dark" data-toggle="modal"
+          data-target="#modal_timeboard_select">時間割で検索</button>
+      </div>
+    </div>
+    <!-- <form>
           このボタンは使用しません
           <a href="#" id="allclick" style="color: white; text-decoration: none;">
             <button class="btn btn-secondary btn mt-4 btn-block d-none">
@@ -38,9 +48,8 @@
             </button>
           </a>
         </form> -->
-      </div>
-    </div>
   </div>
+
   <div id="taskmain" class="col-sm-12 col-md-10">
     <h2>未入手資料を選択しダウンロードできます</h2>
     <div class="container">

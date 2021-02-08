@@ -190,6 +190,10 @@ footer {
     font-size: small;
 }
 
+#resources_searchBox{
+    top:130px; 
+    position: sticky;
+}
 
 
 /*資料ダウンロードページ*/
