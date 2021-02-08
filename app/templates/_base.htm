@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/originalcss_formd.css') }}" type="text/css"
     media="screen and (max-width:767px)" />
 </head>
-
+{#
 <div class="modal fade" id="modal_timeboard_select" tabindex="-1" role="dialog" aria-labelledby="label1"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-fluid" role="document">
@@ -126,7 +126,7 @@
     </div>
   </div>
 </div>
-
+#}
 
 
 <body>
@@ -186,7 +186,7 @@
       </nav>
     -->
 
-      <nav class="navbar navbar-expand navbar-dark bg-dark">
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <div class="container" id="menubar">
           <a class="navbar-brand " href="/"></a>
           <button id="logotoggle" class="navbar-toggler" type="button" data-toggle="collapse"
@@ -196,8 +196,8 @@
           </button>
           <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown2">
             <ul class="navbar-nav mr-auto toggle_lefts">　
-              <li class="nav-item">
-                <a class="btn btn-info navbtns text-nowrap
+              <li class="nav-item mr-1">
+                <a class="btn btn-info navbtns  text-nowrap btn-block border-bottom
                 {% if '/tasklist' in request.path  %}
                 active
                 {% endif %}
@@ -205,14 +205,14 @@
 
                   一覧表示</a>
               <li class="nav-item">
-                <a class="btn btn-info navbtns text-nowrap
+                <a class="btn btn-info navbtns text-nowrap btn-block border-bottom
                 {% if '/overview' in request.path  %}
                 active
                 {% endif %}
                 " href="/overview" role="button">時間割表示</a>
               </li>
-              <li class="nav-item d-none d-md-block navbtns">
-                <a class="btn btn-info navbtns text-nowrap
+              <li class="nav-item navbtns">
+                <a class="btn btn-info navbtns text-nowrap btn-block border-bottom
                 {% if '/resourcelist' in request.path  %}
                 active
                 {% endif %}
@@ -231,8 +231,8 @@
                   <i class="fas fa-2x fa-question-circle"></i>
                 </a>
               </li>
-              <li id="logout_button" class="nav-item mr-3 text-nowrap">
-                <a class="btn btn-danger" href="/logout" data-toggle="tooltip" title="ログアウトします">ログアウト</a>
+              <li id="logout_button" class="nav-item mr-3 text-nowrap btn-block">
+                <a class="btn btn-danger btn-block" href="/logout" data-toggle="tooltip" title="ログアウトします">ログアウト</a>
               </li>
 
 
@@ -244,7 +244,7 @@
 
               <li class="nav-item my-auto">
                 <div class="dropdown">
-                  <button type="button" id="menu_dropdown" class="btn btn-outline-light dropdown-toggle"
+                  <button type="button" id="menu_dropdown" class="btn btn-outline-light dropdown-toggle btn-block"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     メニュー
                   </button>
