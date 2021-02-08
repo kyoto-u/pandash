@@ -272,8 +272,11 @@ def get_course_id_from_api(membership):
 
 def get_course_from_api(site, student_id):
     course_id = site.get('id')
-    instructor_id = site.get('siteOwner').get('userId')
-    fullname = site.get('siteOwner').get('userDisplayName')
+    instructor_id="unknown"
+    fullname="unknown"
+    if site.get('siteOwner'):
+        instructor_id = site.get('siteOwner').get('userId')
+        fullname = site.get('siteOwner').get('userDisplayName')
     coursename = site.get('title')
     yearsch = re.match(r'\[.*\]', coursename)
     yearsemester = "10009"
