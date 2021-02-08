@@ -166,6 +166,16 @@ def option():
     else:
         return redirect(url_for('login'))
 
+@app.route('/update_subject')
+def update_subject():
+    studentid = session.get('student_id')
+    if studentid:
+        update_student_needs_to_update_sitelist(studentid,need_to_update_sitelist=1)
+        redirect_pages[studentid]='option'
+        return redirect(url_for('login'))
+    else:
+        return redirect(url_for('login'))
+
 
 
 # @app.route('/')
