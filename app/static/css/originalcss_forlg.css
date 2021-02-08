@@ -193,11 +193,11 @@ footer {
 
 
 /*資料ダウンロードページ*/
-label > a > .undownloaded{
+label >　.undownloaded{
     color: skyblue;
 }
 
-label > a > .downloaded{
+label >.downloaded{
     color: orchid;
 }
 
