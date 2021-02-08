@@ -156,7 +156,7 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         get_membership = get_course_id_from_api(get_membership_json(ses))
         already_known= get_courses_id_to_be_taken(student_id)
         # 新規のもののみを取り上げる
-        get_membership["site_list"] = [i for i in get_membership if i not in already_known]
+        get_membership["site_list"] = [i for i in get_membership["site_list"] if i not in already_known]
     if student_id != "":
         # get_assignments = get_assignments_from_api(assignments.json(), student_id)
         get_sites = {"courses":[],"student_courses":[]}
