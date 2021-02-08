@@ -99,65 +99,10 @@ def proxyticket():
             else:
                 last_update = 0
                 add_student(student_id, fullname,last_update= now)
-            get_membership = {"student_id": "", "site_list":[]}
-            if need_to_update_sitelist == 0:                
-                get_membership["student_id"] = student_id
-                get_membership["site_list"] = get_courses_id_to_be_taken(student_id)
-            else:
-                # 時間かかる
-                last_update = 0
-                get_membership = get_course_id_from_api(get_membership_json(ses))
-            if student_id != "":
-                # get_assignments = get_assignments_from_api(assignments.json(), student_id)
-                get_sites = {"courses":[],"student_courses":[]}
-                get_resources = {"resources":[],"student_resources":[]}
-                asyncio.set_event_loop(asyncio.SelectorEventLoop())
-                loop = asyncio.get_event_loop()
-                c_statements = []
-                s_statements = []
-                p_statements = []
-                for courseid in get_membership["site_list"]:
-                    c_statements.append(async_get_content(courseid, ses))
-                    s_statements.append(async_get_site(courseid, ses))
-                    p_statements.append(async_get_site_pages(courseid, ses))
-                    # site = s.get(f"{api_url}site/{courseid}.json")
-                    # resources = s.get(f"{api_url}content/site/{courseid}.json")
-                    # get_site = get_course_from_api(site.json(), student_id)
-                    # get_sites["courses"].append(get_site["course"])
-                    # get_sites["student_courses"].append(get_site["student_course"])
-                    # get_resource = get_resources_from_api(resources.json(),courseid,student_id)
-                    # get_resources["resources"].append(get_resource["resources"])
-                    # get_resources["student_resources"].append(get_resources["student_resources"])
-                c_statements.extend(s_statements)
-                c_statements.extend(p_statements)
-                c_statements.extend([async_get_assignments(ses),async_get_user_info(ses)])
-                tasks = asyncio.gather(*c_statements)
-                content_site = loop.run_until_complete(tasks)
-                content_site_len = int(len(content_site))-2
-                one_third_content_site_len = content_site_len//3
-                contents = content_site[0:one_third_content_site_len]
-                sites = content_site[one_third_content_site_len:one_third_content_site_len*2]
-                pages = content_site[one_third_content_site_len*2:content_site_len]
-                get_assignments = get_assignments_from_api(content_site[content_site_len],student_id)
-                user_info = get_user_info_from_api(content_site[content_site_len+1])
-                index = 0
-                for courseid in get_membership["site_list"]:
-                    get_resource = get_resources_from_api(contents[index],courseid,student_id)
-                    get_site = get_course_from_api(sites[index], student_id)
-                    if get_site:
-                        get_site["course"]["page_id"] = get_page_from_api(pages[index])
-                        get_sites["courses"].append(get_site["course"])
-                        get_sites["student_courses"].append(get_site["student_course"])
-                        get_resources["resources"].extend(get_resource["resources"])
-                        get_resources["student_resources"].extend(get_resource["student_resources"])
-                    index += 1
-                # student_id       student_id
-                # get_membership   {"student_id": , "site_list": []}
-                # get_assignments  {"assignments": [], student_assignments: []}
-                # get_sites        {"courses": [], "student_courses": []}
-                # get_resources    {"resources":[], "student_resources": []}
-                # user_info        {"student_id": , "fullname": }
-                sync_student_contents(student_id, get_sites, get_assignments, get_resources, now, last_update=last_update)
+            get_data_from_api_and_update(student_id,ses,now,last_update,0)
+            if need_to_update_sitelist == 1:
+                get_data_from_api_and_update(student_id,ses,now,0,1)
+            if student_id !="":
                 update_student_needs_to_update_sitelist(student_id)
             logging.info(f"TIME {student_id}:{time.perf_counter()-start_time}")
     
@@ -210,6 +155,26 @@ def tutrial():
 def help(page):
     #2021/01/14 Shinji Akayama: 参照するhtmlが間違っていたので修正しました。FAQ_{page}は完全なhtmlではありません
     return flask.render_template(f"_flexible_help_{page}.htm")
+
+@app.route('/option')
+def option():
+    studentid = session.get('student_id')
+    if studentid:
+        data ={"others":[]}
+        data = setdefault_for_overview(studentid)
+        return flask.render_template(f"option.htm",data=data)
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/update_subject')
+def update_subject():
+    studentid = session.get('student_id')
+    if studentid:
+        update_student_needs_to_update_sitelist(studentid,need_to_update_sitelist=1)
+        redirect_pages[studentid]='option'
+        return redirect(url_for('login'))
+    else:
+        return redirect(url_for('login'))
 
 
 

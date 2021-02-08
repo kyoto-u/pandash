@@ -7,6 +7,13 @@ $(document).ready(function(){
         if (numofcourses > 3 && display_width>=768) {
             $('.ressubs').attr('style', 'height: 200px; overflow-y: scroll;');
         }
+        if (display_width<768){
+            $('#card-columns').attr('style', 'auto');
+        }else if(numofcourses<3){
+            $('#card-columns').attr('style', 'columns:'+numofcourses);
+        }else{
+            $('#card-columns').attr('style', 'columns:3');
+        }
     }
 
     $('a.resource').on('click', function(){
