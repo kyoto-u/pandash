@@ -1,15 +1,39 @@
-<div class="container">
-    <h2>表示科目</h2>
-    <h4>表示する科目を選択してください</h4>
-    <div class="row">
-        <input id="check01" type="checkbox">
-        <label for="check01">授業１</label>
-    </div>
-    <div class="row">
-        <input id="check02" type="checkbox">
-        <label for="check02">授業２</label>
-    </div>
-    <div class="row">
-        <button class="btn btn-secondary mx-auto">適用する</button>
-    </div>
+<div class="container mt-2">
+    <h1 class="mb-5">表示科目</h1>
+    <section class="mb-4">
+        <h3 class="pb-3">・表示科目の更新</h3>
+        <div class="container">
+            <div class="row">
+                <div>最終更新: YYYY/MM/DD HH:MM:SS</div>
+                <button class="btn btn-secondary mx-auto">更新する</button>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h3 class="pb-3">・表示する科目の選択</h3>
+        <div class="container border-left">
+            <ul>
+                <li class="list-unstyled">
+                    <div class="d-inline-flex">
+                        <div class="form-check">
+                            <input id="check01" type="checkbox">
+                            <label class="ml-1" for="check01">授業１</label>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-unstyled">
+                    <div class="d-inline-flex">
+                        <div class="form-check">
+                            <input id="check02" type="checkbox">
+                            <label class="ml-1" for="check02">授業２</label>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+</div>
+<div class="row">
+    <button class="btn btn-secondary mx-auto" disabled>適用する</button>
+</div>
 </div>
