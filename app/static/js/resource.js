@@ -8,7 +8,11 @@ $(document).ready(function(){
             $('.ressubs').attr('style', 'height: 200px; overflow-y: scroll;');
         }
         if (display_width<768){
-            $('#card-columns').attr('style', 'auto')
+            $('#card-columns').attr('style', 'auto');
+        }else if(numofcourses<3){
+            $('#card-columns').attr('style', 'columns:'+numofcourses);
+        }else{
+            $('#card-columns').attr('style', 'columns:3');
         }
     }
 
