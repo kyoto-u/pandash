@@ -211,6 +211,9 @@ def help(page):
     #2021/01/14 Shinji Akayama: 参照するhtmlが間違っていたので修正しました。FAQ_{page}は完全なhtmlではありません
     return flask.render_template(f"_flexible_help_{page}.htm")
 
+@app.route('/option')
+def option():
+    return flask.render_template(f"option.htm")
 
 
 # @app.route('/')
