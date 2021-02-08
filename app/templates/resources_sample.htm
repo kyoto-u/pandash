@@ -61,9 +61,9 @@
       <!-- <span><i class="far fa-folder">[2020前期月5]ILASセミナーのリソース</i></span> -->
 
       {% if numofcourses < 3 %}
-      <div class="card-columns" style="columns:{{numofcourses}}">
+      <div class="card-columns" style="columns:{{numofcourses}}" id="card-columns">
       {% else %}
-      <div class="card-columns" style="columns:3">
+      <div class="card-columns" style="columns:3" id="card-columns">
       {% endif %}
         {{ html | safe}}
 
