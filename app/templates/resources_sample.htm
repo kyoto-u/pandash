@@ -4,11 +4,11 @@
 <div class="row" style="pointer-events: all;">
   <div class="col-sm-12 col-md-2 border-right">
     <div class="container" id="resources_searchBox">
-      <div class=" d-flex flex-md-column">
+      <div class="d-flex flex-md-column">
         <div class="container" style="background-color: silver;">
           <!-- See line 7 
                 pointer-events: all; -->
-          <div class="d-flex mx-5 py-2 mb-2">
+          <div class="d-flex mx-5 py-2 mb-2 flex-md-column">
             <h6 id="searchlabel" class="text-nowrap">しぼりこみ検索</h6>
             <!--曜日しぼりこみ-->
             <div class="form-group mx-5">
@@ -27,10 +27,6 @@
               data-target="#modal_timeboard_select">時間割で検索</button>
           </div>
         </div>
-
-        <!--時間割検索機能-->
-        <button id="timesearchbutton" type="button" class="btn btn-dark" data-toggle="modal"
-          data-target="#modal_timeboard_select">時間割で検索</button>
       </div>
     </div>
     <!-- <form>
@@ -69,17 +65,16 @@
     <div class="col-12">
       <!-- <span><i class="far fa-folder">[2020前期月5]ILASセミナーのリソース</i></span> -->
 
-      {% if numofcourses < 3 %}
-      <div class="card-columns" style="columns:{{numofcourses}}" id="card-columns">
-      {% else %}
-      <div class="card-columns" style="columns:3" id="card-columns">
-      {% endif %}
-        {{ html | safe}}
+      {% if numofcourses < 3 %} <div class="card-columns" style="columns:{{numofcourses}}" id="card-columns">
+        {% else %}
+        <div class="card-columns" style="columns:3" id="card-columns">
+          {% endif %}
+          {{ html | safe}}
 
-        <script>
-          var numofcourses = {{ numofcourses| tojson }};
-        </script>
-      </div>
+          <script>
+            var numofcourses = {{ numofcourses| tojson }};
+          </script>
+        </div>
 
     </div>
 
