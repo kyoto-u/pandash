@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/originalcss_formd.css') }}" type="text/css"
     media="screen and (max-width:767px)" />
 </head>
-{#
+
 <div class="modal fade" id="modal_timeboard_select" tabindex="-1" role="dialog" aria-labelledby="label1"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-fluid" role="document">
@@ -126,7 +126,7 @@
     </div>
   </div>
 </div>
-#}
+
 
 
 <body>
@@ -189,80 +189,85 @@
       <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <div class="container" id="menubar">
           <a class="navbar-brand " href="/"></a>
+          <ul class="navbar-nav mr-auto toggle_lefts" style="display: flex; flex-direction: row;">　
+            <li class="nav-item mr-1">
+              <a class="btn btn-info navbtns  text-nowrap
+                          {% if '/tasklist' in request.path  %}
+                          active
+                          {% endif %}
+                          " href="/tasklist" role="button">
+
+                一覧表示</a>
+            <li class="nav-item">
+              <a class="btn btn-info navbtns text-nowrap
+                          {% if '/overview' in request.path  %}
+                          active
+                          {% endif %}
+                          " href="/overview" role="button">時間割表示</a>
+            </li>
+            <li class="nav-item navbtns">
+              <a class="btn btn-info navbtns text-nowrap
+                          {% if '/resourcelist' in request.path  %}
+                          active
+                          {% endif %}
+                          " href="/resourcelist" role="button">授業資料</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <li class="btn nav-item ml-auto mr-3 my-auto">
+              <a id="help_button" role="button" {% if '/tasklist' in request.path %}
+                onclick="window.open('/help/tasklist', '', 'width=800,height=500'); return false;" {% elif '/overview'
+                in request.path %} onclick="window.open('/help/overview', '', 'width=800,height=500'); return false;" {%
+                elif '/resourcelist' in request.path %}
+                onclick="window.open('/help/resdownload', '', 'width=800,height=500'); return false;" {% else %}
+                class="d-none" {% endif %} role="button" 　data-toggle="tooltip" title="ヘルプ">
+                <i class="fas fa-2x fa-question-circle"></i>
+              </a>
+            </li>
+          </ul>
           <button id="logotoggle" class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown2" aria-expanded="false"
             aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown2">
-            <ul class="navbar-nav mr-auto toggle_lefts">　
-              <li class="nav-item mr-1">
-                <a class="btn btn-info navbtns  text-nowrap btn-block border-bottom
-                {% if '/tasklist' in request.path  %}
-                active
-                {% endif %}
-                " href="/tasklist" role="button">
+            <section>
+              <ul class="navbar-nav ml-auto pr-3 toggle_rights">
 
-                  一覧表示</a>
-              <li class="nav-item">
-                <a class="btn btn-info navbtns text-nowrap btn-block border-bottom
-                {% if '/overview' in request.path  %}
-                active
-                {% endif %}
-                " href="/overview" role="button">時間割表示</a>
-              </li>
-              <li class="nav-item navbtns">
-                <a class="btn btn-info navbtns text-nowrap btn-block border-bottom
-                {% if '/resourcelist' in request.path  %}
-                active
-                {% endif %}
-                " href="/resourcelist" role="button">授業資料</a>
-              </li>
-            </ul>
-
-            <ul class="navbar-nav ml-auto pr-3 toggle_rights">
-              <li class="btn nav-item mr-3 my-auto">
-                <a id="help_button" role="button" {% if '/tasklist' in request.path %}
-                  onclick="window.open('/help/tasklist', '', 'width=800,height=500'); return false;" {% elif '/overview'
-                  in request.path %} onclick="window.open('/help/overview', '', 'width=800,height=500'); return false;"
-                  {% elif '/resourcelist' in request.path %}
-                  onclick="window.open('/help/resdownload', '', 'width=800,height=500'); return false;" {% else %}
-                  class="d-none" {% endif %} role="button" 　data-toggle="tooltip" title="ヘルプ">
-                  <i class="fas fa-2x fa-question-circle"></i>
-                </a>
-              </li>
-              <li id="logout_button" class="nav-item mr-3 text-nowrap btn-block">
-                <a class="btn btn-danger btn-block" href="/logout" data-toggle="tooltip" title="ログアウトします">ログアウト</a>
-              </li>
+                <li id="logout_button" class="nav-item mr-3 text-nowrap btn-block">
+                  <a class="btn btn-danger btn-block" href="/logout" data-toggle="tooltip" title="ログアウトします">ログアウト</a>
+                </li>
 
 
-              <!-- <li class="nav-item my-auto">
+
+                <!-- <li class="nav-item my-auto">
                 <a id="ContactUs_link" class="nav-item text-nowrap" href="/ContactUs" 　data-toggle="tooltip"
                   title="疑問点がございます場合はこちらをクリックしてください">お問い合わせ</a>
               </li> -->
 
 
-              <li class="nav-item my-auto">
-                <div class="dropdown">
-                  <button type="button" id="menu_dropdown" class="btn btn-outline-light dropdown-toggle btn-block"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    メニュー
-                  </button>
-                  <div id="menu_dropdown_list" class="dropdown-menu" aria-labelledby="menu_dropdown">
-                    <a class="dropdown-item menu_link border-bottom" href="/ical" data-toggle="tooltip"
-                      title="iCalファイルをダウンロードします">iCalと共有</a>
-                    <a class="dropdown-item menu_link border-bottom" href="/option">設定</a>
-                    <a class="dropdown-item menu_link border-bottom" href="/ContactUs">お問い合わせ</a>
-                  </div>
-                </div>
-              </li>
-
-
-            </ul>
-
+                <li class="nav-item my-auto">
+                  <div class="dropdown">
+                    <button type="button" id="menu_dropdown" class="btn btn-outline-light dropdown-toggle btn-block"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      メニュー
+                    </button>
+                    <div id="menu_dropdown_list" class="dropdown-menu" aria-labelledby="menu_dropdown">
+                      <a class="dropdown-item menu_link border-bottom" href="/ical" data-toggle="tooltip"
+                        title="iCalファイルをダウンロードします">iCalと共有</a>
+                      <a class="dropdown-item menu_link border-bottom" href="/option">設定</a>
+                      <a class="dropdown-item menu_link border-bottom" href="/ContactUs">お問い合わせ</a>
+            </section>
           </div>
         </div>
-      </nav>
+        </li>
+
+
+        </ul>
+
+    </div>
+    </div>
+    </nav>
     </div>
 
   </header>
