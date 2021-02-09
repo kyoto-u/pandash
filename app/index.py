@@ -1025,9 +1025,10 @@ def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
             task["status"]="期限切れ"
 
     
-    tasks = sorted(tasks, key=lambda x: x["deadline"])
-    tasks = sorted(tasks, key=lambda x: order_status(x["status"]))
-    return tasks
+    new_tasks = sorted([i for i in tasks if i["status"] != "期限切れ"], key=lambda x: x["deadline"])
+    new_tasks.extend(sorted([i for i in tasks if i["status"] == "期限切れ"], key=lambda x: x["deadline"],reverse=True))
+    new_tasks = sorted(new_tasks, key=lambda x: order_status(x["status"]))
+    return new_tasks
 
 
 def timejudge(task, max_time_left):
