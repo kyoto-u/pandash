@@ -171,7 +171,7 @@ def update_subject():
     studentid = session.get('student_id')
     if studentid:
         update_student_needs_to_update_sitelist(studentid,need_to_update_sitelist=1)
-        return redirect(url_for('login'),page='option')
+        return redirect(url_for('login',page='option'))
     else:
         return redirect(url_for('login'))
 
