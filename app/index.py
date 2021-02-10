@@ -773,14 +773,14 @@ def get_student(studentid):
         studentdata = None
     return studentdata
 
-def add_student(studentid, fullname, last_update = 0, language = "ja"):
+def add_student(studentid, fullname, last_update = 0, last_update_subject = 0, language = "ja"):
     students = session.query(student.Student.student_id).all()
     isExist = False
     for i in students:
         if list(i)[0] == studentid:
             isExist = True
             break
-    new_student = {"student_id":studentid, "fullname":fullname,"last_update":last_update,"language":language}
+    new_student = {"student_id":studentid, "fullname":fullname,"last_update":last_update, "last_update_subject":last_update_subject,"language":language}
     if isExist == False:
         session.execute(student.Student.__table__.insert(),new_student)
     else:

@@ -97,10 +97,13 @@ def proxyticket():
                 if studentdata.show_already_due==0:show_only_unfinished=1
                 need_to_update_sitelist = studentdata.need_to_update_sitelist
                 last_update = studentdata.last_update
-                add_student(student_id, fullname,last_update= now, language = studentdata.language)
+                if need_to_update_sitelist:
+                    add_student(student_id, fullname,last_update= now, last_update_subject= now, language = studentdata.language)
+                else:
+                    add_student(student_id, fullname,last_update= now, last_update_subject= studentdata.last_update_subject, language = studentdata.language)
             else:
                 last_update = 0
-                add_student(student_id, fullname,last_update= now)
+                add_student(student_id, fullname,last_update= now, last_update_subject= now)
             get_data_from_api_and_update(student_id,ses,now,last_update,0)
             if need_to_update_sitelist == 1:
                 get_data_from_api_and_update(student_id,ses,now,0,1)

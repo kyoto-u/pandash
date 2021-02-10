@@ -8,5 +8,6 @@ class Studentcourse(settings.Base):
     sc_id = sqlalchemy.Column(String(80), primary_key=True)
     student_id = sqlalchemy.Column(String(40),index=True)
     course_id = sqlalchemy.Column(String(40))
+    hide = sqlalchemy.Column(Integer())
 
 settings.Base.metadata.create_all(settings.engine)
