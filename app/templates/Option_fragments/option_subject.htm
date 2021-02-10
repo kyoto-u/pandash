@@ -8,30 +8,24 @@
                 <button class="btn btn-secondary mx-auto" onclick="location.href='/update_subject'">更新する</button>
             </div>
         </div>
-    <!-- </section>
+    </section>
     <section>
         <h3 class="pb-3">・表示する科目の選択</h3>
         <div class="container border-left">
             <ul>
-                <li class="list-unstyled">
-                    <div class="d-inline-flex">
-                        <div class="form-check">
-                            <input id="check01" type="checkbox">
-                            <label class="ml-1" for="check01">授業１</label>
+                {% for course in courses_to_be_taken %}
+                    <li class="list-unstyled">
+                        <div class="d-inline-flex">
+                            <div class="form-check">
+                                <input class="course_checkbox" value="{{course.course_id}}" type="checkbox" {% if course.hide==0 %}checked{% endif %}>
+                                <label class="ml-1" for="{{course.course_id}}">course.coursename</label>
+                            </div>
                         </div>
-                    </div>
-                </li>
-                <li class="list-unstyled">
-                    <div class="d-inline-flex">
-                        <div class="form-check">
-                            <input id="check02" type="checkbox">
-                            <label class="ml-1" for="check02">授業２</label>
-                        </div>
-                    </div>
-                </li>
+                    </li>
+                {% endfor %}
             </ul>
         </div>
-    </section> -->
+    </section>
     <section>
         <h3>
             <input type="checkbox" id="show_already_due_check" {% if show_already_due == 1 %}checked{% endif %}>締切を過ぎた課題を表示する

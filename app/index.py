@@ -483,26 +483,27 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
         tasks.append(task)
     return tasks
 
-def get_courses_to_be_taken(studentid):
+# mode = 1 のときはhideのものも取得
+def get_courses_to_be_taken(studentid, mode=0):
     data=[]
     courses = session.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
     for i in courses:
-        # if course.hide == 1:
-        #     continue
+        if mode==0 and course.hide==1:
+            continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
         if coursedata[0].yearsemester in SHOW_YEAR_SEMESTER:
             data.append(coursedata[0])
     return data
 
-def get_courses_id_to_be_taken(studentid):
+def get_courses_id_to_be_taken(studentid, mode=0):
     data=[]
     courses = session.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
     for i in courses:
-        # if course.hide == 1:
-        #     continue
+        if mode==0 and course.hide == 1:
+            continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
         if coursedata[0].yearsemester in SHOW_YEAR_SEMESTER:
@@ -969,6 +970,18 @@ def update_student_needs_to_update_sitelist(student_id,need_to_update_sitelist=0
 def update_student_show_already_due(student_id,show_already_due=0):
     st = session.query(student.Student).filter(student.Student.student_id==student_id).first()
     st.show_already_due = show_already_due
+    session.commit()
+    return
+
+def update_student_course_hide(student_id, show_course_list, hide_course_list):
+    update_list = []
+    for show_course in show_course_list:
+        sc_id = f'{student_id}:{show_course}'
+        update_list.append({"sc_id":sc_id,"hide":0})
+    for hide_course in hide_course_list:
+        sc_id = f'{student_id}:{hide_course}'
+        update_list.append({"sc_id":sc_id,"hide":1})
+    session.bulk_update_mappings(studentcourse.Studentcourse, update_list)
     session.commit()
     return
 

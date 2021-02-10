@@ -167,9 +167,16 @@ def option():
     if studentid:
         data ={"others":[]}
         studentdata = get_student(studentid)
+        coursesdata = get_courses_to_be_taken(studentid, mode=1)
+        courses_to_be_taken = []
+        for course in coursesdata:
+            course_id = course.course_id
+            hide = course.hide
+            coursename = get_coursename(courseid=course_id)
+            courses_to_be_taken.append({'course_id':course_id,'coursename':coursename,'hide':hide})
         data = setdefault_for_overview(studentid)
         last_update_subject= str(datetime.datetime.fromtimestamp(studentdata.last_update_subject,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-        return flask.render_template(f"option.htm",data=data, show_already_due=studentdata.show_already_due, last_update_subject = last_update_subject)
+        return flask.render_template(f"option.htm",data=data, show_already_due=studentdata.show_already_due, last_update_subject = last_update_subject, courses_to_be_taken=courses_to_be_taken)
     else:
         return redirect(url_for('login'))
 
@@ -403,7 +410,10 @@ def settings_change():
     studentid = session.get('student_id')
     if studentid:
         show_already_due = request.json['show_already_due']
+        show_course_list = request.json['show_course_list']
+        hide_course_list = request.json['hide_course_list']
         update_student_show_already_due(studentid, show_already_due)
+        update_student_course_hide(studentid, show_course_list,hide_course_list)
         return 'success'
     else:
         return 'failed'
