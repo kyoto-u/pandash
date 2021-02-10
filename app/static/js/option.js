@@ -12,6 +12,7 @@ $('#apply_btn').on('click', function() {
         contentType: 'application/json',
         success: function (response) {
             console.log(response);
+            $('apply_msg').show('0.4')
         },
         error: function (error) {
             console.log(error);
