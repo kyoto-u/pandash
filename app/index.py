@@ -225,7 +225,7 @@ def get_assignments_from_api(assignments, student_id):
         course_id = assignment.get('context')
         modifieddate = assignment.get('timeLastModified').get('time')
         status = assignment.get('status')
-        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":"未","student_id":student_id})
+        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":"未","student_id":student_id,"clicked":0})
         assignment_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifieddate":modifieddate,"course_id":course_id})
     assignment_dict = {"student_assignments":sa_list, "assignments":assignment_list}
     return assignment_dict
@@ -987,6 +987,15 @@ def update_task_status(studentid, taskids: list, mode=0):
         update_list.append({"sa_id":sa_id, "status":status})
     session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
     session.commit()
+    return
+
+def update_task_clicked_status(studentid, taskids:list):
+    update_list = []
+    for t_id in taskids:
+        sa_id = f'{student}:{t_id}'
+        update_list.append({"sa_id":sa_id, "clicked":1})
+    session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
+    session.commit() 
     return
 
 def add_studentcourse(studentid, data):

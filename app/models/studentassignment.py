@@ -11,5 +11,6 @@ class Student_Assignment(settings.Base):
     course_id = sqlalchemy.Column(String(80))
     student_id = sqlalchemy.Column(String(40),index=True)
     status = sqlalchemy.Column(String(8))
+    clicked = sqlalchemy.Column(Integer())
 
 settings.Base.metadata.create_all(settings.engine)

@@ -360,6 +360,16 @@ def task_unfinish():
     else:
         return 'failed'
 
+@app.route('/task_clicked', methods=['POST'])
+def task_clicked():
+    studentid = session.get('student_id')
+    if studentid:
+        task_id = request.json['task_id']
+        update_task_clicked_status(studentid, task_id)
+        return 'success'
+    else:
+        return 'failed'
+
 @app.route('/pgtCallback', methods=['GET', 'POST'])
 def pgtCallback():
     if request.method == 'GET':

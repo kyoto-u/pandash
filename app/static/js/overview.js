@@ -4,6 +4,24 @@ $(function () {
 
   function window_load() {
     var display_width = $(window).width();
+    $('a.task_link').on('click', function(){
+      var r_links = new Array();
+      var link = $(this).attr('href');
+      r_links.push(link);
+      var resourcedata = JSON.stringify({"r_links":r_links});
+      $.ajax({
+          type: 'POST',
+          url: '/task_clicked',
+          data: resourcedata,
+          contentType: 'application/json',
+          success: function(response){
+              console.log(response);
+          },
+          error: function(error){
+              console.log(error);
+          }
+      });
+  });
     if (display_width >= 768) {
       $("#finish_form").droppable({
         accept: ".taskcard",
