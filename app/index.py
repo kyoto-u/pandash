@@ -489,7 +489,7 @@ def get_courses_to_be_taken(studentid, mode=0):
     courses = session.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
     for i in courses:
-        if mode==0 and course.hide==1:
+        if mode==0 and i.hide==1:
             continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
@@ -502,7 +502,7 @@ def get_courses_id_to_be_taken(studentid, mode=0):
     courses = session.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
     for i in courses:
-        if mode==0 and course.hide == 1:
+        if mode==0 and i.hide == 1:
             continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
