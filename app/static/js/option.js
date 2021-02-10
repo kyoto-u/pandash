@@ -12,10 +12,15 @@ $('#apply_btn').on('click', function() {
         contentType: 'application/json',
         success: function (response) {
             console.log(response);
-            $('#apply_msg').show('0.4')
+            $('#cancel_msg').fadeOut();
+            $('#apply_msg').fadeOut();
+            $('#apply_msg').show('0.4');
         },
         error: function (error) {
             console.log(error);
+            $('#apply_msg').fadeOut();
+            $('#cancel_msg').fadeOut();
+            $('#cancel_msg').show('0.4');
         }
     });
 })
