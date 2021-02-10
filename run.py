@@ -167,11 +167,11 @@ def option():
     if studentid:
         data ={"others":[]}
         studentdata = get_student(studentid)
-        coursesdata = get_courses_to_be_taken(studentid, mode=1)
+        coursesdata = get_courses_to_be_taken(studentid, mode=1, return_data='student_course')
         courses_to_be_taken = []
-        for course in coursesdata:
-            course_id = course.course_id
-            hide = course.hide
+        for coursedata in coursesdata:
+            course_id = coursedata.course_id
+            hide = coursedata.hide
             coursename = get_coursename(courseid=course_id)
             courses_to_be_taken.append({'course_id':course_id,'coursename':coursename,'hide':hide})
         data = setdefault_for_overview(studentid)
