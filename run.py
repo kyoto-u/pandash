@@ -259,10 +259,12 @@ def controller_for_students(studentid):
 def tasklist_redirect():
     studentid = session.get('student_id')
     if studentid:
-        show_already_due = get_student(studentid).show_already_due
-        show_only_unfinished = 0
-        if show_already_due==0:show_only_unfinished=1
-        return flask.redirect(flask.url_for('tasklist',show_only_unfinished=show_only_unfinished,max_time_left = 3))
+        studentdata=get_student(studentid)
+        if studentdata:
+            show_already_due = studentdata.show_already_due
+            show_only_unfinished = 0
+            if show_already_due==0:show_only_unfinished=1
+            return flask.redirect(flask.url_for('tasklist',show_only_unfinished=show_only_unfinished,max_time_left = 3))
     else:
         return redirect(url_for('login'))
 
@@ -306,10 +308,12 @@ def overview():
 def tasklist_day_redirect(day):
     studentid = session.get('student_id')
     if studentid:
-        show_already_due = get_student(studentid).show_already_due
-        show_only_unfinished = 0
-        if show_already_due==0:show_only_unfinished=1
-        return flask.redirect(flask.url_for('tasklist_day',day=day, show_only_unfinished=show_only_unfinished,max_time_left = 3))
+        studentdata=get_student(studentid)
+        if studentdata:
+            show_already_due = studentdata.show_already_due
+            show_only_unfinished = 0
+            if show_already_due==0:show_only_unfinished=1
+            return flask.redirect(flask.url_for('tasklist_day',day=day, show_only_unfinished=show_only_unfinished,max_time_left = 3))
     else:
         return redirect(url_for('login'))
 
@@ -317,12 +321,13 @@ def tasklist_day_redirect(day):
 def tasklist_course_redirect(courseid):
     studentid = session.get('student_id')
     if studentid:
-        show_already_due = get_student(studentid).show_already_due
-        show_only_unfinished = 0
-        if show_already_due==0:show_only_unfinished=1
-        return flask.redirect(flask.url_for('tasklist_course',courseid=courseid,show_only_unfinished=show_only_unfinished,max_time_left = 3))
-    else:
-        return redirect(url_for('login'))
+        studentdata=get_student(studentid)
+        if studentdata:
+            show_already_due = studentdata.show_already_due
+            show_only_unfinished = 0
+            if show_already_due==0:show_only_unfinished=1
+            return flask.redirect(flask.url_for('tasklist_course',courseid=courseid,show_only_unfinished=show_only_unfinished,max_time_left = 3))
+    return redirect(url_for('login'))
 
 @app.route('/tasklist/day/<day>/<int:show_only_unfinished>/<int:max_time_left>')
 def tasklist_day(day,show_only_unfinished,max_time_left):
