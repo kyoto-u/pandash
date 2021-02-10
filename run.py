@@ -381,7 +381,7 @@ def settings_change():
     studentid = session.get('student_id')
     if studentid:
         show_already_due = request.json['show_already_due']
-        update_student_show_already_due(show_already_due)
+        update_student_show_already_due(studentid, show_already_due)
         return 'success'
     else:
         return 'failed'
