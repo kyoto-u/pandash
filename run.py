@@ -156,13 +156,14 @@ def help(page):
     #2021/01/14 Shinji Akayama: 参照するhtmlが間違っていたので修正しました。FAQ_{page}は完全なhtmlではありません
     return flask.render_template(f"_flexible_help_{page}.htm")
 
-@app.route('/option')
+@app.route('/option', methods=['GET'])
 def option():
     studentid = session.get('student_id')
     if studentid:
         data ={"others":[]}
+        studentdata = get_student(studentid)
         data = setdefault_for_overview(studentid)
-        return flask.render_template(f"option.htm",data=data)
+        return flask.render_template(f"option.htm",data=data, show_already_due=studentdata.show_already_due)
     else:
         return redirect(url_for('login'))
 
@@ -366,6 +367,16 @@ def task_clicked():
     if studentid:
         task_id = request.json['task_id']
         update_task_clicked_status(studentid, task_id)
+        return 'success'
+    else:
+        return 'failed'
+
+@app.route('/settings_change', methods=['POST'])
+def settings_change():
+    studentid = session.get('student_id')
+    if studentid:
+        show_already_due = request.json['show_already_due']
+        update_student_show_already_due(show_already_due)
         return 'success'
     else:
         return 'failed'

@@ -966,6 +966,12 @@ def update_student_needs_to_update_sitelist(student_id,need_to_update_sitelist=0
     session.commit()
     return
 
+def update_student_show_already_due(student_id,show_already_due=0):
+    st = session.query(student.Student).filter(student.Student.student_id==student_id).first()
+    st.show_already_due = show_already_due
+    session.commit()
+    return
+
 def update_resource_status(studentid, resourceids: list):
     srs = session.query(studentresource.Student_Resource.resource_url, studentresource.Student_Resource.sr_id).filter(
         studentresource.Student_Resource.student_id == studentid).all()

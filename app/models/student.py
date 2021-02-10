@@ -11,5 +11,6 @@ class Student(settings.Base):
     language = sqlalchemy.Column(String(40))
     # studentcourse table の更新が必要かどうか
     need_to_update_sitelist = sqlalchemy.Column(Integer(), default=0)
+    show_already_due = sqlalchemy.Column(sqlalchemy.Integer(), default=1)
 
 settings.Base.metadata.create_all(settings.engine)
