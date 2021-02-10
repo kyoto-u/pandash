@@ -979,14 +979,11 @@ def update_student_show_already_due(student_id,show_already_due=0):
     session.commit()
     return
 
-def update_student_course_hide(student_id, show_course_list, hide_course_list):
+def update_student_course_hide(student_id, course_list, hide):
     update_list = []
-    for show_course in show_course_list:
-        sc_id = f'{student_id}:{show_course}'
-        update_list.append({"sc_id":sc_id,"hide":0})
-    for hide_course in hide_course_list:
-        sc_id = f'{student_id}:{hide_course}'
-        update_list.append({"sc_id":sc_id,"hide":1})
+    for coursedata in course_list:
+        sc_id = f'{student_id}:{coursedata}'
+        update_list.append({"sc_id":sc_id,"hide":hide})
     session.bulk_update_mappings(studentcourse.Studentcourse, update_list)
     session.commit()
     return

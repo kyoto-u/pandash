@@ -410,15 +410,23 @@ def task_clicked():
     else:
         return 'failed'
 
-@app.route('/settings_change', methods=['POST'])
-def settings_change():
+@app.route('/course_hide', methods=['POST'])
+def course_hide():
+    studentid = session.get('student_id')
+    if studentid:
+        course_list = request.json['course_list']
+        hide = request.json['hide']
+        update_student_course_hide(studentid,course_list,hide)
+        return 'success'
+    else:
+        return 'failed'
+
+@app.route('/show_already_due', methods=['POST'])
+def show_already_due():
     studentid = session.get('student_id')
     if studentid:
         show_already_due = request.json['show_already_due']
-        show_course_list = request.json['show_course_list']
-        hide_course_list = request.json['hide_course_list']
         update_student_show_already_due(studentid, show_already_due)
-        update_student_course_hide(studentid, show_course_list,hide_course_list)
         return 'success'
     else:
         return 'failed'
