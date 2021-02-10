@@ -998,7 +998,7 @@ def update_task_status(studentid, taskids: list, mode=0):
 def update_task_clicked_status(studentid, taskids:list):
     update_list = []
     for t_id in taskids:
-        sa_id = f'{student}:{t_id}'
+        sa_id = f'{studentid}:{t_id}'
         update_list.append({"sa_id":sa_id, "clicked":1})
     session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
     session.commit() 
