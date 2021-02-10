@@ -92,9 +92,9 @@ def proxyticket():
             session["student_id"] = student_id
             now = now = floor(time.time())
             studentdata = get_student(student_id)
-            if studentdata.show_already_due==0:show_only_unfinished=1
             need_to_update_sitelist = 1
             if studentdata:
+                if studentdata.show_already_due==0:show_only_unfinished=1
                 need_to_update_sitelist = studentdata.need_to_update_sitelist
                 last_update = studentdata.last_update
                 add_student(student_id, fullname,last_update= now, language = studentdata.language)
