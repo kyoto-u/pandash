@@ -81,6 +81,7 @@ def proxy(pgtiou=None):
 def proxyticket():
     ticket = request.args.get('ticket')
     start_time = time.perf_counter()
+    show_only_unfinished = 0
     if ticket:
         ses = requests.Session()
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
@@ -91,6 +92,7 @@ def proxyticket():
             session["student_id"] = student_id
             now = now = floor(time.time())
             studentdata = get_student(student_id)
+            if studentdata.show_already_due==0:show_only_unfinished=1
             need_to_update_sitelist = 1
             if studentdata:
                 need_to_update_sitelist = studentdata.need_to_update_sitelist
@@ -115,7 +117,7 @@ def proxyticket():
             logging.info(f"Requested redirect '{redirect_page}' is invalid because it is portal page")
         else:
             return flask.redirect(redirect_page)
-    return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
+    return flask.redirect(flask.url_for('tasklist',show_only_unfinished=show_only_unfinished,max_time_left = 3))
 
 @app.route('/logout')
 def logout():
