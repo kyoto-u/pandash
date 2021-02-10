@@ -168,7 +168,7 @@ def option():
         data ={"others":[]}
         studentdata = get_student(studentid)
         data = setdefault_for_overview(studentid)
-        return flask.render_template(f"option.htm",data=data, show_already_due=studentdata.show_already_due)
+        return flask.render_template(f"option.htm",data=data, show_already_due=studentdata.show_already_due, last_update_subject = studentdata.last_update_subject)
     else:
         return redirect(url_for('login'))
 
