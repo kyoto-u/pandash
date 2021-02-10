@@ -367,8 +367,8 @@ def task_unfinish():
 def task_clicked():
     studentid = session.get('student_id')
     if studentid:
-        task_id = request.json['task_id']
-        update_task_clicked_status(studentid, task_id)
+        task_ids = request.json['task_ids']
+        update_task_clicked_status(studentid, task_ids)
         return 'success'
     else:
         return 'failed'

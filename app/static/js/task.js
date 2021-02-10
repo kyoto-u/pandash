@@ -5,14 +5,14 @@ $(function() {
     function window_load(){
       var display_width = $(window).width();
       $('a.task_link').on('click', function(){
-        var r_links = new Array();
-        var link = $(this).attr('href');
-        r_links.push(link);
-        var resourcedata = JSON.stringify({"r_links":r_links});
+        var task_ids = new Array();
+        var task_id = $(this).parent().parent().find('tr').attr('id');
+        task_ids.push(task_id);
+        var task_ids = JSON.stringify({"task_ids":task_ids});
         $.ajax({
             type: 'POST',
             url: '/task_clicked',
-            data: resourcedata,
+            data: task_ids,
             contentType: 'application/json',
             success: function(response){
                 console.log(response);
