@@ -6,7 +6,7 @@ $(function () {
     var display_width = $(window).width();
     $('a.task_link').on('click', function(){
       var task_ids = new Array();
-      var task_id = $(this).parent().find('div').attr('id');
+      var task_id = $(this).parent().parent().find('div').attr('id');
       task_ids.push(task_id);
       var task_ids = JSON.stringify({"task_ids":task_ids});
       $.ajax({
