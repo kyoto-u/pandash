@@ -484,7 +484,7 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
     return tasks
 
 # mode = 1 のときはhideのものも取得
-def get_courses_to_be_taken(studentid, mode=0):
+def get_courses_to_be_taken(studentid, mode = 0,return_data = 'course'):
     data=[]
     courses = session.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
@@ -494,7 +494,13 @@ def get_courses_to_be_taken(studentid, mode=0):
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
         if coursedata[0].yearsemester in SHOW_YEAR_SEMESTER:
-            data.append(coursedata[0])
+            if return_data == 'course':
+                data.append(coursedata[0])
+            elif return_data == 'student_course':
+                data.append(i)
+            else:
+                #一応courseを返す
+                data.append(coursedata[0])
     return data
 
 def get_courses_id_to_be_taken(studentid, mode=0):
