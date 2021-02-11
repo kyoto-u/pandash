@@ -14,12 +14,12 @@
             <div class="form-group mx-5">
               <label for="select0a" class="text-nowrap">科目</label>
               <select id="select0a" class="form-control text-nowrap" onchange="location.href=value;">
-                <option value="/tasklist">全ての曜日</option>
-                <option value="/tasklist/day/mon" {% if day=='mon' %}selected{% endif %}>月曜のみ</option>
-                <option value="/tasklist/day/tue" {% if day=='tue' %}selected{% endif %}>火曜のみ</option>
-                <option value="/tasklist/day/wed" {% if day=='wed' %}selected{% endif %}>水曜のみ</option>
-                <option value="/tasklist/day/thu" {% if day=='thu' %}selected{% endif %}>木曜のみ</option>
-                <option value="/tasklist/day/fri" {% if day=='fri' %}selected{% endif %}>金曜のみ</option>
+                <option value="/resourcelist">全ての曜日</option>
+                <option value="/resourcelist/day/mon" {% if day=='mon' %}selected{% endif %}>月曜のみ</option>
+                <option value="/resourcelist/day/tue" {% if day=='tue' %}selected{% endif %}>火曜のみ</option>
+                <option value="/resourcelist/day/wed" {% if day=='wed' %}selected{% endif %}>水曜のみ</option>
+                <option value="/resourcelist/day/thu" {% if day=='thu' %}selected{% endif %}>木曜のみ</option>
+                <option value="/resourcelist/day/fri" {% if day=='fri' %}selected{% endif %}>金曜のみ</option>
               </select>
             </div>
             <!--時間割検索機能-->
@@ -52,7 +52,7 @@
       <div class="row">
         <small class=" ml-auto mt-auto mr-3">最終更新：{{last_update}}</small>
         <button type="button" id="reflesh_button" class="btn  btn-info"
-          onclick="location.href='/login?page=tasklist'">情報を更新</button>
+          onclick="location.href='/login?page=resourcelist'">情報を更新</button>
       </div>
     </div>
 

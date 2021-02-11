@@ -4,6 +4,24 @@ $(function() {
 
     function window_load(){
       var display_width = $(window).width();
+      $('a.task_link').on('click', function(){
+        var task_ids = new Array();
+        var task_id = $(this).parent().parent().parent().find('tr').attr('id');
+        task_ids.push(task_id);
+        var task_ids = JSON.stringify({"task_ids":task_ids});
+        $.ajax({
+            type: 'POST',
+            url: '/task_clicked',
+            data: task_ids,
+            contentType: 'application/json',
+            success: function(response){
+                console.log(response);
+            },
+            error: function(error){
+                console.log(error);
+            }
+        });
+    });
       if (display_width >= 768){
         $('#finish_form').droppable({
           accept: ".acdrag",

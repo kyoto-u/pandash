@@ -81,6 +81,7 @@ def proxy(pgtiou=None):
 def proxyticket():
     ticket = request.args.get('ticket')
     start_time = time.perf_counter()
+    show_only_unfinished = 0
     if ticket:
         ses = requests.Session()
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
@@ -93,12 +94,16 @@ def proxyticket():
             studentdata = get_student(student_id)
             need_to_update_sitelist = 1
             if studentdata:
+                if studentdata.show_already_due==0:show_only_unfinished=1
                 need_to_update_sitelist = studentdata.need_to_update_sitelist
                 last_update = studentdata.last_update
-                add_student(student_id, fullname,last_update= now, language = studentdata.language)
+                if need_to_update_sitelist:
+                    add_student(student_id, fullname,last_update= now, last_update_subject= now, language = studentdata.language)
+                else:
+                    add_student(student_id, fullname,last_update= now, last_update_subject= studentdata.last_update_subject, language = studentdata.language)
             else:
                 last_update = 0
-                add_student(student_id, fullname,last_update= now)
+                add_student(student_id, fullname,last_update= now, last_update_subject= now)
             get_data_from_api_and_update(student_id,ses,now,last_update,0)
             if need_to_update_sitelist == 1:
                 get_data_from_api_and_update(student_id,ses,now,0,1)
@@ -115,7 +120,7 @@ def proxyticket():
             logging.info(f"Requested redirect '{redirect_page}' is invalid because it is portal page")
         else:
             return flask.redirect(redirect_page)
-    return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
+    return flask.redirect(flask.url_for('tasklist',show_only_unfinished=show_only_unfinished,max_time_left = 3))
 
 @app.route('/logout')
 def logout():
@@ -156,13 +161,22 @@ def help(page):
     #2021/01/14 Shinji Akayama: 参照するhtmlが間違っていたので修正しました。FAQ_{page}は完全なhtmlではありません
     return flask.render_template(f"_flexible_help_{page}.htm")
 
-@app.route('/option')
+@app.route('/option', methods=['GET'])
 def option():
     studentid = session.get('student_id')
     if studentid:
         data ={"others":[]}
+        studentdata = get_student(studentid)
+        coursesdata = get_courses_to_be_taken(studentid, mode=1, return_data='student_course')
+        courses_to_be_taken = []
+        for coursedata in coursesdata:
+            course_id = coursedata.course_id
+            hide = coursedata.hide
+            coursename = get_coursename(courseid=course_id)
+            courses_to_be_taken.append({'course_id':course_id,'coursename':coursename,'hide':hide})
         data = setdefault_for_overview(studentid)
-        return flask.render_template(f"option.htm",data=data)
+        last_update_subject= str(datetime.datetime.fromtimestamp(studentdata.last_update_subject,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        return flask.render_template(f"option.htm",data=data, show_already_due=studentdata.show_already_due, last_update_subject = last_update_subject, courses_to_be_taken=courses_to_be_taken)
     else:
         return redirect(url_for('login'))
 
@@ -171,8 +185,7 @@ def update_subject():
     studentid = session.get('student_id')
     if studentid:
         update_student_needs_to_update_sitelist(studentid,need_to_update_sitelist=1)
-        redirect_pages[studentid]='option'
-        return redirect(url_for('login'))
+        return redirect(url_for('login',page='option'))
     else:
         return redirect(url_for('login'))
 
@@ -244,7 +257,16 @@ def controller_for_students(studentid):
 
 @app.route('/tasklist')
 def tasklist_redirect():
-    return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
+    studentid = session.get('student_id')
+    if studentid:
+        studentdata=get_student(studentid)
+        if studentdata:
+            show_already_due = studentdata.show_already_due
+            show_only_unfinished = 0
+            if show_already_due==0:show_only_unfinished=1
+            return flask.redirect(flask.url_for('tasklist',show_only_unfinished=show_only_unfinished,max_time_left = 3))
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/overview')
 def overview():
@@ -284,11 +306,28 @@ def overview():
 
 @app.route('/tasklist/day/<day>')
 def tasklist_day_redirect(day):
-    return flask.redirect(flask.url_for('tasklist_day', day=day, show_only_unfinished = 0,max_time_left = 3))
+    studentid = session.get('student_id')
+    if studentid:
+        studentdata=get_student(studentid)
+        if studentdata:
+            show_already_due = studentdata.show_already_due
+            show_only_unfinished = 0
+            if show_already_due==0:show_only_unfinished=1
+            return flask.redirect(flask.url_for('tasklist_day',day=day, show_only_unfinished=show_only_unfinished,max_time_left = 3))
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/tasklist/course/<courseid>')
 def tasklist_course_redirect(courseid):
-    return flask.redirect(flask.url_for('tasklist_course', courseid=courseid, show_only_unfinished = 0,max_time_left = 3))
+    studentid = session.get('student_id')
+    if studentid:
+        studentdata=get_student(studentid)
+        if studentdata:
+            show_already_due = studentdata.show_already_due
+            show_only_unfinished = 0
+            if show_already_due==0:show_only_unfinished=1
+            return flask.redirect(flask.url_for('tasklist_course',courseid=courseid,show_only_unfinished=show_only_unfinished,max_time_left = 3))
+    return redirect(url_for('login'))
 
 @app.route('/tasklist/day/<day>/<int:show_only_unfinished>/<int:max_time_left>')
 def tasklist_day(day,show_only_unfinished,max_time_left):
@@ -357,6 +396,37 @@ def task_unfinish():
     if studentid:
         task_id = request.json['task_id']
         update_task_status(studentid, task_id, mode=1)
+        return 'success'
+    else:
+        return 'failed'
+
+@app.route('/task_clicked', methods=['POST'])
+def task_clicked():
+    studentid = session.get('student_id')
+    if studentid:
+        task_ids = request.json['task_ids']
+        update_task_clicked_status(studentid, task_ids)
+        return 'success'
+    else:
+        return 'failed'
+
+@app.route('/course_hide', methods=['POST'])
+def course_hide():
+    studentid = session.get('student_id')
+    if studentid:
+        course_list = request.json['course_list']
+        hide = request.json['hide']
+        update_student_course_hide(studentid,course_list,hide)
+        return 'success'
+    else:
+        return 'failed'
+
+@app.route('/show_already_due', methods=['POST'])
+def show_already_due():
+    studentid = session.get('student_id')
+    if studentid:
+        show_already_due = request.json['show_already_due']
+        update_student_show_already_due(studentid, show_already_due)
         return 'success'
     else:
         return 'failed'

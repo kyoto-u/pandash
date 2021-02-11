@@ -225,7 +225,7 @@ def get_assignments_from_api(assignments, student_id):
         course_id = assignment.get('context')
         modifieddate = assignment.get('timeLastModified').get('time')
         status = assignment.get('status')
-        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":"未","student_id":student_id})
+        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":"未","student_id":student_id,"clicked":0})
         assignment_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifieddate":modifieddate,"course_id":course_id})
     assignment_dict = {"student_assignments":sa_list, "assignments":assignment_list}
     return assignment_dict
@@ -483,26 +483,33 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
         tasks.append(task)
     return tasks
 
-def get_courses_to_be_taken(studentid):
+# mode = 1 のときはhideのものも取得
+def get_courses_to_be_taken(studentid, mode = 0,return_data = 'course'):
     data=[]
     courses = session.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
     for i in courses:
-        # if course.hide == 1:
-        #     continue
+        if mode==0 and i.hide==1:
+            continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
         if coursedata[0].yearsemester in SHOW_YEAR_SEMESTER:
-            data.append(coursedata[0])
+            if return_data == 'course':
+                data.append(coursedata[0])
+            elif return_data == 'student_course':
+                data.append(i)
+            else:
+                #一応courseを返す
+                data.append(coursedata[0])
     return data
 
-def get_courses_id_to_be_taken(studentid):
+def get_courses_id_to_be_taken(studentid, mode=0):
     data=[]
     courses = session.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
     for i in courses:
-        # if course.hide == 1:
-        #     continue
+        if mode==0 and i.hide == 1:
+            continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
         if coursedata[0].yearsemester in SHOW_YEAR_SEMESTER:
@@ -773,14 +780,14 @@ def get_student(studentid):
         studentdata = None
     return studentdata
 
-def add_student(studentid, fullname, last_update = 0, language = "ja"):
+def add_student(studentid, fullname, last_update = 0, last_update_subject = 0, language = "ja"):
     students = session.query(student.Student.student_id).all()
     isExist = False
     for i in students:
         if list(i)[0] == studentid:
             isExist = True
             break
-    new_student = {"student_id":studentid, "fullname":fullname,"last_update":last_update,"language":language}
+    new_student = {"student_id":studentid, "fullname":fullname,"last_update":last_update, "last_update_subject":last_update_subject,"language":language}
     if isExist == False:
         session.execute(student.Student.__table__.insert(),new_student)
     else:
@@ -966,6 +973,21 @@ def update_student_needs_to_update_sitelist(student_id,need_to_update_sitelist=0
     session.commit()
     return
 
+def update_student_show_already_due(student_id,show_already_due=0):
+    st = session.query(student.Student).filter(student.Student.student_id==student_id).first()
+    st.show_already_due = show_already_due
+    session.commit()
+    return
+
+def update_student_course_hide(student_id, course_list, hide):
+    update_list = []
+    for coursedata in course_list:
+        sc_id = f'{student_id}:{coursedata}'
+        update_list.append({"sc_id":sc_id,"hide":hide})
+    session.bulk_update_mappings(studentcourse.Studentcourse, update_list)
+    session.commit()
+    return
+
 def update_resource_status(studentid, resourceids: list):
     srs = session.query(studentresource.Student_Resource.resource_url, studentresource.Student_Resource.sr_id).filter(
         studentresource.Student_Resource.student_id == studentid).all()
@@ -987,6 +1009,15 @@ def update_task_status(studentid, taskids: list, mode=0):
         update_list.append({"sa_id":sa_id, "status":status})
     session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
     session.commit()
+    return
+
+def update_task_clicked_status(studentid, taskids:list):
+    update_list = []
+    for t_id in taskids:
+        sa_id = f'{studentid}:{t_id}'
+        update_list.append({"sa_id":sa_id, "clicked":1})
+    session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
+    session.commit() 
     return
 
 def add_studentcourse(studentid, data):
@@ -1025,9 +1056,10 @@ def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
             task["status"]="期限切れ"
 
     
-    tasks = sorted(tasks, key=lambda x: x["deadline"])
-    tasks = sorted(tasks, key=lambda x: order_status(x["status"]))
-    return tasks
+    new_tasks = sorted([i for i in tasks if i["status"] != "期限切れ"], key=lambda x: x["deadline"])
+    new_tasks.extend(sorted([i for i in tasks if i["status"] == "期限切れ"], key=lambda x: x["deadline"],reverse=True))
+    new_tasks = sorted(new_tasks, key=lambda x: order_status(x["status"]))
+    return new_tasks
 
 
 def timejudge(task, max_time_left):
