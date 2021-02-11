@@ -3,12 +3,22 @@
 <div class="container">
     <h1 class="mb-5">設定</h1>
     <div class="row">
-        <div class="col-3 border-right border-top" style="min-height: 100vh; background-color: rgb(200, 234, 238);">
-            <div class="list-group mt-3">
-                <a href="#" class="list-group-item list-group-item-action d-none">言語/Language</a>
-                <a href="#" class="list-group-item list-group-item-action">表示科目</a>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark col-3">
+            <div class="container">
+                <a class="navbar-brand " href="/"></a>
+                <button id="optiontoggle" class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#option_collapse" aria-controls="#option_collapse" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div id="option_collapse" class="collapse navbar-collapse">
+                    <div class="d-flex" style="flex-direction: column;">
+                        <a href="#" class="list-group-item list-group-item-action btn-block">言語/Language</a>
+                        <a href="#" class="list-group-item list-group-item-action btn-block">表示科目</a>
+                    </div>
+                </div>
             </div>
-        </div>
+        </nav>
         <div class="col-9 border-top" style="background-color: whitesmoke;">
             {% include "Option_fragments/option_subject.htm" %}
         </div>

@@ -241,3 +241,8 @@ label >.downloaded{
 .finished{
     background-color: white;
 }
+
+#option_navbar{
+    min-height: 100vh; 
+    background-color: rgb(200, 234, 238);
+}
