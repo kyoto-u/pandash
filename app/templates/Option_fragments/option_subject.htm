@@ -4,7 +4,7 @@
         <h3 class="pb-3">・表示科目の更新</h3>
         <div class="container">
             <div class="row">
-                <div>最終更新: {{last_update_subject}}</div>
+                <div>現在PandAに表示されている科目は {{last_update_subject}}時点であなたが履修していた科目です。新しく科目を追加した場合は右のボタンを押して更新してください。</div>
                 <button class="btn btn-secondary mx-auto" onclick="location.href='/update_subject'">更新する</button>
             </div>
         </div>
@@ -14,21 +14,23 @@
         <div class="container border-left">
             <ul>
                 {% for course in courses_to_be_taken %}
-                    <li class="list-unstyled">
-                        <div class="d-inline-flex">
-                            <div class="form-check">
-                                <input class="course_checkbox" value="{{course.course_id}}" type="checkbox" {% if course.hide==0 %}checked{% endif %}>
-                                <label class="ml-1" for="{{course.course_id}}">{{course.coursename}}</label>
-                            </div>
+                <li class="list-unstyled">
+                    <div class="d-inline-flex">
+                        <div class="form-check">
+                            <input class="course_checkbox" value="{{course.course_id}}" type="checkbox" {% if
+                                course.hide==0 %}checked{% endif %}>
+                            <label class="ml-1" for="{{course.course_id}}">{{course.coursename}}</label>
                         </div>
-                    </li>
+                    </div>
+                </li>
                 {% endfor %}
             </ul>
         </div>
     </section>
     <section>
         <h3>
-            <input type="checkbox" id="show_already_due_check" {% if show_already_due == 1 %}checked{% endif %}>締切を過ぎた課題を表示する
+            <input type="checkbox" id="show_already_due_check" {% if show_already_due==1 %}checked{% endif
+                %}>締切を過ぎた課題を表示する
         </h3>
     </section>
 </div>
