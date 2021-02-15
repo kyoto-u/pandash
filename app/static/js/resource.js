@@ -16,9 +16,11 @@ $(document).ready(function(){
         }
     }
 
-    $('a.resource').on('click', function(){
+    $('a.resource.undownloaded').on('click', function(){
         var r_links = new Array();
         var link = $(this).attr('href');
+        $(this).removeClass("undownloaded");
+        $(this).addClass("downloaded");
         r_links.push(link);
         var resourcedata = JSON.stringify({"r_links":r_links});
         $.ajax({

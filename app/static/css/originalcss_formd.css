@@ -109,10 +109,12 @@ body{
 
 #overviewtable > thead > tr {
     min-height:60px;
+    height: fit-content;
 }
 
 #overviewtable > tbody > tr {
     min-height:60px;
+    height: fit-content;
 }
 
 #ScrollSearchbar{
@@ -179,6 +181,7 @@ label > .downloaded{
     margin-left: 0;
     margin-right: 0;
     width:100vw;
+     background-color: silver;
 }
 
 
@@ -217,3 +220,7 @@ label > .downloaded{
   background: url(/static/loadingimage.gif) no-repeat;
   cursor: wait;
 } */
+
+.fa-exclamation-circle{
+    color:deeppink;
+}

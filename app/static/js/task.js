@@ -7,6 +7,7 @@ $(function() {
       $('a.task_link').on('click', function(){
         var task_ids = new Array();
         var task_id = $(this).parent().parent().attr('id');
+        $(this).parent().parent().find('i').remove();
         task_ids.push(task_id);
         var task_ids = JSON.stringify({"task_ids":task_ids});
         $.ajax({
