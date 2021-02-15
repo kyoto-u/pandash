@@ -193,6 +193,8 @@ footer {
 #resources_searchBox{
     top:130px; 
     position: sticky;
+    background-color: silver;
+    width:min-content;
 }
 
 

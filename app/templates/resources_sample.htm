@@ -4,28 +4,26 @@
 <div class="row" style="pointer-events: all;">
   <div class="col-sm-12 col-md-2 border-right">
     <div class="container" id="resources_searchBox">
-      <div class="d-flex flex-md-column">
-        <div class="container" style="background-color: silver;">
-          <!-- See line 7 
+      <div>
+        <!-- See line 7 
                 pointer-events: all; -->
-          <div class="d-flex mx-5 py-2 mb-2 flex-md-column">
-            <h6 id="searchlabel" class="text-nowrap">しぼりこみ検索</h6>
-            <!--曜日しぼりこみ-->
-            <div class="form-group mx-5">
-              <label for="select0a" class="text-nowrap">科目</label>
-              <select id="select0a" class="form-control text-nowrap" onchange="location.href=value;">
-                <option value="/resourcelist">全ての曜日</option>
-                <option value="/resourcelist/day/mon" {% if day=='mon' %}selected{% endif %}>月曜のみ</option>
-                <option value="/resourcelist/day/tue" {% if day=='tue' %}selected{% endif %}>火曜のみ</option>
-                <option value="/resourcelist/day/wed" {% if day=='wed' %}selected{% endif %}>水曜のみ</option>
-                <option value="/resourcelist/day/thu" {% if day=='thu' %}selected{% endif %}>木曜のみ</option>
-                <option value="/resourcelist/day/fri" {% if day=='fri' %}selected{% endif %}>金曜のみ</option>
-              </select>
-            </div>
-            <!--時間割検索機能-->
-            <button id="timesearchbutton" type="button" class="btn btn-dark text-nowrap" data-toggle="modal"
-              data-target="#modal_timeboard_select">時間割で検索</button>
+        <div class="d-flex py-2 mb-2 flex-md-column">
+          <h6 id="searchlabel" class="text-nowrap">しぼりこみ検索</h6>
+          <!--曜日しぼりこみ-->
+          <div class="form-group mx-5">
+            <label for="select0a" class="text-nowrap">科目</label>
+            <select id="select0a" class="form-control text-nowrap" onchange="location.href=value;">
+              <option value="/resourcelist">全ての曜日</option>
+              <option value="/resourcelist/day/mon" {% if day=='mon' %}selected{% endif %}>月曜のみ</option>
+              <option value="/resourcelist/day/tue" {% if day=='tue' %}selected{% endif %}>火曜のみ</option>
+              <option value="/resourcelist/day/wed" {% if day=='wed' %}selected{% endif %}>水曜のみ</option>
+              <option value="/resourcelist/day/thu" {% if day=='thu' %}selected{% endif %}>木曜のみ</option>
+              <option value="/resourcelist/day/fri" {% if day=='fri' %}selected{% endif %}>金曜のみ</option>
+            </select>
           </div>
+          <!--時間割検索機能-->
+          <button id="timesearchbutton" type="button" class="btn btn-dark text-nowrap ml-sm-5 ml-md-1"
+            data-toggle="modal" data-target="#modal_timeboard_select">時間割で検索</button>
         </div>
       </div>
     </div>
