@@ -217,3 +217,7 @@ label > .downloaded{
   background: url(/static/loadingimage.gif) no-repeat;
   cursor: wait;
 } */
+
+.fa-exclamation-circle{
+    color:deeppink;
+}

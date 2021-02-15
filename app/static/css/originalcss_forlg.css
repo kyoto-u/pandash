@@ -246,3 +246,7 @@ label >.downloaded{
     min-height: 100vh; 
     background-color: rgb(200, 234, 238);
 }
+
+.fa-exclamation-circle{
+    color:deeppink;
+}
