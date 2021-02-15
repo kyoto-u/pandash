@@ -1,17 +1,17 @@
-# How to set up PandAsh
+# How to Set up PandAsh
 
-## 1.make a folder for PandAsh
+## 1.Make a Folder for PandAsh
 ```
 mkdir pandash
 cd pandash
 ```
 
-## 2.install python and git
-### debian系
+## 2.Install Python and Git
+### Debian系
     sudo apt-get install python-dev default-libmysqlclient-dev
     sudo apt-get install python3-dev
  
-### rhel系
+### RHEL系
     sudo yum install python-devel mysql-devel
     sudo yum install python3-devel
 
@@ -19,13 +19,13 @@ cd pandash
 sudo yum install git-all
 ```
 
-## 3. create virtual environments
+## 3. Create Virtual Environments
 ```
 python3 -m venv venv
 
 source venv/bin/activate
 ```
-## 4. install nessesary libraries in virtual environments
+## 4. Install Nessesary Libraries in Virtual Environments
 ```
 pip install --upgrade pip
 <!-- pip install flask, sqlalchemy, mysqlclient -->
@@ -41,9 +41,9 @@ cd python-cas-client
 pip install .
 ```
 
-## 5.modify python-cas-client
-python-cas-client as it is does not work.
-following are changes in python-cas-client.
+## 5.Modify python-cas-client
+Python-cas-client as it is does not work.
+Following are changes in python-cas-client.
 ```
 in /cas_client/cas_client.py:
 
@@ -71,7 +71,7 @@ L.413          return url
 
      def _perform_cas_call(self, url, ticket, headers=None):
 ```
-and at pandash/python-cas-client in virtual environments
+Afterwards, at pandash/python-cas-client in virtual environments
 ```
 pip install .
 ```
