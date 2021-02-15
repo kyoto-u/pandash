@@ -40,35 +40,22 @@
                 {% for task in data.mon1.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                  {% if task.clicked == 0 %}
-                  <i class="fas fa-exclamation-circle"></i>
-                  {% endif %}
-                  <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
-                    class="task_link" data-container='body' data-toggle="tooltip"
-                    title={{task.tooltip}}>{{task.taskname}}</a>
+                <a target="_blank"
+                  href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                  class="task_link" data-container='body' data-toggle="tooltip"
+                  title={{task.tooltip}}>
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-<<<<<<< Updated upstream
-                  <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
-                    class="task_link" data-container='body' data-toggle="tooltip"
-                    title={{task.tooltip}}>{{task.taskname}}
-                    {% if task.clicked == 0 %}
-                    <i class="fas fa-exclamation-circle"></i>
-                    {% endif %}
-                  </a>
-=======
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
->>>>>>> Stashed changes
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -83,9 +70,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -94,9 +79,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -111,9 +94,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -122,9 +103,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -139,9 +118,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -150,9 +127,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -167,9 +142,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -178,9 +151,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -198,9 +169,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -209,9 +178,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -226,9 +193,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -237,9 +202,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -254,9 +217,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -265,9 +226,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -282,9 +241,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -293,9 +250,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -310,9 +265,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -321,9 +274,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -341,9 +292,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -352,9 +301,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -369,9 +316,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -380,9 +325,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -397,9 +340,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -408,9 +349,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -425,9 +364,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -436,9 +373,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -453,9 +388,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -464,9 +397,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -484,9 +415,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -495,9 +424,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -512,9 +439,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -523,9 +448,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -540,9 +463,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -551,9 +472,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -568,9 +487,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -579,9 +496,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -596,9 +511,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -607,9 +520,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -627,9 +538,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -638,9 +547,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -655,9 +562,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -666,9 +571,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -683,9 +586,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -694,9 +595,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -711,9 +610,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -722,9 +619,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -739,9 +634,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-　　　　         {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -750,9 +643,7 @@
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}
-                {{task.taskname}}
-                </a>
+                {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -787,9 +678,7 @@
                 class="task_link" data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                {{task.taskname}}
-              </a>
+                {% endif %}{{task.taskname}}</a>
             </div>
             {% else %}
             <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -798,9 +687,7 @@
                 class="task_link" data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                {{task.taskname}}
-              </a>
+                {% endif %}{{task.taskname}}</a>
             </div>
             {% endif %}
             {% endfor %}
