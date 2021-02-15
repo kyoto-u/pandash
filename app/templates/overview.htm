@@ -21,7 +21,7 @@
         <!-- See file _base.htm, line 132
           style="pointer-events: all;" -->
 
-        <table class="table table-sm" id="overviewtable">
+        <table class="table table-sm　table-striped" id="overviewtable">
           <thead>
             <tr class="d-flex">
               <td class="col-2"></td>
@@ -39,15 +39,15 @@
                 <a href="{{data.mon1.searchURL}}" class="course">{{data.mon1.shortname}}</a>
                 {% for task in data.mon1.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -57,15 +57,15 @@
                 <a href="{{data.tue1.searchURL}}" class="course">{{data.tue1.shortname}}</a>
                 {% for task in data.tue1.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -75,15 +75,15 @@
                 <a href="{{data.wed1.searchURL}}" class="course">{{data.wed1.shortname}}</a>
                 {% for task in data.wed1.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -93,15 +93,15 @@
                 <a href="{{data.thu1.searchURL}}" class="course">{{data.thu1.shortname}}</a>
                 {% for task in data.thu1.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -111,15 +111,15 @@
                 <a href="{{data.fri1.searchURL}}" class="course">{{data.fri1.shortname}}</a>
                 {% for task in data.fri1.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -132,15 +132,15 @@
                 <a href="{{data.mon2.searchURL}}" class="course">{{data.mon2.shortname}}</a>
                 {% for task in data.mon2.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -150,15 +150,15 @@
                 <a href="{{data.tue2.searchURL}}" class="course">{{data.tue2.shortname}}</a>
                 {% for task in data.tue2.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -168,15 +168,15 @@
                 <a href="{{data.wed2.searchURL}}" class="course">{{data.wed2.shortname}}</a>
                 {% for task in data.wed2.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -186,15 +186,15 @@
                 <a href="{{data.thu2.searchURL}}" class="course">{{data.thu2.shortname}}</a>
                 {% for task in data.thu2.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -204,15 +204,15 @@
                 <a href="{{data.fri2.searchURL}}" class="course">{{data.fri2.shortname}}</a>
                 {% for task in data.fri2.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -225,15 +225,15 @@
                 <a href="{{data.mon3.searchURL}}" class="course">{{data.mon3.shortname}}</a>
                 {% for task in data.mon3.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -243,15 +243,15 @@
                 <a href="{{data.tue3.searchURL}}" class="course">{{data.tue3.shortname}}</a>
                 {% for task in data.tue3.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -261,15 +261,15 @@
                 <a href="{{data.wed3.searchURL}}" class="course">{{data.wed3.shortname}}</a>
                 {% for task in data.wed3.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -279,15 +279,15 @@
                 <a href="{{data.thu3.searchURL}}" class="course">{{data.thu3.shortname}}</a>
                 {% for task in data.thu3.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -297,15 +297,15 @@
                 <a href="{{data.fri3.searchURL}}" class="course">{{data.fri3.shortname}}</a>
                 {% for task in data.fri3.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -318,15 +318,15 @@
                 <a href="{{data.mon4.searchURL}}" class="course">{{data.mon4.shortname}}</a>
                 {% for task in data.mon4.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -336,15 +336,15 @@
                 <a href="{{data.tue4.searchURL}}" class="course">{{data.tue4.shortname}}</a>
                 {% for task in data.tue4.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -354,15 +354,15 @@
                 <a href="{{data.wed4.searchURL}}" class="course">{{data.wed4.shortname}}</a>
                 {% for task in data.wed4.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -372,15 +372,15 @@
                 <a href="{{data.thu4.searchURL}}" class="course">{{data.thu4.shortname}}</a>
                 {% for task in data.thu4.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -390,15 +390,15 @@
                 <a href="{{data.fri4.searchURL}}" class="course">{{data.fri4.shortname}}</a>
                 {% for task in data.fri4.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -411,15 +411,15 @@
                 <a href="{{data.mon5.searchURL}}" class="course">{{data.mon5.shortname}}</a>
                 {% for task in data.mon5.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -429,15 +429,15 @@
                 <a href="{{data.tue5.searchURL}}" class="course">{{data.tue5.shortname}}</a>
                 {% for task in data.tue5.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -447,15 +447,15 @@
                 <a href="{{data.wed5.searchURL}}" class="course">{{data.wed5.shortname}}</a>
                 {% for task in data.wed5.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -465,15 +465,15 @@
                 <a href="{{data.thu5.searchURL}}" class="course">{{data.thu5.shortname}}</a>
                 {% for task in data.thu5.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -483,15 +483,15 @@
                 <a href="{{data.fri5.searchURL}}" class="course">{{data.fri5.shortname}}</a>
                 {% for task in data.fri5.tasks %}
                 {% if loop.index > display_num %}
-                <div class="card taskcard d-none" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% else %}
-                <div class="card taskcard" id="{{task.assignmentid}}">
+                <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
                   <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                     data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
                 </div>
                 {% endif %}
@@ -520,15 +520,15 @@
           <div class="card-body">
             {% for task in sbj.tasks %}
             {% if loop.index > display_num %}
-            <div class="card taskcard d-none" id="{{task.assignmentid}}">
+            <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
               <a target="_blank"
-                href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                 data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
             </div>
             {% else %}
-            <div class="card taskcard" id="{{task.assignmentid}}">
+            <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
               <a target="_blank"
-                href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
                 data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
             </div>
             {% endif %}

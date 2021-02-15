@@ -15,115 +15,121 @@
 </div>
 {% endmacro %}
 
+<div class="container container-fluid">
+  <div class="row">
 
-<div class="row">
-
-  <div id="taskmain" class="col-sm-12 col-md-10">
-    <!-- drag and drop時に意図しない動作をするため削除
+    <div id="taskmain" class="col-sm-12 col-md-10">
+      <!-- drag and drop時に意図しない動作をするため削除
          style="left:1vw; overflow: hidden;" -->
 
-    <div class="container" style="background-color: silver;">
-      <!-- See line 7 
+      <div class="container" style="background-color: silver;">
+        <!-- See line 7 
         pointer-events: all; -->
-      <div class="d-flex mx-5 py-2 mb-2">
-        <h6 id="searchlabel">しぼりこみ検索</h6>
-        <!--曜日しぼりこみ-->
-        <div class="form-group mx-5">
-          <label for="select0a">科目</label>
-          <select id="select0a" class="form-control" onchange="location.href=value;">
-            <option value="/tasklist">全ての曜日</option>
-            <option value="/tasklist/day/mon" {% if day=='mon' %}selected{% endif %}>月曜のみ</option>
-            <option value="/tasklist/day/tue" {% if day=='tue' %}selected{% endif %}>火曜のみ</option>
-            <option value="/tasklist/day/wed" {% if day=='wed' %}selected{% endif %}>水曜のみ</option>
-            <option value="/tasklist/day/thu" {% if day=='thu' %}selected{% endif %}>木曜のみ</option>
-            <option value="/tasklist/day/fri" {% if day=='fri' %}selected{% endif %}>金曜のみ</option>
-          </select>
+        <div class="d-flex mx-5 py-2 mb-2">
+          <h6 id="searchlabel" class="text-nowrap">しぼりこみ検索</h6>
+          <!--曜日しぼりこみ-->
+          <div class="form-group mx-5">
+            <label for="select0a" class="text-nowrap">科目</label>
+            <select id="select0a" class="form-control text-nowrap" onchange="location.href=value;">
+              <option value="/tasklist">全ての曜日</option>
+              <option value="/tasklist/day/mon" {% if day=='mon' %}selected{% endif %}>月曜のみ</option>
+              <option value="/tasklist/day/tue" {% if day=='tue' %}selected{% endif %}>火曜のみ</option>
+              <option value="/tasklist/day/wed" {% if day=='wed' %}selected{% endif %}>水曜のみ</option>
+              <option value="/tasklist/day/thu" {% if day=='thu' %}selected{% endif %}>木曜のみ</option>
+              <option value="/tasklist/day/fri" {% if day=='fri' %}selected{% endif %}>金曜のみ</option>
+            </select>
+          </div>
+          <!--時間割検索機能-->
+          <button id="timesearchbutton" type="button" class="btn btn-dark text-nowrap" data-toggle="modal"
+            data-target="#modal_timeboard_select">時間割で検索</button>
         </div>
-        <!--時間割検索機能-->
-        <button id="timesearchbutton" type="button" class="btn btn-dark" data-toggle="modal"
-          data-target="#modal_timeboard_select">時間割で検索</button>
       </div>
-    </div>
 
-    <!--タイトル-->
-    <div class="container">
-      <div class="row">
-        <h3>あなたの課題</h3>
-        <small class=" ml-auto mt-auto mr-3">最終更新：{{last_update}}</small>
-        <button type="button" id="reflesh_button" class="btn  btn-info"
-          onclick="location.href='/login?page=tasklist'">情報を更新</button>
+      <!--タイトル-->
+      <div class="container">
+        <div class="row">
+          <h3>あなたの課題</h3>
+          <small class=" ml-auto mt-auto mr-3">最終更新：{{last_update}}</small>
+          <button type="button" id="reflesh_button" class="btn  btn-info"
+            onclick="location.href='/login?page=tasklist'">情報を更新</button>
+        </div>
       </div>
-    </div>
 
-    <b>検索条件：{{ search_condition.search_condition }}</b>
+      <b>検索条件：{{ search_condition.search_condition }}</b>
 
-    <!--アラート-->
-    {% if tasks|length > 0 %}
+      <!--アラート-->
+      {% if tasks|length > 0 %}
 
-    <div class="alert alert-danger" role="alert">
-      <div class="row">
+      <div class="alert alert-danger" role="alert">
+        <div class="row">
+          {% if search_condition == '全て' %}
+          未完了の課題が<div class="text-danger">{{ unfinished_task_num }}</div>件あります
+          {% else %}
+          この条件での未完了課題が<div class="text-danger">{{ unfinished_task_num }}</div>件あります
+          {% endif %}
+        </div>
+      </div>
+      <div class="table-responsive table-sm table-bordered" style="padding-bottom: 200;" id="table">
+        <!-- See line
+        style="pointer-events: all;" -->
+        <table class="table">
+          <thead>
+            <tr class="d-flex" style="font-size: x-small;">
+              <th class="col-3">科目名</th>
+              <th class="col-3">課題名</th>
+
+              <th class="col-3">
+                {{ deadline_selecter() }}
+              </th>
+              <th class="col-3">締切日</th>
+            </tr>
+          </thead>
+
+          <tbody id="dragArea" style="font-size: small;">
+            {% for task in tasks %}
+            {% if task.status == "未" %}
+              <tr class="d-flex tablecontents acdrag {{task.time_left.judge}}" id="{{task.assignmentid}}">
+            {% elif task.status == "済" %}
+              <tr class="d-flex tablecontents acdrag finished" id="{{task.assignmentid}}">
+            {% else %}
+              <tr class="d-flex tablecontents acdrag nonetype" id="{{task.assignmentid}}">
+            {% endif %}
+              <td class="col-3 subject">
+              {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i>
+              {% endif %}
+              {{task.subject}}
+              </td>
+              <td class="col-3 task_title"><a target="_blank"
+                  href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                  class="task_tag task_link">{{task.taskname}}</a></td>
+              <td class="col-3">{{task.time_left.msg}}</td>
+              <td class="col-3">{{task.deadline}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% else %}
+      <div class="alert alert-success" role="alert">
         {% if search_condition == '全て' %}
-        未完了の課題が<div class="text-danger">{{ unfinished_task_num }}</div>件あります
+        未完了の課題はありません!
         {% else %}
-        この条件での未完了課題が<div class="text-danger">{{ unfinished_task_num }}</div>件あります
+        この条件で未完了課題はありません!
         {% endif %}
       </div>
-    </div>
-    <div class="table-responsive table-sm table-bordered" style="padding-bottom: 200;" id="table">
-      <!-- See line
-        style="pointer-events: all;" -->
-      <table class="table">
-        <thead>
-          <tr class="d-flex" style="font-size: x-small;">
-            <th class="col-3">科目名</th>
-            <th class="col-3">課題名</th>
-
-            <th class="col-3">
-              {{ deadline_selecter() }}
-            </th>
-            <th class="col-3">締切日</th>
-          </tr>
-        </thead>
-
-        <tbody id="dragArea" style="font-size: small;">
-          {% for task in tasks %}
-          {% if task.status == "未" %}
-          <tr class="d-flex tablecontents acdrag unfinished" id="{{task.assignmentid}}">
-            {% elif task.status == "済" %}
-          <tr class="d-flex tablecontents acdrag finished" id="{{task.assignmentid}}">
-            {% else %}
-          <tr class="d-flex tablecontents acdrag nonetype" id="{{task.assignmentid}}">
-            {% endif %}
-            <td class="col-3 subject">{{task.subject}}</td>
-            <td class="col-3 task_title"><a target="_blank"
-                href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
-                class="task_tag">{{task.taskname}}</a></td>
-            <td class="col-3">{{task.time_left}}</td>
-            <td class="col-3">{{task.deadline}}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-
-    {% else %}
-    <div class="alert alert-success" role="alert">
-      {% if search_condition == '全て' %}
-      未完了の課題はありません!
-      {% else %}
-      この条件で未完了課題はありません!
+      <div class="col-3 border" style="pointer-events: all">
+        {{ deadline_selecter() }}
+      </div>
       {% endif %}
     </div>
-    <div class="col-3 border" style="pointer-events: all">
-      {{ deadline_selecter() }}
-    </div>
-    {% endif %}
-  </div>
 
 
-  <div class="col-md-2 border-left d-none d-md-block" id="finish_form">
-    <div style="position:sticky; top:130px;">
-      {% include "finished_box.htm" %}
+    <div class="col-md-2 border-left d-none d-md-block" id="finish_form">
+      <div style="position:sticky; top:130px;">
+        {% include "finished_box.htm" %}
+      </div>
     </div>
   </div>
 </div>

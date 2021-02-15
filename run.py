@@ -81,6 +81,7 @@ def proxy(pgtiou=None):
 def proxyticket():
     ticket = request.args.get('ticket')
     start_time = time.perf_counter()
+    show_only_unfinished = 0
     if ticket:
         ses = requests.Session()
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
@@ -93,71 +94,20 @@ def proxyticket():
             studentdata = get_student(student_id)
             need_to_update_sitelist = 1
             if studentdata:
+                if studentdata.show_already_due==0:show_only_unfinished=1
                 need_to_update_sitelist = studentdata.need_to_update_sitelist
                 last_update = studentdata.last_update
-                add_student(student_id, fullname,last_update= now, language = studentdata.language)
+                if need_to_update_sitelist:
+                    add_student(student_id, fullname,last_update= now, last_update_subject= now, language = studentdata.language)
+                else:
+                    add_student(student_id, fullname,last_update= now, last_update_subject= studentdata.last_update_subject, language = studentdata.language)
             else:
                 last_update = 0
-                add_student(student_id, fullname,last_update= now)
-            get_membership = {"student_id": "", "site_list":[]}
-            if need_to_update_sitelist == 0:                
-                get_membership["student_id"] = student_id
-                get_membership["site_list"] = get_courses_id_to_be_taken(student_id)
-            else:
-                # 時間かかる
-                last_update = 0
-                get_membership = get_course_id_from_api(get_membership_json(ses))
-            if student_id != "":
-                # get_assignments = get_assignments_from_api(assignments.json(), student_id)
-                get_sites = {"courses":[],"student_courses":[]}
-                get_resources = {"resources":[],"student_resources":[]}
-                asyncio.set_event_loop(asyncio.SelectorEventLoop())
-                loop = asyncio.get_event_loop()
-                c_statements = []
-                s_statements = []
-                p_statements = []
-                for courseid in get_membership["site_list"]:
-                    c_statements.append(async_get_content(courseid, ses))
-                    s_statements.append(async_get_site(courseid, ses))
-                    p_statements.append(async_get_site_pages(courseid, ses))
-                    # site = s.get(f"{api_url}site/{courseid}.json")
-                    # resources = s.get(f"{api_url}content/site/{courseid}.json")
-                    # get_site = get_course_from_api(site.json(), student_id)
-                    # get_sites["courses"].append(get_site["course"])
-                    # get_sites["student_courses"].append(get_site["student_course"])
-                    # get_resource = get_resources_from_api(resources.json(),courseid,student_id)
-                    # get_resources["resources"].append(get_resource["resources"])
-                    # get_resources["student_resources"].append(get_resources["student_resources"])
-                c_statements.extend(s_statements)
-                c_statements.extend(p_statements)
-                c_statements.extend([async_get_assignments(ses),async_get_user_info(ses)])
-                tasks = asyncio.gather(*c_statements)
-                content_site = loop.run_until_complete(tasks)
-                content_site_len = int(len(content_site))-2
-                one_third_content_site_len = content_site_len//3
-                contents = content_site[0:one_third_content_site_len]
-                sites = content_site[one_third_content_site_len:one_third_content_site_len*2]
-                pages = content_site[one_third_content_site_len*2:content_site_len]
-                get_assignments = get_assignments_from_api(content_site[content_site_len],student_id)
-                user_info = get_user_info_from_api(content_site[content_site_len+1])
-                index = 0
-                for courseid in get_membership["site_list"]:
-                    get_resource = get_resources_from_api(contents[index],courseid,student_id)
-                    get_site = get_course_from_api(sites[index], student_id)
-                    if get_site:
-                        get_site["course"]["page_id"] = get_page_from_api(pages[index])
-                        get_sites["courses"].append(get_site["course"])
-                        get_sites["student_courses"].append(get_site["student_course"])
-                        get_resources["resources"].extend(get_resource["resources"])
-                        get_resources["student_resources"].extend(get_resource["student_resources"])
-                        index += 1
-                # student_id       student_id
-                # get_membership   {"student_id": , "site_list": []}
-                # get_assignments  {"assignments": [], student_assignments: []}
-                # get_sites        {"courses": [], "student_courses": []}
-                # get_resources    {"resources":[], "student_resources": []}
-                # user_info        {"student_id": , "fullname": }
-                sync_student_contents(student_id, get_sites, get_assignments, get_resources, now, last_update=last_update)
+                add_student(student_id, fullname,last_update= now, last_update_subject= now)
+            get_data_from_api_and_update(student_id,ses,now,last_update,0)
+            if need_to_update_sitelist == 1:
+                get_data_from_api_and_update(student_id,ses,now,0,1)
+            if student_id !="":
                 update_student_needs_to_update_sitelist(student_id)
             logging.info(f"TIME {student_id}:{time.perf_counter()-start_time}")
     
@@ -170,7 +120,7 @@ def proxyticket():
             logging.info(f"Requested redirect '{redirect_page}' is invalid because it is portal page")
         else:
             return flask.redirect(redirect_page)
-    return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
+    return flask.redirect(flask.url_for('tasklist',show_only_unfinished=show_only_unfinished,max_time_left = 3))
 
 @app.route('/logout')
 def logout():
@@ -210,6 +160,34 @@ def tutrial():
 def help(page):
     #2021/01/14 Shinji Akayama: 参照するhtmlが間違っていたので修正しました。FAQ_{page}は完全なhtmlではありません
     return flask.render_template(f"_flexible_help_{page}.htm")
+
+@app.route('/option', methods=['GET'])
+def option():
+    studentid = session.get('student_id')
+    if studentid:
+        data ={"others":[]}
+        studentdata = get_student(studentid)
+        coursesdata = get_courses_to_be_taken(studentid, mode=1, return_data='student_course')
+        courses_to_be_taken = []
+        for coursedata in coursesdata:
+            course_id = coursedata.course_id
+            hide = coursedata.hide
+            coursename = get_coursename(courseid=course_id)
+            courses_to_be_taken.append({'course_id':course_id,'coursename':coursename,'hide':hide})
+        data = setdefault_for_overview(studentid)
+        last_update_subject= str(datetime.datetime.fromtimestamp(studentdata.last_update_subject,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        return flask.render_template(f"option.htm",data=data, show_already_due=studentdata.show_already_due, last_update_subject = last_update_subject, courses_to_be_taken=courses_to_be_taken)
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/update_subject')
+def update_subject():
+    studentid = session.get('student_id')
+    if studentid:
+        update_student_needs_to_update_sitelist(studentid,need_to_update_sitelist=1)
+        return redirect(url_for('login',page='option'))
+    else:
+        return redirect(url_for('login'))
 
 
 
@@ -279,7 +257,16 @@ def controller_for_students(studentid):
 
 @app.route('/tasklist')
 def tasklist_redirect():
-    return flask.redirect(flask.url_for('tasklist',show_only_unfinished = 0,max_time_left = 3))
+    studentid = session.get('student_id')
+    if studentid:
+        studentdata=get_student(studentid)
+        if studentdata:
+            show_already_due = studentdata.show_already_due
+            show_only_unfinished = 0
+            if show_already_due==0:show_only_unfinished=1
+            return flask.redirect(flask.url_for('tasklist',show_only_unfinished=show_only_unfinished,max_time_left = 3))
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/overview')
 def overview():
@@ -319,11 +306,28 @@ def overview():
 
 @app.route('/tasklist/day/<day>')
 def tasklist_day_redirect(day):
-    return flask.redirect(flask.url_for('tasklist_day', day=day, show_only_unfinished = 0,max_time_left = 3))
+    studentid = session.get('student_id')
+    if studentid:
+        studentdata=get_student(studentid)
+        if studentdata:
+            show_already_due = studentdata.show_already_due
+            show_only_unfinished = 0
+            if show_already_due==0:show_only_unfinished=1
+            return flask.redirect(flask.url_for('tasklist_day',day=day, show_only_unfinished=show_only_unfinished,max_time_left = 3))
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/tasklist/course/<courseid>')
 def tasklist_course_redirect(courseid):
-    return flask.redirect(flask.url_for('tasklist_course', courseid=courseid, show_only_unfinished = 0,max_time_left = 3))
+    studentid = session.get('student_id')
+    if studentid:
+        studentdata=get_student(studentid)
+        if studentdata:
+            show_already_due = studentdata.show_already_due
+            show_only_unfinished = 0
+            if show_already_due==0:show_only_unfinished=1
+            return flask.redirect(flask.url_for('tasklist_course',courseid=courseid,show_only_unfinished=show_only_unfinished,max_time_left = 3))
+    return redirect(url_for('login'))
 
 @app.route('/tasklist/day/<day>/<int:show_only_unfinished>/<int:max_time_left>')
 def tasklist_day(day,show_only_unfinished,max_time_left):
@@ -392,6 +396,37 @@ def task_unfinish():
     if studentid:
         task_id = request.json['task_id']
         update_task_status(studentid, task_id, mode=1)
+        return 'success'
+    else:
+        return 'failed'
+
+@app.route('/task_clicked', methods=['POST'])
+def task_clicked():
+    studentid = session.get('student_id')
+    if studentid:
+        task_ids = request.json['task_ids']
+        update_task_clicked_status(studentid, task_ids)
+        return 'success'
+    else:
+        return 'failed'
+
+@app.route('/course_hide', methods=['POST'])
+def course_hide():
+    studentid = session.get('student_id')
+    if studentid:
+        course_list = request.json['course_list']
+        hide = request.json['hide']
+        update_student_course_hide(studentid,course_list,hide)
+        return 'success'
+    else:
+        return 'failed'
+
+@app.route('/show_already_due', methods=['POST'])
+def show_already_due():
+    studentid = session.get('student_id')
+    if studentid:
+        show_already_due = request.json['show_already_due']
+        update_student_show_already_due(studentid, show_already_due)
         return 'success'
     else:
         return 'failed'

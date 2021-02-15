@@ -1,7 +1,7 @@
 from math import *
 import time
 from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment, forum
-from .settings import session, app_url
+from .settings import SHOW_YEAR_SEMESTER, VALID_YEAR_SEMESTER, session, app_url
 import re
 from pprint import pprint
 import copy
@@ -52,34 +52,39 @@ class TimeLeft():
         days = hours/24
         weeks = days/7
         months = weeks/4
-
+        judge_style = 'one_sec'
         msg =''
 
         if seconds < 0:
-            return ''
+            return {'msg':'','judge':judge_style}
         elif minutes < 1:
             # 一分未満
             msg = self.add_miman('1'+ unit_minute_single[self.language])
+            judge_style = 'one_min'
         elif hours < 1:
             # 一時間未満
+            judge_style = 'one_hour'
             if floor(minutes) == 1:
                 msg = str(floor(minutes)) + unit_minute_single[self.language]
             else:
                 msg = str(floor(minutes)) + unit_minute[self.language]
         elif days < 1:
             # 一日未満
+            judge_style = 'one_day'
             if floor(minutes) == 1:
                 msg = str(floor(hours)) + unit_hour_single[self.language]
             else:
                 msg = str(floor(hours)) + unit_hour[self.language]
         elif weeks < 1:
             # 一週間未満
+            judge_style = 'one_week'
             if floor(days) == 1:
                 msg = str(floor(days)) + unit_day_single[self.language]
             else:
                 msg = str(floor(days)) + unit_day[self.language]
         elif months < 1:
             # 一か月(4週間)未満
+            judge_style = 'one_month'
             if floor(weeks) == 1:
                 msg = str(floor(weeks)) + unit_week_single[self.language]
             else:
@@ -94,9 +99,10 @@ class TimeLeft():
                     msg += to[self.language] + str(remain_days) + unit_day[self.language]
         else:
             # 一か月以上
+            judge_style = 'one_year'
             msg = self.add_ijyou('4' + unit_week[self.language])
         
-        return self.add_ato(msg)
+        return {'msg':self.add_ato(msg),'judge':judge_style}
 
 def sync_student_contents(studentid, crs, asm, res, now,last_update=0):
     # 以下主な方針
@@ -139,6 +145,72 @@ def sync_student_resource(studentid, sr, res, last_update):
     add_resource(studentid, res, last_update)
     return 0
 
+def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_sitelist):
+    get_membership = {"student_id": "", "site_list":[]}
+    if need_to_update_sitelist == 0:                
+        get_membership["student_id"] = student_id
+        get_membership["site_list"] = get_courses_id_to_be_taken(student_id)
+    else:
+        # 時間かかる
+        last_update = 0
+        get_membership = get_course_id_from_api(get_membership_json(ses))
+        already_known= get_courses_id_to_be_taken(student_id)
+        # 新規のもののみを取り上げる
+        get_membership["site_list"] = [i for i in get_membership["site_list"] if i not in already_known]
+    if student_id != "":
+        # get_assignments = get_assignments_from_api(assignments.json(), student_id)
+        get_sites = {"courses":[],"student_courses":[]}
+        get_resources = {"resources":[],"student_resources":[]}
+        asyncio.set_event_loop(asyncio.SelectorEventLoop())
+        loop = asyncio.get_event_loop()
+        c_statements = []
+        s_statements = []
+        p_statements = []
+        for courseid in get_membership["site_list"]:
+            c_statements.append(async_get_content(courseid, ses))
+            s_statements.append(async_get_site(courseid, ses))
+            p_statements.append(async_get_site_pages(courseid, ses))
+            # site = s.get(f"{api_url}site/{courseid}.json")
+            # resources = s.get(f"{api_url}content/site/{courseid}.json")
+            # get_site = get_course_from_api(site.json(), student_id)
+            # get_sites["courses"].append(get_site["course"])
+            # get_sites["student_courses"].append(get_site["student_course"])
+            # get_resource = get_resources_from_api(resources.json(),courseid,student_id)
+            # get_resources["resources"].append(get_resource["resources"])
+            # get_resources["student_resources"].append(get_resources["student_resources"])
+        c_statements.extend(s_statements)
+        c_statements.extend(p_statements)
+        c_statements.extend([async_get_assignments(ses),async_get_user_info(ses)])
+        tasks = asyncio.gather(*c_statements)
+        content_site = loop.run_until_complete(tasks)
+        content_site_len = int(len(content_site))-2
+        one_third_content_site_len = content_site_len//3
+        contents = content_site[0:one_third_content_site_len]
+        sites = content_site[one_third_content_site_len:one_third_content_site_len*2]
+        pages = content_site[one_third_content_site_len*2:content_site_len]
+        get_assignments = get_assignments_from_api(content_site[content_site_len],student_id)
+        user_info = get_user_info_from_api(content_site[content_site_len+1])
+        index = 0
+        for courseid in get_membership["site_list"]:
+            get_resource = get_resources_from_api(contents[index],courseid,student_id)
+            get_site = get_course_from_api(sites[index], student_id)
+            if get_site:
+                get_site["course"]["page_id"] = get_page_from_api(pages[index])
+                get_sites["courses"].append(get_site["course"])
+                get_sites["student_courses"].append(get_site["student_course"])
+                get_resources["resources"].extend(get_resource["resources"])
+                get_resources["student_resources"].extend(get_resource["student_resources"])
+            index += 1
+        # student_id       student_id
+        # get_membership   {"student_id": , "site_list": []}
+        # get_assignments  {"assignments": [], student_assignments: []}
+        # get_sites        {"courses": [], "student_courses": []}
+        # get_resources    {"resources":[], "student_resources": []}
+        # user_info        {"student_id": , "fullname": }
+        sync_student_contents(student_id, get_sites, get_assignments, get_resources, now, last_update=last_update)
+
+
+
 def get_assignments_from_api(assignments, student_id):
     assignment_list = []
     sa_list = []
@@ -153,7 +225,7 @@ def get_assignments_from_api(assignments, student_id):
         course_id = assignment.get('context')
         modifieddate = assignment.get('timeLastModified').get('time')
         status = assignment.get('status')
-        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":"未","student_id":student_id})
+        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":"未","student_id":student_id,"clicked":0})
         assignment_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifieddate":modifieddate,"course_id":course_id})
     assignment_dict = {"student_assignments":sa_list, "assignments":assignment_list}
     return assignment_dict
@@ -200,21 +272,31 @@ def get_course_id_from_api(membership):
 
 def get_course_from_api(site, student_id):
     course_id = site.get('id')
-    instructor_id = site.get('siteOwner').get('userId')
-    fullname = site.get('siteOwner').get('userDisplayName')
+    instructor_id="unknown"
+    fullname="unknown"
+    if site.get('siteOwner'):
+        instructor_id = site.get('siteOwner').get('userId')
+        fullname = site.get('siteOwner').get('userDisplayName')
     coursename = site.get('title')
     yearsch = re.match(r'\[.*\]', coursename)
-    yearsemester = "20203"
+    yearsemester = "10009"
     classschedule = "oth"
     try:
-        semnum = "2"
+        semnum = "9"
         semester = yearsch.group()[5:7]
         classsch = yearsch.group()[7:9]
         if semester == '前期':
             semnum = "0"
-            # return None
-        elif semester == '後期':
+        elif semester == '前集':
             semnum = "1"
+        elif semester == '後期':
+            semnum = "2"
+        elif semester == '後集':
+            semnum = "3"
+        elif semester == '通年':
+            semnum = "4"
+        elif semester == '通集':
+            semnum = "5"
         # else:
             # return None
         yearsemester = f"{yearsch.group()[1:5]}{semnum}"
@@ -233,6 +315,8 @@ def get_course_from_api(site, student_id):
     except:
         # return None
         pass
+    if int(yearsemester) not in VALID_YEAR_SEMESTER:
+        return None
     course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule,"page_id":""}
     student_course_dict = {"sc_id":f"{student_id}:{course_id}","course_id":course_id,"student_id":student_id}
     return {"course":course_dict, "student_course":student_course_dict}
@@ -382,7 +466,8 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
         task["assignmentid"] = data.assignment_id
         task["deadline"] = asmdata[0].limit_at
         task["time_left"] = TimeLeft(asmdata[0].time_ms).time_left_to_str()
-        if task["time_left"] == "":
+        task["clicked"] = data.clicked
+        if task["time_left"]["msg"] == "":
             task["status"]="期限切れ"
         if mode == 1:
             # overviewのtooltipsに使用
@@ -399,29 +484,36 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
         tasks.append(task)
     return tasks
 
-def get_courses_to_be_taken(studentid):
+# mode = 1 のときはhideのものも取得
+def get_courses_to_be_taken(studentid, mode = 0,return_data = 'course'):
     data=[]
     courses = session.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
     for i in courses:
-        # if course.hide == 1:
-        #     continue
+        if mode==0 and i.hide==1:
+            continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
-        if coursedata[0].yearsemester == 20201:
-            data.append(coursedata[0])
+        if coursedata[0].yearsemester in SHOW_YEAR_SEMESTER:
+            if return_data == 'course':
+                data.append(coursedata[0])
+            elif return_data == 'student_course':
+                data.append(i)
+            else:
+                #一応courseを返す
+                data.append(coursedata[0])
     return data
 
-def get_courses_id_to_be_taken(studentid):
+def get_courses_id_to_be_taken(studentid, mode=0):
     data=[]
     courses = session.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
     for i in courses:
-        # if course.hide == 1:
-        #     continue
+        if mode==0 and i.hide == 1:
+            continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
-        if coursedata[0].yearsemester == 20201:
+        if coursedata[0].yearsemester in SHOW_YEAR_SEMESTER:
             data.append(coursedata[0].course_id)
     return data
 
@@ -643,26 +735,22 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
         #     </li>
         #     """
         # checkbox なし
+        status_class = "undownloaded"
+        resource_title = r["title"]
+        if r["status"] == 1:
+            status_class = "downloaded"
+            resource_title = "このファイルを再ダウンロードする"
         add_html = f"""
-        <li>
-            <div class="form-check">
-                <label class="form-check-label" for="{r["resource_url"]}"> 
-                    <a href="{r["resource_url"]}" target="{target}" download="{r["title"]}" name="{r["resource_url"]}" class="resource">{r["title"]}</a>
-                </label>
-            </div>
-        </li>"""
-        if r['status'] == 1:
-            add_html = f"""
             <li>
                 <div class="d-inline-flex">
                     <div class="form-check">
                         <label class="form-check-label" for="{r["resource_url"]}">
-                                <a href="{r["resource_url"]}" download="{r["title"]}" data-container="body" data-toggle="tooltip" title="このファイルを再ダウンロードする" name="{r["resource_url"]}" target="{target}" class="resource">{r["title"]}</a>                     
+                                <a href="{r["resource_url"]}" download="{r["title"]}" data-container="body" data-toggle="tooltip" title={resource_title} name="{r["resource_url"]}" target="{target}" class="resource {status_class}">{r["title"]}</a>                     
                         </label>
                     </div>
                 </div>
             </li>
-            """
+        """
         if folder_i:
             html = html[:folder_i.end()+search_num] + add_html + html[folder_i.end()+search_num:]
     # html = f"""<span><i class="far fa-folder" style="font-size:medium;">{coursename}</i></span>
@@ -693,14 +781,14 @@ def get_student(studentid):
         studentdata = None
     return studentdata
 
-def add_student(studentid, fullname, last_update = 0, language = "ja"):
+def add_student(studentid, fullname, last_update = 0, last_update_subject = 0, language = "ja"):
     students = session.query(student.Student.student_id).all()
     isExist = False
     for i in students:
         if list(i)[0] == studentid:
             isExist = True
             break
-    new_student = {"student_id":studentid, "fullname":fullname,"last_update":last_update,"language":language}
+    new_student = {"student_id":studentid, "fullname":fullname,"last_update":last_update, "last_update_subject":last_update_subject,"language":language}
     if isExist == False:
         session.execute(student.Student.__table__.insert(),new_student)
     else:
@@ -886,6 +974,21 @@ def update_student_needs_to_update_sitelist(student_id,need_to_update_sitelist=0
     session.commit()
     return
 
+def update_student_show_already_due(student_id,show_already_due=0):
+    st = session.query(student.Student).filter(student.Student.student_id==student_id).first()
+    st.show_already_due = show_already_due
+    session.commit()
+    return
+
+def update_student_course_hide(student_id, course_list, hide):
+    update_list = []
+    for coursedata in course_list:
+        sc_id = f'{student_id}:{coursedata}'
+        update_list.append({"sc_id":sc_id,"hide":hide})
+    session.bulk_update_mappings(studentcourse.Studentcourse, update_list)
+    session.commit()
+    return
+
 def update_resource_status(studentid, resourceids: list):
     srs = session.query(studentresource.Student_Resource.resource_url, studentresource.Student_Resource.sr_id).filter(
         studentresource.Student_Resource.student_id == studentid).all()
@@ -907,6 +1010,15 @@ def update_task_status(studentid, taskids: list, mode=0):
         update_list.append({"sa_id":sa_id, "status":status})
     session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
     session.commit()
+    return
+
+def update_task_clicked_status(studentid, taskids:list):
+    update_list = []
+    for t_id in taskids:
+        sa_id = f'{studentid}:{t_id}'
+        update_list.append({"sa_id":sa_id, "clicked":1})
+    session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
+    session.commit() 
     return
 
 def add_studentcourse(studentid, data):
@@ -945,9 +1057,10 @@ def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
             task["status"]="期限切れ"
 
     
-    tasks = sorted(tasks, key=lambda x: x["deadline"])
-    tasks = sorted(tasks, key=lambda x: order_status(x["status"]))
-    return tasks
+    new_tasks = sorted([i for i in tasks if i["status"] != "期限切れ"], key=lambda x: x["deadline"])
+    new_tasks.extend(sorted([i for i in tasks if i["status"] == "期限切れ"], key=lambda x: x["deadline"],reverse=True))
+    new_tasks = sorted(new_tasks, key=lambda x: order_status(x["status"]))
+    return new_tasks
 
 
 def timejudge(task, max_time_left):

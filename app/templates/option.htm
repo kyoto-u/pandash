@@ -1,0 +1,29 @@
+{% extends "_base.htm" %}
+{% block bodycontent %}
+<div class="container">
+    <h1 class="mb-5">設定</h1>
+    <div class="row">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark col-3">
+            <div class="container">
+                <a class="navbar-brand " href="/"></a>
+                <button id="optiontoggle" class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#option_collapse" aria-controls="#option_collapse" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div id="option_collapse" class="collapse navbar-collapse">
+                    <div class="d-flex" style="flex-direction: column;">
+                        <a href="#" class="list-group-item list-group-item-action btn-block">言語/Language</a>
+                        <a href="#" class="list-group-item list-group-item-action btn-block">表示科目</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="col-9 border-top" style="background-color: whitesmoke;">
+            {% include "Option_fragments/option_subject.htm" %}
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/static/js/option.js"></script>
+{% endblock %}1
