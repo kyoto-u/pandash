@@ -49,12 +49,13 @@
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -64,21 +65,23 @@
                 {% for task in data.tue1.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -88,21 +91,23 @@
                 {% for task in data.wed1.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -112,21 +117,23 @@
                 {% for task in data.thu1.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -136,21 +143,23 @@
                 {% for task in data.fri1.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -163,21 +172,23 @@
                 {% for task in data.mon2.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -187,21 +198,23 @@
                 {% for task in data.tue2.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -211,21 +224,23 @@
                 {% for task in data.wed2.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -235,21 +250,23 @@
                 {% for task in data.thu2.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -259,21 +276,23 @@
                 {% for task in data.fri2.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -286,21 +305,23 @@
                 {% for task in data.mon3.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -310,21 +331,23 @@
                 {% for task in data.tue3.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -334,21 +357,23 @@
                 {% for task in data.wed3.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -358,21 +383,23 @@
                 {% for task in data.thu3.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -382,21 +409,23 @@
                 {% for task in data.fri3.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -409,21 +438,23 @@
                 {% for task in data.mon4.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -433,21 +464,23 @@
                 {% for task in data.tue4.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -457,21 +490,23 @@
                 {% for task in data.wed4.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -481,21 +516,23 @@
                 {% for task in data.thu4.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -505,21 +542,23 @@
                 {% for task in data.fri4.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -532,21 +571,23 @@
                 {% for task in data.mon5.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
+               <a target="_blank"
+                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
-                <a target="_blank"
-                    href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -556,21 +597,23 @@
                 {% for task in data.tue5.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -580,21 +623,23 @@
                 {% for task in data.wed5.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -604,21 +649,23 @@
                 {% for task in data.thu5.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -628,21 +675,23 @@
                 {% for task in data.fri5.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}                 
                 <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-                {% endif %}
-                  <a target="_blank"
+                <a target="_blank"
                     href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+                {% if task.clicked == 0 %}
+                <i class="fas fa-exclamation-circle"></i> 
+                {% endif %}
+                </a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -671,17 +720,23 @@
             {% for task in sbj.tasks %}
             {% if loop.index > display_num %}
             <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-              <i class="fas fa-exclamation-circle"></i>
               <a target="_blank"
                 href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+              {% if task.clicked == 0 %}
+              <i class="fas fa-exclamation-circle"></i>
+              {% endif %}
+              </a>
             </div>
             {% else %}
             <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-              <i class="fas fa-exclamation-circle"></i>
               <a target="_blank"
                 href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission" class="task_link"
-                data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}</a>
+                data-container='body' data-toggle="tooltip" title={{task.tooltip}}>{{task.taskname}}
+              {% if task.clicked == 0 %}
+              <i class="fas fa-exclamation-circle"></i> 
+              {% endif %}
+              </a>
             </div>
             {% endif %}
             {% endfor %}
