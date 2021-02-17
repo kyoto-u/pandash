@@ -95,14 +95,14 @@
               <tr class="d-flex tablecontents acdrag nonetype" id="{{task.assignmentid}}">
             {% endif %}
               <td class="col-3 subject">
-              {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i>
-              {% endif %}
               {{task.subject}}
               </td>
               <td class="col-3 task_title"><a target="_blank"
                   href="{{task.assignment_url}}"
-                  class="task_tag task_link">{{task.taskname}}</a></td>
+                  class="task_tag task_link">              
+                  {% if task.clicked == 0 %}
+                  <i class="fas fa-exclamation-circle"></i>
+                  {% endif %}{{task.taskname}}</a></td>
               <td class="col-3">{{task.time_left.msg}}</td>
               <td class="col-3">{{task.deadline}}</td>
             </tr>
