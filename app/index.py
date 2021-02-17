@@ -1,7 +1,7 @@
 from math import *
 import time
 from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment, forum
-from .settings import SHOW_YEAR_SEMESTER, VALID_YEAR_SEMESTER, session, app_url
+from .settings import SHOW_YEAR_SEMESTER, VALID_YEAR_SEMESTER, session, app_url, panda_url
 import re
 from pprint import pprint
 import copy
@@ -481,6 +481,7 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
         if show_only_unfinished==1:
             if task["status"]!="未":
                 continue
+        task["assignment_url"] = f"{panda_url}/site/"+task["course_id"]+f"/tool/"+task["tool_id"]+f"?assignmentReference=/assignment/a/"+task["course_id"]+"/"+task["assignmentid"]+"&panel=Main&sakai_action=doView_submission"
         tasks.append(task)
     return tasks
 
