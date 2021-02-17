@@ -11,7 +11,7 @@ proxy_url = app_url + '/pgtCallback'
 proxy_callback = 'https://panda.ecs.kyoto-u.ac.jp/sakai-login-tool/container'
 # PandAのAPI用URL
 panda_url ='https://panda.ecs.kyoto-u.ac.jp/'
-api_url = f'{panda_url}/direct/'
+api_url = f'{panda_url}direct/'
 
 # 収集する教科の学期一覧
 # 前４ケタ:年度

@@ -481,7 +481,7 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
         if show_only_unfinished==1:
             if task["status"]!="未":
                 continue
-        task["assignment_url"] = f"{panda_url}/site/"+task["course_id"]+f"/tool/"+task["tool_id"]+f"?assignmentReference=/assignment/a/"+task["course_id"]+"/"+task["assignmentid"]+"&panel=Main&sakai_action=doView_submission"
+        task["assignment_url"] = f'{panda_url}portal/site/{task["course_id"]}/tool/{task["tool_id"]}?assignmentReference=/assignment/a/{task["course_id"]}/{task["assignmentid"]}&panel=Main&sakai_action=doView_submission'
         tasks.append(task)
     return tasks
 
