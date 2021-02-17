@@ -101,7 +101,7 @@
               {{task.subject}}
               </td>
               <td class="col-3 task_title"><a target="_blank"
-                  href="https://panda.ecs.kyoto-u.ac.jp/portal/tool/{{task.tool_id}}?assignmentReference=/assignment/a/{{task.course_id}}/{{task.assignmentid}}&panel=Main&sakai_action=doView_submission"
+                  href="{{task.assignment_url}}"
                   class="task_tag task_link">{{task.taskname}}</a></td>
               <td class="col-3">{{task.time_left.msg}}</td>
               <td class="col-3">{{task.deadline}}</td>
