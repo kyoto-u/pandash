@@ -41,6 +41,10 @@ body {
     width:98%;
 }
 
+.container {
+    max-width: 2000px;
+}
+
 footer {
     margin-top: auto;
     width: 100%;
@@ -174,12 +178,16 @@ footer {
 
 #overviewtable > thead > tr {
     height:fit-content;
-    min-height: 100px;
+    min-height: 50px;
 }
 
 #overviewtable > tbody > tr {
     height:fit-content;
     min-height: 100px;
+}
+
+.striped_gray{
+    background-color: #f1f1f1;
 }
 
 .elsesbjcard{

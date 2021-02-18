@@ -1,6 +1,6 @@
 {% extends "_base.htm" %}
 {% block bodycontent %}
-<div class="cotainer container-fluid">
+<div class="container container-fluid">
   <!-- See file _base.htm, line 132
     style="pointer-events: none;" -->
   <div class="row">
@@ -26,7 +26,7 @@
             <tr class="d-flex">
               <td class="col-2"></td>
               <td class="col-2">月</td>
-              <td class="col-2">火</td>
+              <td class="col-2 striped_gray">火</td>
               <td class="col-2">水</td>
               <td class="col-2">木</td>
               <td class="col-2">金</td>
@@ -40,46 +40,41 @@
                 {% for task in data.mon1.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                  href="{{task.assignment_url}}"
-                  class="task_link" data-container='body' data-toggle="tooltip"
-                  title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
               </td>
-              <td class="col-2">
+              <td class="col-2 striped_gray">
                 <a href="{{data.tue1.searchURL}}" class="course">{{data.tue1.shortname}}</a>
                 {% for task in data.tue1.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -89,45 +84,41 @@
                 {% for task in data.wed1.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
               </td>
-              <td class="col-2">
+              <td class="col-2 striped_gray">
                 <a href="{{data.thu1.searchURL}}" class="course">{{data.thu1.shortname}}</a>
                 {% for task in data.thu1.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -137,21 +128,19 @@
                 {% for task in data.fri1.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -164,45 +153,41 @@
                 {% for task in data.mon2.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
               </td>
-              <td class="col-2">
+              <td class="col-2 striped_gray">
                 <a href="{{data.tue2.searchURL}}" class="course">{{data.tue2.shortname}}</a>
                 {% for task in data.tue2.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -212,45 +197,41 @@
                 {% for task in data.wed2.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
               </td>
-              <td class="col-2">
+              <td class="col-2 striped_gray">
                 <a href="{{data.thu2.searchURL}}" class="course">{{data.thu2.shortname}}</a>
                 {% for task in data.thu2.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -260,21 +241,19 @@
                 {% for task in data.fri2.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -287,45 +266,41 @@
                 {% for task in data.mon3.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
               </td>
-              <td class="col-2">
+              <td class="col-2 striped_gray">
                 <a href="{{data.tue3.searchURL}}" class="course">{{data.tue3.shortname}}</a>
                 {% for task in data.tue3.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -335,45 +310,41 @@
                 {% for task in data.wed3.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
               </td>
-              <td class="col-2">
+              <td class="col-2 striped_gray">
                 <a href="{{data.thu3.searchURL}}" class="course">{{data.thu3.shortname}}</a>
                 {% for task in data.thu3.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -383,21 +354,19 @@
                 {% for task in data.fri3.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -410,45 +379,41 @@
                 {% for task in data.mon4.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
               </td>
-              <td class="col-2">
+              <td class="col-2 striped_gray">
                 <a href="{{data.tue4.searchURL}}" class="course">{{data.tue4.shortname}}</a>
                 {% for task in data.tue4.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -458,45 +423,41 @@
                 {% for task in data.wed4.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
               </td>
-              <td class="col-2">
+              <td class="col-2 striped_gray">
                 <a href="{{data.thu4.searchURL}}" class="course">{{data.thu4.shortname}}</a>
                 {% for task in data.thu4.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -506,21 +467,19 @@
                 {% for task in data.fri4.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -533,45 +492,41 @@
                 {% for task in data.mon5.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-               <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
               </td>
-              <td class="col-2">
+              <td class="col-2 striped_gray">
                 <a href="{{data.tue5.searchURL}}" class="course">{{data.tue5.shortname}}</a>
                 {% for task in data.tue5.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -581,45 +536,41 @@
                 {% for task in data.wed5.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
               </td>
-              <td class="col-2">
+              <td class="col-2 striped_gray">
                 <a href="{{data.thu5.searchURL}}" class="course">{{data.thu5.shortname}}</a>
                 {% for task in data.thu5.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -629,21 +580,19 @@
                 {% for task in data.fri5.tasks %}
                 {% if loop.index > display_num %}
                 <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-                <a target="_blank"
-                    href="{{task.assignment_url}}" class="task_link"
-                    data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
-                {% if task.clicked == 0 %}
-                <i class="fas fa-exclamation-circle"></i> 
-                {% endif %}{{task.taskname}}</a>
+                  <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                    data-toggle="tooltip" title={{task.tooltip}}>
+                    {% if task.clicked == 0 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                    {% endif %}{{task.taskname}}</a>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -673,18 +622,16 @@
             {% for task in sbj.tasks %}
             {% if loop.index > display_num %}
             <div class="card taskcard {{task.time_left.judge}} d-none" id="{{task.assignmentid}}">
-              <a target="_blank"
-                href="{{task.assignment_url}}"
-                class="task_link" data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
+              <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i>
                 {% endif %}{{task.taskname}}</a>
             </div>
             {% else %}
             <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
-              <a target="_blank"
-                href="{{task.assignment_url}}"
-                class="task_link" data-container='body' data-toggle="tooltip" title={{task.tooltip}}>
+              <a target="_blank" href="{{task.assignment_url}}" class="task_link" data-container='body'
+                data-toggle="tooltip" title={{task.tooltip}}>
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i>
                 {% endif %}{{task.taskname}}</a>

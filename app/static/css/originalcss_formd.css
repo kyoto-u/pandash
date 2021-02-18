@@ -108,7 +108,7 @@ body{
 }
 
 #overviewtable > thead > tr {
-    min-height:60px;
+    min-height:40px;
     height: fit-content;
 }
 
