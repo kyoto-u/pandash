@@ -197,69 +197,69 @@ def update_subject():
     else:
         return redirect(url_for('login'))
 
-
+# 旧バージョンの機能・デバッグ機能のためコメントアウト
 
 # @app.route('/')
 # def root():
 #     return flask.redirect(flask.url_for('main'))
 
 
-@app.route('/controller')
-def controller():
-    # 現行のバージョンでは使えなくなりました
-    # ex
-    add_instructor('instructor1', 'i_fullname', 'i_mailadress')
-    add_assignment("assignmentid1", "url","課題1", "2020-10-30T01:55:00Z", "<p>説明<p>", 11111111111, 1111, "course1" )
-    add_assignment("assignmentid2", "ur2","課題2", "2020-10-30T01:50:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
-    add_assignment("assignmentid3", "ur3","課題3", "2020-11-01T01:52:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
-    add_assignment("assignmentid4", "ur4","課題4", "2020-10-30T01:51:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
-    add_assignment("assignmentid5", "ur5","課題5", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, "course2" )
-    add_assignment("assignmentid6", "ur6","課題6", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
-    add_assignment("assignmentid7", "ur7","課題7", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
-    for i in range(30):
-        add_course(f'dummy{i}', 'teacher1', f'[2020前期他他]ダミー{i}', 20200, f'thu{(i%5)+1}')
-        for j in range(10):
-            add_assignment(f"dummyassignment{i}-{j}", "url",f"課題{i}-{j}", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, f"dummy{i}" )
-            add_resource(f'resource{i}-{j}','teacher1','/content/group/2020-888-N150-017/演義/',111,f'dummy{i}')
-    
-    
-    add_course('course1', 'teacher1', 'コース1', 20200, 'wed2')
-    add_course('course2', 'teacher1', 'コース2', 20200, 'mon2')
-    add_course('course3', 'teacher1', '[2020前期月1]線形代数学', 20200, 'mon1')
-    add_course('course4', 'teacher1', '[2020前期月2]微分積分学', 20200, 'mon2')
-    add_resource('url1', '資料１', '/content/group/2020-888-N150-017/演義/演義動画/', 111, 'course1')
-    add_resource('url2', '資料２', '/content/group/2020-888-N150-017/演義/演義動画/', 222, 'course1')
-    add_resource('url3', '資料３', '/content/group/2020-888-N150-017/演義/演義資料/', 222, 'course1')
-    add_resource('url4', '資料４', '/content/group/2020-888-N150-017/演義/演義動画/詳細/', 222, 'course1')
-    add_resource('url5', '資料５', '/content/group/2020-888-N150-017/講義/講義動画/', 222, 'course1')
-    add_resource('url6', '資料６', '/content/group/2020-888-N150-017/講義/講義ノート/', 222, 'course1')
-    add_resource('url7', '資料７', '/content/group/2020-888-N150-017/演義/演義動画/', 222, 'course2')
-    return ''
+# @app.route('/controller')
+# def controller():
+#     # 現行のバージョンでは使えなくなりました
+#     # ex
+#     add_instructor('instructor1', 'i_fullname', 'i_mailadress')
+#     add_assignment("assignmentid1", "url","課題1", "2020-10-30T01:55:00Z", "<p>説明<p>", 11111111111, 1111, "course1" )
+#     add_assignment("assignmentid2", "ur2","課題2", "2020-10-30T01:50:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
+#     add_assignment("assignmentid3", "ur3","課題3", "2020-11-01T01:52:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
+#     add_assignment("assignmentid4", "ur4","課題4", "2020-10-30T01:51:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
+#     add_assignment("assignmentid5", "ur5","課題5", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, "course2" )
+#     add_assignment("assignmentid6", "ur6","課題6", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
+#     add_assignment("assignmentid7", "ur7","課題7", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, "course4" )
+#     for i in range(30):
+#         add_course(f'dummy{i}', 'teacher1', f'[2020前期他他]ダミー{i}', 20200, f'thu{(i%5)+1}')
+#         for j in range(10):
+#             add_assignment(f"dummyassignment{i}-{j}", "url",f"課題{i}-{j}", "2020-10-30T01:53:00Z", "<p>説明<p>", 11111111111, 1111, f"dummy{i}" )
+#             add_resource(f'resource{i}-{j}','teacher1','/content/group/2020-888-N150-017/演義/',111,f'dummy{i}')
+#     
+#     
+#     add_course('course1', 'teacher1', 'コース1', 20200, 'wed2')
+#     add_course('course2', 'teacher1', 'コース2', 20200, 'mon2')
+#     add_course('course3', 'teacher1', '[2020前期月1]線形代数学', 20200, 'mon1')
+#     add_course('course4', 'teacher1', '[2020前期月2]微分積分学', 20200, 'mon2')
+#     add_resource('url1', '資料１', '/content/group/2020-888-N150-017/演義/演義動画/', 111, 'course1')
+#     add_resource('url2', '資料２', '/content/group/2020-888-N150-017/演義/演義動画/', 222, 'course1')
+#     add_resource('url3', '資料３', '/content/group/2020-888-N150-017/演義/演義資料/', 222, 'course1')
+#     add_resource('url4', '資料４', '/content/group/2020-888-N150-017/演義/演義動画/詳細/', 222, 'course1')
+#     add_resource('url5', '資料５', '/content/group/2020-888-N150-017/講義/講義動画/', 222, 'course1')
+#     add_resource('url6', '資料６', '/content/group/2020-888-N150-017/講義/講義ノート/', 222, 'course1')
+#     add_resource('url7', '資料７', '/content/group/2020-888-N150-017/演義/演義動画/', 222, 'course2')
+#     return ''
 
-@app.route('/controller_for_students/<studentid>')
-def controller_for_students(studentid):
-    add_student(studentid,'s_fullname')
-    sc_data=[]
-    sa_data=[]
-    sr_data=[]
-    crs_data=[]
-    asm_data=[]
-    res_data=[]
-    for i in range(30):
-        sc_data.append({"student_id":studentid,"course_id":f"dummy{i}"})
-        crs_data.append({"course_id":f"dummy{i}","instructor_id":"instructor1", "coursename":f'[2020前期他他]ダミー{i}', "yearsemester":20200, "classschedule":f'thu{(i%5)+1}'})
-        for j in range(10):
-            sa_data.append({"sa_id":f"{studentid}:dummyassignment{i}-{j}", "assignment_id":f'dummyassignment{i}-{j}', "student_id":studentid, "status":'未'})
-            asm_data.append({"assignment_id":f'dummyassignment{i}-{j}', "url":"url","title":f"課題{i}-{j}", "limit_at":"2020-10-30T01:50:00Z", "instructions":"<p>説明<p>", "time_ms":11111111111, "modifieddate":1111, "course_id":f"dummy{i}"})
-            sr_data.append({"resource_url":f"resource{i}-{j}","student_id":studentid,"status":0})
-            res_data.append({"resource_url":f"resource{i}-{j}", "title":f'資料{i}-{j}', "container":'/content/group/2020-888-N150-017/演義/', "modifieddate":222, "course_id":f"dummy{i}"})
-    add_studentcourse(studentid,sc_data)
-    add_student_assignment(studentid,sa_data, 0)
-    add_student_resource(studentid, sr_data)
-    add_course(studentid, crs_data, 0)
-    add_assignment(studentid, asm_data, 0)
-    add_resource(studentid, res_data, 0)
-    return ''
+# @app.route('/controller_for_students/<studentid>')
+# def controller_for_students(studentid):
+#     add_student(studentid,'s_fullname')
+#     sc_data=[]
+#     sa_data=[]
+#     sr_data=[]
+#     crs_data=[]
+#     asm_data=[]
+#     res_data=[]
+#     for i in range(30):
+#         sc_data.append({"student_id":studentid,"course_id":f"dummy{i}"})
+#         crs_data.append({"course_id":f"dummy{i}","instructor_id":"instructor1", "coursename":f'[2020前期他他]ダミー{i}', "yearsemester":20200, "classschedule":f'thu{(i%5)+1}'})
+#         for j in range(10):
+#             sa_data.append({"sa_id":f"{studentid}:dummyassignment{i}-{j}", "assignment_id":f'dummyassignment{i}-{j}', "student_id":studentid, "status":'未'})
+#             asm_data.append({"assignment_id":f'dummyassignment{i}-{j}', "url":"url","title":f"課題{i}-{j}", "limit_at":"2020-10-30T01:50:00Z", "instructions":"<p>説明<p>", "time_ms":11111111111, "modifieddate":1111, "course_id":f"dummy{i}"})
+#             sr_data.append({"resource_url":f"resource{i}-{j}","student_id":studentid,"status":0})
+#             res_data.append({"resource_url":f"resource{i}-{j}", "title":f'資料{i}-{j}', "container":'/content/group/2020-888-N150-017/演義/', "modifieddate":222, "course_id":f"dummy{i}"})
+#     add_studentcourse(studentid,sc_data)
+#     add_student_assignment(studentid,sa_data, 0)
+#     add_student_resource(studentid, sr_data)
+#     add_course(studentid, crs_data, 0)
+#     add_assignment(studentid, asm_data, 0)
+#     add_resource(studentid, res_data, 0)
+#     return ''
     
 
 
