@@ -127,7 +127,8 @@ def proxyticket():
         # 前回情報がない場合のdefaultページ
         return flask.redirect(flask.url_for('tasklist',show_only_unfinished=show_only_unfinished,max_time_left = 3))
     # PGTなどが入手できたにもかかわらずstudent_idがないのは不具合であるのでエラー画面に飛ばす
-    return flask.render_template('login_failed.htm')
+    return flask.redirect(url_for('login_failed'))
+
 
 @app.route('/logout')
 def logout():
@@ -558,6 +559,11 @@ def forum():
                 return flask.render_template('ContactUs.htm', error=True, data=data)
     else:
         return redirect('/login')
+
+# 403
+@app.route('/loginfailed')
+def login_failed():
+    return flask.render_template('login_failed.htm')
 
 # HTTP error 処理 debag=Trueとすると無効になる
 @app.errorhandler(500)
