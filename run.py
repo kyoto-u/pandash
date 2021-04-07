@@ -141,7 +141,7 @@ def logout():
 
 @app.route('/')
 def root():
-    if session.get('logged-in'):
+    if session.get('logged-in') and session.get('student_id'):
         return redirect(url_for("login"))
     else:
         return flask.render_template('welcome.htm')
