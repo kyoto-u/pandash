@@ -323,6 +323,7 @@ def tasklist_day_redirect(day):
             if show_already_due==0:show_only_unfinished=1
             return flask.redirect(flask.url_for('tasklist_day',day=day, show_only_unfinished=show_only_unfinished,max_time_left = 3))
     else:
+        # student_idがないのでログイン画面に飛ばす
         return redirect(url_for('login'))
 
 @app.route('/tasklist/course/<courseid>')
