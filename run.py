@@ -110,6 +110,8 @@ def proxyticket():
             if student_id !="":
                 update_student_needs_to_update_sitelist(student_id)
             logging.info(f"TIME {student_id}:{time.perf_counter()-start_time}")
+        else:
+            logging.error(api_response.text)
     
     # リダイレクト先を決める
     if 'student_id' in session:
