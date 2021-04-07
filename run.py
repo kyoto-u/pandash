@@ -111,16 +111,21 @@ def proxyticket():
                 update_student_needs_to_update_sitelist(student_id)
             logging.info(f"TIME {student_id}:{time.perf_counter()-start_time}")
     
-    if 'student_id' in session and session['student_id'] in redirect_pages:
-        redirect_page = redirect_pages[session['student_id']]
-        redirect_page = app_url + "/" + redirect_page
-        if re.match(app_login_url,redirect_page):
-            logging.info(f"Requested redirect '{redirect_page}' is invalid because it is login page")
-        elif redirect_page == app_url + "/":
-            logging.info(f"Requested redirect '{redirect_page}' is invalid because it is portal page")
-        else:
-            return flask.redirect(redirect_page)
-    return flask.redirect(flask.url_for('tasklist',show_only_unfinished=show_only_unfinished,max_time_left = 3))
+    # リダイレクト先を決める
+    if 'student_id' in session:
+        if session['student_id'] in redirect_pages:
+            redirect_page = redirect_pages[session['student_id']]
+            redirect_page = app_url + "/" + redirect_page
+            if re.match(app_login_url,redirect_page):
+                logging.info(f"Requested redirect '{redirect_page}' is invalid because it is login page")
+            elif redirect_page == app_url + "/":
+                logging.info(f"Requested redirect '{redirect_page}' is invalid because it is portal page")
+            else:
+                return flask.redirect(redirect_page)
+        # 前回情報がない場合のdefaultページ
+        return flask.redirect(flask.url_for('tasklist',show_only_unfinished=show_only_unfinished,max_time_left = 3))
+    # PGTなどが入手できたにもかかわらずstudent_idがないのは不具合であるのでエラー画面に飛ばす
+    return flask.render_template('login_failed.htm')
 
 @app.route('/logout')
 def logout():
