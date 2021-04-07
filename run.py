@@ -564,6 +564,10 @@ def forum():
 # 403
 @app.route('/loginfailed')
 def login_failed():
+    if "logged-in" in session and session["logged-in"]:
+        del(session['logged-in'])
+    if "student_id" in session and session["student_id"]:
+        del(session['student_id'])
     return flask.render_template('login_failed.htm')
 
 # HTTP error 処理 debag=Trueとすると無効になる
