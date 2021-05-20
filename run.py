@@ -155,11 +155,11 @@ def main():
 def faq():
     return flask.render_template("faq.htm")
 
-@app.route('/updatelog')
+@app.route('/update')
 def update():
     return flask.render_template("update.htm")
 
-@app.route('/tutrial')
+@app.route('/tutorial')
 def tutrial():
     return flask.render_template("_tutrial.htm")
 
