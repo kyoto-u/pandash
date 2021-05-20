@@ -1,9 +1,11 @@
 # データベースの情報を書き換える関数の一覧
 #
 
-from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment, forum
+from .models import student, assignment, comment, course, coursecomment, studentassignment,\
+     instructor, studentcourse, resource, studentresource, assignment_attachment, forum
 from .settings import session
 from .get import get_courseids
+import time
 
 def add_assignment(studentid, data, last_update):
     course_ids = get_courseids(studentid)
@@ -43,6 +45,19 @@ def add_assignment_attachment(url, title, assignment_id):
     if isExist == False:
         new_assignment_attachment = assignment_attachment.Assignment_attachment(assignment_url=url, title=title, assignment_id=assignment_id)
         session.add(new_assignment_attachment)
+        session.commit()
+    return
+
+
+def add_comment(student_id, reply_to, content):
+    update_time = int(time.time())
+    new_comment = comment.Comment(student_id=student_id, reply_to=reply_to, update_time=update_time, content=content)
+    try:
+        session.add(new_comment)
+        session.commit()
+    # primarykeyが同じ時について繰り返し処理にする
+    except:
+        session.add(new_comment)
         session.commit()
     return
 
