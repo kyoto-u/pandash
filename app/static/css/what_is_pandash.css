@@ -5,6 +5,10 @@
 img{
     width:200px;
 }
+
+.container{
+    min-height: 100vh;
+}
 ul{
     margin-left:10px;
     margin-top:7px;
