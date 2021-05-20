@@ -3,7 +3,7 @@
 
 import asyncio, json
 from math import *
-from .settings import VALID_YEAR_SEMESTER, panda_url
+from .settings import VALID_YEAR_SEMESTER, api_url
 import re
 
 def get_assignments_from_api(assignments, student_id):
@@ -92,7 +92,7 @@ def get_course_id_from_api(membership):
     return {"student_id":student_id, "site_list":site_list}
 
 def get_membership_json(ses):
-    res = ses.get("https://panda.ecs.kyoto-u.ac.jp/direct/membership.json")
+    res = ses.get(f"{api_url}/membership.json")
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -138,14 +138,14 @@ def get_user_info_from_api(user):
     return {"student_id":student_id,"fullname":fullname}
 
 def get_user_json(ses):
-    res = ses.get("https://panda.ecs.kyoto-u.ac.jp/direct/user/current.json")
+    res = ses.get(f"{api_url}/user/current.json")
     try:
         return res.json()
     except json.JSONDecodeError as e:
         return {}
 
 def get_session_json(ses):
-    res = ses.get("https://panda.ecs.kyoto-u.ac.jp/direct/session/current.json")
+    res = ses.get(f"{api_url}/session/current.json")
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -153,7 +153,7 @@ def get_session_json(ses):
 
 #async
 async def async_get_assignments(ses):
-    url = f"https://panda.ecs.kyoto-u.ac.jp/direct/assignment/my.json"
+    url = f"{api_url}/assignment/my.json"
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, ses.get, url)
     try:
@@ -162,7 +162,7 @@ async def async_get_assignments(ses):
         return {}
 
 async def async_get_content(site_id, ses):
-    url = f"https://panda.ecs.kyoto-u.ac.jp/direct/content/site/{site_id}.json"
+    url = f"{api_url}/content/site/{site_id}.json"
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, ses.get, url)
     try:
@@ -171,7 +171,7 @@ async def async_get_content(site_id, ses):
         return {'content_collection':[]}
 
 async def async_get_site(site_id, ses):
-    url = f"https://panda.ecs.kyoto-u.ac.jp/direct/site/{site_id}.json"
+    url = f"{api_url}/site/{site_id}.json"
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, ses.get, url)
     try:
@@ -180,7 +180,7 @@ async def async_get_site(site_id, ses):
         return {'id':site_id}
 
 async def async_get_site_pages(site_id, ses):
-    url = f"https://panda.ecs.kyoto-u.ac.jp/direct/site/{site_id}/pages.json"
+    url = f"{api_url}/site/{site_id}/pages.json"
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, ses.get, url)
     try:
@@ -189,7 +189,7 @@ async def async_get_site_pages(site_id, ses):
         return {}
 
 async def async_get_user_info(ses):
-    url = f"https://panda.ecs.kyoto-u.ac.jp/direct/user/current.json"
+    url = f"{api_url}/user/current.json"
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, ses.get, url)
     try:
