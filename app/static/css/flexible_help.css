@@ -1,13 +1,12 @@
 @media (min-width: 992px) {
-
-body {
+  body {
     position: absolute;
     width: 100%;
     top: 0;
     bottom: 0;
-}
+  }
 
-#example-menu {
+  #example-menu {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -15,81 +14,77 @@ body {
     z-index: 1;
     background-color: #f6f6f6;
     font-size: small;
- }
+  }
 
-#section-outline{
-    height:50px;
-}
+  #section-outline {
+    height: 50px;
+  }
 
-#section-tasklist{
-    height:50px;
-}
+  #section-tasklist {
+    height: 50px;
+  }
 
-#section-overview{
-    height:50px;  
-}
+  #section-overview {
+    height: 50px;
+  }
 
-#section-resdownload{
-    height:50px;    
-}
+  #section-resdownload {
+    height: 50px;
+  }
 
-#section-iCal{
-    height:50px;    
-}
+  #section-iCal {
+    height: 50px;
+  }
 
-#section-other{
-    height:50px;    
-}
+  #section-other {
+    height: 50px;
+  }
 
-.tutrialtext{
-    height:280px;
-}
+  .tutorialtext {
+    height: 280px;
+  }
 
-.faqboard{
+  .faqboard {
     z-index: 1;
     padding-bottom: 50px;
-}
+  }
 
-#example-main {
+  #example-main {
     position: absolute;
     top: 0;
     bottom: 0;
     width: 100%;
-    padding-top:20;
+    padding-top: 20;
     padding-left: 15vw;
     padding-right: 3vw;
     overflow-y: scroll;
+  }
 }
 
-
-
-}
-
-
-@media  (max-width:991px){
-#example-main {
+@media (max-width: 991px) {
+  #example-main {
     position: absolute;
     top: 0;
     bottom: 0;
     width: 100%;
-    padding-top:20;
+    padding-top: 20;
     padding-left: 3vw;
     padding-right: 3vw;
     overflow-y: scroll;
-    font-size:small;
-}
+    font-size: small;
+  }
 
-.tutrialtext{
+  .tutorialtext {
     padding-bottom: 20px;
-}
+  }
 
-h2{
+  h2 {
     font-size: x-large;
     font-weight: bolder;
-}
+  }
 
-.faqboard{
+  .faqboard {
     z-index: 1;
     padding-bottom: 50px;
-}
+  }
 }
