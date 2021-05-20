@@ -1,7 +1,7 @@
 # データベース操作を伴い情報を取得する関数の一覧
 #
 from math import *
-from .models import student, assignment, course, studentassignment, studentcourse, resource, studentresource, 
+from .models import student, assignment, course, studentassignment, studentcourse, resource, studentresource
 from .settings import SHOW_YEAR_SEMESTER, session, panda_url
 from .original_classes import TimeLeft
 
