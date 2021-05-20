@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PandAshとは？</title>
+    <!-- BootstrapのCSS読み込み -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <!-- jQuery読み込み -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
+    <!-- BootstrapのJS読み込み -->
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+    <script src="https://kit.fontawesome.com/7bb95e7ca3.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/what_is_pandash.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <p>
+        <h1>PandAshとは？</h1>
+        <div class="article">
+            <div class="row">
+                <a  class="mx-1 my-3" href="/welcome">
+                    <img src="{{ url_for('static', filename='images/PandAsh_logo.png')}}" 
+                        alt="ロゴ">
+                </a>
+            </div>
+            <div class="article">
+                PandAshは京都大学の学習支援システム<a href="https://panda.ecs.kyoto-u.ac.jp/portal/">PandA</a>のためのダッシュボードツールです。<br />
+                PandA上の課題の状態を管理したり、PandAにアップされた授業資料を一括でダウンロードすることが出来ます。<br />
+                詳しい使い方についてはPandAshチュートリアル、またはPandA学生用マニュアルを参考にしてください。
+            </div>
+            <div class="reference">
+                <a href="/_tutorial">PandAshチュートリアル</a><br />
+                <a href="#">PandA学生用マニュアル</a>
+            </div>
+        </div>
+        </p>
+        <p>
+        <h2>PandAshが開発されたきっかけ</h2>
+        <div class="article">
+            京都大学の学習支援システムPandAは平成25年度前期から運用を開始し、京都大学の学生、教職員の方々に利用されてきました。<br />
+            サービスを運用するにつれて、学生と教職員がオンラインで通信できるという利便性が評価されましたが、一方で不便な点も指摘されるようになりました。<br />
+            主な意見として、
+            <ul>
+                <li>PandA上で出題された課題を見逃してしまう</li>
+                <li>授業資料のダウンロードが面倒</li>
+            </ul>
+            というのがありました。<br>
+            2020年春、新型コロナウィルスの蔓延によって講義がオンラインになり、PandAの利用が増えるとともにPandAへの不満の声も大きくなりました。<br />
+            PandAsh開発前にも、上の問題を解消するような非公式ツールがインターネット上で公開されていましたが、情報環境機構からそういうツールを出してほしいという要望があり、開発に乗り切りました。
+        </div>
+        </p>
+        <p>
+        <h2>PandAshの仕組み(簡単な技術的説明)</h2>
+        <div class="article">
+            　PandAshは、PandAが管理している学生データを、PandAに備わっているデータを提供する仕組み(API)によって取得し、データを整理して表示しています。<br>
+            　個人情報の詳しい取扱いについては以下のプライバシポリシを参照してください。<br>
+            <div class="reference">
+                <a href="#">プライバシポリシ</a>
+            </div>
+        </div>
+        </p>
+    </div>
+    <footer>
+        <div id="footercont" class="container-fluid">
+            <div class="row">
+                <div class="ml-auto mr-5">
+                    <small>Copyright 2021 Institute for Information Management and Communication. All rights
+                        reserved.</small><br>
+                    <small>PandAsh</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

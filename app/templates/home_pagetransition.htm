@@ -1,37 +1,88 @@
-<div class="navbar navbar-expand-md navbar-light bg-light" style="padding:0px;">
-    <a class="navbar-brand　d-block d-md-none ml-5" href="#" style="color: black;">ページ切り替え</a>
-    <button class="navbar-toggler mr-5" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
-        aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo03" style="padding: 0px;">
-        <ul class="nav w-100 flex-column mx-auto" style="width:inherit;">
-            <li class="nav-item border-bottom">
-                <a href="/" role="button" class="btn btn-light btn-lg btn-block 
-        {% if '/updatelog' in request.path   %}
-        {% else %}
-                active
-        {% endif %}"><i class="far fa-file"></i> Welcome</a>
-            </li>
-            <li class="nav-item border-bottom">
-                <a href="/updatelog" role="button" class="btn btn-light btn-lg btn-block
-        {% if '/updatelog' in request.path  %}
+<div class="navbar navbar-expand-md navbar-light bg-light" style="padding: 0px">
+  <a class="navbar-brand d-block d-md-none ml-5" href="#" style="color: black"
+    >ページ切り替え</a
+  >
+  <button
+    class="navbar-toggler mr-5"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarTogglerDemo03"
+    aria-controls="navbarTogglerDemo03"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div
+    class="collapse navbar-collapse"
+    id="navbarTogglerDemo03"
+    style="padding: 0px"
+  >
+    <ul class="nav w-100 flex-column mx-auto" style="width: inherit">
+      <li class="nav-item border-bottom">
+        <a
+          href="/welcome"
+          role="button"
+          class="
+            btn btn-light btn-lg btn-block
+            {%
+            if
+            '/updatelog'
+            in
+            request.path
+            %}
+            {%
+            else
+            %}
             active
-        {% endif %}"><i class="far fa-file"></i> Update log</a>
-            </li>
-            <li class="nav-item">
-                <div class="d-block d-md-none" id="helpbutton_for_small">
-                    <a role="button" target="_blank" href="/tutrial" class="btn btn-light btn-lg btn-block">
-                        <i class="far fa-question-circle"></i>Help
-                    </a>
-                </div>
-                <div class="d-none d-md-block" id="helpbutton_for_medium">
-                    <a onclick="window.open('./tutrial', '', 'width=760,height=500'); return false;" role="button"
-                        class="btn btn-light btn-lg btn-block">
-                        <i class="far fa-question-circle"></i>Help
-                    </a>
-                </div>
-            </li>
-        </ul>
-    </div>
+            {%
+            endif
+            %}
+          "
+          ><i class="far fa-file"></i> Welcome</a
+        >
+      </li>
+      <li class="nav-item border-bottom">
+        <a
+          href="/update"
+          role="button"
+          class="
+            btn btn-light btn-lg btn-block
+            {%
+            if
+            '/updatelog'
+            in
+            request.path
+            %}
+            active
+            {%
+            endif
+            %}
+          "
+          ><i class="far fa-file"></i> Update log</a
+        >
+      </li>
+      <li class="nav-item">
+        <div class="d-block d-md-none" id="helpbutton_for_small">
+          <a
+            role="button"
+            target="_blank"
+            href="/_tutorial"
+            class="btn btn-light btn-lg btn-block"
+          >
+            <i class="far fa-question-circle"></i>Help
+          </a>
+        </div>
+        <div class="d-none d-md-block" id="helpbutton_for_medium">
+          <a
+            onclick="window.open('./_tutorial', '', 'width=760,height=500'); return false;"
+            role="button"
+            class="btn btn-light btn-lg btn-block"
+          >
+            <i class="far fa-question-circle"></i>Help
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>
