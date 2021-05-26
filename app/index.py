@@ -27,15 +27,18 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         # get_assignments = get_assignments_from_api(assignments.json(), student_id)
         get_sites = {"courses":[],"student_courses":[]}
         get_resources = {"resources":[],"student_resources":[]}
+        get_quizzes = {"quizzes":[], "student_quizzes":[]}
         asyncio.set_event_loop(asyncio.SelectorEventLoop())
         loop = asyncio.get_event_loop()
         c_statements = []
         s_statements = []
+        q_statements = []
         p_statements = []
         for courseid in get_membership["site_list"]:
             c_statements.append(async_get_content(courseid, ses))
             s_statements.append(async_get_site(courseid, ses))
             p_statements.append(async_get_site_pages(courseid, ses))
+            q_statements.append(async_get_quiz(courseid, ses))
             # site = s.get(f"{api_url}site/{courseid}.json")
             # resources = s.get(f"{api_url}content/site/{courseid}.json")
             # get_site = get_course_from_api(site.json(), student_id)
@@ -46,19 +49,22 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
             # get_resources["student_resources"].append(get_resources["student_resources"])
         c_statements.extend(s_statements)
         c_statements.extend(p_statements)
+        c_statements.extend(q_statements)
         c_statements.extend([async_get_assignments(ses),async_get_user_info(ses)])
         tasks = asyncio.gather(*c_statements)
         content_site = loop.run_until_complete(tasks)
         content_site_len = int(len(content_site))-2
-        one_third_content_site_len = content_site_len//3
-        contents = content_site[0:one_third_content_site_len]
-        sites = content_site[one_third_content_site_len:one_third_content_site_len*2]
-        pages = content_site[one_third_content_site_len*2:content_site_len]
+        one_forrth_content_site_len = content_site_len//4
+        contents = content_site[0:one_forrth_content_site_len]
+        sites = content_site[one_forrth_content_site_len:one_forrth_content_site_len*2]
+        pages = content_site[one_forrth_content_site_len*2:one_forrth_content_site_len*3]
+        quizzes = content_site[one_forrth_content_site_len*3:content_site_len]
         get_assignments = get_assignments_from_api(content_site[content_site_len],student_id)
         user_info = get_user_info_from_api(content_site[content_site_len+1])
         index = 0
         for courseid in get_membership["site_list"]:
             get_resource = get_resources_from_api(contents[index],courseid,student_id)
+            get_quiz = get_quizzes_from_api(contents[index],courseid,student_id)
             get_site = get_course_from_api(sites[index], student_id)
             if get_site:
                 get_site["course"]["page_id"] = get_page_from_api(pages[index])
@@ -66,13 +72,17 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
                 get_sites["student_courses"].append(get_site["student_course"])
                 get_resources["resources"].extend(get_resource["resources"])
                 get_resources["student_resources"].extend(get_resource["student_resources"])
+                get_quizzes["quizzes"].extend(get_quiz["quiz"])
+                get_quizzes["student_quizzes"].extend(get_quiz["student_quizzes"])
             index += 1
         # student_id       student_id
         # get_membership   {"student_id": , "site_list": []}
         # get_assignments  {"assignments": [], student_assignments: []}
         # get_sites        {"courses": [], "student_courses": []}
         # get_resources    {"resources":[], "student_resources": []}
+        # student_quizzes  {"quizzes:[], "student_quizzes":[]}
         # user_info        {"student_id": , "fullname": }
+        # + get_quizzes 
         sync_student_contents(student_id, get_sites, get_assignments, get_resources, now, last_update=last_update)
 
 def sync_student_assignment(studentid, sa, asm,last_update): 
