@@ -7,6 +7,6 @@ class Coursecomment(settings.Base):
     __tablename__ = 'coursecomments'
     comment_id = Column(String(80))
     course_id = Column(String(80))
-    deleted = Column(Integer())
+    deleted = Column(Integer(), default=0)
 
 settings.Base.metadata.create_all(settings.engine)

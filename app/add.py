@@ -61,6 +61,7 @@ def add_comment(student_id, reply_to, content):
         session.commit()
     return
 
+
 def add_course(studentid, data, last_update):
     course_ids = get_courseids(studentid)
     courses = session.query(
@@ -86,6 +87,14 @@ def add_course(studentid, data, last_update):
         session.bulk_update_mappings(course.Course, upd_crs)
     session.commit()
     return
+
+
+def add_coursecomment(comment_id, course_id):
+    new_coursecomment = coursecomment.Coursecomment(comment_id=comment_id, course_id=course_id)
+    session.add(new_coursecomment)
+    session.commit()
+    return
+    
 
 def add_forum(studentid,title,contents):
     inq = forum.Forum()
