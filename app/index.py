@@ -85,6 +85,18 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         # + get_quizzes 
         sync_student_contents(student_id, get_sites, get_assignments, get_resources, get_quizzes, now, last_update=last_update)
 
+def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):
+    """
+        mode
+        0:tasklist
+        1:tasklist for overview
+    """
+
+    assignments=get_assignments(studentid, show_only_unfinished,courseid, day, mode)
+    quizzes=get_quizzes(studentid, show_only_unfinished,courseid, day, mode)
+    # assignmentsとquizzesを結合
+    return assignments+quizzes
+
 def sync_student_assignment(studentid, sa, asm,last_update): 
     # 追加、更新をする
     add_student_assignment(studentid,sa, last_update)
