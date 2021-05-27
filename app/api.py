@@ -16,9 +16,9 @@ def get_assignments_from_api(assignments, student_id):
         title = assignment.get('title')[:80]
         limit_at = assignment.get('dueTimeString')
         instructions = assignment.get('instructions')[:100]
-        time_ms = assignment.get('dueTime').get('time')
+        time_ms = assignment.get('dueTime').get('epochSecond')
         course_id = assignment.get('context')
-        modifieddate = assignment.get('timeLastModified').get('time')
+        modifieddate = assignment.get('timeLastModified').get('epochSecond')
         status = assignment.get('status')
         sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":"未","student_id":student_id,"clicked":0})
         assignment_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifieddate":modifieddate,"course_id":course_id})
@@ -114,7 +114,9 @@ def get_resources_from_api(resources, course_id, student_id):
     for content in content_collection:
         resource_author = content.get('author')
         resource_container = content.get('container')
-        resource_modified_date = content.get('modifiedDate')
+        md = str(int(content.get('modifiedDate'))//1000)
+        date_format = "%Y%m%d%H%M%S"
+        resource_modified_date = int(datetime.datetime.strptime(md,date_format).timestamp())
         resource_title = content.get('title')[:80]
         resource_url = content.get('url')
         container_split = resource_container.split('/')
@@ -135,7 +137,7 @@ def get_quizzes_from_api(quizzes, course_id, student_id):
         url = content.get('ownerSiteId')
         title = content.get('entityTitle')
         time_ms = content.get('dueDate')
-        modifieddate = content.get('lastModifiedDate')
+        modifieddate = str(int(content.get('lastModifiedDate'))//1000)
         limit_at = datetime.datetime.fromtimestamp(limit_at//1000)
         quiz_list.append({'course_id':course_id, 'quiz_id': quiz_id, 'url':url, 'title': title, \
             'limit_at':limit_at, 'time_ms': time_ms, 'modifieddate': modifieddate, 'instructions':''})
