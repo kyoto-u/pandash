@@ -34,7 +34,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-
+      
       <div class="modal-body">
         <div class="table-responsive table-considered">
           <table class="table table-sm modaltable">
@@ -138,10 +138,10 @@
     <div class="fixed-top logos">
       <nav class="navbar navbar-light bg-light" id="logonav">
         <div class="row">
-          <a href="#" class=navbar-brand>
-            <img id="siteface" src="{{ url_for('static', filename='images/headerlogo.jpg') }}" alt="ロゴ">
+          <a href="/tasklist" class=navbar-brand>
+            <img src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ" width="175px"
+              height="60px">
           </a>
-          <h1 id="SiteNamelabel">PandAsh</h1>
         </div>
       </nav>
       <!--メニュー-->
@@ -235,7 +235,7 @@
               <ul class="navbar-nav ml-auto pr-3 toggle_rights">
 
                 <li id="logout_button" class="nav-item mr-3 text-nowrap btn-block">
-                  <a class="btn btn-danger btn-block" href="/logout" data-toggle="tooltip" title="ログアウトします">ログアウト</a>
+                  <a class="btn btn-danger btn-block" href="/_logout" data-toggle="tooltip" title="ログアウトします">ログアウト</a>
                 </li>
 
 
