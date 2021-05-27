@@ -83,19 +83,15 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         # student_quizzes  {"quizzes:[], "student_quizzes":[]}
         # user_info        {"student_id": , "fullname": }
         # + get_quizzes 
-        sync_student_contents(student_id, get_sites, get_assignments, get_resources, now, last_update=last_update)
+        sync_student_contents(student_id, get_sites, get_assignments, get_resources, get_quizzes, now, last_update=last_update)
 
 def sync_student_assignment(studentid, sa, asm,last_update): 
     # 追加、更新をする
     add_student_assignment(studentid,sa, last_update)
     add_assignment(studentid, asm, last_update)
-    
-    
-
-
     return 0
 
-def sync_student_contents(studentid, crs, asm, res, now,last_update=0):
+def sync_student_contents(studentid, crs, asm, res, qz, now,last_update=0):
     # 以下主な方針
     #
     # studentテーブルにlast_updateを用意し、毎回update後に記録しておく
@@ -104,13 +100,14 @@ def sync_student_contents(studentid, crs, asm, res, now,last_update=0):
     # modifieddateがlast_updateよりあとのもののみupdate
     #
 
-    # 更新をするのはstudent, student_assignment, student_course, student_resource
-    # 加えて、assignment,course,resourceも同時に更新することにする。
+    # 更新をするのはstudent, student_assignment, student_course, student_resource, student_quiz
+    # 加えて、assignment,course,resource,quizも同時に更新することにする。
 
     # courseが最初!!!
     sync_student_course(studentid, crs["student_courses"], crs["courses"], last_update)
     sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"], last_update)
     sync_student_resource(studentid, res["student_resources"], res["resources"], last_update)
+    sync_student_quiz(studentid, qz["student_quizzes"], qz["quizzes"], last_update)
 
     return 0
 
@@ -124,6 +121,11 @@ def sync_student_resource(studentid, sr, res, last_update):
     # 追加、更新をする
     add_student_resource(studentid, sr)
     add_resource(studentid, res, last_update)
+    return 0
+
+def sync_student_quiz(studentid, sq, quiz, last_update):
+    add_student_quiz(studentid, sq, last_update)
+    add_quiz(studentid, quiz, last_update)
     return 0
 
 
