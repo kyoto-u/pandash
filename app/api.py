@@ -124,6 +124,25 @@ def get_resources_from_api(resources, course_id, student_id):
     resource_dict = {"student_resources":sr_list, "resources":resource_list}
     return resource_dict
 
+import datetime
+def get_quizzes_from_api(quizzes, course_id, student_id):
+    quiz_list = []
+    sq_list = []
+    quiz_collection = quizzes.get("sam_pub_collection")
+    for content in quiz_collection:
+        quiz_id = content.get('publishedAssessmentId')
+        # とりあえずsite_id
+        url = content.get('ownerSiteId')
+        title = content.get('entityTitle')
+        time_ms = content.get('dueDate')
+        modifieddate = content.get('lastModifiedDate')
+        limit_at = datetime.datetime.fromtimestamp(limit_at//1000)
+        quiz_list.append({'course_id':course_id, 'quiz_id': quiz_id, 'url':url, 'title': title, \
+            'limit_at':limit_at, 'time_ms': time_ms, 'modifieddate': modifieddate, 'instructions':''})
+        sq_list.append({"sq_id":f"{student_id}:{quiz_id}", "quiz_id":quiz_id, "student_id":student_id, "course_id":course_id, "status":0})
+    quiz_dict = {"student_quizzes":sq_list, "quizzes":quiz_list}
+    return quiz_dict
+
 def get_student_id_from_api(membership):
     mem_collection = membership.get('membership_collection')
     student_id = ""
@@ -169,6 +188,15 @@ async def async_get_content(site_id, ses):
         return res.json()
     except json.JSONDecodeError as e:
         return {'content_collection':[]}
+
+async def async_get_quiz(site_id, ses):
+    url = f"{api_url}/sam_pub/content/{site_id}.json"
+    loop = asyncio.get_event_loop()
+    res = await loop.run_in_executor(None, ses.get, url)
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {'quiz_collection':[]}
 
 async def async_get_site(site_id, ses):
     url = f"{api_url}/site/{site_id}.json"
