@@ -16,9 +16,9 @@ def get_assignments_from_api(assignments, student_id):
         title = assignment.get('title')[:80]
         limit_at = assignment.get('dueTimeString')
         instructions = assignment.get('instructions')[:100]
-        time_ms = assignment.get('dueTime').get('time')
+        time_ms = assignment.get('dueTime').get('epochSecond')
         course_id = assignment.get('context')
-        modifieddate = assignment.get('timeLastModified').get('time')
+        modifieddate = assignment.get('timeLastModified').get('epochSecond')
         status = assignment.get('status')
         sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":"未","student_id":student_id,"clicked":0})
         assignment_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifieddate":modifieddate,"course_id":course_id})
@@ -114,7 +114,9 @@ def get_resources_from_api(resources, course_id, student_id):
     for content in content_collection:
         resource_author = content.get('author')
         resource_container = content.get('container')
-        resource_modified_date = content.get('modifiedDate')
+        md = str(int(content.get('modifiedDate'))//1000)
+        date_format = "%Y%m%d%H%M%S"
+        resource_modified_date = int(datetime.datetime.strptime(md,date_format).timestamp())
         resource_title = content.get('title')[:80]
         resource_url = content.get('url')
         container_split = resource_container.split('/')
@@ -123,6 +125,25 @@ def get_resources_from_api(resources, course_id, student_id):
         sr_list.append({"sr_id":f"{student_id}:{resource_url}", "resource_url":resource_url, "student_id":student_id, "course_id":course_id, "status":0})
     resource_dict = {"student_resources":sr_list, "resources":resource_list}
     return resource_dict
+
+import datetime
+def get_quizzes_from_api(quizzes, course_id, student_id):
+    quiz_list = []
+    sq_list = []
+    quiz_collection = quizzes.get("sam_pub_collection")
+    for content in quiz_collection:
+        quiz_id = content.get('publishedAssessmentId')
+        # とりあえずsite_id
+        url = content.get('ownerSiteId')
+        title = content.get('entityTitle')
+        time_ms = content.get('dueDate')
+        modifieddate = str(int(content.get('lastModifiedDate'))//1000)
+        limit_at = datetime.datetime.fromtimestamp(limit_at//1000)
+        quiz_list.append({'course_id':course_id, 'quiz_id': quiz_id, 'url':url, 'title': title, \
+            'limit_at':limit_at, 'time_ms': time_ms, 'modifieddate': modifieddate, 'instructions':''})
+        sq_list.append({"sq_id":f"{student_id}:{quiz_id}", "quiz_id":quiz_id, "student_id":student_id, "course_id":course_id, "status":0})
+    quiz_dict = {"student_quizzes":sq_list, "quizzes":quiz_list}
+    return quiz_dict
 
 def get_student_id_from_api(membership):
     mem_collection = membership.get('membership_collection')
@@ -169,6 +190,15 @@ async def async_get_content(site_id, ses):
         return res.json()
     except json.JSONDecodeError as e:
         return {'content_collection':[]}
+
+async def async_get_quiz(site_id, ses):
+    url = f"{api_url}/sam_pub/content/{site_id}.json"
+    loop = asyncio.get_event_loop()
+    res = await loop.run_in_executor(None, ses.get, url)
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {'quiz_collection':[]}
 
 async def async_get_site(site_id, ses):
     url = f"{api_url}/site/{site_id}.json"

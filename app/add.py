@@ -1,7 +1,7 @@
 # データベースの情報を書き換える関数の一覧
 #
 
-from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment, forum
+from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment, forum,quiz,studentquiz
 from .settings import session
 from .get import get_courseids
 
@@ -99,6 +99,34 @@ def add_instructor(instructorid, fullname, emailaddress):
         session.commit()
     return
 
+def add_quiz(studentid, data, last_update):
+    course_ids = get_courseids(studentid)
+    quizzes = session.query(
+        quiz.Quiz).filter(quiz.Quiz.course_id.in_(course_ids)).all()
+    new_quiz=[]
+    upd_quiz = []
+    for item in data:
+        quiz_exist = False
+        update=False
+        if item["course_id"] not in course_ids:
+            continue
+        for i in quizzes:
+            if i.quiz_id == item["quiz_id"]:
+                quiz_exist = True
+                if item["modifieddate"] > last_update:
+                    update=True
+                break
+        if quiz_exist == False:
+            new_quiz.append(item)
+        elif update == True:
+            upd_quiz.append(item)
+    if len(new_quiz) != 0:
+        session.execute(quiz.Quiz.__table__.insert(),new_quiz)
+    if len(upd_quiz) != 0:
+        session.bulk_update_mappings(quiz.Quiz, upd_quiz)
+    session.commit()
+    return
+
 def add_resource(studentid, data, last_update):
     course_ids = get_courseids(studentid)
     resources = session.query(
@@ -189,6 +217,37 @@ def add_student_assignment(studentid, data, last_update):
         session.execute(studentassignment.Student_Assignment.__table__.insert(),new_sa)
     if len(upd_sa) != 0:
         session.bulk_update_mappings(studentassignment.Student_Assignment, upd_sa)
+    session.commit()
+    return
+
+def add_student_quiz(studentid, data, last_update):
+    """
+        data:quiz_id, student_id, status
+    """
+    sa = session.query(
+        studentquiz.Student_Quiz).filter(studentquiz.Student_Quiz.student_id == studentid).all()
+    course_ids = get_courseids(studentid)
+    new_sq = []
+    upd_sq = []
+    for item in data:
+        quiz_exist = False
+        update=False
+        if not item["course_id"] in course_ids:
+            continue
+        for i in sa:
+            if i.quiz_id == item["quiz_id"]:
+                quiz_exist = True
+                if item["status"] !='未':
+                    update=True
+                break
+        if quiz_exist == False:
+            new_sq.append(item)
+        elif update == True:
+            upd_sq.append(item)
+    if len(new_sq) != 0:
+        session.execute(studentquiz.Student_Quiz.__table__.insert(),new_sq)
+    if len(upd_sq) != 0:
+        session.bulk_update_mappings(studentquiz.Student_Quiz, upd_sq)
     session.commit()
     return
 
