@@ -198,7 +198,7 @@ async def async_get_quiz(site_id, ses):
     try:
         return res.json()
     except json.JSONDecodeError as e:
-        return {'quiz_collection':[]}
+        return {'sam_pub_collection':[]}
 
 async def async_get_site(site_id, ses):
     url = f"{api_url}/site/{site_id}.json"
