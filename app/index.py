@@ -19,7 +19,10 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
     else:
         # 時間かかる
         last_update = 0
-        get_membership = get_course_id_from_api(get_membership_json(ses))
+        # membership.json 使用
+        # get_membership = get_course_id_from_api(get_membership_json(ses))
+        # site.json 使用
+        get_membership = get_course_id_from_site_api(get_site_json(ses),student_id)
         already_known= get_courses_id_to_be_taken(student_id)
         # 新規のもののみを取り上げる
         get_membership["site_list"] = [i for i in get_membership["site_list"] if i not in already_known]
