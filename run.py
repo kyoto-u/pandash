@@ -146,6 +146,9 @@ def root():
     else:
         return flask.render_template('welcome.htm')
 
+@app.route('/welcome')
+def welcome():
+    return flask.redirect(url_for('root'))
 
 @app.route('/hello')
 def main():
