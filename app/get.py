@@ -43,6 +43,7 @@ def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
         task["deadline"] = asmdata[0].limit_at
         task["time_left"] = TimeLeft(asmdata[0].time_ms).time_left_to_str()
         task["clicked"] = data.clicked
+        task["quiz"] = False
         if task["time_left"]["msg"] == "":
             task["status"]="期限切れ"
         if mode == 1:
@@ -148,6 +149,7 @@ def get_quizzes(studentid, show_only_unfinished,courseid, day, mode):
         task["deadline"] = quizdata[0].limit_at
         task["time_left"] = TimeLeft(quizdata[0].time_ms).time_left_to_str()
         task["clicked"] = data.clicked
+        task["quiz"] = True
         if task["time_left"]["msg"] == "":
             task["status"]="期限切れ"
         if mode == 1:
