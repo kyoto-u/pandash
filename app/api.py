@@ -91,12 +91,32 @@ def get_course_id_from_api(membership):
         site_list.append(site_id)
     return {"student_id":student_id, "site_list":site_list}
 
+# get_course_id_from_api(membership) の代わり
+def get_course_id_from_site_api(site, student_id):
+    site_collection = site.get('site_collection')
+    site_list = []
+    for s in site_collection:
+        if s.get('joinerRole') != "Student":
+            continue
+        user_site_id = s.get('id')
+        site_id = user_site_id.replace(f'{student_id}::site:','')
+        site_list.append(site_id)
+    return {"student_id":student_id, "site_list":site_list}
+
 def get_membership_json(ses):
     res = ses.get(f"{api_url}/membership.json")
     try:
         return res.json()
     except json.JSONDecodeError as e:
         return {}
+
+# get_membership_json(ses) の代わり
+def get_site_json(ses):
+    res = ses.get(f"{api_url}/site.json?_limit=2000")
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {"site_collection": []}
 
 def get_page_from_api(pages):
     page_id = ""
@@ -198,7 +218,7 @@ async def async_get_quiz(site_id, ses):
     try:
         return res.json()
     except json.JSONDecodeError as e:
-        return {'quiz_collection':[]}
+        return {'sam_pub_collection':[]}
 
 async def async_get_site(site_id, ses):
     url = f"{api_url}/site/{site_id}.json"

@@ -21,9 +21,21 @@
 </head>
 
 <body>
-    <div class="container">
+    <div>
+        <nav class="navbar navbar-light bg-light" id="logonav">
+            <div class="row">
+                <a href="/welcome" class="navbar-brand">
+                    <img id="siteface" src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ"
+                        width="175px" height="60px">
+                </a>
+            </div>
+        </nav>
+        <nav class="navbar navbar-light bg-dark">
+            <h3 style="color:white">プライバシポリシ</h3>
+        </nav>
+    </div>
+    <div class="container mt-3">
         <p>
-        <h1>PandAshプライバシポリシ</h1>
         PandAshにおいて、個人情報の取扱いは法令を遵守し、<a
             href="https://www.kyoto-u.ac.jp/uni_int/kitei/reiki_honbun/w002RG00000963.html">京都大学における個人情報の保護に関する規程</a>に基づいてサービスを運用します。
         </p>

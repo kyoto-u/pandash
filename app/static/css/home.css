@@ -27,6 +27,9 @@ html{
 #update_schedule{
     min-height: 100px;
 }
+#updatelog{
+    min-height: 100px;
+}
 
 @media screen and (min-width:760px){
 body {
