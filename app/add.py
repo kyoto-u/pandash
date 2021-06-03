@@ -4,6 +4,7 @@
 from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment, forum,quiz,studentquiz
 from .settings import session
 from .get import get_courseids
+from .original_classes import Status
 
 def add_assignment(studentid, data, last_update):
     course_ids = get_courseids(studentid)
@@ -206,7 +207,7 @@ def add_student_assignment(studentid, data, last_update):
         for i in sa:
             if i.assignment_id == item["assignment_id"]:
                 assignment_exist = True
-                if item["status"] !='未':
+                if item["status"] !=Status.AlreadyDue.value:
                     update=True
                 break
         if assignment_exist == False:
@@ -237,7 +238,7 @@ def add_student_quiz(studentid, data, last_update):
         for i in sa:
             if i.quiz_id == item["quiz_id"]:
                 quiz_exist = True
-                if item["status"] !='未':
+                if item["status"] !=Status.AlreadyDue.value:
                     update=True
                 break
         if quiz_exist == False:
@@ -326,9 +327,9 @@ def update_task_clicked_status(studentid, taskids:list):
 
 def update_task_status(studentid, taskids: list, mode=0):
     update_list = []
-    status = "未"
+    status = Status.NotYet.value
     if mode==0:
-        status = "済"
+        status = Status.Done.value
     for t_id in taskids:
         sa_id = f'{studentid}:{t_id}'
         update_list.append({"sa_id":sa_id, "status":status})

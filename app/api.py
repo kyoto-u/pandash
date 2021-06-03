@@ -5,6 +5,7 @@ import asyncio, json
 from math import *
 from .settings import VALID_YEAR_SEMESTER, api_url
 import re
+from .original_classes import Status
 
 def get_assignments_from_api(assignments, student_id):
     assignment_list = []
@@ -20,7 +21,7 @@ def get_assignments_from_api(assignments, student_id):
         course_id = assignment.get('context')
         modifieddate = assignment.get('timeLastModified').get('epochSecond')
         status = assignment.get('status')
-        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":"未","student_id":student_id,"clicked":0})
+        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":Status.NotYet.value,"student_id":student_id,"clicked":0})
         assignment_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifieddate":modifieddate,"course_id":course_id})
     assignment_dict = {"student_assignments":sa_list, "assignments":assignment_list}
     return assignment_dict
@@ -161,7 +162,7 @@ def get_quizzes_from_api(quizzes, course_id, student_id):
         limit_at = datetime.datetime.fromtimestamp(limit_at//1000)
         quiz_list.append({'course_id':course_id, 'quiz_id': quiz_id, 'url':url, 'title': title, \
             'limit_at':limit_at, 'time_ms': time_ms, 'modifieddate': modifieddate, 'instructions':''})
-        sq_list.append({"sq_id":f"{student_id}:{quiz_id}", "quiz_id":quiz_id, "student_id":student_id, "course_id":course_id, "status":0})
+        sq_list.append({"sq_id":f"{student_id}:{quiz_id}", "quiz_id":quiz_id, "student_id":student_id, "course_id":course_id, "status":Status.NotYet.value,"clicked":0})
     quiz_dict = {"student_quizzes":sq_list, "quizzes":quiz_list}
     return quiz_dict
 
