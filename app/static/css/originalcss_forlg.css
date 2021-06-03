@@ -227,6 +227,17 @@ label >.downloaded{
     background-color: #f5f5f5;
 }
  
+
+/*オプション*/
+.option-content{
+    background-color: rgb(248, 250, 252);
+}
+
+.optiontablink{
+    color:black;
+    background-color:gainsboro;
+}
+
 /*課題の色*/
 .one_sec{
     background-color: #ffdcdd;
