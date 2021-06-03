@@ -3,7 +3,7 @@ import sqlalchemy.ext.declarative
 from sqlalchemy import Integer, String, Column
 from .. import settings
 
-class Coursecomment(settings.Base):
+class Course_Comment(settings.Base):
     __tablename__ = 'coursecomments'
     comment_id = Column(String(80))
     course_id = Column(String(80))

@@ -2,6 +2,7 @@
 #
 from math import *
 from .models import student, assignment, course, studentassignment, studentcourse, resource, studentresource,quiz,studentquiz
+from .models import comment, coursecomment
 from .settings import SHOW_YEAR_SEMESTER, session, panda_url
 from .original_classes import TimeLeft
 
@@ -62,6 +63,32 @@ def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
         tasks.append(task)
     return tasks
 
+# コメントを取得する courseid = None のときすべてのコメントを取得
+def get_comments(studentid, courseid):
+    courseids = []
+    if courseid:
+        courseids.append(courseid)
+    else:
+        course_to_be_taken=get_courses_to_be_taken(studentid)
+        courseids = [i.course_id for i in course_to_be_taken]
+    all_comments = []
+    for courseid in courseids:
+        coursecomemnts = session.query(coursecomment.Course_Comment).filter(
+            coursecomment.Course_Comment.course_id == courseid).all()
+        commentids = [i.comment_id for i in coursecomemnts]
+        commentdata = session.query(comment.Comment).filter(
+            comment.Comment.comment_id.in_(commentids)).all()
+        comments = []
+        for data in commentdata:
+            cmnt = {}
+            cmnt["commentid"] = data.comment_id
+            cmnt["studentid"] = data.student_id
+            cmnt["reply_to"] = data.reply_to
+            cmnt["update_time"] = data.update_time
+            cmnt["content"] = data.content
+            comments.append(cmnt)
+        all_comments.append({f"{courseid}":comments})
+    return all_comments
 
 def get_courseids(studentid):
     course_ids = session.query(studentcourse.Studentcourse.course_id).filter(studentcourse.Studentcourse.student_id==studentid).all()

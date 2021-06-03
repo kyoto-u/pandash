@@ -366,6 +366,20 @@ def resource_day(day):
 def resources_sample():
     return resourcelist_general()
 
+# コメントを取得/表示
+@app.route('/chat/course/<courseid>')
+def chat_course(courseid):
+    studentid = session.get('studentid')
+    if studentid:
+        studentdata = get_student(studentid)
+        if studentdata == None:
+            return redirect(url_for('login'))
+        last_update = str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        return comment_general(courseid)
+    else:
+        return redirect(url_for('login'))
+
+
 @app.route('/ical')
 def ical():
     studentid = session.get('student_id')
@@ -442,6 +456,24 @@ def show_already_due():
         return 'success'
     else:
         return 'failed'
+
+# コメントを追加 post
+@app.route('/add_comment', methods=['POST'])
+def add_comment():
+    studentid = session.get('studentid')
+    if studentid:
+        courseid = request.json['courseid']
+        content = request.json['content']
+        reply_to = request.json['reply_to']
+        commentid = add_comment(studentid,reply_to,content)
+        have_auth = add_coursecomment(studentid,commentid,courseid)
+        if have_auth:
+            return 'success'
+        else:
+            return 'failed'
+    else:
+        return 'error'                
+
 
 @app.route('/pgtCallback', methods=['GET', 'POST'])
 def pgtCallback():
@@ -538,6 +570,22 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
     else:
         return redirect(url_for('login'))
 
+
+def comment_general(courseid = None):
+    studentid = session.get('studentid')
+    if studentid:
+        studentdata = get_student(studentid)
+        if studentdata == None:
+            return redirect(url_for('login'))
+        last_update = str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        data = setdefault_for_overview(studentid)
+        comments = get_comments(studentid, courseid)
+        return flask.render_template(
+            'comment.htm',
+            comments = comments,
+            data = data)
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/ContactUs', methods=['GET', 'POST'])
 def forum():

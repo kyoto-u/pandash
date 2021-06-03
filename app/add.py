@@ -59,7 +59,8 @@ def add_comment(student_id, reply_to, content):
     except:
         session.add(new_comment)
         session.commit()
-    return
+    session.refresh(new_comment)
+    return new_comment.comment_id
 
 
 def add_course(studentid, data, last_update):
@@ -89,11 +90,14 @@ def add_course(studentid, data, last_update):
     return
 
 
-def add_coursecomment(comment_id, course_id):
+def add_coursecomment(studentid, comment_id, course_id):
+    course_ids = get_courseids(studentid)
+    if course_id not in course_ids:
+        return False
     new_coursecomment = coursecomment.Coursecomment(comment_id=comment_id, course_id=course_id)
     session.add(new_coursecomment)
     session.commit()
-    return
+    return True
     
 
 def add_forum(studentid,title,contents):
