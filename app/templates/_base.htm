@@ -34,7 +34,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      
+    
       <div class="modal-body">
         <div class="table-responsive table-considered">
           <table class="table table-sm modaltable">
@@ -219,7 +219,10 @@
                 onclick="window.open('/help/tasklist', '', 'width=800,height=500'); return false;" {% elif '/overview'
                 in request.path %} onclick="window.open('/help/overview', '', 'width=800,height=500'); return false;" {%
                 elif '/resourcelist' in request.path %}
-                onclick="window.open('/help/resdownload', '', 'width=800,height=500'); return false;" {% else %}
+                onclick="window.open('/help/resdownload', '', 'width=800,height=500'); return false;" 
+                {% elif '/chat' in request.path %}
+                onclick="window.open('/help/chatroom', '', 'width=800,height=500'); return false;" 
+                {% else %}
                 class="d-none" {% endif %} role="button" 　data-toggle="tooltip" title="ヘルプ">
                 <i class="fas fa-2x fa-question-circle"></i>
               </a>
