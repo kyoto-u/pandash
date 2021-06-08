@@ -2,17 +2,19 @@
 {% block bodycontent %}
 <div class="container-fluid">
     <div class="row">
-        <h1 class="col-12">線形代数学のチャットルーム</h1>
+        <h1 class="col-12">{{roomname}}のチャットルーム</h1>
         <div class="col-12">
         <div class="sle" style="height:500px; border:1px solid gainsboro; overflow-y: scroll;">
-            <p class="comment">
+            {% for comment in comments %}
+                <p class="comment">
                 <div>
-                　1. ID: qwerty　2021/5/31 23:55
+                    　{{comment.index}} ID: {{comment.userid}}　{{comment.update_time}}
                 </div>
                 <div>
-                　コメント
+                    　{{comment.content}}
                 </div>
-            </p>
+                </p>
+            {% endfor %}
         </div>
         <div class="col-12">
             <div class="form-group">

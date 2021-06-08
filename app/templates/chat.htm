@@ -9,21 +9,18 @@
                 <th>アクション</th>
                 <th>最終更新</th>
             </tr>
-            <tr>
-                <td>線形代数学</td>
-                <td><button class="btn btn-secondary">入室する</button></td>
-                <td><i class="fas fa-exclamation-circle"></i>2021/06/03 17:00</td>
-            </tr>
-            <tr>
-                <td>線形代数学</td>
-                <td><button class="btn btn-secondary">入室する</button></td>
-                <td>2021/06/03 17:00</td>
-            </tr>
-            <tr>
-                <td>線形代数学</td>
-                <td><button class="btn btn-secondary">入室する</button></td>
-                <td>2021/06/03 17:00</td>
-            </tr>
+            {% for chatroom in chatrooms %}
+                <tr>
+                    <td>{{chatroom.name}}</td>
+                    <td><a href="{{chatroom.link}}" class="btn btn-secondary">入室する</a></td>
+                    <td>
+                        {% if chatroom.Unchecked == True %}
+                        <i class="fas fa-exclamation-circle"></i>
+                        {% endif %}
+                        {{chatroom.last_update}}
+                    </td>
+                </tr>
+            {% endfor %}
         </table>
     </div>
 </div>
