@@ -19,7 +19,10 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
     else:
         # 時間かかる
         last_update = 0
-        get_membership = get_course_id_from_api(get_membership_json(ses))
+        # membership.json 使用
+        # get_membership = get_course_id_from_api(get_membership_json(ses))
+        # site.json 使用
+        get_membership = get_course_id_from_site_api(get_site_json(ses),student_id)
         already_known= get_courses_id_to_be_taken(student_id)
         # 新規のもののみを取り上げる
         get_membership["site_list"] = [i for i in get_membership["site_list"] if i not in already_known]
@@ -184,11 +187,11 @@ def get_search_condition(show_only_unfinished ,max_time_left , course=None, day=
     return {"search_condition":search_condition, "select3a_judge":select3a_judge}
 
 def order_status(status):
-    if status == "未":
+    if status == Status.NotYet.value:
         return 0
-    elif status == "済":
+    elif status == Status.Done.value:
         return 1
-    elif status == "期限切れ":
+    elif status == Status.AlreadyDue.value:
         return 2
     else:
         return 3
@@ -374,17 +377,17 @@ def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
         2:a week
     """
     if show_only_unfinished == True:
-        tasks = [task for task in tasks if task["status"] == "未"]
+        tasks = [task for task in tasks if task["status"] == Status.NotYet.value]
     if max_time_left in [0, 1, 2]:
         tasks = [task for task in tasks if timejudge(task, max_time_left)]
     
     for task in tasks:
         if task["time_left"] == "":
-            task["status"]="期限切れ"
+            task["status"]=Status.AlreadyDue.value
 
     
-    new_tasks = sorted([i for i in tasks if i["status"] != "期限切れ"], key=lambda x: x["deadline"])
-    new_tasks.extend(sorted([i for i in tasks if i["status"] == "期限切れ"], key=lambda x: x["deadline"],reverse=True))
+    new_tasks = sorted([i for i in tasks if i["status"] != Status.AlreadyDue.value], key=lambda x: x["deadline"])
+    new_tasks.extend(sorted([i for i in tasks if i["status"] == Status.AlreadyDue.value], key=lambda x: x["deadline"],reverse=True))
     new_tasks = sorted(new_tasks, key=lambda x: order_status(x["status"]))
     return new_tasks
 
