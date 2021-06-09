@@ -10,4 +10,6 @@ class Studentcourse(settings.Base):
     course_id = sqlalchemy.Column(String(40))
     hide = sqlalchemy.Column(Integer(),default=0)
 
+    comment_checked =sqlalchemy.Column(Integer(), default=0)
+
 settings.Base.metadata.create_all(settings.engine)

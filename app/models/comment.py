@@ -10,7 +10,7 @@ class Comment(settings.Base):
     comment_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     student_id = Column(String(80))
     reply_to = Column(String(80))
-    update_time = Column(Integer(80))
+    update_time = Column(Integer())
     content = Column(String(1000))
 
 settings.Base.metadata.create_all(settings.engine)

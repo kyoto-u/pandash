@@ -13,5 +13,7 @@ class Course(settings.Base):
     yearsemester = Column(Integer())
     # mon1, wed2, ...   othe
     classschedule = Column(String(4))
+    
+    comment_last_update = Column(Integer())
 
 settings.Base.metadata.create_all(settings.engine)
