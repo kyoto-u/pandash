@@ -5,6 +5,7 @@ from .models import student, assignment, course, studentassignment, studentcours
 from .models import comment, coursecomment
 from .settings import SHOW_YEAR_SEMESTER, session, panda_url
 from .original_classes import TimeLeft ,Status
+import datetime
 
 def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
     if show_only_unfinished == False:
@@ -69,8 +70,8 @@ def get_comments(studentid, courseid):
     if courseid:
         courseids.append(courseid)
     else:
-        course_to_be_taken=get_courses_to_be_taken(studentid)
-        courseids = [i.course_id for i in course_to_be_taken]
+        courses_to_be_taken=get_courses_to_be_taken(studentid)
+        courseids = [i.course_id for i in courses_to_be_taken]
     all_comments = []
     for courseid in courseids:
         coursecomemnts = session.query(coursecomment.Course_Comment).filter(
@@ -80,15 +81,29 @@ def get_comments(studentid, courseid):
             comment.Comment.comment_id.in_(commentids)).all()
         comments = []
         for data in commentdata:
-            cmnt = {}
-            cmnt["commentid"] = data.comment_id
-            cmnt["studentid"] = data.student_id
-            cmnt["reply_to"] = data.reply_to
-            cmnt["update_time"] = data.update_time
-            cmnt["content"] = data.content
+            cmnt = {"commentid":data.comment_id,"userid":data.student_id,"reply_to":data.reply_to,"update_time":data.update_time,"content":data.content}
             comments.append(cmnt)
-        all_comments.append({f"{courseid}":comments})
+        coursename = get_coursename(courseid)
+        all_comments.append({"roomname":coursename, "commnets":comments})
     return all_comments
+
+def get_chatrooms(studentid, courseid):
+    courseids = []
+    chatrooms = []
+    if courseid:
+        courseids.append(courseid)
+    else:
+        courses_to_be_taken=get_courses_to_be_taken(studentid)
+        courseids = [i.course_id for i in courses_to_be_taken]
+    for courseid in courseids:
+        crs = session.query(course.Course).filter(course.Course.course_id==courseid).first()
+        coursename = crs[0].coursename
+        link = f"/chat/course/{courseid}"
+        last_update = str(datetime.datetime.fromtimestamp(course[0].comment_last_update,datetime.timezone(datetime.timedelta(hours=9))))[:6]
+        checked = session.query(studentcourse.Studentcourse.comment_checked).filter(studentcourse.Studentcourse.sc_id==f"{studentid}:{courseid}").first()[0]
+        chatrooms.append({"name":coursename,"link":link,"checked":checked,"last_update":last_update})
+    return chatrooms
+
 
 def get_courseids(studentid):
     course_ids = session.query(studentcourse.Studentcourse.course_id).filter(studentcourse.Studentcourse.student_id==studentid).all()

@@ -96,6 +96,10 @@ def add_coursecomment(studentid, comment_id, course_id):
     if course_id not in course_ids:
         return False
     new_coursecomment = coursecomment.Coursecomment(comment_id=comment_id, course_id=course_id)
+    # course table の comment_lat_update を更新する
+    last_update = int(time.time())
+    crs = session.query(course.Course).filter(course.Course.course_id).first()
+    crs.comment_last_update = last_update
     session.add(new_coursecomment)
     session.commit()
     return True

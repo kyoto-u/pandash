@@ -315,6 +315,17 @@ def overview():
     else:
         return redirect(url_for('login'))
 
+# chat 一覧（暫定）
+@app.route('/chat/overview')
+def chat_overview():
+    studentid = session.get('student_id')
+    if studentid:
+        chatrooms = get_chatrooms(studentid)
+        data = setdefault_for_overview(studentid)
+        return flask.render_template('chat.htm', chatrooms=chatrooms, data=data)
+    else:
+        return redirect(url_for('login'))
+
 @app.route('/tasklist/day/<day>')
 def tasklist_day_redirect(day):
     studentid = session.get('student_id')
@@ -579,11 +590,20 @@ def comment_general(courseid = None):
             return redirect(url_for('login'))
         last_update = str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         data = setdefault_for_overview(studentid)
-        comments = get_comments(studentid, courseid)
-        return flask.render_template(
-            'comment.htm',
-            comments = comments,
-            data = data)
+        all_comments = get_comments(studentid, courseid)
+        if len(all_comments) == 1:
+            return flask.render_template(
+                'comment.htm',
+                comments = all_comments[0]["comments"],
+                roomname = all_comments[0]["roomname"],
+                data = data)
+        else:
+            return flask.render_template(
+                'chatroom.htm',
+                # commnets: [{roomname:"", comments:[]}, ..]
+                comments = all_comments,
+                data = data
+            )
     else:
         return redirect(url_for('login'))
 
