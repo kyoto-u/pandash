@@ -2,6 +2,24 @@
 
 from math import *
 import time
+import enum
+
+
+class Status(enum.Enum):
+    """
+        課題の取り組み状況・状態を表すclass
+    """
+    NotYet="未"
+    Done="済"
+    AlreadyDue="期限切れ"
+    def order(self):
+        if self==self.NotYet:
+            return 0
+        if self==self.Done:
+            return 1
+        if self==self.AlreadyDue:
+            return 2
+        return 3
 
 class TimeLeft():
     time_ms:int

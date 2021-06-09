@@ -4,7 +4,7 @@ from math import *
 from .models import student, assignment, course, studentassignment, studentcourse, resource, studentresource,quiz,studentquiz
 from .models import comment, coursecomment
 from .settings import SHOW_YEAR_SEMESTER, session, panda_url
-from .original_classes import TimeLeft
+from .original_classes import TimeLeft ,Status
 
 def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
     if show_only_unfinished == False:
@@ -13,7 +13,7 @@ def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
     else:
         enrollments = session.query(studentassignment.Student_Assignment).filter(
             studentassignment.Student_Assignment.student_id == studentid).filter(
-                studentassignment.Student_Assignment.status == "未").all()
+                studentassignment.Student_Assignment.status == Status.NotYet.value).all()
     assignmentids =[i.assignment_id for i in enrollments]
     course_to_be_taken=get_courses_to_be_taken(studentid)
     courseids = [i.course_id for i in course_to_be_taken]
@@ -46,7 +46,7 @@ def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
         task["clicked"] = data.clicked
         task["quiz"] = False
         if task["time_left"]["msg"] == "":
-            task["status"]="期限切れ"
+            task["status"]=Status.AlreadyDue.value
         if mode == 1:
             # overviewのtooltipsに使用
             task["instructions"] = asmdata[0].instructions
@@ -57,7 +57,7 @@ def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
         if mode == 1:
             task["classschedule"] = crsdata[0].classschedule
         if show_only_unfinished==1:
-            if task["status"]!="未":
+            if task["status"]!=Status.NotYet.value:
                 continue
         task["assignment_url"] = f'{panda_url}/portal/site/{task["course_id"]}/tool/{task["tool_id"]}?assignmentReference=/assignment/a/{task["course_id"]}/{task["assignmentid"]}&panel=Main&sakai_action=doView_submission'
         tasks.append(task)
@@ -139,7 +139,7 @@ def get_quizzes(studentid, show_only_unfinished,courseid, day, mode):
     else:
         enrollments = session.query(studentquiz.Student_Quiz).filter(
             studentquiz.Student_Quiz.student_id == studentid).filter(
-                studentquiz.Student_Quiz.status == "未").all()
+                studentquiz.Student_Quiz.status == Status.NotYet.value).all()
     # quizのidだけを収集したリスト、courseのidだけを収集したリストを作成
     quizids =[i.quiz_id for i in enrollments]
     course_to_be_taken=get_courses_to_be_taken(studentid)
@@ -178,7 +178,7 @@ def get_quizzes(studentid, show_only_unfinished,courseid, day, mode):
         task["clicked"] = data.clicked
         task["quiz"] = True
         if task["time_left"]["msg"] == "":
-            task["status"]="期限切れ"
+            task["status"]=Status.AlreadyDue.value
         if mode == 1:
             # overviewのtooltipsに使用
             task["instructions"] = quizdata[0].instructions
@@ -190,7 +190,7 @@ def get_quizzes(studentid, show_only_unfinished,courseid, day, mode):
         if mode == 1:
             task["classschedule"] = crsdata[0].classschedule
         if show_only_unfinished==1:
-            if task["status"]!="未":
+            if task["status"]!=Status.NotYet.value:
                 continue
         task["assignment_url"] = f'{panda_url}/portal/site/{task["course_id"]}'
         tasks.append(task)

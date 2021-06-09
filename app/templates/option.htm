@@ -2,28 +2,77 @@
 {% block bodycontent %}
 <div class="container">
     <h1 class="mb-5">設定</h1>
-    <div class="row">
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark col-3">
-            <div class="container">
-                <a class="navbar-brand " href="/"></a>
-                <button id="optiontoggle" class="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#option_collapse" aria-controls="#option_collapse" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div id="option_collapse" class="collapse navbar-collapse">
-                    <div class="d-flex" style="flex-direction: column;">
-                        <a href="#" class="list-group-item list-group-item-action btn-block d-none">言語/Language</a>
-                        <a href="#" class="list-group-item list-group-item-action btn-block">表示科目</a>
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active optiontablink" id="item1-tab" data-toggle="tab" href="#item1" role="tab"
+                aria-controls="item1" aria-selected="true">表示科目</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link optiontablink" id="item2-tab" data-toggle="tab" href="#item2" role="tab"
+                aria-controls="item2" aria-selected="false">Item#2</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link optiontablink" id="item3-tab" data-toggle="tab" href="#item3" role="tab"
+                aria-controls="item3" aria-selected="false">Item#3</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="option-content tab-pane fade show active" id="item1" role="tabpanel" aria-labelledby="item1-tab">
+            <div class="container-fluid pb-5">
+                <section class="pt-3 mb-4">
+                    <h3 class="pb-3">●表示科目の更新</h3>
+                    <div class="container">
+                        <div class="row">
+                            <div>現在PandAに表示されている科目は
+                                {{last_update_subject}}時点であなたが履修していた科目です。新しく科目を追加した場合は右下のボタンを押して更新してください。</div>
+                            <button class="btn btn-secondary ml-auto"
+                                onclick="location.href='/update_subject'">更新する</button>
+                        </div>
                     </div>
-                </div>
+                </section>
+                <section>
+                    <h3 class="pb-3">●表示する科目の選択</h3>
+                    <div class="container border-left">
+                        <ul>
+                            {% for course in courses_to_be_taken %}
+                            <li class="list-unstyled">
+                                <div class="d-inline-flex">
+                                    <div class="form-check">
+                                        <input class="course_checkbox" value="{{course.course_id}}" type="checkbox" {%
+                                            if course.hide==0 %}checked{% endif %}>
+                                        <label class="ml-1" for="{{course.course_id}}">{{course.coursename}}</label>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </section>
+                <section>
+                    <h3>
+                        <input type="checkbox" id="show_already_due_check" {% if show_already_due==1 %}checked{% endif
+                            %}>締切を過ぎた課題を表示する
+                    </h3>
+                </section>
+                <section>
+                    <h3 id="apply_msg" style="display: none;">
+                        適用しました。
+                    </h3>
+                    <h3 id="cancel_msg" style="display: none;">
+                        適用できませんでした。
+                    </h3>
+                </section>
             </div>
-        </nav>
-        <div class="col-9 border-top" style="background-color: whitesmoke;">
-            {% include "Option_fragments/option_subject.htm" %}
+        </div>
+        <div class="option-content tab-pane fade" id="item2" role="tabpanel" aria-labelledby="item2-tab">
+            設定項目２
+        </div>
+        <div class="option-content tab-pane fade" id="item3" role="tabpanel" aria-labelledby="item3-tab">
+            設定項目３
         </div>
     </div>
+
 </div>
 
 <script type="text/javascript" src="/static/js/option.js"></script>
-{% endblock %}1
+{% endblock %}
