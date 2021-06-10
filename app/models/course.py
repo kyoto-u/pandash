@@ -8,10 +8,8 @@ class Course(settings.Base):
     course_id = Column(String(80), primary_key=True,index=True)
     page_id = Column(String(80))
     instructor_id = Column(String(40))
-    coursename = Column(String(800))
-    # 2020年前期：20200 2020年後期：20201
-    yearsemester = Column(Integer())
-    # mon1, wed2, ...   othe
-    classschedule = Column(String(4))
+    coursename = Column(String(800)) # コース名
+    yearsemester = Column(Integer()) # 2020年前期：20200 2020年後期：20201
+    classschedule = Column(String(4)) # mon1, wed2, ...   othe
 
 settings.Base.metadata.create_all(settings.engine)
