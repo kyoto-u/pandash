@@ -62,12 +62,12 @@ class TimeLeft():
         unit_week_single = {'ja':'週間', 'en':' week'}
         unit_week = {'ja':'週間', 'en':' weeks'}
         now = floor(time.time())
-        seconds = self.time_ms/1000 - now
-        minutes = seconds/60
-        hours = minutes/60
-        days = hours/24
-        weeks = days/7
-        months = weeks/4
+        seconds = self.time_ms//1000 - now
+        minutes = seconds//60
+        hours = minutes//60
+        days = hours//24
+        weeks = days//7
+        months = weeks//4
         judge_style = 'one_sec'
         msg =''
 

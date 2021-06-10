@@ -86,6 +86,7 @@ def proxyticket():
     start_time = time.perf_counter()
     show_only_unfinished = 0
     if ticket:
+        # ticketがあるのでPandAのAPIを利用できる
         ses = requests.Session()
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
         if api_response.status_code == 200:
@@ -93,7 +94,7 @@ def proxyticket():
             student_id = user.get('id')
             fullname = user.get('displayName')
             session["student_id"] = student_id
-            now = now = floor(time.time())
+            now = floor(time.time()*1000) #millisecond
             studentdata = get_student(student_id)
             need_to_update_sitelist = 1
             if studentdata:
