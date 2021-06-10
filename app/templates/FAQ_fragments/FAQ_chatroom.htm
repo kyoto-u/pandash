@@ -1,0 +1,25 @@
+﻿{% set qnum = namespace(cnt = 1) %}
+{% macro faq(ques,ans) %}
+<div class="card">
+    <div class="card-header" id="header-4a">
+        <button id="faqque" class="btn btn-link collapsed faqque" type="button" data-toggle="collapse"
+            data-target="#F{{ qnum.cnt }}" aria-expanded="true" aria-controls="F{{ qnum.cnt }}" style="background-color: #00000008;
+    color: black; font-size: small;">
+            <small>◯</small>
+            {{ ques }}
+        </button>
+    </div>
+    <div id="F{{ qnum.cnt }}" class="collapse" aria-labelledby="header-4a">
+        <div class="card-body" style="font-size: small;">
+            {{ ans }}
+        </div>
+    </div>
+</div>
+{% set qnum.cnt = qnum.cnt + 1 %}
+{% endmacro %}
+<section class="faqboard" id="faq-chatroom">
+    <i class="fas fa-chevron-circle-right">チャットルームについて</i>
+    <div class="accordion" id="que_acc3">
+        {{ faq('チャットルームの利用は匿名ですか','はい。利用者の個人情報の保護の観点から、匿名でご利用いただいております。') }}
+    </div>
+</section>
