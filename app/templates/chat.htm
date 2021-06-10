@@ -14,7 +14,7 @@
                     <td>{{chatroom.name}}</td>
                     <td><a href="{{chatroom.link}}" class="btn btn-secondary">入室する</a></td>
                     <td>
-                        {% if chatroom.Unchecked == True %}
+                        {% if chatroom.checked == False %}
                         <i class="fas fa-exclamation-circle"></i>
                         {% endif %}
                         {{chatroom.last_update}}
