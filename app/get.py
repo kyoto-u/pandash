@@ -6,6 +6,7 @@ from .models import comment, coursecomment
 from .settings import SHOW_YEAR_SEMESTER, session, panda_url
 from .original_classes import TimeLeft ,Status
 import datetime
+import hashlib
 
 def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
     if show_only_unfinished == False:
@@ -77,11 +78,19 @@ def get_comments(studentid, courseid):
         coursecomemnts = session.query(coursecomment.Course_Comment).filter(
             coursecomment.Course_Comment.course_id == courseid).all()
         commentids = [i.comment_id for i in coursecomemnts]
+        # 全て取得せず　limit()で制限してページなどで分ける様にする場合は 降順で取得
+        # commentdata = session.query(comment.Comment).filter(
+        #     comment.Comment.comment_id.in_(commentids)).order_by(comment.Comment.update_time.desc()).all()
+        # 昇順で取得
         commentdata = session.query(comment.Comment).filter(
-            comment.Comment.comment_id.in_(commentids)).all()
+               comment.Comment.comment_id.in_(commentids)).order_by(comment.Comment.update_time).all()
         comments = []
+        index = 1
         for data in commentdata:
-            cmnt = {"commentid":data.comment_id,"userid":data.student_id,"reply_to":data.reply_to,"update_time":data.update_time,"content":data.content}
+            # student_id のハッシュ化
+            userid = hashlib.md5(data.sutdent_id.encode()).hexdigest()[:6]
+            cmnt = {"commentid":data.comment_id,"userid":userid,"reply_to":data.reply_to,"update_time":data.update_time,"content":data.content,"index":index}
+            index += 1
             comments.append(cmnt)
         coursename = get_coursename(courseid)
         all_comments.append({"roomname":coursename, "commnets":comments})
