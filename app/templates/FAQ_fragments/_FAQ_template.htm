@@ -1,0 +1,29 @@
+﻿<!--このファイルはFAQを作るためのひな形です-->
+{% set qnum = namespace(cnt = 1) %}
+{% macro faq(ques,ans) %}
+<!--変数：X{{ qnum.cnt }}のXを好きなアルファベットに変更してください。ただしA~Fまでは既に使用されています-->
+<div class="card">
+    <div class="card-header" id="header-4a">
+        <button id="faqque" class="btn btn-link collapsed faqque" type="button" data-toggle="collapse"
+            data-target="#X{{ qnum.cnt }}" aria-expanded="true" aria-controls="X{{ qnum.cnt }}" style="background-color: #00000008;
+    color: black; font-size: small;">
+            <small>◯</small>
+            {{ ques }}
+        </button>
+    </div>
+    <div id="X{{ qnum.cnt }}" class="collapse" aria-labelledby="header-4a">
+        <div class="card-body" style="font-size: small;">
+            {{ ans }}
+        </div>
+    </div>
+</div>
+{% set qnum.cnt = qnum.cnt + 1 %}
+{% endmacro %}
+<section class="faqboard" id="faq-chatroom">
+    <i class="fas fa-chevron-circle-right">FAQの分類名</i>
+    <div class="accordion" id="que_acc3">
+        {{ faq('質問１','解答１') }}
+        {{ faq('質問２','解答２') }}
+        {{ faq('質問３','解答３') }}
+    </div>
+</section>
