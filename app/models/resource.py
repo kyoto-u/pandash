@@ -9,7 +9,7 @@ class Resource(settings.Base):
     resource_url = Column(String(727), primary_key=True)
     title = Column(String(400))
     container = Column(String(500))
-    modifieddate = Column(sqlalchemy.BigInteger())
+    modifieddate = Column(sqlalchemy.BigInteger()) # milliseconds e.g. 1600000000000
     course_id = Column(String(40),index=True)
 
 settings.Base.metadata.create_all(settings.engine)

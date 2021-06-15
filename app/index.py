@@ -12,6 +12,13 @@ from .api import *
 
 # 複合的な関数
 def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_sitelist):
+    """
+        ユーザーの履修科目を取得し、対象科目の課題、授業資料、テスト・クイズの情報を更新する
+
+        need_to_update_sitelist:
+        0 -> すでにデータベースに格納してあるユーザー履修状況をもとに対象科目を定める
+        1 -> APIで履修科目を取得し、うちデータベースに格納していない科目のみを対象とする
+    """
     get_membership = {"student_id": "", "site_list":[]}
     if need_to_update_sitelist == 0:                
         get_membership["student_id"] = student_id
@@ -67,7 +74,7 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         index = 0
         for courseid in get_membership["site_list"]:
             get_resource = get_resources_from_api(contents[index],courseid,student_id)
-            get_quiz = get_quizzes_from_api(contents[index],courseid,student_id)
+            get_quiz = get_quizzes_from_api(quizzes[index],courseid,student_id)
             get_site = get_course_from_api(sites[index], student_id)
             if get_site:
                 get_site["course"]["page_id"] = get_page_from_api(pages[index])
@@ -318,6 +325,26 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
     return html
 
 def setdefault_for_overview(studentid, mode='tasklist'):
+    """
+        履修科目をデータベースから取得し、overviewで使用するdataの枠組みを作る
+        data:
+        {
+            "mon1":{"subject": "", "shortname": "", "searchURL": "","tasks": []}
+            "mon2":{"subject": "", "shortname": "", "searchURL": "","tasks": []}
+            "mon3":{"subject": "", "shortname": "", "searchURL": "","tasks": []}
+            "mon4":{"subject": "", "shortname": "", "searchURL": "","tasks": []}
+            "mon5":{"subject": "", "shortname": "", "searchURL": "","tasks": []}
+            "tue1":{"subject": "", "shortname": "", "searchURL": "","tasks": []}
+            "tue2":{"subject": "", "shortname": "", "searchURL": "","tasks": []}
+            .
+            .
+            .
+            "fri5":
+            "others":[{"subject": "", "shortname": "", "searchURL": "","tasks": []},{"subject": "", "shortname": "", "searchURL": "","tasks": []}]
+        }
+        - mon1からfri5に対して履修科目があればsubject,shortname,searchURLを追加(taskは空リスト)
+        - 時限情報がない科目や、同じ時限に二科目入っていた場合はothersにリスト化して追加
+    """
     data={}
     days =["mon", "tue", "wed", "thu", "fri"]
     default = {"subject": "", "shortname": "", "searchURL": "","tasks": []}
@@ -416,7 +443,7 @@ def task_arrange_for_overview(tasks,task_arranged):
             if subject_exist:
                 task_arranged["others"][index]["tasks"].append(task)
             else:
-                # 新しい教科を追加(本来ここに到達することはない)
+                # 新しい教科を追加(setdefault_for_overviewで型は作ってあるはずなので本来ここに到達することはない)
                 task_arranged["others"].append({})
                 task_arranged["others"][index]["searchURL"] = ""
                 task_arranged["others"][index]["subject"] = task["subject"]
@@ -429,6 +456,17 @@ def task_arrange_for_overview(tasks,task_arranged):
     return task_arranged
 
 def timejudge(task, max_time_left):
+    """
+        taskの締め切りまでの残り時間から、taskが残り時間での絞り込みの範囲内かを判定する
+
+        max_time_left
+        0:一時間以内
+        1:一日以内
+        2:一週間以内
+        (3:無期限　この場合はそもそもこの関数を呼ばないが、Trueを返しておく。)
+    """
+    if max_time_left==3:
+        return True
     # ex あと10分
     time_left = task["time_left"]
     units = ["minute", "分", "hour", "時", "day", "日"]
