@@ -84,7 +84,7 @@ def get_comments(studentid, courseid):
         #     comment.Comment.comment_id.in_(commentids)).order_by(comment.Comment.update_time.desc()).all()
         # 昇順で取得
         commentdata = session.query(comment.Comment).filter(
-               comment.Comment.comment_id.in_(commentids)).order_by(comment.Comment.update_time).all()
+               comment.Comment.comment_id.in_(commentids)).order_by(comment.Comment.update_time).limit(1000).all()
         comments = []
         index = 1
         for data in commentdata:

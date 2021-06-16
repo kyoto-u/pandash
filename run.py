@@ -484,7 +484,7 @@ def add_comment():
         reply_to = request.json['reply_to']
         commentid = add_comment(studentid,reply_to,content)
         have_auth = add_coursecomment(studentid,commentid,courseid)
-        update_commnet_unchecked(courseid)
+        update_comment_unchecked(courseid)
         # 自分の未読チェックは外す
         update_comment_checked(studentid,courseid)
         if have_auth:
