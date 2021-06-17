@@ -6,7 +6,7 @@ from .settings import session
 from .get import get_courseids
 from .original_classes import Status
 
-def add_announcement(studentid, data, last_update):
+def add_announcement(studentid, data):
     course_ids = get_courseids(studentid)
     announcements = session.query(
         announcement.Announcement).filter(announcement.Announcement.course_id.in_(course_ids)).all()
@@ -282,7 +282,7 @@ def add_student_quiz(studentid, data, last_update):
     """
         data:quiz_id, student_id, status
     """
-    sa = session.query(
+    sq = session.query(
         studentquiz.Student_Quiz).filter(studentquiz.Student_Quiz.student_id == studentid).all()
     course_ids = get_courseids(studentid)
     new_sq = []
@@ -292,7 +292,7 @@ def add_student_quiz(studentid, data, last_update):
         update=False
         if not item["course_id"] in course_ids:
             continue
-        for i in sa:
+        for i in sq:
             if i.quiz_id == item["quiz_id"]:
                 quiz_exist = True
                 if item["status"] !=Status.AlreadyDue.value:
