@@ -94,9 +94,9 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         # get_resources    {"resources":[], "student_resources": []}
         # student_quizzes  {"quizzes:[], "student_quizzes":[]}
         # user_info        {"student_id": , "fullname": }
-        # + get_quizzes
+        # + get_quizzes    
         # + get_announcement
-        sync_student_contents(student_id, get_sites, get_assignments, get_resources, get_quizzes, now, last_update=last_update)
+        sync_student_contents(student_id, get_sites, get_assignments, get_resources, get_quizzes, get_announcements, now, last_update=last_update)
 
 def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):
     """
