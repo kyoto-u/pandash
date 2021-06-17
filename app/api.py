@@ -7,11 +7,26 @@ from .settings import VALID_YEAR_SEMESTER, api_url
 import re
 from .original_classes import Status
 
+def get_announcement_from_api(announcements, student_id):
+    announcement_list = []
+    st_anouncement_list = []
+    an_st_collection = announcements.get("assnoucement_collection")
+    for announce in an_st_collection:
+        announcement_id = announce.get('announcementId')
+        title = announce.get('title')
+        body = announce.get('body')
+        createddate = announce.get('createdOn')
+        course_id = announce.get('siteId')
+        announcement_list.append({"sa_id":f"{student_id}:{announcement_id}","announcement_id":announcement_id,"title":title,"body":body,"createddate":createddate,"course_id":course_id}) 
+        st_anouncement_list.append({"announcement_id":announcement_id,"course_id":course_id})
+    announcement_dict = {"student_annoucement":st_anouncement_list, "annoouncements":announcement_list}
+    return announcement_dict
+
 def get_assignments_from_api(assignments, student_id):
     assignment_list = []
     sa_list = []
-    ass_colection = assignments.get("assignment_collection")
-    for assignment in ass_colection:
+    as_colection = assignments.get("assignment_collection")
+    for assignment in as_colection:
         assignment_id = assignment.get('id')
         url = assignment.get('entityURL')
         title = assignment.get('title')[:80]
@@ -73,7 +88,7 @@ def get_course_from_api(site, student_id):
         pass
     if int(yearsemester) not in VALID_YEAR_SEMESTER:
         return None
-    course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule,"page_id":""}
+    course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule,"page_id":"","announcement_page_id":""}
     student_course_dict = {"sc_id":f"{student_id}:{course_id}","course_id":course_id,"student_id":student_id}
     return {"course":course_dict, "student_course":student_course_dict}
 
@@ -121,12 +136,16 @@ def get_site_json(ses):
 
 def get_page_from_api(pages):
     page_id = ""
+    announcement_page_id = ""
     for page in pages:
         title = page.get('title')
         if re.search('課題', title) or re.search('assignment', title):
             page_id = page.get('tools')[0].get('id')
+        elif re.search('お知らせ', title) or re.search('announcement', title):
+            announcement_page_id = page.get('tools')[0].get('id')
+        if page_id != "" and announcement_page_id != "":
             break
-    return page_id
+    return {"page_id":page_id, "announcement_page_id":announcement_page_id}
 
 def get_resources_from_api(resources, course_id, student_id):
     resource_list = []
@@ -194,6 +213,15 @@ def get_session_json(ses):
         return {}
 
 #async
+async def async_get_announcement(ses):
+    url = f"{api_url}/announcement/user.json?n=2000"
+    loop = asyncio.get_event_loop()
+    res = await loop.run_in_executor(None, ses.get, url)
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {'announcement_collection':[]}
+
 async def async_get_assignments(ses):
     url = f"{api_url}/assignment/my.json"
     loop = asyncio.get_event_loop()

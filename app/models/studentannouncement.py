@@ -1,4 +1,4 @@
-  import sqlalchemy
+import sqlalchemy
 import sqlalchemy.ext.declarative
 from sqlalchemy import Integer, String
 from .. import settings

@@ -60,10 +60,10 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         c_statements.extend(s_statements)
         c_statements.extend(p_statements)
         c_statements.extend(q_statements)
-        c_statements.extend([async_get_assignments(ses),async_get_user_info(ses)])
+        c_statements.extend([async_get_assignments(ses),async_get_user_info(ses),async_get_announcement(ses)])
         tasks = asyncio.gather(*c_statements)
         content_site = loop.run_until_complete(tasks)
-        content_site_len = int(len(content_site))-2
+        content_site_len = int(len(content_site))-3
         one_forrth_content_site_len = content_site_len//4
         contents = content_site[0:one_forrth_content_site_len]
         sites = content_site[one_forrth_content_site_len:one_forrth_content_site_len*2]
@@ -71,13 +71,15 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         quizzes = content_site[one_forrth_content_site_len*3:content_site_len]
         get_assignments = get_assignments_from_api(content_site[content_site_len],student_id)
         user_info = get_user_info_from_api(content_site[content_site_len+1])
+        get_announcements = get_announcement_from_api(content_site[content_site_len+2])
         index = 0
         for courseid in get_membership["site_list"]:
             get_resource = get_resources_from_api(contents[index],courseid,student_id)
             get_quiz = get_quizzes_from_api(quizzes[index],courseid,student_id)
             get_site = get_course_from_api(sites[index], student_id)
             if get_site:
-                get_site["course"]["page_id"] = get_page_from_api(pages[index])
+                get_site["course"]["page_id"] = get_page_from_api(pages[index]["page_id"])
+                get_site["course"]["announcement_page_id"] = get_page_from_api(pages[index]["announcement_page_id"])
                 get_sites["courses"].append(get_site["course"])
                 get_sites["student_courses"].append(get_site["student_course"])
                 get_resources["resources"].extend(get_resource["resources"])
@@ -92,7 +94,8 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         # get_resources    {"resources":[], "student_resources": []}
         # student_quizzes  {"quizzes:[], "student_quizzes":[]}
         # user_info        {"student_id": , "fullname": }
-        # + get_quizzes 
+        # + get_quizzes
+        # + get_announcement
         sync_student_contents(student_id, get_sites, get_assignments, get_resources, get_quizzes, now, last_update=last_update)
 
 def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):
@@ -107,13 +110,19 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
     # assignmentsとquizzesを結合
     return assignments+quizzes
 
+def sync_student_announcement(studentid, sa, anc): 
+    # 追加、更新をする
+    add_student_announcement(studentid, sa)
+    add_announcement(studentid, anc)
+    return 0
+
 def sync_student_assignment(studentid, sa, asm,last_update): 
     # 追加、更新をする
     add_student_assignment(studentid,sa, last_update)
     add_assignment(studentid, asm, last_update)
     return 0
 
-def sync_student_contents(studentid, crs, asm, res, qz, now,last_update=0):
+def sync_student_contents(studentid, crs, asm, res, qz, anc, now,last_update=0):
     # 以下主な方針
     #
     # studentテーブルにlast_updateを用意し、毎回update後に記録しておく
@@ -130,6 +139,7 @@ def sync_student_contents(studentid, crs, asm, res, qz, now,last_update=0):
     sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"], last_update)
     sync_student_resource(studentid, res["student_resources"], res["resources"], last_update)
     sync_student_quiz(studentid, qz["student_quizzes"], qz["quizzes"], last_update)
+    sync_student_announcement(studentid, anc["student_announcement", anc["announcements"]])
 
     return 0
 
