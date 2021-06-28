@@ -271,3 +271,7 @@ label >.downloaded{
     color:deeppink;
 }
 
+#message_container{
+    min-height:200px; 
+    background-color:rgb(236, 236, 236);
+}
