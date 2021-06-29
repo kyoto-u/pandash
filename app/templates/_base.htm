@@ -34,7 +34,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-    
+      
       <div class="modal-body">
         <div class="table-responsive table-considered">
           <table class="table table-sm modaltable">
@@ -136,14 +136,17 @@
   <header>
     <!-- ロゴとサイト名-->
     <div class="fixed-top logos">
-      <nav class="navbar navbar-light bg-light" id="logonav">
+      <div class="container-fluid">
         <div class="row">
-          <a href="/tasklist" class=navbar-brand>
-            <img src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ" width="175px"
-              height="60px">
-          </a>
+          <nav class="navbar bg-light" id="logonav" style="width:100vw">
+            <a href="/tasklist" class="navbar-brand">
+              <img src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ" width="175px"
+                height="60px">
+            </a>
+            <a class="btn btn-dark" href="/_logout" data-toggle="tooltip" title="ログアウトします"><small>ログアウト</small></a>
+          </nav>
         </div>
-      </nav>
+      </div>
       <!--メニュー-->
       <!--
       <nav class="navbar navbar-expand-md md_fixed navbar-dark bg-dark">
@@ -219,11 +222,9 @@
                 onclick="window.open('/help/tasklist', '', 'width=800,height=500'); return false;" {% elif '/overview'
                 in request.path %} onclick="window.open('/help/overview', '', 'width=800,height=500'); return false;" {%
                 elif '/resourcelist' in request.path %}
-                onclick="window.open('/help/resdownload', '', 'width=800,height=500'); return false;" 
-                {% elif '/chat' in request.path %}
-                onclick="window.open('/help/chatroom', '', 'width=800,height=500'); return false;" 
-                {% else %}
-                class="d-none" {% endif %} role="button" 　data-toggle="tooltip" title="ヘルプ">
+                onclick="window.open('/help/resdownload', '', 'width=800,height=500'); return false;" {% elif '/chat' in
+                request.path %} onclick="window.open('/help/chatroom', '', 'width=800,height=500'); return false;" {%
+                else %} class="d-none" {% endif %} role="button" 　data-toggle="tooltip" title="ヘルプ">
                 <i class="fas fa-2x fa-question-circle"></i>
               </a>
             </li>
@@ -238,11 +239,12 @@
               <ul class="navbar-nav ml-auto pr-3 toggle_rights">
 
                 <li class="nav-item mr-3 my-auto text-nowrap btn-block">
-                  <a class="btn btn-warning btn-block" href="/chat" data-toggle="tooltip" title="チャットルーム一覧を表示します">チャットルーム</a>
+                  <a class="btn btn-warning btn-block" href="/chat" data-toggle="tooltip"
+                    title="チャットルーム一覧を表示します">チャットルーム</a>
                 </li>
 
                 <li id="logout_button" class="nav-item mr-3 my-auto text-nowrap btn-block">
-                  <a class="btn btn-danger btn-block" href="/_logout" data-toggle="tooltip" title="ログアウトします">ログアウト</a>
+                  <a class="btn btn-light btn-block" href="/announce" data-toggle="tooltip" title="PandAからのお知らせを表示します">お知らせ</a>
                 </li>
 
 
@@ -264,6 +266,7 @@
                         title="iCalファイルをダウンロードします">iCalと共有</a>
                       <a class="dropdown-item menu_link border-bottom" href="/option">設定</a>
                       <a class="dropdown-item menu_link border-bottom" href="/ContactUs">お問い合わせ</a>
+
             </section>
           </div>
         </div>
