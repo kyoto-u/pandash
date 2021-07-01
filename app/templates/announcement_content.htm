@@ -17,10 +17,12 @@
             <div id="message_container">
                 <div class="col-12 mt-1">
                     <p class="pt-2">
-                        引き続きオンラインです。
+                        {% set html_file = "<h1>generated_html</h1>" %}
+                        {{html_file|safe}}
                     </p>
                 </div>
             </div>
+            
         </div>
     </div>
 </div>
