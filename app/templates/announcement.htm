@@ -2,68 +2,77 @@
 {% block bodycontent %}
 <div class="container container-fluid">
     <div class="row">
-        <h1 class="col-12 mb-5">PandAに届いたお知らせ一覧</h1>
-        <table class="table col-11 ml-5 mr-auto">
-            <tr>
-                <th>件名</th>
-                <th><a href="#" style="color:black">保存者</a></th>
-                <th><a href="#" style="color:black">修正日時</a></th>
-                <th><a href="#" style="color:black">サイト</a></th>
-                <th><a href="#" style="color:black">開始日時</a></th>
-                <th><a href="#" style="color:black">終了日時</a></th>
-            </tr>
-            <tr class="announcement_tr">
-                <td>
-                    <a href="#" style="color:black">
-                        <i class="fas fa-exclamation-circle"></i>６月２１日以降の授業について
-                    </a>
-                </td>
-                <td>京大太郎</td>
-                <td>2021/6/12 17:36</td>
-                <td>OAテスト</td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr class="announcement_tr">
-                <td>
-                    <a href="#" style="color:black">
-                        <i class="fas fa-exclamation-circle"></i>６月２１日以降の授業について
-                    </a>
-                </td>
-                <td>京大太郎</td>
-                <td>2021/6/12 17:36</td>
-                <td>OAテスト</td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr class="announcement_tr">
-                <td>
-                    <a href="#" style="color:black">
-                        <i class="fas fa-exclamation-circle"></i>６月２１日以降の授業について
-                    </a>
-                </td>
-                <td>京大太郎</td>
-                <td>2021/6/12 17:36</td>
-                <td>OAテスト</td>
-                <td></td>
-                <td></td>
-            </tr>
-
-        </table>
+        <h1 class="col-12 mb-5">お知らせ一覧</h1>
+        <div class="col-11 ml-md-3 ml-sm-1 mr-auto">
+            <form>
+                <div class="form-group row">
+                    <label class="col-6">全40件(1-20件まで表示)</label>
+                    <select id="select1a" class="form-control col-6">
+                        <option>１ページ目 (1-20件)</option>
+                        <option>２ページ目 (21-40件)</option>
+                    </select>
+                </div>
+            </form>
+            <table class="table tale-sm">
+                <tr>
+                    <th>件名</th>
+                    <th><a href="#" style="color:black">保存者</a></th>
+                    <th><a href="#" style="color:black">修正日時</a></th>
+                    <th><a href="#" style="color:black">サイト</a></th>
+                    <th><a href="#" style="color:black">開始日時</a></th>
+                    <th><a href="#" style="color:black">終了日時</a></th>
+                </tr>
+                <tr class="announcement_tr">
+                    <td>
+                        <a href="#" style="color:black">
+                            <i class="fas fa-exclamation-circle"></i>６月２１日以降の授業について
+                        </a>
+                    </td>
+                    <td>京大太郎</td>
+                    <td>2021/6/12 17:36</td>
+                    <td>OAテスト</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="announcement_tr">
+                    <td>
+                        <a href="#" style="color:black">
+                            <i class="fas fa-exclamation-circle"></i>６月２１日以降の授業について
+                        </a>
+                    </td>
+                    <td>京大太郎</td>
+                    <td>2021/6/12 17:36</td>
+                    <td>OAテスト</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="announcement_tr">
+                    <td>
+                        <a href="#" style="color:black">
+                            <i class="fas fa-exclamation-circle"></i>KULASISからのお知らせ
+                        </a>
+                    </td>
+                    <td>京大太郎</td>
+                    <td>2021/6/12 17:36</td>
+                    <td>KULASIS</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
     </div>
-</div>
-<script>
-    var targets = document.getElementsByClassName("announcement_tr");
-    
-    for(var i=0; i<targets.length; i++){
-        targets[i].addEventListener("mouseover", function () {
-            this.setAttribute("style","background-color:whitesmoke;")
-        });
+    <script>
+        var targets = document.getElementsByClassName("announcement_tr");
 
-        targets[i].addEventListener("mouseleave", function () {
-            this.setAttribute('style', "")
-        });
+        for (var i = 0; i < targets.length; i++) {
+            targets[i].addEventListener("mouseover", function () {
+                this.setAttribute("style", "background-color:whitesmoke;")
+            });
 
-    }
-</script>
-{% endblock %}
+            targets[i].addEventListener("mouseleave", function () {
+                this.setAttribute('style', "")
+            });
+
+        }
+    </script>
+    {% endblock %}
