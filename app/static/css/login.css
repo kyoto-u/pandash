@@ -1,5 +1,14 @@
 html{
     font-size: medium;
+    min-height:100vh;
+}
+
+.container{
+    min-height:100vh;
+}
+footer{
+    margin-top: auto;
+    background-color:gainsboro;
 }
 
 #logo{

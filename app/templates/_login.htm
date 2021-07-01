@@ -20,32 +20,43 @@
 </head>
 
 <body>
-    <div class="card mx-auto">
-        <div class="card-header">ログイン/ Log in</div>
-        <div class="card-body">
-            <div class="mx-auto" id="loginface">
-                <div class="row">
-                    <img id="logo" src="{{ url_for('static', filename='images/loginlogo.jpg') }}" alt="ロゴ">
-                    <h1 id="sitename">PandAsh</h1>
+    <div class="container">
+        <div class="card mx-auto">
+            <div class="card-header">ログイン/ Log in</div>
+            <div class="card-body">
+                <div class="mx-auto" id="loginface">
+                    <div class="row">
+                        <img id="logo" src="{{ url_for('static', filename='images/loginlogo.jpg') }}" alt="ロゴ">
+                        <h1 id="sitename">PandAsh</h1>
+                    </div>
                 </div>
+                <div class="alert alert-danger d-none">
+                    ECS-IDまたはパスワードが間違っています
+                </div>
+                <form class="form-inline">
+                    <label for="text1">ECS-ID : 　　</label>
+                    <input type="text" id="ecs-id" class="form-control ml-auto">
+                </form>
+                <form class="form-inline">
+                    <label for="passwd1">Password : </label>
+                    <input type="password" id="passwd" class="form-control ml-auto">
+                </form>
+                <button class="btn btn-dark btn-block" id="logi">ログイン</button>
             </div>
-            <div class="alert alert-danger d-none">
-                ECS-IDまたはパスワードが間違っています
+            <div class="card-footer">
+                <a href="#"><i class="fas fa-question-circle"></i> ECS-IDを忘れた</a><br>
+                <a href="#"><i class="fas fa-question-circle"></i> パスワードを忘れた</a><br>
             </div>
-            <form class="form-inline">
-                <label for="text1">ECS-ID : 　　</label>
-                <input type="text" id="ecs-id" class="form-control ml-auto">
-            </form>
-            <form class="form-inline">
-                <label for="passwd1">Password : </label>
-                <input type="password" id="passwd" class="form-control ml-auto">
-            </form>
-            <button class="btn btn-dark btn-block" id="logi">ログイン</button>
         </div>
-        <div class="card-footer">
-            <a href="#"><i class="fas fa-question-circle"></i> ECS-IDを忘れた</a><br>
-            <a href="#"><i class="fas fa-question-circle"></i> パスワードを忘れた</a>
-        </div>
+    </div>
 </body>
+
+<footer id="footer" role="contentinfo">
+    <div class="container-fluid">
+        <div class="row">
+            <small class="ml-auto mr-1">Copyright 2020 Institute for Information Management and Communication, Kyoto University</small>
+        </div>
+    </div>
+</footer>
 
 </html>
