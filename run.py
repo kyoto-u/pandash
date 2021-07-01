@@ -90,48 +90,65 @@ def proxyticket():
         ses = requests.Session()
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
         if api_response.status_code == 200:
-            user=get_user_json(ses)
-            student_id = user.get('id')
-            fullname = user.get('displayName')
-            session["student_id"] = student_id
-            now = floor(time.time()*1000) #millisecond
-            studentdata = get_student(student_id)
-            need_to_update_sitelist = 1
-            if studentdata:
-                if studentdata.show_already_due==0:
-                    # ユーザーが期限の過ぎた課題は表示しないように設定しているので、適用する
-                    show_only_unfinished=1
-                need_to_update_sitelist = studentdata.need_to_update_sitelist
-                last_update = studentdata.last_update
-                if need_to_update_sitelist:
-                    add_student(student_id, fullname,last_update= now, last_update_subject= now, language = studentdata.language)
-                else:
-                    add_student(student_id, fullname,last_update= now, last_update_subject= studentdata.last_update_subject, language = studentdata.language)
-            else:
-                last_update = 0
-                add_student(student_id, fullname,last_update= now, last_update_subject= now)
-            get_data_from_api_and_update(student_id,ses,now,last_update,0)
-            if need_to_update_sitelist == 1:
-                get_data_from_api_and_update(student_id,ses,now,0,1)
-            if student_id !="":
-                update_student_needs_to_update_sitelist(student_id)
-            logging.info(f"TIME {student_id}:{time.perf_counter()-start_time}")
+            cookies = ses['cookies']
+            MOD_AUTH_CAS = cookies['MOD_AUTH_CAS']
+            return flask.redirect(url_for('login_successful', MOD_AUTH_CAS = MOD_AUTH_CAS))
+    return flask.redirect(url_for('login_failed'))
+
+@app.route('/login_successful', methods = ["GET"])
+def login_successful():
+    """
+    proxyticket()で認証に成功した際に実行する。課題の取得・更新が主
+
+    args
+    'session':認証に成功したsession
+    """
+    start_time = time.perf_counter()
+    ses = requests.Session()
+    MOD_AUTH_CAS = request.args.get('MOD_AUTH_CAS')
+    cookies = {'MOD_AUTH_CAS':MOD_AUTH_CAS}
+    ses['cookies'] = cookies
+    user = get_user_json(ses)
+    student_id = user.get('id')
+    fullname = user.get('displayName')
+    session["student_id"] = student_id
+    now = floor(time.time() * 1000) #millisecond
+    studentdata = get_student(student_id)
+    need_to_update_sitelist = 1
+    if studentdata:
+        if studentdata.show_already_due == 0:
+            # ユーザーが期限の過ぎた課題は表示しないように設定しているので、適用する
+            show_only_unfinished = 1
+        need_to_update_sitelist = studentdata.need_to_update_sitelist
+        last_update = studentdata.last_update
+        if need_to_update_sitelist:
+            add_student(student_id, fullname, last_update = now, last_update_subject = now, language = studentdata.language)
         else:
-            logging.error(api_response.text)
+            add_student(student_id, fullname, last_update = now, last_update_subject = studentdata.last_update_subject, language = studentdata.language)
+    else:
+        last_update = 0
+        add_student(student_id, fullname, last_update = now, last_update_subject = now)
+    
+    get_data_from_api_and_update(student_id, ses, now, last_update, 0)
+    if need_to_update_sitelist == 1:
+        get_data_from_api_and_update(student_id, ses, now, 0, 1)
+    if student_id != "":
+        update_student_needs_to_update_sitelist(student_id)
+    logging.info(f"TIME {student_id}: {time.perf_counter() - start_time}")
     
     # リダイレクト先を決める
     if 'student_id' in session:
         if session['student_id'] in redirect_pages:
             redirect_page = redirect_pages[session['student_id']]
-            redirect_page = app_url + "/" + redirect_page
-            if re.match(app_login_url,redirect_page):
+            redirect_page = f"{app_url}/{redirect_page}"
+            if re.match(app_login_url, redirect_page):
                 logging.info(f"Requested redirect '{redirect_page}' is invalid because it is login page")
-            elif redirect_page == app_url + "/":
+            elif redirect_page == f"{app_url}/":
                 logging.info(f"Requested redirect '{redirect_page}' is invalid because it is portal page")
             else:
                 return flask.redirect(redirect_page)
         # 前回情報がない場合のdefaultページ
-        return flask.redirect(flask.url_for('tasklist',show_only_unfinished=show_only_unfinished,max_time_left = 3))
+        return flask.redirect(flask.url_for('tasklist', show_only_unfinished = show_only_unfinished, max_time_left = 3))
     # PGTなどが入手できたにもかかわらずstudent_idがないのは不具合であるのでエラー画面に飛ばす
     return flask.redirect(url_for('login_failed'))
 
