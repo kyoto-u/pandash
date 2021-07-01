@@ -3,7 +3,7 @@
 
 import asyncio, json
 from math import *
-from .settings import VALID_YEAR_SEMESTER, api_url
+from .settings import VALID_YEAR_SEMESTER, api_url, kulasis_api_url
 import re
 from .original_classes import Status
 
@@ -271,6 +271,196 @@ async def async_get_user_info(ses):
     url = f"{api_url}/user/current.json"
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, ses.get, url)
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
+
+
+
+# kulasis api  param=kulasis_login_get_api_keys()
+def get_timetable(ses, param):
+    """
+    時間割の取得
+    {
+        "showWhichSemester": 前期:"first" or 後期:"second",
+        "timetables":[
+            {
+                "departmentMinimalName":"学部の略称",
+                "departmentMinimalNameEn":"学部名の略称 (英語)",
+                "departmentName":"学部名",
+                "departmentNameEn":"学部名 (英語)",
+                "departmentNo":"学部の番号 (Number として格納されている)",
+                "isLa": "全学共通科目かどうか (bool)",
+                "isNew": "KULASIS の時間割に NEW があるかどうか (bool)",
+                "isShownOnKouki": "後期の時間割に表示されているか (bool)",
+                "isShownOnZenki": "前期の時間割に表示されているか (bool)",
+                "isSyutyuSemester": "集中講義かどうか (bool)",
+                "lectureName":"講義の名称",
+                "lectureNameEn":"講義の名称 (英語)",
+                "lectureNo": "講義の番号 (Number)",
+                "lectureWeekSchedule":"講義の曜時限 (複数あるときには 月1, 月2 のようにカンマで区切られる。)",
+                "lectureWeekScheduleEn":"講義の曜時限 (英語、複数あるときのはカンマ区切り。)",
+                "newFamily": (不明),
+                "newFamilyEn": (不明),
+                "periodNo": "何時限目か (Number, 1-5)",
+                "roomName":"講義の教室名",
+                "roomNameEn":"講義の教室名 (英語)",
+                "semester":"前期か後期か",
+                "semesterEn":"前期か後期か (英語)",
+                "shortTeacherName":"担当教員 (省略形 ?)",
+                "shortTeacherNameEn":"担当教員 (省略形 ? 英語)",
+                "targetDiscipline":"対象学科",
+                "targetDisciplineEn":"対象学科 (英語)",
+                "teacherName":"担当教員",
+                "teacherNameEn":"担当教員 (英語)",
+                "weekdayNo": "曜日 (月曜から順に 1) (Number)"
+            }
+        ]
+    }
+    """
+    res = ses.get(f"{kulasis_api_url}/timetable/get_table", params=param)
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
+
+async def get_lecture_detail(ses, param, departmentNo, lectureNo):
+    """
+    講義の詳細情報の取得
+    {
+        "departmentMinimalName":"学部名",
+        "departmentMinimalNameEn":"学部名 (英語)",
+        "departmentNo": "学部の番号 (Number)",
+        "isCourseMailChanged": "新しい授業連絡メールがあるかどうか (bool)",
+        "isLa": "全学共通科目かどうか ? (bool)",
+        "isLectureMaterialChanged": "新しい講義資料があるか (bool)",
+        "isLectureSupportChanged": "不明 (bool)",
+        "isReportChanged": "新しいレポート情報があるか (bool)",
+        "lectureCode":"講義番号",
+        "lectureName":"講義名",
+        "lectureNameEn":"講義名 (英語)",
+        "lectureNo":"講義番号 (リクエストと同じもの、 lectureCode との使い分けは不明) (Number)",
+        "lectureWeekSchedule":"講義の曜時限",
+        "lectureWeekScheduleEn":"講義の曜時限 (英語)",
+        "newFamily":"不明",
+        "newFamilyEn":"不明",
+        "oldFamily":"不明",
+        "oldFamilyEn":"不明",
+        "pandaURL":"Panda の URL",
+        "roomName":"教室名",
+        "roomNameEn":"教室名 (英語)",
+        "semester":"前期 or 後期",
+        "semesterEn":"前期 or 後期 (英語)",
+        "syllabusURL":"シラバスの URL",
+        "targetDiscipline":"対象学科",
+        "targetDisciplineEn":"対象学科 (英語)",
+        "teacherName":"教員名",
+        "teacherNameEn":"教員名 (英語)"
+    }
+    """
+    param["departmentNo"] = departmentNo
+    param["lectureNo"] = lectureNo
+    kulasis_loop = asyncio.get_event_loop()
+    res = await kulasis_loop.run_in_executor(None, ses.get, f"{kulasis_api_url}/support/lecture_detail", params=param)
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
+
+async def get_lecture_material(ses, param, departmentNo, lectureNo):
+    """
+    講義資料の一覧取得
+    {
+        "lectureMaterials": [
+            {
+                    "comment":"コメント",
+                    "commentEn":"コメント (英語)",
+                    "isNew": "新しいかどうか ? (bool)",
+                    "lastModifiedAt":"更新日時",
+                    "lastModifiedAtEn":"更新日時 (英語)",
+                    "lectureMaterialAttachmentNumbers": "資料の番号のリスト (Number の list)",
+                    "lectureWeekSchedule":"曜時限",
+                    "lectureWeekScheduleEn":"曜時限 (英語)",
+                    "teacherName":"教員名",
+                    "teacherNameEn":"教員名 (英語)",
+                    "title":"タイトル",
+                    "titleEn":"タイトル (英語)"
+            }
+        ]
+    }
+    """
+    param["departmentNo"] = departmentNo
+    param["lectureNo"] = lectureNo
+    kulasis_loop = asyncio.get_event_loop()
+    res = await kulasis_loop.run_in_executor(None, ses.get, f"{kulasis_api_url}/support/lecture_material", params=param)
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
+
+async def get_lecture_material_attachment(ses, param, departmentNo, lectureMaterialAttachmentNo):
+    """
+    講義資料のダウンロード
+    lectureMaterialAttachmentNoはlectureMaterialAttachmentNumbersから取得
+    {
+        "contentType":"ファイル形式 (MIME ?)",
+        "fileBody":"ファイルの中身 (base64)",
+        "fileName":"ファイル名"
+    }
+    """
+    param["departmentNo"] = departmentNo
+    param["lectureMaterialAttachmentNo"] = lectureMaterialAttachmentNo
+    kulasis_loop = asyncio.get_event_loop()
+    res = await kulasis_loop.run_in_executor(None, ses.get, f"{kulasis_api_url}/support/lecture_material_attachment", params=param)
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
+
+async def get_mail_list(ses, param, departmentNo, lectureNo):
+    """
+    授業連絡メールの一覧の取得
+    {
+        "courseMails":[
+            {
+                "courseMailNo": "連絡メールのメッセージ番号 (Number)",
+                "date":"送信日時",
+                "dateEn":"送信日時 (英語)",
+                "departmentNo":"学部の番号 (Number)",
+                "isNew":"新しいかどうか ? (bool)",
+                "lectureWeekSchedule":"講義の曜時限",
+                "lectureWeekScheduleEn":"講義の曜時限 (英語)",
+                "teacherName":"講義の担当教員",
+                "teacherNameEn":"講義の担当教員 (英語)",
+                "title":"件名",
+                "titleEn":"件名 (英語)"
+            }
+        ]
+    }
+    """
+    param["departmentNo"] = departmentNo
+    param["lectureNo"] = lectureNo
+    kulasis_loop = asyncio.get_event_loop()
+    res = await kulasis_loop.run_in_executor(None, ses.get, f"{kulasis_api_url}/support/course_mail_list", params=param)
+    try:
+        return res.json()
+    except json.JSONDecodeError as e:
+        return {}
+
+async def get_mail_detail(ses, param, departmentNo, courseMailNo):
+    """
+    講義連絡メールの内容取得
+    {
+        "date":"送信日時",
+        "textBody":"本文",
+        "title":"件名"
+    }
+    """
+    param["departmentNo"] = departmentNo
+    param["courseMailNo"] = courseMailNo
+    kulasis_loop = asyncio.get_event_loop()
+    res = await kulasis_loop.run_in_executor(None, ses.get, f"{kulasis_api_url}/support/course_mail", params=param)
     try:
         return res.json()
     except json.JSONDecodeError as e:
