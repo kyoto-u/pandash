@@ -34,7 +34,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      
+
       <div class="modal-body">
         <div class="table-responsive table-considered">
           <table class="table table-sm modaltable">
@@ -119,7 +119,7 @@
 
         </div>
       </div>
-      
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">とじる</button>
       </div>
@@ -130,9 +130,6 @@
 
 
 <body>
-  <!-- pointer-eventsをnoneにする必要がない上に，
-    drag and dropをはじめとして予期しない動作をするので削除
-       style="pointer-events: none;" -->
   <header>
     <!-- ロゴとサイト名-->
     <div class="fixed-top logos">
@@ -147,48 +144,6 @@
           </nav>
         </div>
       </div>
-      <!--メニュー-->
-      <!--
-      <nav class="navbar navbar-expand-md md_fixed navbar-dark bg-dark">
-        <div class="container" id="menubar">
-          <a class="navbar-brand " href="/"></a>
-          <button id="logotoggle" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown2" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown2">
-            <ul class="navbar-nav mr-auto toggle_lefts">　
-              <li class="nav-item">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-dark active">
-                    <input type="radio" name="options" id="option1" autocomplete="off" checked>一覧表示
-                  </label>
-                  <label class="btn btn-dark">
-                    <input type="radio" name="options" id="option2" autocomplete="off">時間割表示
-                  </label>
-                </div>
-              </li>
-              <li class="nav-item">
-                <a class="btn btn-secondary" href="#" role="button">授業資料</a>
-              </li>
-            </ul>
-
-            <ul class="navbar-nav toggle_rights">
-              <li class="nav-item">
-                <a class="nav-link" href="#" data-container='body' 　data-placement="left" data-toggle="tooltip"
-                  title="iCalファイルをダウンロードします">iCalと共有</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">ログアウト</a>
-              </li>
-            </ul>
-
-          </div>
-        </div>
-      </nav>
-    -->
-
       <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <div class="container" id="menubar">
           <a class="navbar-brand " href="/"></a>
@@ -237,24 +192,14 @@
           <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown2">
             <section>
               <ul class="navbar-nav ml-auto pr-3 toggle_rights">
-
                 <li class="nav-item mr-3 my-auto text-nowrap btn-block">
                   <a class="btn btn-warning btn-block" href="/chat" data-toggle="tooltip"
                     title="チャットルーム一覧を表示します">チャットルーム</a>
                 </li>
-
                 <li id="logout_button" class="nav-item mr-3 my-auto text-nowrap btn-block">
-                  <a class="btn btn-light btn-block" href="/announce" data-toggle="tooltip" title="PandAからのお知らせを表示します">お知らせ</a>
+                  <a class="btn btn-light btn-block" href="/announce" data-toggle="tooltip"
+                    title="PandAからのお知らせを表示します">お知らせ</a>
                 </li>
-
-
-
-                <!-- <li class="nav-item my-auto">
-                <a id="ContactUs_link" class="nav-item text-nowrap" href="/ContactUs" 　data-toggle="tooltip"
-                  title="疑問点がございます場合はこちらをクリックしてください">お問い合わせ</a>
-              </li> -->
-
-
                 <li class="nav-item my-auto">
                   <div class="dropdown">
                     <button type="button" id="menu_dropdown" class="btn btn-outline-light dropdown-toggle btn-block"
@@ -266,20 +211,15 @@
                         title="iCalファイルをダウンロードします">iCalと共有</a>
                       <a class="dropdown-item menu_link border-bottom" href="/option">設定</a>
                       <a class="dropdown-item menu_link border-bottom" href="/ContactUs">お問い合わせ</a>
-
+                    </div>
+                  </div>
+                </li>
+              </ul>
             </section>
           </div>
         </div>
-        </li>
-
-
-        </ul>
-
+      </nav>
     </div>
-    </div>
-    </nav>
-    </div>
-
   </header>
 
   <div id="wrapper">
@@ -291,16 +231,16 @@
       </div>
     </main>
   </div>
+</body>
 
-  <footer>
-    <div id="footercont" class="container-fluid">
-      <div class="row">
-        <div class="ml-auto mr-5">
-          <small>Copyright 2020 Institute for Information Management and Communication. All rights
-            reserved.</small><br>
-          <small>PandAsh</small>
-        </div>
+<footer>
+  <div id="footercont" class="container-fluid">
+    <div class="row">
+      <div class="ml-auto mr-3">
+        <small>Copyright 2020 Institute for Information Management and Communication. All rights
+          reserved.</small><br>
+        <small>PandAsh</small>
       </div>
     </div>
-  </footer>
-</body>
+  </div>
+</footer>
