@@ -6,6 +6,8 @@ from .models import comment, coursecomment
 from .settings import SHOW_YEAR_SEMESTER, session, panda_url
 from .original_classes import TimeLeft ,Status
 import datetime
+import hashlib
+from typing import List
 
 def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
     if show_only_unfinished == False:
@@ -77,11 +79,19 @@ def get_comments(studentid, courseid):
         coursecomemnts = session.query(coursecomment.Course_Comment).filter(
             coursecomment.Course_Comment.course_id == courseid).all()
         commentids = [i.comment_id for i in coursecomemnts]
+        # 全て取得せず　limit()で制限してページなどで分ける様にする場合は 降順で取得
+        # commentdata = session.query(comment.Comment).filter(
+        #     comment.Comment.comment_id.in_(commentids)).order_by(comment.Comment.update_time.desc()).all()
+        # 昇順で取得
         commentdata = session.query(comment.Comment).filter(
-            comment.Comment.comment_id.in_(commentids)).all()
+               comment.Comment.comment_id.in_(commentids)).order_by(comment.Comment.update_time).limit(1000).all()
         comments = []
+        index = 1
         for data in commentdata:
-            cmnt = {"commentid":data.comment_id,"userid":data.student_id,"reply_to":data.reply_to,"update_time":data.update_time,"content":data.content}
+            # student_id のハッシュ化
+            userid = hashlib.md5(data.sutdent_id.encode()).hexdigest()[:6]
+            cmnt = {"commentid":data.comment_id,"userid":userid,"reply_to":data.reply_to,"update_time":data.update_time,"content":data.content,"index":index}
+            index += 1
             comments.append(cmnt)
         coursename = get_coursename(courseid)
         all_comments.append({"roomname":coursename, "commnets":comments})
@@ -105,15 +115,31 @@ def get_chatrooms(studentid, courseid):
     return chatrooms
 
 
-def get_courseids(studentid):
+def get_courseids(studentid: str) ->List[str]:
+    """
+        データベース上でstudent_idと結びつけられたcourse_idを集めてリストを返す
+
+        ユーザーの非表示に設定している教科や表示開講期外のものも収集される
+    """
     course_ids = session.query(studentcourse.Studentcourse.course_id).filter(studentcourse.Studentcourse.student_id==studentid).all()
     return [i.course_id for i in course_ids]
 
-def get_coursename(courseid):
+def get_coursename(courseid: str) -> str:
+    """
+        データベースを参照してcourse_idからcoursenameを取得する
+    """
     coursename = session.query(course.Course.coursename).filter(course.Course.course_id==courseid).first()
     return coursename[0]
 
-def get_courses_id_to_be_taken(studentid, mode=0):
+def get_courses_id_to_be_taken(studentid, mode=0) ->List[str]:
+    """
+        データベース上でstudent_idと結びつけられたcourse_idを集めてリストを返す
+
+        表示開講期外のものは収集しない
+        mode:
+        0 -> ユーザーが非表示設定にしているものを収集しない
+        1 -> ユーザーが非表示設定にしているものも収集する
+    """
     data=[]
     courses = session.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
@@ -128,6 +154,17 @@ def get_courses_id_to_be_taken(studentid, mode=0):
 
 # mode = 1 のときはhideのものも取得
 def get_courses_to_be_taken(studentid, mode = 0,return_data = 'course'):
+    """
+        データベース上でstudent_idと結びつけられた教科情報を集めてリストを返す
+
+        表示開講期外のものは収集しない
+        mode:
+        0 -> ユーザーが非表示設定にしているものを収集しない
+        1 -> ユーザーが非表示設定にしているものも収集する
+        return_data:戻り値の型
+        'course' -> course.Course
+        'student_course' -> studentcourse.Studentcourse
+    """
     data=[]
     courses = session.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
@@ -247,7 +284,10 @@ def get_resource_list(studentid, course_id=None, day=None):
         resource_list[rscdata[0].course_id].append(resource_dict)
     return resource_list
 
-def get_student(studentid):
+def get_student(studentid: str) -> student.Student:
+    """
+        データベースを参照してstudent_idからstudentの情報を返す
+    """
     studentdata = session.query(student.Student).filter(student.Student.student_id == studentid).all()
     if len(studentdata) != 0:
         studentdata = studentdata[0]

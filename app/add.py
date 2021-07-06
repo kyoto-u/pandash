@@ -368,3 +368,22 @@ def update_task_status(studentid, taskids: list, mode=0):
     session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
     session.commit()
     return
+
+# コースのコメントをチェックしたときに実行
+def update_comment_checked(studentid, courseid):
+    sc_id = f"{studentid}:{courseid}"
+    sc = session.query(studentcourse.Studentcourse).filter(studentcourse.Studentcourse.sc_id==sc_id).first()
+    sc.comment_checked = 1
+    session.commit()
+    return
+
+# コースのコメントが追加されたときに実行
+def update_commnet_unchecked(courseid):
+    sc_ids = session.query(studentcourse.Studentcourse.sc_id).filter(
+        studentcourse.Studentcourse.course_id==courseid).all()
+    update_list = []
+    for sc_id in sc_ids:
+        update_list.append({"sc_id":sc_id, "comment_checked":0})
+    session.bulk_update_mappings(studentcourse.Studentcourse, update_list)
+    session.commit()
+    return

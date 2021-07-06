@@ -41,6 +41,7 @@ def login():
     if request.method == 'GET':
         ticket = request.args.get('ticket')
         if ticket:
+            # ticketのvalidateを行う
             try:
                 cas_response = cas_client.perform_service_validate(
                     ticket=ticket,
@@ -56,7 +57,9 @@ def login():
         if "logged-in" in session and session["logged-in"]:
             del(session['logged-in'])
         if "student_id" in session:
-            # ログイン後のページを指定しておく
+            # student_idがセッションにありかつログインページへ来るのは
+            # 長時間放置での接続切れまたは意図的な移動
+            # ログイン後のページとして遷移元ページを指定しておく
             redirect_page = request.args.get('page')
             if not redirect_page:
                 redirect_page =""
@@ -83,6 +86,7 @@ def proxyticket():
     start_time = time.perf_counter()
     show_only_unfinished = 0
     if ticket:
+        # ticketがあるのでPandAのAPIを利用できる
         ses = requests.Session()
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
         if api_response.status_code == 200:
@@ -90,11 +94,13 @@ def proxyticket():
             student_id = user.get('id')
             fullname = user.get('displayName')
             session["student_id"] = student_id
-            now = now = floor(time.time())
+            now = floor(time.time()*1000) #millisecond
             studentdata = get_student(student_id)
             need_to_update_sitelist = 1
             if studentdata:
-                if studentdata.show_already_due==0:show_only_unfinished=1
+                if studentdata.show_already_due==0:
+                    # ユーザーが期限の過ぎた課題は表示しないように設定しているので、適用する
+                    show_only_unfinished=1
                 need_to_update_sitelist = studentdata.need_to_update_sitelist
                 last_update = studentdata.last_update
                 if need_to_update_sitelist:
@@ -478,6 +484,9 @@ def add_comment():
         reply_to = request.json['reply_to']
         commentid = add_comment(studentid,reply_to,content)
         have_auth = add_coursecomment(studentid,commentid,courseid)
+        update_comment_unchecked(courseid)
+        # 自分の未読チェックは外す
+        update_comment_checked(studentid,courseid)
         if have_auth:
             return 'success'
         else:

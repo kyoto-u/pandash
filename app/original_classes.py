@@ -3,6 +3,7 @@
 from math import *
 import time
 import enum
+from typing import Dict
 
 
 class Status(enum.Enum):
@@ -12,7 +13,7 @@ class Status(enum.Enum):
     NotYet="未"
     Done="済"
     AlreadyDue="期限切れ"
-    def order(self):
+    def order(self) -> int:
         if self==self.NotYet:
             return 0
         if self==self.Done:
@@ -29,28 +30,28 @@ class TimeLeft():
         self.time_ms = time_ms
         self.language = language
     
-    def add_ato(self, msg):
+    def add_ato(self, msg) -> str:
         if self.language == 'ja':
             msg = f'あと{msg}'
         else:
             msg = f'{msg} left'
         return msg
 
-    def add_ijyou(self, msg):
+    def add_ijyou(self, msg) -> str:
         if self.language == 'ja':
             msg = f'{msg}以上'
         else:
             msg = f'more than {msg}'
         return msg
     
-    def add_miman(self, msg):
+    def add_miman(self, msg) -> str:
         if self.language == 'ja':
             msg = f'{msg}未満'
         else:
             msg = f'less than {msg}'
         return msg
 
-    def time_left_to_str(self):
+    def time_left_to_str(self) -> Dict[str,str]:
         to = {'ja':'と','en':' and '}
         unit_minute_single = {'ja':'分', 'en':' minute'}
         unit_minute = {'ja':'分', 'en':' minutes'}
@@ -61,12 +62,12 @@ class TimeLeft():
         unit_week_single = {'ja':'週間', 'en':' week'}
         unit_week = {'ja':'週間', 'en':' weeks'}
         now = floor(time.time())
-        seconds = self.time_ms/1000 - now
-        minutes = seconds/60
-        hours = minutes/60
-        days = hours/24
-        weeks = days/7
-        months = weeks/4
+        seconds = self.time_ms//1000 - now
+        minutes = seconds//60
+        hours = minutes//60
+        days = hours//24
+        weeks = days//7
+        months = weeks//4
         judge_style = 'one_sec'
         msg =''
 
