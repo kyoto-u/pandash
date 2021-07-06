@@ -75,15 +75,14 @@ footer {
 }
 
 #menu_dropdown_list{
-    background-color: #63a3db;
+    background-color: #333333;
 }
 
 .menu_link{
     color:white;
-    background-color:#63a3db;
+    background-color:#333333;
     border-bottom: white;
 }
-
 
 
 
@@ -223,4 +222,14 @@ label > .downloaded{
 
 .fa-exclamation-circle{
     color:deeppink;
+}
+
+/*オプション*/
+.option-content{
+    background-color: whitesmoke;
+}
+
+.optiontablink{
+    color:black;
+    background-color:gainsboro;
 }
