@@ -142,7 +142,7 @@ def add_resource(studentid, data, last_update):
         for i in resources:
             if i.resource_url == item["resource_url"]:
                 resource_exist = True
-                if i.modifieddate > last_update:
+                if item["modifieddate"] > last_update:
                     update=True
                 break
         if resource_exist == False:
@@ -235,7 +235,7 @@ def add_student_assignment(studentid, data, last_update):
         for i in sa:
             if i.assignment_id == item["assignment_id"]:
                 assignment_exist = True
-                if item["status"] !=Status.AlreadyDue.value:
+                if item["status"] !=Status.NotYet.value:
                     update=True
                 break
         if assignment_exist == False:
@@ -266,7 +266,7 @@ def add_student_quiz(studentid, data, last_update):
         for i in sa:
             if i.quiz_id == item["quiz_id"]:
                 quiz_exist = True
-                if item["status"] !=Status.AlreadyDue.value:
+                if item["status"] !=Status.NotYet.value:
                     update=True
                 break
         if quiz_exist == False:
@@ -296,7 +296,7 @@ def add_student_resource(studentid,data):
         for i in sr:
             if i.resource_url == item["resource_url"]:
                 resource_exist = True
-                if item["status"] !=0:
+                if item["status"] !=0 and i.status ==0:
                     update=True
                 break
         if resource_exist == False:
