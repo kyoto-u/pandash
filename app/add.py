@@ -171,22 +171,50 @@ def add_student(studentid, fullname, last_update = 0, last_update_subject = 0, l
     session.commit()
     return
 
-def add_studentcourse(studentid, data):
+def add_studentcourse(studentid, data, allow_delete = 1):
     """
-        data:[{student_id:"", course_id:""},{}]
+        学生の履修状況をテーブルに追加する
+
+        data: [{student_id:"", course_id:""},{}]
+        allow_delete: 逆にdataにない情報を削除する
+        APIなどで全取得したデータの場合は1、そうでない場合は0にする
     """
     sc = session.query(studentcourse.Studentcourse).filter(studentcourse.Studentcourse.student_id == studentid).all()
     new_sc = []
+    upd_sc = []
+    # APIで取得した履修情報について、既にテーブルに格納されているか調べる
     for item in data:
         course_exist = False
+        update = False
         for i in sc:
             if i.course_id == item["course_id"]:
                 course_exist = True
+
+                # もし履修取り消し扱いになっている場合はそれを直すためにupdateする
+                if i.deleted == 1:
+                    update = True
                 break
-        if course_exist == False:
+        
+        # 追加・更新リストに上の結果に応じて加える
+        if not course_exist:
             new_sc.append(item)
-    if len(new_sc)!=0:
+        if update:
+            upd_sc.append({"course_id": item["course_id"], "deleted": 0})
+
+    if allow_delete == 1:
+        # 逆に、テーブルに格納されている履修情報について、今回のAPIで取得できたかを調べる。
+        for i in sc:
+            course_deleted = True
+            for item in data:
+                if item["course_id"] == i.course_id:
+                    course_deleted = False
+                    break
+            if course_deleted and i.deleted == 0:
+                upd_sc.append({"course_id": i.course_id, "deleted": 1})
+    if len(new_sc) != 0:
         session.execute(studentcourse.Studentcourse.__table__.insert(),new_sc)
+    if len(upd_sc) != 0:
+        session.bulk_update_mappings(studentcourse.Studentcourse, upd_sc)
     session.commit()
     return
 

@@ -80,7 +80,7 @@ def get_coursename(courseid: str) -> str:
     coursename = session.query(course.Course.coursename).filter(course.Course.course_id==courseid).first()
     return coursename[0]
 
-def get_courses_id_to_be_taken(studentid, mode=0) ->List[str]:
+def get_courses_id_to_be_taken(studentid, mode=0,include_deleted=0) ->List[str]:
     """
         データベース上でstudent_idと結びつけられたcourse_idを集めてリストを返す
 
@@ -88,12 +88,17 @@ def get_courses_id_to_be_taken(studentid, mode=0) ->List[str]:
         mode:
         0 -> ユーザーが非表示設定にしているものを収集しない
         1 -> ユーザーが非表示設定にしているものも収集する
+        include_deleted:
+        0 -> ユーザーが履修取り消ししたものを収集しない
+        1 -> ユーザーが履修取り消ししたものも収集する
     """
     data=[]
     courses = session.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
     for i in courses:
         if mode==0 and i.hide == 1:
+            continue
+        if include_deleted==0 and i.deleted == 1:
             continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
