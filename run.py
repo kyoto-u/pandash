@@ -626,6 +626,12 @@ import os
 def favicon():
     return flask.send_from_directory(os.path.join(app.root_path,'static/images'),'favicon.ico',mimetype='image/vnd.microsoft.icon')
 
+@app.before_request
+def before_request():
+    # リクエストのたびにセッションの寿命を更新する
+    session.permanent = True
+    app.permanent_session_lifetime = datetime.timedelta(minutes = 30)
+    session.modified = True
 
 if __name__ == '__main__':
     pgtids={}
