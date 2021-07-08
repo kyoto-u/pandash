@@ -1,3 +1,5 @@
+from app.login import kulasis_login_get_api_keys
+from flask.templating import render_template
 from app.app import app
 from app.settings import engine,app_url,app_logout_url,app_login_url,cas_url,proxy_url,proxy_callback,api_url
 from app.settings import cas_client
@@ -151,6 +153,36 @@ def login_successful():
         return flask.redirect(flask.url_for('tasklist', show_only_unfinished = show_only_unfinished, max_time_left = 3))
     # PGTなどが入手できたにもかかわらずstudent_idがないのは不具合であるのでエラー画面に飛ばす
     return flask.redirect(url_for('login_failed'))
+
+@app.route('/kulasis/login', methods=['GET', 'POST'])
+def kulasis_login():
+    if request.method == 'GET':
+        return render_template('kulasis_login.htm')
+    elif request.method == 'POST':
+        try:
+            ecs_id = request.form["ecs_id"]
+            password = request.form["password"]
+            params = kulasis_login_get_api_keys(ecs_id, password)
+            if params != {}:
+                session["access_param"] = params
+                return url_for('kulasis_login_successful')
+            else:
+                return url_for('kulasis_login_faild')
+        except:
+            return url_for('kulasis_login_faild')
+
+@app.route('/kulasis/login/failed')
+def kulasis_login_failed():
+    return render_template('kulasis_login_failed.htm')
+
+@app.route('/kulasis/login/successful')
+def kulasis_login_successful():
+    studentid = session.get('studentid')
+    param = session.get('access_param')
+    if studentid and param:
+        ses = requests.Session()
+        
+
 
 
 @app.route('/logout')
