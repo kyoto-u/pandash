@@ -279,6 +279,17 @@ async def async_get_user_info(ses):
 
 
 # kulasis api  param=kulasis_login_get_api_keys()
+# site_list {lecture_no: , department_no}
+def get_kulasis_lecture_and_department_no_from_timetable_api(timetable, studentid):
+    timetables = timetable.get('timetables')
+    site_list = []
+    for sub in timetables:
+        lecture_no = sub.get('lectureNo')
+        department_no = sub.get('departmentNo')
+        site_list.append({'lectureNo':lecture_no, 'department_no':department_no})
+    return {"studentid":studentid, "site_list":site_list}
+
+
 def get_timetable(ses, param):
     """
     時間割の取得
@@ -368,6 +379,25 @@ async def get_lecture_detail(ses, param, departmentNo, lectureNo):
     except json.JSONDecodeError as e:
         return {}
 
+def get_lecture_detail_from_api(lecture):
+    kulasis_course_dict = {'course_id':'','lecture_no':0,'department_no':0,'lecture_name':'','lecture_name_en':'',\
+        'lecture_week_schedule':'','lecture_week_schedule_en':'','syllabus_url':'','yearsemester':0}
+    panda_url = lecture.get('pandaURL')
+    try:
+        kulasis_course_dict['course_id'] = re.split(r'/_kcd=',panda_url)[1]
+    except IndexError as e:
+        kulasis_course_dict['course_id'] = ''
+    kulasis_course_dict['lecture_no'] = lecture.get('lectureNo')
+    kulasis_course_dict['department_no'] = lecture.get('departmentNo')
+    kulasis_course_dict['lecutre_name'] = lecture.get('lectureName')
+    kulasis_course_dict['lcture_name_en'] = lecture.get('lecutreNameEn')
+    kulasis_course_dict['lecture_week_schedule'] = lecture.get('lectureWeekSchedule')
+    kulasis_course_dict['lecture_week_schedule_en'] = lecture.get('lectureWeekScheduleEn')
+    kulasis_course_dict['syllabus_url'] = lecture.get('syllabusURL')
+    # 要検討
+    kulasis_course_dict['yearsemester'] = 0
+    return kulasis_course_dict
+    
 async def get_lecture_material(ses, param, departmentNo, lectureNo):
     """
     講義資料の一覧取得
@@ -398,6 +428,13 @@ async def get_lecture_material(ses, param, departmentNo, lectureNo):
         return res.json()
     except json.JSONDecodeError as e:
         return {}
+
+# 未実装
+def get_lecture_material_from_api(material):
+    resource_list = []
+    sr_list = []
+    content_collection = material.get("lectureMaterials")
+    return
 
 async def get_lecture_material_attachment(ses, param, departmentNo, lectureMaterialAttachmentNo):
     """
@@ -444,9 +481,20 @@ async def get_mail_list(ses, param, departmentNo, lectureNo):
     kulasis_loop = asyncio.get_event_loop()
     res = await kulasis_loop.run_in_executor(None, ses.get, f"{kulasis_api_url}/support/course_mail_list", params=param)
     try:
-        return res.json()
+        response = res.json()
+        response["lecture_no"] = lectureNo
+        return response
     except json.JSONDecodeError as e:
         return {}
+
+def get_mail_list_from_api(mail_list):
+    lecture_no = mail_list.get('lectureNo')
+    mails = mail_list.get('courseMails')
+    mail_details = []
+    for mail in mails:
+        mail_details.append({'courseMailNo':mail.get('courseMailNo'),'date':mail.get('date'),'department_no':mail.get('departmentNo'),\
+            'title':mail.get('title'), 'lectureNo':lecture_no})
+    return mail_details
 
 async def get_mail_detail(ses, param, departmentNo, courseMailNo):
     """
@@ -465,3 +513,10 @@ async def get_mail_detail(ses, param, departmentNo, courseMailNo):
         return res.json()
     except json.JSONDecodeError as e:
         return {}
+
+# announcement は sutdentとcourseと結びつける
+def get_mail_detail_from_api(mail_detail, mail_list_index):
+    body = mail_detail.get('body')
+    mail_list_index["body"] = body
+    announcement = mail_list_index
+    return announcement

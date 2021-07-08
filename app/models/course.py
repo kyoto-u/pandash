@@ -13,5 +13,5 @@ class Course(settings.Base):
     coursename = Column(String(800)) # コース名
     yearsemester = Column(Integer()) # 2020年前期：20200 2020年後期：20201
     classschedule = Column(String(4)) # mon1, wed2, ...   othe
-
+    
 settings.Base.metadata.create_all(settings.engine)
