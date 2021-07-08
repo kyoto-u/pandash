@@ -119,6 +119,10 @@ def login_successful():
             # ユーザーが期限の過ぎた課題は表示しないように設定しているので、適用する
             show_only_unfinished = 1
         need_to_update_sitelist = studentdata.need_to_update_sitelist
+        # ここで、履修状況について前回の更新から1週間以上経過している場合は履修状況を更新する
+        if (now - studentdata.last_update_subject) >= 1*7*24*60*60*1000:
+            need_to_update_sitelist = 1
+        
         last_update = studentdata.last_update
         if need_to_update_sitelist:
             add_student(student_id, fullname, last_update = now, last_update_subject = now, language = studentdata.language)
