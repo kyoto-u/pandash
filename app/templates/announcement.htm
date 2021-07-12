@@ -6,21 +6,20 @@
         <div class="col-11 ml-md-3 ml-sm-1 mr-auto">
             <form>
                 <div class="form-group row">
-                    {% set page_num =  num // 20 + 1 %}
                     <label class="col-6">全{{num}}件
-                        {{% if page != page_num %}}
+                        {% if page != page_num %}
                             ({{(page-1)*20+1}}-{{page * 20}}件まで表示)
-                        {{% else %}}
-                            ({{(page-1)*20+1}}-{{page_num}}件まで表示)
-                        {{% endif %}}
+                        {% else %}
+                            ({{(page-1)*20+1}}-{{num}}件まで表示)
+                        {% endif %}
                     </label>
                     <select id="select1a" class="form-control col-6">
                         {% set ns = namespace(cnt=1) %}
                         {% for i in range(page_num) %}
                             {% if ns.cnt != page_num %}
-                                <option {% if ns.cnt = page %}selected{% endif %}>{{ns.cnt}}ページ目 ({{(ns.cnt-1)*20 + 1}}-{{ns.cnt * 20}}件)</option>
+                                <option {% if ns.cnt == page %}selected{% endif %}>{{ns.cnt}}ページ目 ({{(ns.cnt-1)*20 + 1}}-{{ns.cnt * 20}}件)</option>
                             {% else %}
-                                <option {% if ns.cnt = page %}selected{% endif %}>{{ns.cnt}}ページ目 ({{(ns.cnt-1)*20 + 1}}-{{num}}件)</option>
+                                <option {% if ns.cnt == page %}selected{% endif %}>{{ns.cnt}}ページ目 ({{(ns.cnt-1)*20 + 1}}-{{num}}件)</option>
                             {% endif %}
 
                             {% set ns.cnt = ns.cnt + 1 %}
@@ -31,9 +30,27 @@
             <table class="table tale-sm">
                 <tr>
                     <th>件名</th>
-                    <th><a href="#" style="color:black">保存者</a> <i class="fas fa-sort-amount-up-alt"></i></th>
-                    <th><a href="#" style="color:black">公開日時</a> <i class="fas fa-sort-amount-down"></i></th>
-                    <th><a href="#" style="color:black">サイト</a></th>
+                    <th><a href="#" style="color:black">保存者</a> 
+                        {% if sort_condition.criterion == 0 and sort_condition.ascending == True %}
+                            <i class="fas fa-sort-amount-up-alt"></i>
+                        {% elif sort_condition.criterion == 0 and sort_condition.ascending == False %}
+                            <i class="fas fa-sort-amount-down"></i>
+                        {% endif %}
+                    </th>
+                    <th><a href="#" style="color:black">公開日時</a> 
+                        {% if sort_condition.criterion == 1 and sort_condition.ascending == True %}
+                            <i class="fas fa-sort-amount-up-alt"></i>
+                        {% elif sort_condition.criterion == 1 and sort_condition.ascending == False %}
+                            <i class="fas fa-sort-amount-down"></i>
+                        {% endif %}
+                    </th>
+                    <th><a href="#" style="color:black">サイト</a> 
+                        {% if sort_condition.criterion == 2 and sort_condition.ascending == True %}
+                            <i class="fas fa-sort-amount-up-alt"></i>
+                        {% elif sort_condition.criterion == 2 and sort_condition.ascending == False %}
+                            <i class="fas fa-sort-amount-down"></i>
+                        {% endif %}
+                    </th>
                 </tr>
                 {% for announcement in announcements %}
                 <tr class="announcement_tr">
