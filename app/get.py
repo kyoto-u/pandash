@@ -1,7 +1,7 @@
 # データベース操作を伴い情報を取得する関数の一覧
 #
 from math import *
-from .models import student, assignment, course, studentassignment, studentcourse, resource, studentresource, quiz, studentquiz, announcement, studentannouncement
+from .models import student, assignment, course, studentassignment, studentcourse, resource, studentresource, quiz, studentquiz, announcement, studentannouncement, kulasiscourse
 from .settings import SHOW_YEAR_SEMESTER, session, panda_url
 from .original_classes import TimeLeft ,Status
 from typing import List
@@ -116,6 +116,23 @@ def get_coursename(courseid: str) -> str:
     """
     coursename = session.query(course.Course.coursename).filter(course.Course.course_id==courseid).first()
     return coursename[0]
+
+def get_course_id_from_lecture_and_department_no(lecture_no: int, department_no: int) -> str:
+    """
+        kulasis で取得できる lectureNo, departmentNo を利用して
+        データベース上でそれらと結びつけられたcourse_id (primary key) を返す
+    """
+    kulasis_lectures = session.query(kulasiscourse.Kulasiscourse).filter(
+        kulasiscourse.Kulasiscourse.lecture_no == lecture_no).all()
+    if len(kulasis_lectures) == 0:
+        return None
+    elif len(kulasis_lectures) == 1:
+        return kulasis_lectures[0].course_id
+    else:
+        kulasis_lecture = session.query(kulasiscourse.Kulasiscourse).filter(
+            kulasiscourse.Kulasiscourse.lecture_no == lecture_no).filter(
+            kulasiscourse.Kulasiscourse.deparment_no == department_no).first()
+        return kulasis_lecture.course_id
 
 def get_courses_id_to_be_taken(studentid, mode=0) ->List[str]:
     """

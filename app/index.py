@@ -87,37 +87,42 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         # announcements{"announcements":[], "studnet_announcements":[]}
         sync_student_contents(student_id, courses, assignments, resources, quizzes, announcements, now, last_update=last_update)
 
-def get_data_from_api_and_update(student_id,access_param,ses,now,last_update):
+def get_data_from_kulasis_api_and_update(student_id,access_param,ses,now,last_update):
     last_update = 0
     timetables = get_kulasis_lecture_and_department_no_from_timetable_api(get_timetable(ses,access_param),student_id)
     lectures = {"lectures":[], "student_lectreus":[]}
     # announcements = {"announcements":[], "student_announcements":[]}
+    # 非同期処理のセット
     asyncio.set_event_loop(asyncio.SelectorEventLoop())
     loop = asyncio.get_event_loop()
     lecture_statements = []
     lecture_material_statements = []
     mail_list_statements = []
+    # 非同期でkulasis api にアクセス
     for lecture in timetables["site_list"]:
         lecture_statements.append(get_lecture_detail(ses,access_param,lecture["department_no"],lecture["lecture_no"]))
         lecture_material_statements.append(get_lecture_material(ses,access_param,lecture["department_no"],lecture["lecture_no"]))
         mail_list_statements.append(get_mail_list(ses,access_param,lecture["department_no"],lecture["lecture_no"]))
     statements = [*lecture_statements,*lecture_material_statements,*mail_list_statements]
     tasks = asyncio.gather(*statements)
+    # 非同期処理の実行
     results = loop.run_until_complete(tasks)
+    # 結果を分割
     results_len = int(len(results))
     one_third_results_len = results_len//3
     rslt_lecture_details = results[0:one_third_results_len]
     rslt_lecture_materials = results[one_third_results_len:one_third_results_len*2]
     rslt_mail_lists = results[one_third_results_len*2:results_len]
+
     index = 0
-    lecture_details = {"lectures":[]}
     mail_lists = []
     for lecture in timetables["site_list"]:
-        lecture_detail = get_lecture_detail_from_api(rslt_lecture_details[index])
+        lectures["lectures"].append(get_lecture_detail_from_api(rslt_lecture_details[index],student_id))
+        # resource はひとまず取得しない
         lecture_material = get_lecture_material_from_api(rslt_lecture_details[index])
         mail_list = get_mail_list_from_api(rslt_mail_lists[index])
-        lecture_details["lectures"].append(lecture_detail)
         mail_lists.extend(mail_list)
+        index += 1
 
     mail_detail_statements = []
     for mail in mail_lists:
@@ -125,7 +130,15 @@ def get_data_from_api_and_update(student_id,access_param,ses,now,last_update):
     # 2度目の非同期処理, メール本文の取得
     task_mail = asyncio.gather(*mail_detail_statements)
     mail_detail_result = loop.run_until_complete(task_mail)
-    # この後メールの本文取得，追加処理
+    # メールの取得
+    mail_index = 0
+    # ここのannouncements は panda の処理のannouncements とほぼ同一
+    announcements = {"announcements":[],"student_announcements":[]}
+    for mail in mail_lists:
+        announcement = get_mail_detail_from_api(mail_detail_result[mail_index],mail[mail_index])
+        announcements["announcements"].append(announcement["announcement"])
+        announcements["student_announcements"].append(announcement["student_announcement"])
+        mail_index += 1
         
 
 def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):

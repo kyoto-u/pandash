@@ -1,6 +1,8 @@
 # APIを用いて情報を取得する関数一覧
 #
 
+from app.get import get_course_id_from_lecture_and_department_no
+from app.models import announcement
 import asyncio, json
 from math import *
 from .settings import VALID_YEAR_SEMESTER, api_url, kulasis_api_url
@@ -379,7 +381,10 @@ async def get_lecture_detail(ses, param, departmentNo, lectureNo):
     except json.JSONDecodeError as e:
         return {}
 
-def get_lecture_detail_from_api(lecture):
+def get_lecture_detail_from_api(lecture, student_id):
+    """
+        return {"student_course":{}, "course":{}}
+    """
     kulasis_course_dict = {'course_id':'','lecture_no':0,'department_no':0,'lecture_name':'','lecture_name_en':'',\
         'lecture_week_schedule':'','lecture_week_schedule_en':'','syllabus_url':'','yearsemester':0}
     panda_url = lecture.get('pandaURL')
@@ -396,7 +401,8 @@ def get_lecture_detail_from_api(lecture):
     kulasis_course_dict['syllabus_url'] = lecture.get('syllabusURL')
     # 要検討
     kulasis_course_dict['yearsemester'] = 0
-    return kulasis_course_dict
+    student_lecture =  {"sc_id":f"{student_id}:{kulasis_course_dict['course_id']}","course_id":kulasis_course_dict['course_id'],"student_id":student_id}
+    return {"student_course":student_lecture,"course":kulasis_course_dict}
     
 async def get_lecture_material(ses, param, departmentNo, lectureNo):
     """
@@ -488,13 +494,16 @@ async def get_mail_list(ses, param, departmentNo, lectureNo):
         return {}
 
 def get_mail_list_from_api(mail_list):
+    """
+    mail_list:[{{'courseMailNo':,'date':,'department_no':,'title':,'lectureNo':,}]
+    """
     lecture_no = mail_list.get('lectureNo')
     mails = mail_list.get('courseMails')
-    mail_details = []
+    mail_list_details = []
     for mail in mails:
-        mail_details.append({'courseMailNo':mail.get('courseMailNo'),'date':mail.get('date'),'department_no':mail.get('departmentNo'),\
+        mail_list_details.append({'course_mail_no':mail.get('courseMailNo'),'createdate':mail.get('date'),'department_no':mail.get('departmentNo'),\
             'title':mail.get('title'), 'lectureNo':lecture_no})
-    return mail_details
+    return mail_list_details
 
 async def get_mail_detail(ses, param, departmentNo, courseMailNo):
     """
@@ -515,8 +524,13 @@ async def get_mail_detail(ses, param, departmentNo, courseMailNo):
         return {}
 
 # announcement は sutdentとcourseと結びつける
-def get_mail_detail_from_api(mail_detail, mail_list_index):
+def get_mail_detail_from_api(mail_detail, mail_list_details,student_id):
     body = mail_detail.get('body')
-    mail_list_index["body"] = body
-    announcement = mail_list_index
-    return announcement
+    mail_all_info = mail_list_details
+    mail_all_info["body"] = body
+    course_id = get_course_id_from_lecture_and_department_no(mail_all_info["lecture_no"],mail_all_info["department_no"])
+    st_announcement_dict = {"announcement_id":f"{mail_all_info['department_no']}:{mail_all_info['course_mail_no']}","course_id":course_id}
+    announcement_dict = {"sa_id":f"{student_id}:{mail_all_info['department_no']}:{mail_all_info['course_mail_no'],}"}
+    announcement_dict.update(mail_all_info)
+    del announcement_dict["course_mail_no"],announcement_dict["department_no"]
+    return {"student_announcement":st_announcement_dict,"announcement":announcement_dict}
