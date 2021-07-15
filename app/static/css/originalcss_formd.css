@@ -233,3 +233,8 @@ label > .downloaded{
     color:black;
     background-color:gainsboro;
 }
+
+#message_container{
+    min-height:200px; 
+    background-color:rgb(236, 236, 236);
+}
