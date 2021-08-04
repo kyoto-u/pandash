@@ -21,7 +21,6 @@
                             {% else %}
                                 <option {% if ns.cnt == page %}selected{% endif %}>{{ns.cnt}}ページ目 ({{(ns.cnt-1)*20 + 1}}-{{num}}件)</option>
                             {% endif %}
-
                             {% set ns.cnt = ns.cnt + 1 %}
                         {% endfor %}
                     </select>
@@ -30,27 +29,9 @@
             <table class="table tale-sm">
                 <tr>
                     <th>件名</th>
-                    <th><a href="#" style="color:black">保存者</a> 
-                        {% if sort_condition.criterion == 0 and sort_condition.ascending == True %}
-                            <i class="fas fa-sort-amount-up-alt"></i>
-                        {% elif sort_condition.criterion == 0 and sort_condition.ascending == False %}
-                            <i class="fas fa-sort-amount-down"></i>
-                        {% endif %}
-                    </th>
-                    <th><a href="#" style="color:black">公開日時</a> 
-                        {% if sort_condition.criterion == 1 and sort_condition.ascending == True %}
-                            <i class="fas fa-sort-amount-up-alt"></i>
-                        {% elif sort_condition.criterion == 1 and sort_condition.ascending == False %}
-                            <i class="fas fa-sort-amount-down"></i>
-                        {% endif %}
-                    </th>
-                    <th><a href="#" style="color:black">サイト</a> 
-                        {% if sort_condition.criterion == 2 and sort_condition.ascending == True %}
-                            <i class="fas fa-sort-amount-up-alt"></i>
-                        {% elif sort_condition.criterion == 2 and sort_condition.ascending == False %}
-                            <i class="fas fa-sort-amount-down"></i>
-                        {% endif %}
-                    </th>
+                    <th><a style="color:black">保存者</a></th>
+                    <th><a style="color:black">公開日時</a></th>
+                    <th><a style="color:black">サイト</a></th>
                 </tr>
                 {% for announcement in announcements %}
                 <tr class="announcement_tr">
