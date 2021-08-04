@@ -501,7 +501,10 @@ def get_mail_list_from_api(mail_list):
     mails = mail_list.get('courseMails')
     mail_list_details = []
     for mail in mails:
-        mail_list_details.append({'course_mail_no':mail.get('courseMailNo'),'createdate':mail.get('date'),'department_no':mail.get('departmentNo'),\
+        date = mail.get('date')[0:-3]
+        date_format = "%Y/%m/%d"
+        createdate = int(datetime.datetime.strptime(date,date_format).timestamp()*1000)
+        mail_list_details.append({'course_mail_no':mail.get('courseMailNo'),'createdate':createdate,'department_no':mail.get('departmentNo'),\
             'title':mail.get('title'), 'lectureNo':lecture_no})
     return mail_list_details
 

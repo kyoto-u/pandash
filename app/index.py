@@ -127,7 +127,7 @@ def get_data_from_kulasis_api_and_update(student_id,access_param,ses,now,last_up
     mail_detail_statements = []
     for mail in mail_lists:
         mail_detail_statements.extend(get_mail_detail(ses,access_param,mail['department_no'],mail['courseMailNo']))
-    # 2度目の非同期処理, メール本文の取得
+    # 非同期処理, メール本文の取得
     task_mail = asyncio.gather(*mail_detail_statements)
     mail_detail_result = loop.run_until_complete(task_mail)
     # メールの取得
