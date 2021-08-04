@@ -421,6 +421,62 @@ def resource_day(day):
 def resources_sample():
     return resourcelist_general()
 
+@app.route('/announcement')
+def announcement_overview():
+    studentid = session.get('student_id')
+    if studentid:
+        # 課題の最終更新時間を取得
+        studentdata = get_student(studentid)
+        if studentdata == None:
+            # なければstudentの記録がないことになるので一度ログインへ
+            return redirect(url_for('login'))
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        logging.debug(f"last update = {last_update}\npage = announcement")
+        data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcemnts")
+        announcements = get_announcementlist(studentid)
+        data = task_arrange_for_overview(announcements,data,key_name="announcements")
+
+        days =["mon", "tue", "wed", "thu", "fri"]
+        for day in days:
+            for i in range(5):
+                data[day+str(i+1)]["announcements"] = sort_announcements(data[day+str(i+1)]["announcements"],1,0)
+        data.setdefault("others",[])
+        for i in range(len(data["others"])):
+            data["others"][i]["announcements"] = sort_announcements(data["others"][i]["announcements"],1,0)
+        # TODO: 適切なテンプレートを選択する
+        return flask.render_template('overview.htm',data = data,last_update=last_update)
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/announcement/course/<courseid>/<criterion>/<ascending>')
+def announcementlist_general(courseid,criterion,ascending):
+    studentid = session.get('student_id')
+    if studentid:
+        # 課題の最終更新時間を取得
+        studentdata = get_student(studentid)
+        if studentdata == None:
+            # なければstudentの記録がないことになるので一度ログインへ
+            return redirect(url_for('login'))
+        
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        logging.debug(f"last update = {last_update}\npage = announcementlist")
+        announcements = get_announcementlist(studentid,courseid=courseid)
+        announcements = sort_announcements(announcements,criterion=criterion,ascending=ascending)
+        unchecked_announcement_num=sum((i["checked"] == 0 for i in announcements))
+        logging.info(f"studentid={studentid}の未確認のお知らせ:{unchecked_announcement_num}個")
+        data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcemnts")
+        
+        sort_condition = {"criterion":criterion,"ascending":ascending==1}
+        return flask.render_template(
+            'announcement.htm',
+            announcements = announcements,
+            data = data,
+            sort_condition = sort_condition,
+            unchecked_task_num = unchecked_announcement_num,
+            last_update = last_update)
+    else:
+        return redirect(url_for('login'))
+
 @app.route('/ical')
 def ical():
     studentid = session.get('student_id')

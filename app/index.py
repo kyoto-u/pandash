@@ -11,6 +11,14 @@ from .get import *
 from .api import *
 
 # 複合的な関数
+def get_announcementlist(studentid, show_only_unchecked = False,courseid=None, day=None):
+    """
+
+    """
+    announcements=get_announcements(studentid, show_only_unchecked,courseid, day)
+
+    return announcements
+
 def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_sitelist):
     """
         ユーザーの履修科目を取得し、対象科目の課題、授業資料、テスト・クイズの情報を更新する
@@ -364,7 +372,7 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
         """ + html + "</div></div>"
     return html
 
-def setdefault_for_overview(studentid, mode='tasklist'):
+def setdefault_for_overview(studentid, mode='tasklist',tasks_name="tasks"):
     """
         履修科目をデータベースから取得し、overviewで使用するdataの枠組みを作る
         data:
@@ -387,7 +395,7 @@ def setdefault_for_overview(studentid, mode='tasklist'):
     """
     data={}
     days =["mon", "tue", "wed", "thu", "fri"]
-    default = {"subject": "", "shortname": "", "searchURL": "","tasks": []}
+    default = {"subject": "", "shortname": "", "searchURL": "",tasks_name: []}
     for day in days:
         for i in range(5):
             data[day+str(i+1)]=copy.copy(default)
@@ -426,15 +434,36 @@ def setdefault_for_overview(studentid, mode='tasklist'):
                 data["others"][index]["subject"] = course.coursename
                 data["others"][index]["shortname"] = re.sub(
                     "\[.*\]", "", course.coursename)
-                data["others"][index]["tasks"] = []
+                data["others"][index][tasks_name] = []
 
         elif add_subject == True:
             data[course.classschedule]["searchURL"] = app_url+ f"/{mode}/course/"+course.course_id
             data[course.classschedule]["subject"] = course.coursename
             data[course.classschedule]["shortname"] = re.sub(
                 "\[.*\]", "", course.coursename)
-            data[course.classschedule]["tasks"] = []
+            data[course.classschedule][tasks_name] = []
     return data
+
+def sort_announcements(announcements,criterion,ascending):
+    """
+        
+        criterion 並び替えの順
+        0: 保存者 1: 公開日時 2: サイト名
+
+        ascending 0: 降順 1: 昇順
+    """
+    
+
+    keyname=""
+    if criterion==0:
+        keyname="publisher"
+    elif criterion==1:
+        keyname="time_ms"
+    else:
+        keyname="subject"
+    # keynameの値で並べ変える。降順ならreverseをTrueにする
+    new_announcements = sorted(announcements, key=lambda x: x[keyname],reverse=ascending==0)
+    return new_announcements
 
 def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
     """
@@ -458,7 +487,7 @@ def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
     new_tasks = sorted(new_tasks, key=lambda x: order_status(x["status"]))
     return new_tasks
 
-def task_arrange_for_overview(tasks,task_arranged):
+def task_arrange_for_overview(tasks,task_arranged,key_name="tasks"):
 
     for task in tasks:
         add_in_others = False
@@ -481,7 +510,7 @@ def task_arrange_for_overview(tasks,task_arranged):
                     break
                 index += 1
             if subject_exist:
-                task_arranged["others"][index]["tasks"].append(task)
+                task_arranged["others"][index][key_name].append(task)
             else:
                 # 新しい教科を追加(setdefault_for_overviewで型は作ってあるはずなので本来ここに到達することはない)
                 task_arranged["others"].append({})
@@ -489,10 +518,10 @@ def task_arrange_for_overview(tasks,task_arranged):
                 task_arranged["others"][index]["subject"] = task["subject"]
                 task_arranged["others"][index]["shortname"] = re.sub(
                     "\[.*\]", "", task["subject"])
-                task_arranged["others"][index]["tasks"] = [task]
+                task_arranged["others"][index][key_name] = [task]
 
         else:
-            task_arranged[task["classschedule"]]["tasks"].append(task)
+            task_arranged[task["classschedule"]][key_name].append(task)
     return task_arranged
 
 def timejudge(task, max_time_left):

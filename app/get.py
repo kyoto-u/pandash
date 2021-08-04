@@ -5,8 +5,9 @@ from .models import student, assignment, course, studentassignment, studentcours
 from .settings import SHOW_YEAR_SEMESTER, session, panda_url
 from .original_classes import TimeLeft ,Status
 from typing import List
+import datetime
 
-def get_announcements(studentid,courseid, day):
+def get_announcements(studentid,show_only_unchecked, courseid, day):
     enrollments = session.query(studentannouncement.Student_Announcement).filter(
         studentannouncement.Student_Announcement.student_id == studentid).all()
     announcementids =[i.announcement_id for i in enrollments]
@@ -20,6 +21,9 @@ def get_announcements(studentid,courseid, day):
     
     returns = []
     for data in enrollments:
+        if show_only_unchecked==1:
+            if data.checked==1:
+                continue
         anndata = [i for i in announcementdata if i.announcement_id == data.announcement_id]
         crsdata = [i for i in coursedata if i.course_id == anndata[0].course_id]
         
@@ -35,10 +39,13 @@ def get_announcements(studentid,courseid, day):
         announce = {}
         announce["checked"]=data.checked
         announce["title"]=anndata[0].title
-        announce["body"]=anndata[0].body
+        announce["html_file"]=anndata[0].body
         announce["subject"]=crsdata[0].coursename
         announce["classschedule"]=crsdata[0].classschedule
         announce["course_id"]=anndata[0].course_id
+        announce["publisher"]="xxxx"
+        announce["time_ms"]=anndata[0].createddate
+        announce["publish_date"]=datetime.datetime.fromtimestamp(anndata[0].createddate//1000).strftime("%Y/%m/%d %H:%M:%S")
         returns.append(announce)
     return returns
 
