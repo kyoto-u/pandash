@@ -204,6 +204,21 @@ def sync_student_quiz(studentid, sq, quiz, last_update):
     return 0
 
 
+# kulasis 
+def sync_kulasis_student_contents(studentid, crs, res, qz, anc, now,last_update=0):
+    sync_kulasis_student_course(studentid, crs["student_courses"], crs["courses"], last_update)
+    # sync_kulasis_student_resource(studentid, res["student_resources"], res["resources"], last_update)
+    # announcement は panda と同じ
+    sync_student_announcement(studentid, anc["student_announcement", anc["announcements"]])
+
+    return 0
+
+def sync_kulasis_student_course(studentid, sc, crs, last_update):
+    add_kulasis_course(studentid, crs, last_update)
+
+    return 0
+
+
 # formatter, sort
 
 def day_to_str(day):

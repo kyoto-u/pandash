@@ -1,6 +1,7 @@
 # データベースの情報を書き換える関数の一覧
 #
 
+from app.models import kulasiscourse
 from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment, forum,quiz,studentquiz, announcement,studentannouncement
 from .settings import session
 from .get import get_courseids
@@ -336,6 +337,33 @@ def add_student_resource(studentid,data):
         session.execute(studentresource.Student_Resource.__table__.insert(),new_sr)
     if len(upd_sr) != 0:
         session.bulk_update_mappings(studentresource.Student_Resource, upd_sr)
+    session.commit()
+    return
+
+def add_kulasis_course(studentid, data, last_update):
+    course_ids = get_courseids(studentid)
+    courses = session.query(
+        kulasiscourse.Kulasiscourse).filter(kulasiscourse.Kulasiscourse.course_id.in_(course_ids)).all()
+    new_crs=[]
+    upd_crs = []
+    for item in data:
+        course_exist = False
+        update = False
+        # panda のコースにない コースをどうするか
+        # if item["course_id"] not in course_ids:
+        #     continue
+        for i in courses:
+            if i.course_id == item["course_id"]:
+                course_exist = True
+                break
+        if course_exist == False:
+            new_crs.append(item)
+        elif update == True:
+            upd_crs.append(item)
+    if len(new_crs) != 0:
+        session.execute(kulasiscourse.Kulasiscourse.__table__.insert(),new_crs)
+    if len(upd_crs) != 0:
+        session.bulk_update_mappings(kulasiscourse.Kulasiscourse, upd_crs)
     session.commit()
     return
   
