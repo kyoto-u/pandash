@@ -10,7 +10,11 @@
       <div class="container">
         <div class="row">
           <h3>あなたの課題</h3>
-          <small class=" ml-auto mt-auto mr-3">最終更新：{{last_update}}</small>
+          <div class="ml-5">
+            <a href="/tasklist"><i class="fas fa-2x fa-list mr-2" style="color:gray;"></i></a>
+            <i class="fas fa-2x fa-th ml-2" style="color:black;"></i>
+          </div>
+          <small class="ml-auto">最終更新：{{last_update}}</small>
           <button type="button" id="reflesh_button" class="btn  btn-info"
             onclick="location.href='/login?page=overview'">情報を更新</button>
         </div>
@@ -604,13 +608,12 @@
       </div>
 
 
-
       <h4>その他の科目</h4>
 
 
       <!-- See file _base.htm, line 132
           pointer-events: all; -->
-
+      
       <div class="row">
         {% if (data.others | length) > 0 %}
         {% for sbj in data.others %}
@@ -645,7 +648,7 @@
         <h6 class="col-12 mt-2">その他の科目はありません</h6>
         {% endif %}
       </div>
-
+      
 
 
     </div>

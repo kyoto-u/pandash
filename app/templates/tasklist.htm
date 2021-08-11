@@ -49,13 +49,18 @@
       <div class="container">
         <div class="row">
           <h3>あなたの課題</h3>
-          <small class=" ml-auto mt-auto mr-3">最終更新：{{last_update}}</small>
+          <div class="ml-5">
+            <i class="fas fa-2x fa-list mr-2" style="color:black;"></i>
+            <a href="/overview"><i class="fas fa-2x fa-th ml-2" style="color:gray;"></i></a>
+          </div>
+          <small class="ml-auto">最終更新：{{last_update}}</small>
           <button type="button" id="reflesh_button" class="btn  btn-info"
-            onclick="location.href='/login?page=tasklist'">情報を更新</button>
+            onclick="location.href='/login?page=overview'">情報を更新</button>
         </div>
       </div>
+      
 
-      <b>検索条件：{{ search_condition.search_condition }}</b>
+      <b>検索条件：{#{{ search_condition.search_condition }}#}</b>
 
       <!--アラート-->
       {% if tasks|length > 0 %}
