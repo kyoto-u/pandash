@@ -1,12 +1,10 @@
 from app.app import app
-from app.settings import engine,app_url,app_logout_url,app_login_url,cas_url,proxy_url,proxy_callback,api_url
+from app.settings import app_url,app_logout_url,app_login_url,proxy_callback
 from app.settings import cas_client
 import flask
-from sqlalchemy.orm import sessionmaker
 from app.index import *
 from pprint import pprint
-from cas_client import CASClient
-from flask import Flask, redirect, request, session, url_for
+from flask import redirect, request, session, url_for
 import logging
 import requests
 import datetime
@@ -36,39 +34,35 @@ global redirect_pages
 # 
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET'])
 def login():
-    if request.method == 'GET':
-        ticket = request.args.get('ticket')
-        if ticket:
-            # ticketのvalidateを行う
-            try:
-                cas_response = cas_client.perform_service_validate(
-                    ticket=ticket,
-                    service_url=app_login_url,
-                    )              
-            except:
-                # CAS server is currently broken, try again later.
-                return redirect(url_for('root'))
-            if cas_response and cas_response.success:
-                session['logged-in'] = True
-                pgtiou= cas_response.data['proxyGrantingTicket']
-                return redirect(url_for('proxy', pgtiou=pgtiou))
-        if "logged-in" in session and session["logged-in"]:
-            del(session['logged-in'])
-        if "student_id" in session:
-            # student_idがセッションにありかつログインページへ来るのは
-            # 長時間放置での接続切れまたは意図的な移動
-            # ログイン後のページとして遷移元ページを指定しておく
-            redirect_page = request.args.get('page')
-            if not redirect_page:
-                redirect_page =""
-            redirect_pages[session['student_id']] = redirect_page
-        cas_login_url = cas_client.get_login_url(service_url=app_login_url)
-        return redirect(cas_login_url)
-    elif request.method == 'POST':
-        pgt = request.form
-        return ''
+    ticket = request.args.get('ticket')
+    if ticket:
+        # ticketのvalidateを行う
+        try:
+            cas_response = cas_client.perform_service_validate(
+                ticket=ticket,
+                service_url=app_login_url,
+                )              
+        except:
+            # CAS server is currently broken, try again later.
+            return redirect(url_for('root'))
+        if cas_response and cas_response.success:
+            session['logged-in'] = True
+            pgtiou= cas_response.data['proxyGrantingTicket']
+            return redirect(url_for('proxy', pgtiou=pgtiou))
+    if "logged-in" in session and session["logged-in"]:
+        del(session['logged-in'])
+    if "student_id" in session:
+        # student_idがセッションにありかつログインページへ来るのは
+        # 長時間放置での接続切れまたは意図的な移動
+        # ログイン後のページとして遷移元ページを指定しておく
+        redirect_page = request.args.get('page')
+        if not redirect_page:
+            redirect_page =""
+        redirect_pages[session['student_id']] = redirect_page
+    cas_login_url = cas_client.get_login_url(service_url=app_login_url)
+    return redirect(cas_login_url)
 
 @app.route('/login/proxy/<pgtiou>', methods=['GET'])
 def proxy(pgtiou=None):
@@ -449,16 +443,12 @@ def show_already_due():
     else:
         return 'failed'
 
-@app.route('/pgtCallback', methods=['GET', 'POST'])
+@app.route('/pgtCallback', methods=['GET'])
 def pgtCallback():
-    if request.method == 'GET':
-        pgtiou = request.args.get('pgtIou')
-        pgtid = request.args.get('pgtId')
-        pgtids[pgtiou] = pgtid
-        return ''
-    elif request.method == 'POST':
-        pgt = request.form
-        return ''
+    pgtiou = request.args.get('pgtIou')
+    pgtid = request.args.get('pgtId')
+    pgtids[pgtiou] = pgtid
+    return ''
 
 
 def resourcelist_general(day = None,courseid = None):
