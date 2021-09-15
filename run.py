@@ -186,7 +186,7 @@ def option():
             coursename = get_coursename(courseid=course_id)
             courses_to_be_taken.append({'course_id':course_id,'coursename':coursename,'hide':hide})
         data = setdefault_for_overview(studentid)
-        last_update_subject= str(datetime.datetime.fromtimestamp(studentdata.last_update_subject,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        last_update_subject= str(datetime.datetime.fromtimestamp(studentdata.last_update_subject//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         return flask.render_template(f"option.htm",data=data, show_already_due=studentdata.show_already_due, last_update_subject = last_update_subject, courses_to_be_taken=courses_to_be_taken)
     else:
         return redirect(url_for('login'))
@@ -298,7 +298,7 @@ def overview():
         if studentdata == None:
             # なければstudentの記録がないことになるので一度ログインへ
             return redirect(url_for('login'))
-        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         logging.debug(f"last update = {last_update}\npage = overview")
         data = setdefault_for_overview(studentid)
         tasks = get_tasklist(studentid, show_only_unfinished=1, mode=1)
@@ -459,7 +459,7 @@ def resourcelist_general(day = None,courseid = None):
         if studentdata == None:
             # なければstudentの記録がないことになるので一度ログインへ
             return redirect(url_for('login'))
-        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         logging.debug(f"last update = {last_update}\npage = resourcelist")
         numofcourses = 0
         courses = get_courses_to_be_taken(studentid)
@@ -488,7 +488,7 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
         if studentdata == None:
             # なければstudentの記録がないことになるので一度ログインへ
             return redirect(url_for('login'))
-        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         logging.debug(f"last update = {last_update}\npage = tasklist")
         if courseid != None:
             tasks = get_tasklist(studentid,courseid=courseid)
