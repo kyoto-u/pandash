@@ -213,7 +213,7 @@ async def async_get_content(site_id, ses):
         return {'content_collection':[]}
 
 async def async_get_quiz(site_id, ses):
-    url = f"{api_url}/sam_pub/content/{site_id}.json"
+    url = f"{api_url}/sam_pub/context/{site_id}.json"
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, ses.get, url)
     try:
