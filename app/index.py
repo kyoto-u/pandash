@@ -478,6 +478,6 @@ def timejudge(task, max_time_left):
     else:
         u_num = 6
     for i in range(u_num):
-        if units[i] in time_left:
+        if units[i] in time_left["msg"]:
             return True
     return False
