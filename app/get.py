@@ -155,14 +155,14 @@ def get_quizzes(studentid, show_only_unfinished,courseid, day, mode):
     tasks = []
     for data in enrollments:
         # 各quizに対してquizの詳細データ、courseの詳細データがあるか探す
-        quizdata = [i for i in quizdata if i.quiz_id == data.quiz_id]
+        qizdata = [i for i in quizdata if i.quiz_id == data.quiz_id]
         crsdata = [i for i in coursedata if i.course_id == quizdata[0].course_id]
         
         if courseid != None:
             # courseidでの絞り込み
-            if courseid != quizdata[0].course_id:
+            if courseid != qizdata[0].course_id:
                 continue
-        if quizdata[0].course_id not in courseids:
+        if qizdata[0].course_id not in courseids:
             # courseが何らかの理由（開講期や個人設定）で取得対象外であった場合は追加しない
             continue
         if day != None:
@@ -172,17 +172,17 @@ def get_quizzes(studentid, show_only_unfinished,courseid, day, mode):
         # 注：taskの構造はassignmentと構造をそろえているために一部の名称が不適切である
         task = {}
         task["status"] = data.status
-        task["taskname"] = quizdata[0].title
+        task["taskname"] = qizdata[0].title
         task["assignmentid"] = data.quiz_id
-        task["deadline"] = quizdata[0].limit_at
-        task["time_left"] = TimeLeft(quizdata[0].time_ms).time_left_to_str()
+        task["deadline"] = qizdata[0].limit_at
+        task["time_left"] = TimeLeft(qizdata[0].time_ms).time_left_to_str()
         task["clicked"] = data.clicked
         task["quiz"] = True
         if task["time_left"]["msg"] == "":
             task["status"]=Status.AlreadyDue.value
         if mode == 1:
             # overviewのtooltipsに使用
-            task["instructions"] = quizdata[0].instructions
+            task["instructions"] = qizdata[0].instructions
 
         task["subject"] = crsdata[0].coursename
         # 下のtool_idは課題ツールのidなので使いません

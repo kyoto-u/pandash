@@ -97,7 +97,7 @@ def get_course_id_from_site_api(site, student_id):
     site_collection = site.get('site_collection')
     site_list = []
     for s in site_collection:
-        if s.get('joinerRole') != "Student":
+        if s.get('joinerRole') != "Student" and s.get('joinerRole') != None:
             continue
         user_site_id = s.get('id')
         site_id = user_site_id.replace(f'{student_id}::site:','')
@@ -153,11 +153,14 @@ def get_quizzes_from_api(quizzes, course_id, student_id):
     sq_list = []
     quiz_collection = quizzes.get("sam_pub_collection")
     for content in quiz_collection:
-        quiz_id = content.get('publishedAssessmentId')
+        quiz_id = str(content.get('publishedAssessmentId'))
         # とりあえずsite_id
         url = content.get('ownerSiteId')
         title = content.get('entityTitle')
         time_ms = content.get('dueDate') # millisecond
+        if time_ms==None:
+            # 期限のないものは2099-12-31T23:59:59Zとなるよう設定
+            time_ms=4102412399000				
         modifieddate = int(content.get('lastModifiedDate')) #millisecond
         limit_at = datetime.datetime.fromtimestamp(time_ms//1000).strftime("%Y-%m-%dT%H:%M:%SZ")
         quiz_list.append({'course_id':course_id, 'quiz_id': quiz_id, 'url':url, 'title': title, \
