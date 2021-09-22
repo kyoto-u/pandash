@@ -130,7 +130,7 @@ def proxyticket():
     return flask.redirect(url_for('login_failed'))
 
 
-@app.route('/logout')
+@app.route('/_logout')
 def logout():
     if "logged-in" in session and session["logged-in"]:
         del(session['logged-in'])
