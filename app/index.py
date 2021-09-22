@@ -82,7 +82,7 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
                 get_sites["student_courses"].append(get_site["student_course"])
                 get_resources["resources"].extend(get_resource["resources"])
                 get_resources["student_resources"].extend(get_resource["student_resources"])
-                get_quizzes["quizzes"].extend(get_quiz["quiz"])
+                get_quizzes["quizzes"].extend(get_quiz["quizzes"])
                 get_quizzes["student_quizzes"].extend(get_quiz["student_quizzes"])
             index += 1
         # student_id       student_id
