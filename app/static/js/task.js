@@ -5,6 +5,14 @@ $(function() {
     function window_load(){
       var display_width = $(window).width();
       $('a.task_link').on('click', function(){
+        var quiz = $(this).attr('name');
+        console.log(quiz)
+        var post_url = ''
+        if (quiz=="True"){
+          post_url = '/quiz_clicked';
+        } else if (quiz=="False"){
+          post_url = '/task_clicked';
+        }
         var task_ids = new Array();
         var task_id = $(this).parent().parent().attr('id');
         $(this).parent().parent().find('i').remove();
@@ -12,7 +20,7 @@ $(function() {
         var task_ids = JSON.stringify({"task_ids":task_ids});
         $.ajax({
             type: 'POST',
-            url: '/task_clicked',
+            url: post_url,
             data: task_ids,
             contentType: 'application/json',
             success: function(response){

@@ -316,12 +316,18 @@ def update_student_show_already_due(student_id,show_already_due=0):
     session.commit()
     return
 
-def update_task_clicked_status(studentid, taskids:list):
+def update_task_clicked_status(studentid, taskids:list, mode="task"):
     update_list = []
-    for t_id in taskids:
-        sa_id = f'{studentid}:{t_id}'
-        update_list.append({"sa_id":sa_id, "clicked":1})
-    session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
+    if mode == "task":
+        for t_id in taskids:
+            sa_id = f'{studentid}:{t_id}'
+            update_list.append({"sa_id":sa_id, "clicked":1})
+        session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
+    elif mode == "quiz":
+        for t_id in taskids:
+            sq_id = f'{studentid}:{t_id}'
+            update_list.append({"sq_id":sq_id, "clicked":1})
+            session.bulk_update_mappings(studentquiz.Student_Quiz, update_list)
     session.commit() 
     return
 

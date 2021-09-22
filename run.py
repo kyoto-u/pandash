@@ -417,7 +417,17 @@ def task_clicked():
     studentid = session.get('student_id')
     if studentid:
         task_ids = request.json['task_ids']
-        update_task_clicked_status(studentid, task_ids)
+        update_task_clicked_status(studentid, task_ids, mode="task")
+        return 'success'
+    else:
+        return 'failed'
+
+@app.route('/quiz_clicked', methods=['POST'])
+def quiz_clicked():
+    studentid = session.get('student_id')
+    if studentid:
+        task_ids = request.json['task_ids']
+        update_task_clicked_status(studentid, task_ids, mode="quiz")
         return 'success'
     else:
         return 'failed'
