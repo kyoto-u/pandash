@@ -156,7 +156,7 @@ def get_quizzes(studentid, show_only_unfinished,courseid, day, mode):
     for data in enrollments:
         # 各quizに対してquizの詳細データ、courseの詳細データがあるか探す
         qizdata = [i for i in quizdata if i.quiz_id == data.quiz_id]
-        crsdata = [i for i in coursedata if i.course_id == quizdata[0].course_id]
+        crsdata = [i for i in coursedata if i.course_id == qizdata[0].course_id]
         
         if courseid != None:
             # courseidでの絞り込み
