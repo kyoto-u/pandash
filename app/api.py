@@ -15,9 +15,9 @@ def get_assignments_from_api(assignments, student_id):
         assignment_id = assignment.get('id')
         url = assignment.get('entityURL')
         title = assignment.get('title')[:80]
-        limit_at = assignment.get('dueTimeString')
         instructions = assignment.get('instructions')[:100]
         time_ms = assignment.get('dueTime').get('epochSecond')*1000 #millisecond
+        limit_at = datetime.datetime.fromtimestamp(time_ms//1000).strftime("%Y-%m-%dT%H:%M:%SZ")
         course_id = assignment.get('context')
         modifieddate = assignment.get('timeLastModified').get('epochSecond')*1000 #millisecond
         status = assignment.get('status')
