@@ -185,15 +185,14 @@ def get_quizzes(studentid, show_only_unfinished,courseid, day, mode):
             task["instructions"] = qizdata[0].instructions
 
         task["subject"] = crsdata[0].coursename
-        # 下のtool_idは課題ツールのidなので使いません
-        task["tool_id"] = crsdata[0].page_id
+        task["tool_id"] = crsdata[0].quiz_page_id
         task["course_id"] = crsdata[0].course_id
         if mode == 1:
             task["classschedule"] = crsdata[0].classschedule
         if show_only_unfinished==1:
             if task["status"]!=Status.NotYet.value:
                 continue
-        task["assignment_url"] = f'{panda_url}/portal/site/{task["course_id"]}'
+        task["assignment_url"] = f'{panda_url}/portal/site/{task["course_id"]}/tool-reset/{task["tool_id"]}'
         tasks.append(task)
     return tasks
 

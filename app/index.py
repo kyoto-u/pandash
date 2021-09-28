@@ -77,7 +77,8 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
             get_quiz = get_quizzes_from_api(quizzes[index],courseid,student_id)
             get_site = get_course_from_api(sites[index], student_id)
             if get_site:
-                get_site["course"]["page_id"] = get_page_from_api(pages[index])
+                get_site["course"]["page_id"] = get_page_from_api(pages[index],"assignment")
+                get_site["course"]["quiz_page_id"] = get_page_from_api(pages[index],"quiz")
                 get_sites["courses"].append(get_site["course"])
                 get_sites["student_courses"].append(get_site["student_course"])
                 get_resources["resources"].extend(get_resource["resources"])

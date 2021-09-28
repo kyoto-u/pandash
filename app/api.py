@@ -119,13 +119,18 @@ def get_site_json(ses):
     except json.JSONDecodeError as e:
         return {"site_collection": []}
 
-def get_page_from_api(pages):
+def get_page_from_api(pages,mode):
     page_id = ""
     for page in pages:
         title = page.get('title')
-        if re.search('課題', title) or re.search('assignment', title):
-            page_id = page.get('tools')[0].get('id')
-            break
+        if mode == "assignment":
+            if re.search('課題', title) or re.search('assignment', title):
+                page_id = page.get('tools')[0].get('id')
+                break
+        elif mode == "quiz":
+            if re.search('テスト・クイズ', title) or re.search('Quizzes', title):
+                page_id = page.get('tools')[0].get('id')
+                break
     return page_id
 
 def get_resources_from_api(resources, course_id, student_id):
