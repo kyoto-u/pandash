@@ -6,7 +6,6 @@ $(function() {
       var display_width = $(window).width();
       $('a.task_link').on('click', function(){
         var quiz = $(this).attr('name');
-        console.log(quiz)
         var post_url = ''
         if (quiz=="True"){
           post_url = '/quiz_clicked';
