@@ -157,9 +157,8 @@ footer {
 
 
 #finished_taskslist{
-    min-width: 200px;
-    max-height: 200px;
-    overflow-y: scroll;
+    overflow-y:hidden;
+    overflow-x: visible;
 }
 
 .finished-list-item{
