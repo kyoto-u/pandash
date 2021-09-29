@@ -133,6 +133,9 @@ def get_resources_from_api(resources, course_id, student_id):
     sr_list = []
     content_collection = resources.get("content_collection")
     for content in content_collection:
+        file_type = content.get('type')
+        if file_type == "collection":
+            continue
         resource_author = content.get('author')
         resource_container = content.get('container')
         md = str(int(content.get('modifiedDate'))//1000)

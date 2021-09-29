@@ -203,21 +203,24 @@ def order_status(status):
     else:
         return 3
 
+def split_container(container):
+    container_splited = container.split('/')
+    del container_splited[-1]
+    for i in range(3):
+        del container_splited[0]
+    return container_splited
+
 def resource_arrange(resource_list:list, coursename:str, courseid):
     course = {"folders":[],"files":[],"name":coursename}
     folderlist = []
     html = ""
     for r in resource_list:
-        container = r['container']
-        container_spilt = container.split('/')
-        del container_spilt[-1]
-        for i in range(3):
-            del container_spilt[0]
+        container_splited = split_container(r['container'])
         for folder in folderlist:
-            if folder == container_spilt:
+            if folder == container_splited:
                 break
         else:
-            folderlist.append(container_spilt)
+            folderlist.append(container_splited)
     for foldername in folderlist:
         list_f = course["folders"]
         str_place = 0
@@ -254,12 +257,8 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
             folderindex += 1
     for r in resource_list:
         list_f = course["folders"]
-        container = r['container']
-        container_spilt = container.split('/')
-        del container_spilt[-1]
-        for i in range(3):
-            del container_spilt[0]
-        folder_id = '/'.join(container_spilt)
+        container_splited = split_container(r['container'])
+        folder_id = '/'.join(container_splited)
         folder = re.search(f'<li id="{folder_id}">',html)
         search_num = 0
         if folder:
