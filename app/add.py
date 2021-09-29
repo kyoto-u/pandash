@@ -327,18 +327,24 @@ def update_task_clicked_status(studentid, taskids:list, mode="task"):
         for t_id in taskids:
             sq_id = f'{studentid}:{t_id}'
             update_list.append({"sq_id":sq_id, "clicked":1})
-            session.bulk_update_mappings(studentquiz.Student_Quiz, update_list)
+        session.bulk_update_mappings(studentquiz.Student_Quiz, update_list)
     session.commit() 
     return
 
-def update_task_status(studentid, taskids: list, mode=0):
+def update_task_status(studentid, taskids: list, mode=0, taskmode="task"):
     update_list = []
     status = Status.NotYet.value
     if mode==0:
         status = Status.Done.value
-    for t_id in taskids:
-        sa_id = f'{studentid}:{t_id}'
-        update_list.append({"sa_id":sa_id, "status":status})
-    session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
+    if taskmode == "task":
+        for t_id in taskids:
+            sa_id = f'{studentid}:{t_id}'
+            update_list.append({"sa_id":sa_id, "status":status})
+        session.bulk_update_mappings(studentassignment.Student_Assignment, update_list)
+    elif taskmode == "quiz":
+        for t_id in taskids:
+            sq_id = f'{studentid}:{t_id}'
+            update_list.append({"sq_id":sq_id, "status":status})
+        session.bulk_update_mappings(studentquiz.Student_Quiz, update_list)
     session.commit()
     return

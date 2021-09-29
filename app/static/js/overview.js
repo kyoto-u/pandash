@@ -40,6 +40,13 @@ $(function () {
         drop: function (event, ui) {
           dr_text = ui.draggable.find("a").text();
           dr_id = ui.draggable.find("a").attr("href");
+          quiz = ui.draggable.find("a").attr("name");
+          var post_url = ''
+          if (quiz=="True"){
+            post_url = '/quiz_finish';
+          } else if (quiz=="False"){
+            post_url = '/task_finish'
+          }
           dr_sub = ui.draggable.parent().find('.course').text();
           if (dr_sub.length == 0) {
             dr_sub = ui.draggable.parent().parent().find('.othcourse').text();
@@ -60,6 +67,7 @@ $(function () {
           add_button.append(add_i);
           add_a.attr("href", dr_id);
           add_a.attr("id", assignment_id + "new");
+          add_a.attr("name", quiz)
           add_a.html(dr_text);
           add_li.html(dr_sub);
           add_li.append($('<br>'));
@@ -74,7 +82,7 @@ $(function () {
           var task_id = JSON.stringify({ "task_id": a_ids });
           $.ajax({
             type: "POST",
-            url: "/task_finish",
+            url: post_url,
             data: task_id,
             contentType: "application/json",
             success: function (response) {
@@ -102,6 +110,13 @@ $(function () {
           $('.new_task_btn').on('click', function () {
             dr_id = $(this).parent().parent().find('li').find('a').attr('href');
             new_assignment_id = $(this).parent().parent().find('li').find('a').attr('id');
+            quiz = $(this).parent().parent().find('li').find('a').attr('name');
+            var post_url = ''
+            if (quiz=="True"){
+              post_url = '/quiz_unfinish';
+            } else if (quiz=="False"){
+              post_url = '/task_unfinish'
+            }
             assignment_id = new_assignment_id.slice(0, -3);
             old_task = $('#' + assignment_id);
             old_task.css("display", "table");
@@ -112,7 +127,7 @@ $(function () {
             var task_id = JSON.stringify({ "task_id": a_ids });
             $.ajax({
               type: 'POST',
-              url: '/task_unfinish',
+              url: post_url,
               data: task_id,
               contentType: 'application/json',
               success: function (response) {
@@ -153,6 +168,13 @@ $(function () {
           dr_text = ui.draggable.find('a').text();
           dr_id = ui.draggable.find('a').attr('href');
           new_assignment_id = ui.draggable.find('a').attr('id');
+          quiz = ui.draggable.find('a').attr('name');
+          var post_url = ''
+          if (quiz=="True"){
+            post_url = '/quiz_unfinish';
+          } else if (quiz=="False"){
+            post_url = '/task_unfinish'
+          }
           assignment_id = new_assignment_id.slice(0, -3);
           old_task = $('#' + assignment_id);
           old_task.css("display", "block");
@@ -162,7 +184,7 @@ $(function () {
           var task_id = JSON.stringify({ "task_id": a_ids });
           $.ajax({
             type: 'POST',
-            url: '/task_unfinish',
+            url: post_url,
             data: task_id,
             contentType: 'application/json',
             success: function (response) {

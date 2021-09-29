@@ -412,6 +412,26 @@ def task_unfinish():
     else:
         return 'failed'
 
+@app.route('/quiz_finish', methods=['POST'])
+def quiz_finish():
+    studentid = session.get('student_id')
+    if studentid:
+        task_id = request.json['task_id']
+        update_task_status(studentid, task_id, mode=0, taskmode="quiz")
+        return 'success'
+    else:
+        return 'failed'
+
+@app.route('/quiz_unfinish', methods=['POST'])
+def quiz_unfinish():
+    studentid = session.get('student_id')
+    if studentid:
+        task_id = request.json['task_id']
+        update_task_status(studentid, task_id, mode=1, taskmode="quiz")
+        return 'success'
+    else:
+        return 'failed'
+
 @app.route('/task_clicked', methods=['POST'])
 def task_clicked():
     studentid = session.get('student_id')
