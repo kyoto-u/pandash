@@ -24,6 +24,9 @@
           <!--時間割検索機能-->
           <button id="timesearchbutton" type="button" class="btn btn-dark text-nowrap ml-sm-5 ml-md-1"
             data-toggle="modal" data-target="#modal_timeboard_select">時間割で検索</button>
+          {% if request.path != '/resourcelist' %}
+          <a type="button" href="/resourcelist" id="search_clear" type="button" class="btn btn-light mt-5 text-nowrap">条件クリア</a>
+          {% endif %}
         </div>
       </div>
     </div>
