@@ -162,6 +162,14 @@ def faq():
 def update():
     return flask.render_template("update.htm")
 
+@app.route('/privacypolicy')
+def privacypolicy():
+    return flask.render_template("privacypolicy.htm")
+
+@app.route('/what_is_pandash')
+def what_is_pandash():
+    return flask.render_template("what_is_pandash.htm")
+
 @app.route('/_tutorial')
 def tutorial():
     return flask.render_template("_tutorial.htm")
