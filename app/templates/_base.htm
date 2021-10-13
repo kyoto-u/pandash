@@ -150,7 +150,7 @@
           <ul class="navbar-nav mr-auto toggle_lefts" style="display: flex; flex-direction: row;">　
             <li class="nav-item mr-1">
               <a class="btn btn-info navbtns  text-nowrap
-                          {% if '/tasklist' in request.path  %}
+                          {% if '/tasklist' in request.path or '/overview' in request.path  %}
                           active
                           {% endif %}
                           " href="/tasklist" role="button">
