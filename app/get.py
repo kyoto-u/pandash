@@ -5,6 +5,7 @@ from .models import student, assignment, course, studentassignment, studentcours
 from .settings import SHOW_YEAR_SEMESTER, session, panda_url
 from .original_classes import TimeLeft ,Status
 from typing import List
+from pprint import pprint
 
 def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
     if show_only_unfinished == False:
@@ -206,19 +207,19 @@ def get_resource_list(studentid, course_id=None, day=None):
     resourcedata = session.query(resource.Resource).filter(
         resource.Resource.resource_url.in_(resource_urls)).all()
     course_to_be_taken=get_courses_to_be_taken(studentid)
-    courseids = [i.course_id for i in course_to_be_taken]
+    sorted_courseids = sort_courses_by_classschedule(course_to_be_taken)
     coursedata = session.query(course.Course).filter(
-        course.Course.course_id.in_(courseids)).all()
-    resource_list={i:[] for i in courseids}
+        course.Course.course_id.in_(sorted_courseids)).all()
+    resource_list={i:[] for i in sorted_courseids}
 
     for data in srs:
         rscdata = [i for i in resourcedata if i.resource_url == data.resource_url]
         crsdata = [i for i in coursedata if i.course_id == rscdata[0].course_id]
-        
+
         if course_id != None:
             if course_id != rscdata[0].course_id:
                 continue
-        if rscdata[0].course_id not in courseids:
+        if rscdata[0].course_id not in sorted_courseids:
             continue
         if day !=None:
             if day not in crsdata[0].classschedule:
@@ -231,6 +232,18 @@ def get_resource_list(studentid, course_id=None, day=None):
         resource_dict["status"] = data.status
         resource_list[rscdata[0].course_id].append(resource_dict)
     return resource_list
+
+def sort_courses_by_classschedule(course_to_be_taken, mode="course_id"):
+    courses = [(i.course_id,i.coursename,i.classschedule) for i in course_to_be_taken]
+    order = ['mon1','mon2','mon3','mon4','mon5','tue1','tue2','tue3','tue4','tue5','wed1','wed2','wed3','wed4','wed5',\
+        'thu1','thu2','thu3','thu4','thu5','fri1','fri2','fri3','fri4','fri5','oth']
+    sorted_courses = sorted(courses,key=lambda x:order.index(x[2]))
+    if mode == "course_id":
+        return [i[0] for i in sorted_courses]
+    elif mode == "course_id_name":
+        return [(i[0],i[1]) for i in sorted_courses]
+    else:
+        return []
 
 def get_student(studentid: str) -> student.Student:
     """

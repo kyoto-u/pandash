@@ -66,10 +66,11 @@
     <div class="col-12">
       <!-- <span><i class="far fa-folder">[2020前期月5]ILASセミナーのリソース</i></span> -->
 
-      {% if numofcourses < 3 %} <div class="card-columns" style="columns:{{numofcourses}}" id="card-columns">
-        {% else %}
-        <div class="card-columns" style="columns:3" id="card-columns">
-          {% endif %}
+      {% if numofcourses < 3 %} 
+        <div class="card-columns" style="columns:{{numofcourses}}" id="card-columns">
+      {% else %}
+        <div class="card-columns row row-cols-lg-3 row-cols-md-3 row-cols-sm-3 row-cols-xs-1" id="card-columns">
+      {% endif %}
           {{ html | safe}}
 
           <script>
@@ -84,4 +85,5 @@
 </div>
 <!-- <script src="{{ url_for('static', filename='js/resource.js') }}"></script> -->
 <script type="text/javascript" src="/static/js/resource.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/resource_card.css') }}">
 {% endblock %}

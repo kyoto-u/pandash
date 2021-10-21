@@ -1,0 +1,7 @@
+.card-columns{
+    column-gap: 0rem;
+}
+
+.card{
+    border: 0.2px solid rgba(0,32,120,0.2);
+}
