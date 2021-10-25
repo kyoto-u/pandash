@@ -82,7 +82,7 @@ def proxyticket():
     if ticket:
         # ticketがあるのでPandAのAPIを利用できる
         ses = requests.Session()
-        api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
+        api_response = ses.get(f"{proxy_callback}?ticket={ticket}", verify=False)
         if api_response.status_code == 200:
             user=get_user_json(ses)
             student_id = user.get('id')

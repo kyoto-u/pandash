@@ -105,7 +105,7 @@ def get_course_id_from_site_api(site, student_id):
     return {"student_id":student_id, "site_list":site_list}
 
 def get_membership_json(ses):
-    res = ses.get(f"{api_url}/membership.json")
+    res = ses.get(f"{api_url}/membership.json", verify=False)
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -113,7 +113,7 @@ def get_membership_json(ses):
 
 # get_membership_json(ses) の代わり
 def get_site_json(ses):
-    res = ses.get(f"{api_url}/site.json?_limit=2000")
+    res = ses.get(f"{api_url}/site.json?_limit=2000", verify=False)
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -191,14 +191,14 @@ def get_user_info_from_api(user):
     return {"student_id":student_id,"fullname":fullname}
 
 def get_user_json(ses):
-    res = ses.get(f"{api_url}/user/current.json")
+    res = ses.get(f"{api_url}/user/current.json", verify=False)
     try:
         return res.json()
     except json.JSONDecodeError as e:
         return {}
 
 def get_session_json(ses):
-    res = ses.get(f"{api_url}/session/current.json")
+    res = ses.get(f"{api_url}/session/current.json", verify=False)
     try:
         return res.json()
     except json.JSONDecodeError as e:
