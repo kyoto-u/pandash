@@ -208,7 +208,7 @@ def get_session_json(ses):
 async def async_get_assignments(ses):
     url = f"{api_url}/assignment/my.json"
     loop = asyncio.get_event_loop()
-    res = await loop.run_in_executor(None, ses.get, url)
+    res = await loop.run_in_executor(None, ses.get, url, verify=False)
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -217,7 +217,7 @@ async def async_get_assignments(ses):
 async def async_get_content(site_id, ses):
     url = f"{api_url}/content/site/{site_id}.json"
     loop = asyncio.get_event_loop()
-    res = await loop.run_in_executor(None, ses.get, url)
+    res = await loop.run_in_executor(None, ses.get, url, verify=False)
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -226,7 +226,7 @@ async def async_get_content(site_id, ses):
 async def async_get_quiz(site_id, ses):
     url = f"{api_url}/sam_pub/context/{site_id}.json"
     loop = asyncio.get_event_loop()
-    res = await loop.run_in_executor(None, ses.get, url)
+    res = await loop.run_in_executor(None, ses.get, url, verify=False)
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -235,7 +235,7 @@ async def async_get_quiz(site_id, ses):
 async def async_get_site(site_id, ses):
     url = f"{api_url}/site/{site_id}.json"
     loop = asyncio.get_event_loop()
-    res = await loop.run_in_executor(None, ses.get, url)
+    res = await loop.run_in_executor(None, ses.get, url, verify=False)
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -244,7 +244,7 @@ async def async_get_site(site_id, ses):
 async def async_get_site_pages(site_id, ses):
     url = f"{api_url}/site/{site_id}/pages.json"
     loop = asyncio.get_event_loop()
-    res = await loop.run_in_executor(None, ses.get, url)
+    res = await loop.run_in_executor(None, ses.get, url, verify=False)
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -253,7 +253,7 @@ async def async_get_site_pages(site_id, ses):
 async def async_get_user_info(ses):
     url = f"{api_url}/user/current.json"
     loop = asyncio.get_event_loop()
-    res = await loop.run_in_executor(None, ses.get, url)
+    res = await loop.run_in_executor(None, ses.get, url, verify=False)
     try:
         return res.json()
     except json.JSONDecodeError as e:
