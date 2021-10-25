@@ -233,14 +233,7 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
             isExist = False
             tag_class = "fas fa-folder-plus"
             if folder_num == 1:
-                # 2021- みたいなフォルダ
-                # ここで一番親追加しとけばよくね
                 tag_class = "far fa-folder first"
-                # hold_on = """
-                # <i class="far fa-folder">
-                #     <a href="/resourcelist/course/{courseid}">{coursename}</a>
-                # </i>
-                # """
             for lf in list_f:
                 if lf["name"] == f:
                     list_f = list_f[index]["folders"]
