@@ -82,7 +82,7 @@ def proxyticket():
     if ticket:
         # ticketがあるのでPandAのAPIを利用できる
         ses = requests.Session()
-        api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
+        api_response = ses.get(f"{proxy_callback}?ticket={ticket}", verify=False)
         if api_response.status_code == 200:
             user=get_user_json(ses)
             student_id = user.get('id')
@@ -500,13 +500,13 @@ def resourcelist_general(day = None,courseid = None):
         last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         logging.debug(f"last update = {last_update}\npage = resourcelist")
         numofcourses = 0
-        courses = get_courses_to_be_taken(studentid)
+        courses = sort_courses_by_classschedule(get_courses_to_be_taken(studentid),mode='course_id_name')
         html = ""
         resource_list = get_resource_list(studentid, course_id = courseid, day=day)
         for c in courses:
-            if resource_list[c.course_id] != []:
+            if resource_list[c[0]] != []:
                 numofcourses += 1
-                html += resource_arrange(resource_list[c.course_id], c.coursename, c.course_id)
+                html += resource_arrange(resource_list[c[0]], c[1], c[0])
         data = setdefault_for_overview(studentid, mode='resourcelist')
 
         if courseid != None:
