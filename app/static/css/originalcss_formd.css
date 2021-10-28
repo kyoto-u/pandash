@@ -20,7 +20,6 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding-top:200px;
 }
 
 #wrapper {
@@ -103,7 +102,7 @@ th,td{
 }
 
 body{
-  padding-top: 140px;
+
 }
 
 #overviewtable > thead > tr {

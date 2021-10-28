@@ -132,13 +132,12 @@
 <body>
   <header>
     <!-- ロゴとサイト名-->
-    <div class="fixed-top logos">
+    <div class="logos">
       <div class="container-fluid">
         <div class="row">
           <nav class="navbar bg-light" id="logonav" style="width:100vw">
             <a href="/tasklist" class="navbar-brand">
-              <img src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ" width="175px"
-                height="60px">
+              <img src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ" height="50">
             </a>
             <a class="btn btn-dark" href="/_logout" data-toggle="tooltip" title="ログアウトします"><small>ログアウト</small></a>
           </nav>
@@ -217,7 +216,7 @@
     </div>
   </header>
 
-  <div id="wrapper">
+  <div id="wrapper" class="mt-5">
     <main id="contents">
       <div id="bodycontent">
         {% block bodycontent %}

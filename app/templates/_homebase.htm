@@ -20,12 +20,12 @@
 </head>
 
 <body>
-    <div class="fixed-top logos">
+    <div class="logos">
         <nav class="navbar navbar-light bg-light" id="logonav">
             <div class="row">
                 <a href="/welcome" class=navbar-brand>
                     <img id="siteface" src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ"
-                        width="175px" height="60px">
+                        height="50">
                 </a>
             </div>
         </nav>
@@ -65,7 +65,7 @@
             {% include "home_pagetransition.htm" %}
         </div>
     </div>
-    <div class="col-12">
+    <div class="col-12 pt-5">
         {% block homebodycontent %}
         Replace This
         {% endblock %}
