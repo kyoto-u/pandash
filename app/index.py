@@ -233,7 +233,7 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
             isExist = False
             tag_class = "fas fa-folder-plus"
             if folder_num == 1:
-                tag_class = "far fa-folder"
+                tag_class = "far fa-folder first"
             for lf in list_f:
                 if lf["name"] == f:
                     list_f = list_f[index]["folders"]
@@ -315,13 +315,15 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
     # html = f"""<span><i class="far fa-folder" style="font-size:medium;">{coursename}</i></span>
     #         """ + html
     # html = f'<li class="list-group-item">{coursename}<ul>' + html + '</ul></li>'
+    html_deleted_courseid = re.sub(r'<li id=.*>.*</i>','<div>',html,1)
+    html_deleted_courseid = re.sub(r'</li>$', '</div>', html_deleted_courseid, 1)
     html = f"""
         <div class="card">
             <div class="card-body ressubs">
         <span><i class="far fa-folder">
             <a href="/resourcelist/course/{courseid}">{coursename}</a>
         </i><span>
-        """ + html + "</div></div>"
+        """ + html_deleted_courseid + "</div></div>"
     return html
 
 def setdefault_for_overview(studentid, mode='tasklist'):
