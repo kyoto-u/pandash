@@ -315,15 +315,15 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
     # html = f"""<span><i class="far fa-folder" style="font-size:medium;">{coursename}</i></span>
     #         """ + html
     # html = f'<li class="list-group-item">{coursename}<ul>' + html + '</ul></li>'
-    coursename_html = re.sub('<i class="far fa-folder first">.*</i>',f'''
-        <span><i class="far fa-folder">
-            <a href="/resourcelist/course/{courseid}">{coursename}</a>
-        </i><span>
-    ''', html)
+    html_deleted_courseid = re.sub(r'<li id=.*>.*</i>','<div>',html,1)
+    html_deleted_courseid = re.sub(r'</li>$', '</div>', html_deleted_courseid, 1)
     html = f"""
         <div class="card">
             <div class="card-body ressubs">
-        """ + coursename_html + "</div></div>"
+        <span><i class="far fa-folder">
+            <a href="/resourcelist/course/{courseid}">{coursename}</a>
+        </i><span>
+        """ + html_deleted_courseid + "</div></div>"
     return html
 
 def setdefault_for_overview(studentid, mode='tasklist'):
