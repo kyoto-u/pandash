@@ -3,6 +3,7 @@ from app.settings import app_url,app_logout_url,app_login_url,proxy_callback
 from app.settings import cas_client
 import flask
 from app.index import *
+from app.decorators import login_required, check_admin
 from pprint import pprint
 from flask import redirect, request, session, url_for
 import logging
@@ -597,6 +598,12 @@ def forum():
                 return flask.render_template('ContactUs.htm', error=True, data=data)
     else:
         return redirect('/login')
+
+# 管理画面
+@app.route('/manage')
+@check_admin
+def config():
+    return "manage pandash!"
 
 # 403
 @app.route('/loginfailed')
