@@ -300,11 +300,11 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
             status_class = "downloaded"
             resource_title = "このファイルを再ダウンロードする"
         add_html = f"""
-            <li>
+            <li class="d-flex">
                 <div class="d-inline-flex">
                     <div class="form-check">
                         <label class="form-check-label" for="{r["resource_url"]}">
-                                <a href="{r["resource_url"]}" download="{r["title"]}" data-container="body" data-toggle="tooltip" title={resource_title} name="{r["resource_url"]}" target="{target}" class="resource {status_class}">{r["title"]}</a>                     
+                                <a href="{r["resource_url"]}" download="{r["title"]}" data-container="body" data-toggle="tooltip" title={resource_title} name="{r["resource_url"]}" target="{target}" class="resource {status_class}">・{r["title"]}</a>                     
                         </label>
                     </div>
                 </div>
