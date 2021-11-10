@@ -3,7 +3,7 @@ from app.settings import app_url,app_logout_url,app_login_url,proxy_callback
 from app.settings import cas_client
 import flask
 from app.index import *
-from app.decorators import login_required, check_admin
+from app.decorators import check_oa, login_required, check_admin
 from pprint import pprint
 from flask import redirect, request, session, url_for
 import logging
@@ -600,10 +600,15 @@ def forum():
         return redirect('/login')
 
 # 管理画面
-@app.route('/manage')
+@app.route('/manage/admin')
 @check_admin
-def config():
+def manage_admin():
     return "manage pandash!"
+
+@app.route('/manage/oa')
+@check_oa
+def manage_oa():
+    return "manage_oa"
 
 # 403
 @app.route('/loginfailed')

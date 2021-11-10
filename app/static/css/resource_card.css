@@ -24,6 +24,7 @@
   }
 
   ul {
-    list-style: square;
+    list-style: none;
     /* list-style-position: outside; */
+    padding-inline-start: 20px;
   }
