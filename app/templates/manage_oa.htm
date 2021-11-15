@@ -62,15 +62,18 @@
 
         <div class="tab-content">
             <div class="tab-pane active" id="dashboard" aria-labelledby="tab-dashboard">
-                利用状況
                 <div class="container-fluid">
-                    <div id="users_thismon">
-                        今月の利用者数：人（先月比：+10）
+                    <div id="users_thismon" class="my-3">
+                        今月の利用者数：300人（先月比：+10）
                     </div>
                     <div id="users_graph">
-                        利用者数の推移
                         <canvas id="graph-canvas"></canvas>
-                        <script type="text/javascript">
+                        {% set d_8 = 50 %}
+                        {% set d_9 = 30 %}
+                        {% set d_10 = 60 %}
+                        {% set d_11 = 80 %}
+                        {% set d_12 = 100 %}
+                        <script>
                             //利用者数の推移グラフの描写
                                 var ctx = document.getElementById("graph-canvas");
                                 var linechart = new Chart(ctx, {
@@ -79,10 +82,27 @@
                                         labels: ["2021年8月", "2021年9月", "2021年10月", "2021年11月", "2021年12月"],
                                         datasets: [{
                                             label: "利用者数",
-                                            data: [10, 30, 60, 90, 130],
-                                            borderColor: "rgba(255,0,0,1)",
+                                            data: [{{d_8}}, {{d_9}}, {{d_10}}, {{d_11}}, {{d_12}}],
+                                            borderColor: "rgba(0,0,100,0.5)",
                                             backgroundColor: "rgba(0,0,0,0)"
                                         }]
+                                    }, 
+                                    options:{
+                                        title:{
+                                            display:true,
+                                            text:"利用者数の推移"
+                                        }, 
+                                        scales: {
+                                            yAxes: [{
+                                                ticks: {
+                                                    suggestedMin: 0,
+                                                    stepSize: 50,
+                                                    callback: function (value, index, values) {
+                                                        return value + '人'
+                                                    }
+                                                }
+                                            }]
+                                        }
                                     }
                                 })
                         </script>

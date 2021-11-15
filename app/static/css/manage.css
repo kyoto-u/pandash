@@ -35,3 +35,7 @@
 #reply_textarea{
     min-height:150px;
 }
+
+#graph-canvas{
+    max-width:500px;
+}
