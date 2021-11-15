@@ -1,5 +1,7 @@
 {% extends "home.htm" %}
 {% block home_homecontent %}
+
+
 <section>
     <h2 class="border-bottom border-dark"><i class="fa fa-info-circle"></i> 不具合修正・更新予定</h2>
     <div id="update_schedule">
@@ -17,11 +19,48 @@
     </div>
     <h2 class="border-bottom border-dark">利用状況</h2>
     <div id="usage_status">
-        <ul>
-            <li>
-                公開準備期間　(2021年10月)
-            </li>
-        </ul>
+        <canvas id="graph-canvas" style="max-width: 500px;"></canvas>
+        {% set d_1 = 0 %}
+        {% set d_2 = 0 %}
+        {% set d_3 = 0 %}
+        {% set d_4 = 0 %}
+        {% set d_5 = 0 %}
+        
+        <script>
+            //利用者数の推移グラフの描写
+            var ctx = document.getElementById("graph-canvas");
+            var linechart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: ["2021年8月", "2021年9月", "2021年10月", "2021年11月", "2021年12月"],
+                    datasets: [{
+                        label: "利用者数",
+                        data: [{{ d_1 }}, {{ d_2 }}, {{ d_3 }}, {{ d_4 }}, {{ d_5 }}],
+                        borderColor: "rgba(0,0,100,0.5)",
+                        backgroundColor: "rgba(0,0,0,0)"
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: "利用者数の推移"
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                suggestedMin: 0,
+                                stepSize: 50,
+                                callback: function (value, index, values) {
+                                    return value + '人'
+                                }
+                            }
+                        }]
+                    }
+                }
+            });
+        </script>
     </div>
 </section>
+
+
 {% endblock %}
