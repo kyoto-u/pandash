@@ -18,8 +18,9 @@
     <script src="https://kit.fontawesome.com/7bb95e7ca3.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/manage.css') }}" type="text/css">
-    <script src="{{ url_for('static', filename='js/manage.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+    <script src="{{ url_for('static', filename='js/manage.js') }}"></script>
+    
 </head>
 
 <body>
@@ -63,27 +64,46 @@
         <div class="tab-content">
             <div class="tab-pane active" id="dashboard" aria-labelledby="tab-dashboard">
                 <div class="container-fluid">
+                    <!-- サンプルデータ -->
+                    {% set l_1 = "2021年8月" %}
+                    {% set l_2 = "2021年9月" %}
+                    {% set l_3 = "2021年10月" %}
+                    {% set l_4 = "2021年11月" %}
+                    {% set l_5 = "2021年12月" %}
+                    {% set l_6 = "2022年1月" %}
+                    {% set l_thismon = "2022年2月" %}
+                    {% set d_1 = 10 %}
+                    {% set d_2 = 50 %}
+                    {% set d_3 = 30 %}
+                    {% set d_4 = 100 %}
+                    {% set d_5 = 20 %}
+                    {% set d_6 = 30 %}
+                    {% set d_thismon=30 %}
                     <div id="users_thismon" class="my-3">
-                        今月の利用者数：300人（先月比：+10）
+                        今月の利用者数：{{d_thismon}}人
+                        （先月比：
+                        {% if d_thismon - d_6 >= 0 %}
+                        +{{d_thismon - d_6}}
+                        {% else %}
+                        {{d_thismon - d_6}}
+                        {%endif%}
+                        ）
                     </div>
                     <div id="users_graph">
                         <canvas id="graph-canvas"></canvas>
-                        {% set d_8 = 50 %}
-                        {% set d_9 = 30 %}
-                        {% set d_10 = 60 %}
-                        {% set d_11 = 80 %}
-                        {% set d_12 = 100 %}
+                        
                         <script>
                             //利用者数の推移グラフの描写
                                 var ctx = document.getElementById("graph-canvas");
                                 var linechart = new Chart(ctx, {
                                     type: "line",
                                     data: {
-                                        labels: ["2021年8月", "2021年9月", "2021年10月", "2021年11月", "2021年12月"],
+                                        labels: ["{{l_1}}", "{{l_2}}", "{{l_3}}", "{{l_4}}", "{{l_5}}","{{l_6}}","{{l_thismon}}"],
                                         datasets: [{
                                             label: "利用者数",
-                                            data: [{{d_8}}, {{d_9}}, {{d_10}}, {{d_11}}, {{d_12}}],
+                                            data: [{{d_1}}, {{d_2}}, {{d_3}}, {{d_4}}, {{d_5}},{{d_6}},{{d_thismon}}],
                                             borderColor: "rgba(0,0,100,0.5)",
+                                            lineTension: 0,
                                             backgroundColor: "rgba(0,0,0,0)"
                                         }]
                                     }, 

@@ -37,5 +37,19 @@
 }
 
 #graph-canvas{
-    max-width:500px;
+    max-width:700px;
+}
+
+.nav-link{
+    background-color: white;
+    color: black;
+}
+.nav-link.active{
+    background-color:rgb(92, 154, 179) !important;
+    color: white !important;
+}
+
+.nav-link.active.show{
+    background-color:rgb(92, 154, 179);
+    color: white;
 }
