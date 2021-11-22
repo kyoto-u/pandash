@@ -34,7 +34,7 @@
             </div>
         </nav>
         <!--メニュー-->
-        <nav class="navbar navbar-expand md_fixed navbar-dark bg-dark">
+        <nav class="navbar navbar-expand mdashboard.data.d_fixed navbar-dark bg-dark">
             <div class="container" id="menubar">
                 <div class="nav-item">
                     管理者用画面
@@ -64,28 +64,13 @@
         <div class="tab-content">
             <div class="tab-pane active" id="dashboard" aria-labelledby="tab-dashboard">
                 <div class="container-fluid">
-                    <!-- サンプルデータ -->
-                    {% set l_1 = "2021年8月" %}
-                    {% set l_2 = "2021年9月" %}
-                    {% set l_3 = "2021年10月" %}
-                    {% set l_4 = "2021年11月" %}
-                    {% set l_5 = "2021年12月" %}
-                    {% set l_6 = "2022年1月" %}
-                    {% set l_thismon = "2022年2月" %}
-                    {% set d_1 = 10 %}
-                    {% set d_2 = 50 %}
-                    {% set d_3 = 30 %}
-                    {% set d_4 = 100 %}
-                    {% set d_5 = 20 %}
-                    {% set d_6 = 30 %}
-                    {% set d_thismon=30 %}
                     <div id="users_thismon" class="my-3">
-                        今月の利用者数：{{d_thismon}}人
+                        今月の利用者数：{{dashboard.data.d_thismon}}人
                         （先月比：
-                        {% if d_thismon - d_6 >= 0 %}
-                        +{{d_thismon - d_6}}
+                        {% if dashboard.data.d_thismon - dashboard.data.d_6 >= 0 %}
+                        +{{dashboard.data.d_thismon - dashboard.data.d_6}}
                         {% else %}
-                        {{d_thismon - d_6}}
+                        {{dashboard.data.d_thismon - dashboard.data.d_6}}
                         {%endif%}
                         ）
                     </div>
@@ -98,10 +83,10 @@
                                 var linechart = new Chart(ctx, {
                                     type: "line",
                                     data: {
-                                        labels: ["{{l_1}}", "{{l_2}}", "{{l_3}}", "{{l_4}}", "{{l_5}}","{{l_6}}","{{l_thismon}}"],
+                                        labels: ["{{dashboard.labels.l_1}}", "{{dashboard.labels.l_2}}", "{{dashboard.labels.l_3}}", "{{dashboard.labels.l_4}}", "{{dashboard.labels.l_5}}","{{dashboard.labels.l_6}}","{{dashboard.labels.l_thismon}}"],
                                         datasets: [{
                                             label: "利用者数",
-                                            data: [{{d_1}}, {{d_2}}, {{d_3}}, {{d_4}}, {{d_5}},{{d_6}},{{d_thismon}}],
+                                            data: [{{dashboard.data.d_1}}, {{dashboard.data.d_2}}, {{dashboard.data.d_3}}, {{dashboard.data.d_4}}, {{dashboard.data.d_5}},{{dashboard.data.d_6}},{{dashboard.data.d_thismon}}],
                                             borderColor: "rgba(0,0,100,0.5)",
                                             lineTension: 0,
                                             backgroundColor: "rgba(0,0,0,0)"

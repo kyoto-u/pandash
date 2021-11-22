@@ -19,31 +19,17 @@
     </div>
     <h2 class="border-bottom border-dark">利用状況</h2>
     <div id="usage_status">
-        <canvas id="graph-canvas" style="max-width: 500px;"></canvas>
-        {% set l_1 = "2021年8月" %}
-        {% set l_2 = "2021年9月" %}
-        {% set l_3 = "2021年10月" %}
-        {% set l_4 = "2021年11月" %}
-        {% set l_5 = "2021年12月" %}
-        {% set l_6 = "2022年1月" %}
-        {% set l_thismon = "2022年2月" %}
-        {% set d_1 = 10 %}
-        {% set d_2 = 50 %}
-        {% set d_3 = 30 %}
-        {% set d_4 = 100 %}
-        {% set d_5 = 20 %}
-        {% set d_6 = 30 %}
-        
+        <canvas id="graph-canvas" style="max-width: 500px;"></canvas>        
         <script>
             //利用者数の推移グラフの描写
             var ctx = document.getElementById("graph-canvas");
             var linechart = new Chart(ctx, {
                 type: "line",
                 data: {
-                    labels: ["{{l_1}}", "{{l_2}}", "{{l_3}}", "{{l_4}}", "{{l_5}}","{{l_6}}"],
+                    labels: ["{{dashboard.labels.l_1}}", "{{dashboard.labels.l_2}}", "{{dashboard.labels.l_3}}", "{{dashboard.labels.l_4}}", "{{dashboard.labels.l_5}}","{{dashboard.labels.l_6}}"],
                     datasets: [{
                         label: "利用者数",
-                        data: [{{ d_1 }}, {{ d_2 }}, {{ d_3 }}, {{ d_4 }}, {{ d_5 }},{{d_6}}],
+                        data: [{{dashboard.labels.d_1}}, {{dashboard.labels.d_2}}, {{dashboard.labels.d_3}}, {{dashboard.labels.d_4}}, {{dashboard.labels.d_5}},{{dashboard.labels.d_6}}],
                         borderColor: "rgba(0,0,100,0.5)",
                         backgroundColor: "rgba(0,0,0,0)",
                         lineTension:0
