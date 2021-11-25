@@ -231,6 +231,9 @@ async def async_get_quiz(site_id, ses):
     func = functools.partial(ses.get, url, verify=False)
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, func)
+    if res.status_code == 403:
+        # 恐らく履修解除等によりアクセスが出来なくなった
+        return {'sam_pub_collection':[]}
     try:
         return res.json()
     except json.JSONDecodeError as e:
