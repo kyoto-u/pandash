@@ -35,10 +35,10 @@ def get_course_from_api(site, student_id):
         instructor_id = site.get('siteOwner').get('userId')
         fullname = site.get('siteOwner').get('userDisplayName')
     coursename = site.get('title')
-    yearsch = re.match(r'\[.*\]', coursename)
     yearsemester = "10009"
     classschedule = "oth"
     try:
+        yearsch = re.match(r'\[.*\]', coursename)
         semnum = "9"
         semester = yearsch.group()[5:7]
         classsch = yearsch.group()[7:9]
