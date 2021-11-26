@@ -65,14 +65,14 @@ def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
     return tasks
 
 
-def get_courseids(studentid: str) ->List[str]:
+def get_courseids(studentid: str,include_deleted = 0) ->List[str]:
     """
         データベース上でstudent_idと結びつけられたcourse_idを集めてリストを返す
 
         ユーザーの非表示に設定している教科や表示開講期外のものも収集される
     """
     course_ids = session.query(studentcourse.Studentcourse.course_id).filter(studentcourse.Studentcourse.student_id==studentid).all()
-    return [i.course_id for i in course_ids]
+    return [i.course_id for i in course_ids if include_deleted == 1 or i.deleted == 0]
 
 def get_coursename(courseid: str) -> str:
     """
@@ -81,7 +81,7 @@ def get_coursename(courseid: str) -> str:
     coursename = session.query(course.Course.coursename).filter(course.Course.course_id==courseid).first()
     return coursename[0]
 
-def get_courses_id_to_be_taken(studentid, mode=0) ->List[str]:
+def get_courses_id_to_be_taken(studentid, mode=0,include_deleted=0) ->List[str]:
     """
         データベース上でstudent_idと結びつけられたcourse_idを集めてリストを返す
 
@@ -89,12 +89,17 @@ def get_courses_id_to_be_taken(studentid, mode=0) ->List[str]:
         mode:
         0 -> ユーザーが非表示設定にしているものを収集しない
         1 -> ユーザーが非表示設定にしているものも収集する
+        include_deleted:
+        0 -> ユーザーが履修取り消ししたものを収集しない
+        1 -> ユーザーが履修取り消ししたものも収集する
     """
     data=[]
     courses = session.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
     for i in courses:
         if mode==0 and i.hide == 1:
+            continue
+        if include_deleted==0 and i.deleted == 1:
             continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
@@ -103,7 +108,7 @@ def get_courses_id_to_be_taken(studentid, mode=0) ->List[str]:
     return data
 
 # mode = 1 のときはhideのものも取得
-def get_courses_to_be_taken(studentid, mode = 0,return_data = 'course'):
+def get_courses_to_be_taken(studentid, mode = 0,include_deleted = 0,return_data = 'course'):
     """
         データベース上でstudent_idと結びつけられた教科情報を集めてリストを返す
 
@@ -111,6 +116,9 @@ def get_courses_to_be_taken(studentid, mode = 0,return_data = 'course'):
         mode:
         0 -> ユーザーが非表示設定にしているものを収集しない
         1 -> ユーザーが非表示設定にしているものも収集する
+        include_deleted:
+        0 -> ユーザーが履修取り消ししたものを収集しない
+        1 -> ユーザーが履修取り消ししたものも収集する
         return_data:戻り値の型
         'course' -> course.Course
         'student_course' -> studentcourse.Studentcourse
@@ -120,6 +128,8 @@ def get_courses_to_be_taken(studentid, mode = 0,return_data = 'course'):
         studentcourse.Studentcourse.student_id == studentid).all()
     for i in courses:
         if mode==0 and i.hide==1:
+            continue
+        if include_deleted==0 and i.deleted == 1:
             continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
