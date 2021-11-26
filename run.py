@@ -85,23 +85,16 @@ def proxyticket():
         ses = requests.Session()
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}", verify=False)
         if api_response.status_code == 200:
-            cookies = ses['cookies']
-            MOD_AUTH_CAS = cookies['MOD_AUTH_CAS']
-            return flask.redirect(url_for('login_successful', MOD_AUTH_CAS = MOD_AUTH_CAS))
+            return login_successful(ses)
     return flask.redirect(url_for('login_failed'))
 
-@app.route('/login_successful', methods = ["GET"])
-def login_successful():
+def login_successful(ses):
     """
     proxyticket()で認証に成功した際に実行する。課題の取得・更新が主
     args
     'session':認証に成功したsession
     """
     start_time = time.perf_counter()
-    ses = requests.Session()
-    MOD_AUTH_CAS = request.args.get('MOD_AUTH_CAS')
-    cookies = {'MOD_AUTH_CAS':MOD_AUTH_CAS}
-    ses['cookies'] = cookies
     user = get_user_json(ses)
     student_id = user.get('id')
     fullname = user.get('displayName')
