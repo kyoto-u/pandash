@@ -64,29 +64,39 @@
         <div class="tab-content">
             <div class="tab-pane active" id="dashboard" aria-labelledby="tab-dashboard">
                 <div class="container-fluid">
-                    <div id="users_thismon" class="my-3">
-                        今月の利用者数：{{dashboard.data.d_thismon}}人
+                    <div id="unique_users_thismon" class="my-3">
+                        今月の利用者数：{{dashboard.unique_data.d_thismon}}人
                         （先月比：
-                        {% if dashboard.data.d_thismon - dashboard.data.d_6 >= 0 %}
-                        +{{dashboard.data.d_thismon - dashboard.data.d_6}}
+                        {% if dashboard.unique_data.d_thismon - dashboard.unique_data.d_6 >= 0 %}
+                        +{{dashboard.unique_data.d_thismon - dashboard.unique_data.d_6}}
                         {% else %}
-                        {{dashboard.data.d_thismon - dashboard.data.d_6}}
+                        {{dashboard.unique_data.d_thismon - dashboard.unique_data.d_6}}
+                        {%endif%}
+                        ）
+                    </div>
+                    <div id="total_use_thismon" class="my-3">
+                        今月の総利用回数：{{dashboard.total_data.d_thismon}}回
+                        （先月比：
+                        {% if dashboard.total_data.d_thismon - dashboard.total_data.d_6 >= 0 %}
+                        +{{dashboard.total_data.d_thismon - dashboard.total_data.d_6}}
+                        {% else %}
+                        {{dashboard.total_data.d_thismon - dashboard.total_data.d_6}}
                         {%endif%}
                         ）
                     </div>
                     <div id="users_graph">
-                        <canvas id="graph-canvas"></canvas>
-                        
+                        <canvas id="unique-graph-canvas" class="graph-canvas"></canvas>
+                        <canvas id="total-graph-canvas" class="graph-canvas"></canvas>
                         <script>
-                            //利用者数の推移グラフの描写
-                                var ctx = document.getElementById("graph-canvas");
+                            //unique利用者数の推移グラフの描写
+                                var ctx = document.getElementById("unique-graph-canvas");
                                 var linechart = new Chart(ctx, {
                                     type: "line",
                                     data: {
                                         labels: ["{{dashboard.labels.l_1}}", "{{dashboard.labels.l_2}}", "{{dashboard.labels.l_3}}", "{{dashboard.labels.l_4}}", "{{dashboard.labels.l_5}}","{{dashboard.labels.l_6}}","{{dashboard.labels.l_thismon}}"],
                                         datasets: [{
                                             label: "利用者数",
-                                            data: [{{dashboard.data.d_1}}, {{dashboard.data.d_2}}, {{dashboard.data.d_3}}, {{dashboard.data.d_4}}, {{dashboard.data.d_5}},{{dashboard.data.d_6}},{{dashboard.data.d_thismon}}],
+                                            data: [{{dashboard.unique_data.d_1}}, {{dashboard.unique_data.d_2}}, {{dashboard.unique_data.d_3}}, {{dashboard.unique_data.d_4}}, {{dashboard.unique_data.d_5}},{{dashboard.unique_data.d_6}},{{dashboard.unique_data.d_thismon}}],
                                             borderColor: "rgba(0,0,100,0.5)",
                                             lineTension: 0,
                                             backgroundColor: "rgba(0,0,0,0)"
@@ -101,7 +111,7 @@
                                             yAxes: [{
                                                 ticks: {
                                                     suggestedMin: 0,
-                                                    stepSize: 50,
+                                                    stepSize: 100,
                                                     callback: function (value, index, values) {
                                                         return value + '人'
                                                     }
@@ -110,6 +120,40 @@
                                         }
                                     }
                                 })
+                        </script>
+                        <script>
+                            //total利用回数の推移グラフの描写
+                            var ctx = document.getElementById("total-graph-canvas");
+                            var linechart = new Chart(ctx, {
+                                type: "line",
+                                data: {
+                                    labels: ["{{dashboard.labels.l_1}}", "{{dashboard.labels.l_2}}", "{{dashboard.labels.l_3}}", "{{dashboard.labels.l_4}}", "{{dashboard.labels.l_5}}", "{{dashboard.labels.l_6}}", "{{dashboard.labels.l_thismon}}"],
+                                    datasets: [{
+                                        label: "総利用回数",
+                                        data: [{{ dashboard.total_data.d_1 }}, {{ dashboard.total_data.d_2 }}, {{ dashboard.total_data.d_3 }}, { { dashboard.total_data.d_4 } }, { { dashboard.total_data.d_5 } }, { { dashboard.total_data.d_6 } }, { { dashboard.total_data.d_thismon } }],
+                                        borderColor: "rgba(0,0,100,0.5)",
+                                        lineTension: 0,
+                                        backgroundColor: "rgba(0,0,0,0)"
+                                    }]
+                                },
+                                options: {
+                                    title: {
+                                        display: true,
+                                        text: "総利用回数の推移"
+                                    },
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                suggestedMin: 0,
+                                                stepSize: 500,
+                                                callback: function (value, index, values) {
+                                                    return value + '回'
+                                                }
+                                            }
+                                        }]
+                                    }
+                                }
+                            })
                         </script>
                     </div>
                 </div>
