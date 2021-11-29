@@ -102,6 +102,9 @@ def login_successful(ses):
     now = floor(time.time() * 1000) #millisecond
     studentdata = get_student(student_id)
     need_to_update_sitelist = 1
+    last_update=0
+    last_update_subject=0
+    language='ja'
     if studentdata:
         if studentdata.show_already_due == 0:
             # ユーザーが期限の過ぎた課題は表示しないように設定しているので、適用する
@@ -112,19 +115,21 @@ def login_successful(ses):
             need_to_update_sitelist = 1
         
         last_update = studentdata.last_update
-        if need_to_update_sitelist:
-            add_student(student_id, fullname, last_update = now, last_update_subject = now, language = studentdata.language)
-        else:
-            add_student(student_id, fullname, last_update = now, last_update_subject = studentdata.last_update_subject, language = studentdata.language)
+        last_update_subject = studentdata.last_update_subject
+        
     else:
-        last_update = 0
-        add_student(student_id, fullname, last_update = now, last_update_subject = now)
+        add_student(student_id, fullname, last_update = 0, last_update_subject = 0,language='ja')
     
     get_data_from_api_and_update(student_id, ses, now, last_update, 0)
     if need_to_update_sitelist == 1:
         get_data_from_api_and_update(student_id, ses, now, 0, 1)
     if student_id != "":
         update_student_needs_to_update_sitelist(student_id)
+
+    if need_to_update_sitelist:
+        add_student(student_id, fullname, last_update = now, last_update_subject = now, language = language)
+    else:
+        add_student(student_id, fullname, last_update = now, last_update_subject = last_update_subject, language = language)
     logging.info(f"TIME {student_id}: {time.perf_counter() - start_time}")
     
     # リダイレクト先を決める
