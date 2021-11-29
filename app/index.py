@@ -137,9 +137,9 @@ def sync_student_contents(studentid, crs, asm, res, qz, now,last_update=0,need_t
 def sync_student_course(studentid, sc, crs, last_update,need_to_update_sitelist):
     # 追加、更新をする
     if need_to_update_sitelist:
-        add_studentcourse(studentid, sc,need_to_update_sitelist,allow_delete=0)
+        add_studentcourse(studentid, sc,allow_delete=0)
     else:
-        add_studentcourse(studentid, sc,need_to_update_sitelist)
+        add_studentcourse(studentid, sc)
     add_course(studentid, crs, last_update)
     return 0
 
