@@ -82,3 +82,28 @@ def get_today(today):
     """
     td_native = datetime.datetime.combine(today, datetime.time())
     return datetime.datetime.timestamp(pytz.timezone('Asia/Tokyo').localize(td_native))
+
+from dateutil.relativedelta import relativedelta
+def get_accece_logs():
+    dashboard = {"labels":{}, "unique_data":{}, "total_data":{}}
+    now = datetime.datetime.now()
+    last_dates = [get_last_date(now.date())]
+    dashboard["labels"]["l_7"] = now.strftime('%Y年%m月')
+    for i in range(6):
+        l_i = now - relativedelta(months=(i+1))
+        l_i_date = l_i.date()
+        dashboard["labels"][f"l_{(6-i)}"] = l_i.strftime('%Y年%m月')
+        last_dates.append(get_last_date(l_i_date))
+    index = 0
+    for last_date in last_dates:
+        accesslog = session.query(access.Access).filter(
+                access.Access.access_month_at==int(last_date*1000)).first()
+        try:
+            dashboard["unique_data"][f"d_{(7-index)}"] = accesslog.unique_users
+            dashboard["total_data"][f"d_{(7-index)}"] = accesslog.total_users
+        except:
+            # データがないとき
+            dashboard["unique_data"][f"d_{(7-index)}"] = 0
+            dashboard["total_data"][f"d_{(7-index)}"] = 0
+        index += 1
+    return dashboard

@@ -11,7 +11,7 @@ import requests
 import datetime
 import time
 from bs4 import BeautifulSoup
-from app.accesscount import check_and_insert_all_accesses
+from app.accesscount import check_and_insert_all_accesses, get_accece_logs
 
 logging.basicConfig(level=logging.INFO)
 app.secret_key ='pandash'
@@ -614,6 +614,8 @@ def manage_admin():
 @app.route('/manage/oa')
 @check_oa
 def manage_oa():
+    # !dashboardの情報
+    dashboard = get_accece_logs()
     return "manage_oa"
 
 # 403
