@@ -71,7 +71,7 @@ def get_courseids(studentid: str,include_deleted = 0) ->List[str]:
 
         ユーザーの非表示に設定している教科や表示開講期外のものも収集される
     """
-    course_ids = session.query(studentcourse.Studentcourse.course_id).filter(studentcourse.Studentcourse.student_id==studentid).all()
+    course_ids = session.query(studentcourse.Studentcourse).filter(studentcourse.Studentcourse.student_id==studentid).all()
     return [i.course_id for i in course_ids if include_deleted == 1 or i.deleted == 0]
 
 def get_coursename(courseid: str) -> str:
