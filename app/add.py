@@ -199,7 +199,7 @@ def add_studentcourse(studentid, data, allow_delete = 1):
         if not course_exist:
             new_sc.append(item)
         if update:
-            upd_sc.append({"course_id": item["course_id"], "deleted": 0})
+            upd_sc.append({"sc_id": item["sc_id"], "deleted": 0})
 
     if allow_delete == 1:
         # 逆に、テーブルに格納されている履修情報について、今回のAPIで取得できたかを調べる。
@@ -210,7 +210,7 @@ def add_studentcourse(studentid, data, allow_delete = 1):
                     course_deleted = False
                     break
             if course_deleted and i.deleted == 0:
-                upd_sc.append({"course_id": i.course_id, "deleted": 1})
+                upd_sc.append({"sc_id": i.sc_id, "deleted": 1})
     if len(new_sc) != 0:
         session.execute(studentcourse.Studentcourse.__table__.insert(),new_sc)
     if len(upd_sc) != 0:
