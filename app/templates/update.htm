@@ -19,8 +19,10 @@
     </div>
     <h2 class="border-bottom border-dark">利用状況</h2>
     <div id="usage_status">
-        <canvas id="unique-graph-canvas" style="max-width: 500px;"></canvas>
-        <canvas id="total-graph-canvas" style="max-width: 500px;"></canvas>
+        <div class="row">
+            <canvas id="unique-graph-canvas" class="graph-canvas"></canvas>
+            <canvas id="total-graph-canvas" class="graph-canvas"></canvas>
+        </div>
         <script>
             //unique利用者数の推移グラフの描写
             var ctx = document.getElementById("unique-graph-canvas");
@@ -31,7 +33,7 @@
                     datasets: [{
                         label: "利用者数",
                         data: [{{dashboard.unique_data.d_1}}, {{dashboard.unique_data.d_2}}, {{dashboard.unique_data.d_3}}, {{dashboard.unique_data.d_4}}, {{dashboard.unique_data.d_5}}, {{dashboard.unique_data.d_6}}],
-                        borderColor: "rgba(0,0,100,0.5)",
+                        borderColor: "rgba(0,0,200,0.5)",
                         lineTension: 0,
                         backgroundColor: "rgba(0,0,0,0)"
                     }]
