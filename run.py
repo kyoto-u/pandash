@@ -78,8 +78,6 @@ def proxy(pgtiou=None):
 @app.route('/proxyticket', methods=["GET"])
 def proxyticket():
     ticket = request.args.get('ticket')
-    start_time = time.perf_counter()
-    show_only_unfinished = 0
     if ticket:
         # ticketがあるのでPandAのAPIを利用できる
         ses = requests.Session()
@@ -101,6 +99,7 @@ def login_successful(ses):
     session["student_id"] = student_id
     now = floor(time.time() * 1000) #millisecond
     studentdata = get_student(student_id)
+    show_only_unfinished = 0
     need_to_update_sitelist = 1
     last_update=0
     last_update_subject=0
