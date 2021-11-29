@@ -94,7 +94,7 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         # student_quizzes  {"quizzes:[], "student_quizzes":[]}
         # user_info        {"student_id": , "fullname": }
         # + get_quizzes 
-        sync_student_contents(student_id, get_sites, get_assignments, get_resources, get_quizzes, now, last_update=last_update)
+        sync_student_contents(student_id, get_sites, get_assignments, get_resources, get_quizzes, now, last_update=last_update, need_to_update_sitelist=need_to_update_sitelist)
 
 def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):
     """
@@ -114,7 +114,7 @@ def sync_student_assignment(studentid, sa, asm,last_update):
     add_assignment(studentid, asm, last_update)
     return 0
 
-def sync_student_contents(studentid, crs, asm, res, qz, now,last_update=0):
+def sync_student_contents(studentid, crs, asm, res, qz, now,last_update=0,need_to_update_sitelist=0):
     # 以下主な方針
     #
     # studentテーブルにlast_updateを用意し、毎回update後に記録しておく
@@ -127,16 +127,19 @@ def sync_student_contents(studentid, crs, asm, res, qz, now,last_update=0):
     # 加えて、assignment,course,resource,quizも同時に更新することにする。
 
     # courseが最初!!!
-    sync_student_course(studentid, crs["student_courses"], crs["courses"], last_update)
+    sync_student_course(studentid, crs["student_courses"], crs["courses"], last_update,need_to_update_sitelist)
     sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"], last_update)
     sync_student_resource(studentid, res["student_resources"], res["resources"], last_update)
     sync_student_quiz(studentid, qz["student_quizzes"], qz["quizzes"], last_update)
 
     return 0
 
-def sync_student_course(studentid, sc, crs, last_update):
+def sync_student_course(studentid, sc, crs, last_update,need_to_update_sitelist):
     # 追加、更新をする
-    add_studentcourse(studentid, sc)
+    if need_to_update_sitelist:
+        add_studentcourse(studentid, sc,need_to_update_sitelist,allow_delete=0)
+    else:
+        add_studentcourse(studentid, sc,need_to_update_sitelist)
     add_course(studentid, crs, last_update)
     return 0
 
