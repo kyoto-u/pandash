@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/manage.css') }}" type="text/css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
     <script src="{{ url_for('static', filename='js/manage.js') }}"></script>
-    
+
 </head>
 
 <body>
@@ -34,7 +34,7 @@
             </div>
         </nav>
         <!--メニュー-->
-        <nav class="navbar navbar-expand md_fixed navbar-dark bg-dark">
+        <nav class="navbar navbar-expand mdashboard.data.d_fixed navbar-dark bg-dark">
             <div class="container" id="menubar">
                 <div class="nav-item">
                     管理者用画面
@@ -64,67 +64,102 @@
         <div class="tab-content">
             <div class="tab-pane active" id="dashboard" aria-labelledby="tab-dashboard">
                 <div class="container-fluid">
-                    <!-- サンプルデータ -->
-                    {% set l_1 = "2021年8月" %}
-                    {% set l_2 = "2021年9月" %}
-                    {% set l_3 = "2021年10月" %}
-                    {% set l_4 = "2021年11月" %}
-                    {% set l_5 = "2021年12月" %}
-                    {% set l_6 = "2022年1月" %}
-                    {% set l_thismon = "2022年2月" %}
-                    {% set d_1 = 10 %}
-                    {% set d_2 = 50 %}
-                    {% set d_3 = 30 %}
-                    {% set d_4 = 100 %}
-                    {% set d_5 = 20 %}
-                    {% set d_6 = 30 %}
-                    {% set d_thismon=30 %}
-                    <div id="users_thismon" class="my-3">
-                        今月の利用者数：{{d_thismon}}人
-                        （先月比：
-                        {% if d_thismon - d_6 >= 0 %}
-                        +{{d_thismon - d_6}}
-                        {% else %}
-                        {{d_thismon - d_6}}
-                        {%endif%}
-                        ）
+                    <div class="row">
+                        <div id="unique_users_thismon" class="my-3 mx-auto">
+                            今月の利用者数：{{dashboard.unique_data.d_thismon}}人
+                            （先月比：
+                            {% if dashboard.unique_data.d_thismon - dashboard.unique_data.d_6 >= 0 %}
+                            +{{dashboard.unique_data.d_thismon - dashboard.unique_data.d_6}}
+                            {% else %}
+                            {{dashboard.unique_data.d_thismon - dashboard.unique_data.d_6}}
+                            {%endif%}
+                            ）
+                        </div>
+                        <div id="total_use_thismon" class="my-3 mx-auto">
+                            今月の総利用回数：{{dashboard.total_data.d_thismon}}回
+                            （先月比：
+                            {% if dashboard.total_data.d_thismon - dashboard.total_data.d_6 >= 0 %}
+                            +{{dashboard.total_data.d_thismon - dashboard.total_data.d_6}}
+                            {% else %}
+                            {{dashboard.total_data.d_thismon - dashboard.total_data.d_6}}
+                            {%endif%}
+                            ）
+                        </div>
                     </div>
                     <div id="users_graph">
-                        <canvas id="graph-canvas"></canvas>
-                        
+
+                        <div class="row">
+                            <canvas id="unique-graph-canvas" class="graph-canvas col-6"></canvas>
+                            <canvas id="total-graph-canvas" class="graph-canvas col-6"></canvas>
+                        </div>
+
                         <script>
-                            //利用者数の推移グラフの描写
-                                var ctx = document.getElementById("graph-canvas");
-                                var linechart = new Chart(ctx, {
-                                    type: "line",
-                                    data: {
-                                        labels: ["{{l_1}}", "{{l_2}}", "{{l_3}}", "{{l_4}}", "{{l_5}}","{{l_6}}","{{l_thismon}}"],
-                                        datasets: [{
-                                            label: "利用者数",
-                                            data: [{{d_1}}, {{d_2}}, {{d_3}}, {{d_4}}, {{d_5}},{{d_6}},{{d_thismon}}],
-                                            borderColor: "rgba(0,0,100,0.5)",
-                                            lineTension: 0,
-                                            backgroundColor: "rgba(0,0,0,0)"
-                                        }]
-                                    }, 
-                                    options:{
-                                        title:{
-                                            display:true,
-                                            text:"利用者数の推移"
-                                        }, 
-                                        scales: {
-                                            yAxes: [{
-                                                ticks: {
-                                                    suggestedMin: 0,
-                                                    stepSize: 50,
-                                                    callback: function (value, index, values) {
-                                                        return value + '人'
-                                                    }
+                            //unique利用者数の推移グラフの描写
+                            var ctx = document.getElementById("unique-graph-canvas");
+                            var linechart = new Chart(ctx, {
+                                type: "line",
+                                data: {
+                                    labels: ["{{dashboard.labels.l_1}}", "{{dashboard.labels.l_2}}", "{{dashboard.labels.l_3}}", "{{dashboard.labels.l_4}}", "{{dashboard.labels.l_5}}", "{{dashboard.labels.l_6}}", "{{dashboard.labels.l_thismon}}"],
+                                    datasets: [{
+                                        label: "利用者数",
+                                        data: [{{ dashboard.unique_data.d_1}}, {{ dashboard.unique_data.d_2}}, {{ dashboard.unique_data.d_3}}, {{dashboard.unique_data.d_4}}, {{dashboard.unique_data.d_5}}, {{dashboard.unique_data.d_6}}, {{dashboard.unique_data.d_thismon}}],
+                                        borderColor: "rgba(0,0,200,0.5)",
+                                        lineTension: 0,
+                                        backgroundColor: "rgba(0,0,0,0)"
+                                    }]
+                                },
+                                options: {
+                                    title: {
+                                        display: true,
+                                        text: "利用者数の推移"
+                                    },
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                suggestedMin: 0,
+                                                stepSize: 100,
+                                                callback: function (value, index, values) {
+                                                    return value + '人'
                                                 }
-                                            }]
-                                        }
+                                            }
+                                        }]
                                     }
-                                })
+                                }
+                            })
+                        </script>
+                        <script>
+                            //total利用回数の推移グラフの描写
+                            var ctx = document.getElementById("total-graph-canvas");
+                            var linechart = new Chart(ctx, {
+                                type: "line",
+                                data: {
+                                    labels: ["{{dashboard.labels.l_1}}", "{{dashboard.labels.l_2}}", "{{dashboard.labels.l_3}}", "{{dashboard.labels.l_4}}", "{{dashboard.labels.l_5}}", "{{dashboard.labels.l_6}}", "{{dashboard.labels.l_thismon}}"],
+                                    datasets: [{
+                                        label: "総利用回数",
+                                        data: [{{dashboard.total_data.d_1}}, {{dashboard.total_data.d_2}}, {{dashboard.total_data.d_3}}, {{dashboard.total_data.d_4}}, {{dashboard.total_data.d_5}}, {{dashboard.total_data.d_6}}, {{dashboard.total_data.d_thismon}}],
+                                        borderColor: "rgba(0,0,100,0.5)",
+                                        lineTension: 0,
+                                        backgroundColor: "rgba(0,0,0,0)"
+                                    }]
+                                },
+                                options: {
+                                    title: {
+                                        display: true,
+                                        text: "総利用回数の推移"
+                                    },
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                suggestedMin: 0,
+                                                stepSize: 500,
+                                                callback: function (value, index, values) {
+                                                    return value + '回'
+                                                }
+                                            }
+                                        }]
+                                    }
+                                }
+                            })
                         </script>
                     </div>
                 </div>
@@ -141,11 +176,11 @@
                                 <tr>
                             </thead>
                             <tbody>
-                                <tr class="inquery_row">
+                                <tr class="inquery_row" id="inq1">
                                     <td class="date">2021/11/10 16:54</td>
                                     <td class="title">問い合わせ１</td>
                                 </tr>
-                                <tr class="inquery_row">
+                                <tr class="inquery_row" id="inq2">
                                     <td class="date">2021/11/10 16:56</td>
                                     <td class="title">問い合わせ２</td>
                                 </tr>
@@ -153,7 +188,7 @@
                         </table>
                     </div>
                     <div id="reply_form" class="col-8">
-                        <div class="container-fluid">
+                        <div class="inquery_form container-fluid" id="inq1">
                             問い合わせ返信フォーム
                             <div id="inquery_title">
                                 <h4>タイトル：問い合わせ１</h4>
