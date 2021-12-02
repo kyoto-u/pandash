@@ -31,8 +31,15 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         # site.json 使用
         get_membership = get_course_id_from_site_api(get_site_json(ses),student_id)
         already_known= get_courses_id_to_be_taken(student_id)
+        
+        # 既存の教科情報を更新
+        site_list_known = [i for i in get_membership["site_list"] if i in already_known]
+        sc_known = [{"sc_id":f"{student_id}:{i}","student_id":student_id,"course_id":i} for i in site_list_known]
+        add_studentcourse(student_id,sc_known)
+
         # 新規のもののみを取り上げる
         get_membership["site_list"] = [i for i in get_membership["site_list"] if i not in already_known]
+        
     if student_id != "":
         # get_assignments = get_assignments_from_api(assignments.json(), student_id)
         get_sites = {"courses":[],"student_courses":[]}

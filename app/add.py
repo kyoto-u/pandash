@@ -175,7 +175,7 @@ def add_studentcourse(studentid, data, allow_delete = 1):
     """
         学生の履修状況をテーブルに追加する
 
-        data: [{student_id:"", course_id:""},{}]
+        data: [{"sc_id":"","student_id":"", "course_id":""},{}]
         allow_delete: 逆にdataにない情報を削除する
         APIなどで全取得したデータの場合は1、そうでない場合は0にする
     """
