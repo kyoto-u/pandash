@@ -106,7 +106,7 @@ def get_course_id_from_site_api(site, student_id):
     return {"student_id":student_id, "site_list":site_list}
 
 def get_membership_json(ses):
-    res = ses.get(f"{api_url}/membership.json", verify=False)
+    res = ses.get(f"{api_url}/membership.json", verify=True)
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -114,7 +114,7 @@ def get_membership_json(ses):
 
 # get_membership_json(ses) の代わり
 def get_site_json(ses):
-    res = ses.get(f"{api_url}/site.json?_limit=2000", verify=False)
+    res = ses.get(f"{api_url}/site.json?_limit=2000", verify=True)
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -192,14 +192,14 @@ def get_user_info_from_api(user):
     return {"student_id":student_id,"fullname":fullname}
 
 def get_user_json(ses):
-    res = ses.get(f"{api_url}/user/current.json", verify=False)
+    res = ses.get(f"{api_url}/user/current.json", verify=True)
     try:
         return res.json()
     except json.JSONDecodeError as e:
         return {}
 
 def get_session_json(ses):
-    res = ses.get(f"{api_url}/session/current.json", verify=False)
+    res = ses.get(f"{api_url}/session/current.json", verify=True)
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -208,7 +208,7 @@ def get_session_json(ses):
 #async
 async def async_get_assignments(ses):
     url = f"{api_url}/assignment/my.json"
-    func = functools.partial(ses.get, url, verify=False)
+    func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, func)
     try:
@@ -218,7 +218,7 @@ async def async_get_assignments(ses):
 
 async def async_get_content(site_id, ses):
     url = f"{api_url}/content/site/{site_id}.json"
-    func = functools.partial(ses.get, url, verify=False)
+    func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, func)
     try:
@@ -228,7 +228,7 @@ async def async_get_content(site_id, ses):
 
 async def async_get_quiz(site_id, ses):
     url = f"{api_url}/sam_pub/context/{site_id}.json"
-    func = functools.partial(ses.get, url, verify=False)
+    func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, func)
     if res.status_code == 403:
@@ -241,7 +241,7 @@ async def async_get_quiz(site_id, ses):
 
 async def async_get_site(site_id, ses):
     url = f"{api_url}/site/{site_id}.json"
-    func = functools.partial(ses.get, url, verify=False)
+    func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, func)
     try:
@@ -251,7 +251,7 @@ async def async_get_site(site_id, ses):
 
 async def async_get_site_pages(site_id, ses):
     url = f"{api_url}/site/{site_id}/pages.json"
-    func = functools.partial(ses.get, url, verify=False)
+    func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, func)
     try:
@@ -261,7 +261,7 @@ async def async_get_site_pages(site_id, ses):
 
 async def async_get_user_info(ses):
     url = f"{api_url}/user/current.json"
-    func = functools.partial(ses.get, url, verify=False)
+    func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, func)
     try:
