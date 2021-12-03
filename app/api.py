@@ -18,7 +18,7 @@ def get_assignments_from_api(assignments, student_id):
         title = assignment.get('title')[:80]
         instructions = assignment.get('instructions')[:100]
         time_ms = assignment.get('dueTime').get('epochSecond')*1000 #millisecond
-        limit_at = datetime.datetime.fromtimestamp(time_ms//1000).strftime("%Y-%m-%dT%H:%M:%SZ")
+        limit_at = datetime.datetime.fromtimestamp(time_ms//1000,datetime.timezone(datetime.timedelta(hours=9))).strftime("%Y-%m-%dT%H:%M:%SZ")
         course_id = assignment.get('context')
         modifieddate = assignment.get('timeLastModified').get('epochSecond')*1000 #millisecond
         status = assignment.get('status')
@@ -171,7 +171,7 @@ def get_quizzes_from_api(quizzes, course_id, student_id):
             # 期限のないものは2099-12-31T23:59:59Zとなるよう設定
             time_ms=4102412399000				
         modifieddate = int(content.get('lastModifiedDate')) #millisecond
-        limit_at = datetime.datetime.fromtimestamp(time_ms//1000).strftime("%Y-%m-%dT%H:%M:%SZ")
+        limit_at = datetime.datetime.fromtimestamp(time_ms//1000,datetime.timezone(datetime.timedelta(hours=9))).strftime("%Y-%m-%dT%H:%M:%SZ")
         quiz_list.append({'course_id':course_id, 'quiz_id': quiz_id, 'url':url, 'title': title, \
             'limit_at':limit_at, 'time_ms': time_ms, 'modifieddate': modifieddate, 'instructions':''})
         sq_list.append({"sq_id":f"{student_id}:{quiz_id}", "quiz_id":quiz_id, "student_id":student_id, "course_id":course_id, "status":Status.NotYet.value,"clicked":0})
