@@ -341,6 +341,17 @@ def overview():
     else:
         return redirect(url_for('login'))
 
+# chat 一覧（暫定）
+@app.route('/chat/overview')
+def chat_overview():
+    studentid = session.get('student_id')
+    if studentid:
+        chatrooms = get_chatrooms(studentid)
+        data = setdefault_for_overview(studentid)
+        return flask.render_template('chat.htm', chatrooms=chatrooms, data=data)
+    else:
+        return redirect(url_for('login'))
+
 @app.route('/tasklist/day/<day>')
 def tasklist_day_redirect(day):
     studentid = session.get('student_id')
@@ -391,6 +402,20 @@ def resource_day(day):
 @app.route('/resourcelist')
 def resources_sample():
     return resourcelist_general()
+
+# コメントを取得/表示
+@app.route('/chat/course/<courseid>')
+def chat_course(courseid):
+    studentid = session.get('studentid')
+    if studentid:
+        studentdata = get_student(studentid)
+        if studentdata == None:
+            return redirect(url_for('login'))
+        last_update = str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        return comment_general(courseid)
+    else:
+        return redirect(url_for('login'))
+
 
 @app.route('/ical')
 def ical():
@@ -499,6 +524,27 @@ def show_already_due():
     else:
         return 'failed'
 
+# コメントを追加 post
+@app.route('/add_comment', methods=['POST'])
+def add_comment():
+    studentid = session.get('studentid')
+    if studentid:
+        courseid = request.json['courseid']
+        content = request.json['content']
+        reply_to = request.json['reply_to']
+        commentid = add_comment(studentid,reply_to,content)
+        have_auth = add_coursecomment(studentid,commentid,courseid)
+        update_comment_unchecked(courseid)
+        # 自分の未読チェックは外す
+        update_comment_checked(studentid,courseid)
+        if have_auth:
+            return 'success'
+        else:
+            return 'failed'
+    else:
+        return 'error'                
+
+
 @app.route('/pgtCallback', methods=['GET'])
 def pgtCallback():
     pgtiou = request.args.get('pgtIou')
@@ -590,6 +636,31 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
     else:
         return redirect(url_for('login'))
 
+
+def comment_general(courseid = None):
+    studentid = session.get('studentid')
+    if studentid:
+        studentdata = get_student(studentid)
+        if studentdata == None:
+            return redirect(url_for('login'))
+        last_update = str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        data = setdefault_for_overview(studentid)
+        all_comments = get_comments(studentid, courseid)
+        if len(all_comments) == 1:
+            return flask.render_template(
+                'comment.htm',
+                comments = all_comments[0]["comments"],
+                roomname = all_comments[0]["roomname"],
+                data = data)
+        else:
+            return flask.render_template(
+                'chatroom.htm',
+                # commnets: [{roomname:"", comments:[]}, ..]
+                comments = all_comments,
+                data = data
+            )
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/ContactUs', methods=['GET', 'POST'])
 def forum():

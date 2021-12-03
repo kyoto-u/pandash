@@ -13,4 +13,6 @@ class Course(settings.Base):
     yearsemester = Column(Integer()) # 2020年前期：20200 2020年後期：20201
     classschedule = Column(String(4)) # mon1, wed2, ...   othe
 
+    comment_last_update = Column(Integer()) # コメントの最終更新日時
+
 settings.Base.metadata.create_all(settings.engine)

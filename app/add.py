@@ -1,9 +1,11 @@
 # データベースの情報を書き換える関数の一覧
 #
 
-from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment, forum,quiz,studentquiz
+from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment,\
+                    forum, quiz, studentquiz, comment, coursecomment
 from .settings import session
 from .get import get_courseids
+import time
 from .original_classes import Status
 
 def add_assignment(studentid, data, last_update):
@@ -47,6 +49,21 @@ def add_assignment_attachment(url, title, assignment_id):
         session.commit()
     return
 
+
+def add_comment(student_id, reply_to, content):
+    update_time = int(time.time())
+    new_comment = comment.Comment(student_id=student_id, reply_to=reply_to, update_time=update_time, content=content)
+    try:
+        session.add(new_comment)
+        session.commit()
+    # primarykeyが同じ時について繰り返し処理にする
+    except:
+        session.add(new_comment)
+        session.commit()
+    session.refresh(new_comment)
+    return new_comment.comment_id
+
+
 def add_course(studentid, data, last_update):
     course_ids = get_courseids(studentid)
     courses = session.query(
@@ -72,6 +89,21 @@ def add_course(studentid, data, last_update):
         session.bulk_update_mappings(course.Course, upd_crs)
     session.commit()
     return
+
+
+def add_coursecomment(studentid, comment_id, course_id):
+    course_ids = get_courseids(studentid)
+    if course_id not in course_ids:
+        return False
+    new_coursecomment = coursecomment.Coursecomment(comment_id=comment_id, course_id=course_id)
+    # course table の comment_lat_update を更新する
+    last_update = int(time.time())
+    crs = session.query(course.Course).filter(course.Course.course_id).first()
+    crs.comment_last_update = last_update
+    session.add(new_coursecomment)
+    session.commit()
+    return True
+    
 
 def add_forum(studentid,title,contents):
     inq = forum.Forum()
@@ -376,5 +408,24 @@ def update_task_status(studentid, taskids: list, mode=0, taskmode="task"):
             sq_id = f'{studentid}:{t_id}'
             update_list.append({"sq_id":sq_id, "status":status})
         session.bulk_update_mappings(studentquiz.Student_Quiz, update_list)
+    session.commit()
+    return
+
+# コースのコメントをチェックしたときに実行
+def update_comment_checked(studentid, courseid):
+    sc_id = f"{studentid}:{courseid}"
+    sc = session.query(studentcourse.Studentcourse).filter(studentcourse.Studentcourse.sc_id==sc_id).first()
+    sc.comment_checked = 1
+    session.commit()
+    return
+
+# コースのコメントが追加されたときに実行
+def update_commnet_unchecked(courseid):
+    sc_ids = session.query(studentcourse.Studentcourse.sc_id).filter(
+        studentcourse.Studentcourse.course_id==courseid).all()
+    update_list = []
+    for sc_id in sc_ids:
+        update_list.append({"sc_id":sc_id, "comment_checked":0})
+    session.bulk_update_mappings(studentcourse.Studentcourse, update_list)
     session.commit()
     return

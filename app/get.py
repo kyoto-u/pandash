@@ -2,8 +2,11 @@
 #
 from math import *
 from .models import student, assignment, course, studentassignment, studentcourse, resource, studentresource,quiz,studentquiz
+from .models import comment, coursecomment
 from .settings import SHOW_YEAR_SEMESTER, session, panda_url
 from .original_classes import TimeLeft ,Status
+import datetime
+import hashlib
 from typing import List
 from pprint import pprint
 
@@ -63,6 +66,54 @@ def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
         task["assignment_url"] = f'{panda_url}/portal/site/{task["course_id"]}/tool/{task["tool_id"]}?assignmentReference=/assignment/a/{task["course_id"]}/{task["assignmentid"]}&panel=Main&sakai_action=doView_submission'
         tasks.append(task)
     return tasks
+
+# コメントを取得する courseid = None のときすべてのコメントを取得
+def get_comments(studentid, courseid):
+    courseids = []
+    if courseid:
+        courseids.append(courseid)
+    else:
+        courses_to_be_taken=get_courses_to_be_taken(studentid)
+        courseids = [i.course_id for i in courses_to_be_taken]
+    all_comments = []
+    for courseid in courseids:
+        coursecomemnts = session.query(coursecomment.Course_Comment).filter(
+            coursecomment.Course_Comment.course_id == courseid).all()
+        commentids = [i.comment_id for i in coursecomemnts]
+        # 全て取得せず　limit()で制限してページなどで分ける様にする場合は 降順で取得
+        # commentdata = session.query(comment.Comment).filter(
+        #     comment.Comment.comment_id.in_(commentids)).order_by(comment.Comment.update_time.desc()).all()
+        # 昇順で取得
+        commentdata = session.query(comment.Comment).filter(
+               comment.Comment.comment_id.in_(commentids)).order_by(comment.Comment.update_time).limit(1000).all()
+        comments = []
+        index = 1
+        for data in commentdata:
+            # student_id のハッシュ化
+            userid = hashlib.md5(data.sutdent_id.encode()).hexdigest()[:6]
+            cmnt = {"commentid":data.comment_id,"userid":userid,"reply_to":data.reply_to,"update_time":data.update_time,"content":data.content,"index":index}
+            index += 1
+            comments.append(cmnt)
+        coursename = get_coursename(courseid)
+        all_comments.append({"roomname":coursename, "commnets":comments})
+    return all_comments
+
+def get_chatrooms(studentid, courseid):
+    courseids = []
+    chatrooms = []
+    if courseid:
+        courseids.append(courseid)
+    else:
+        courses_to_be_taken=get_courses_to_be_taken(studentid)
+        courseids = [i.course_id for i in courses_to_be_taken]
+    for courseid in courseids:
+        crs = session.query(course.Course).filter(course.Course.course_id==courseid).first()
+        coursename = crs[0].coursename
+        link = f"/chat/course/{courseid}"
+        last_update = str(datetime.datetime.fromtimestamp(course[0].comment_last_update,datetime.timezone(datetime.timedelta(hours=9))))[:6]
+        checked = session.query(studentcourse.Studentcourse.comment_checked).filter(studentcourse.Studentcourse.sc_id==f"{studentid}:{courseid}").first()[0]
+        chatrooms.append({"name":coursename,"link":link,"checked":checked,"last_update":last_update})
+    return chatrooms
 
 
 def get_courseids(studentid: str,include_deleted = 0) ->List[str]:
