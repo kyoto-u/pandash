@@ -1,0 +1,27 @@
+﻿{% extends "_base.htm" %}
+{% block bodycontent %}
+<div class="container container-fluid">
+    <div class="row">
+        <h1 class="col-12 mb-5">チャットルーム</h1>
+        <table class="table col-11 mx-auto">
+            <tr>
+                <th>科目名</th>
+                <th>アクション</th>
+                <th>最終更新</th>
+            </tr>
+            {% for chatroom in chatrooms %}
+                <tr>
+                    <td>{{chatroom.name}}</td>
+                    <td><a href="{{chatroom.link}}" class="btn btn-secondary">入室する</a></td>
+                    <td>
+                        {% if chatroom.Unchecked == True %}
+                        <i class="fas fa-exclamation-circle"></i>
+                        {% endif %}
+                        {{chatroom.last_update}}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

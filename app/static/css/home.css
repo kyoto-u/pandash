@@ -24,13 +24,19 @@ html{
     padding-bottom: 20px;
 }
 
+#update_schedule{
+    min-height: 100px;
+}
+#updatelog{
+    min-height: 100px;
+}
+
 @media screen and (min-width:760px){
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    padding-top: 160;
-    width:100vw;
+    width:100%;
 }
 }
 @media screen and (max-width:760px){
@@ -38,13 +44,12 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    padding-top: 200;
-    width:100vw;
+    width:100%;
 }
 }
 
 nav{
-    width:100vw;
+    width:100%;
     margin-left: 0;
 }
 

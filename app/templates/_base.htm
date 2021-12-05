@@ -130,81 +130,31 @@
 
 
 <body>
-  <!-- pointer-eventsをnoneにする必要がない上に，
-    drag and dropをはじめとして予期しない動作をするので削除
-       style="pointer-events: none;" -->
   <header>
     <!-- ロゴとサイト名-->
-    <div class="fixed-top logos">
-      <nav class="navbar navbar-light bg-light" id="logonav">
+    <div class="logos">
+      <div class="container-fluid">
         <div class="row">
-          <a href="#" class=navbar-brand>
-            <img id="siteface" src="{{ url_for('static', filename='images/headerlogo.jpg') }}" alt="ロゴ">
-          </a>
-          <h1 id="SiteNamelabel">PandAsh</h1>
+          <nav class="navbar bg-light" id="logonav" style="width:100vw">
+            <a href="/tasklist" class="navbar-brand">
+              <img src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ" height="50">
+            </a>
+            <a class="btn btn-dark" href="/_logout" data-toggle="tooltip" title="ログアウトします"><small>ログアウト</small></a>
+          </nav>
         </div>
-      </nav>
-      <!--メニュー-->
-      <!--
-      <nav class="navbar navbar-expand-md md_fixed navbar-dark bg-dark">
-        <div class="container" id="menubar">
-          <a class="navbar-brand " href="/"></a>
-          <button id="logotoggle" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown2" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown2">
-            <ul class="navbar-nav mr-auto toggle_lefts">　
-              <li class="nav-item">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-dark active">
-                    <input type="radio" name="options" id="option1" autocomplete="off" checked>一覧表示
-                  </label>
-                  <label class="btn btn-dark">
-                    <input type="radio" name="options" id="option2" autocomplete="off">時間割表示
-                  </label>
-                </div>
-              </li>
-              <li class="nav-item">
-                <a class="btn btn-secondary" href="#" role="button">授業資料</a>
-              </li>
-            </ul>
-
-            <ul class="navbar-nav toggle_rights">
-              <li class="nav-item">
-                <a class="nav-link" href="#" data-container='body' 　data-placement="left" data-toggle="tooltip"
-                  title="iCalファイルをダウンロードします">iCalと共有</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">ログアウト</a>
-              </li>
-            </ul>
-
-          </div>
-        </div>
-      </nav>
-    -->
-
+      </div>
       <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <div class="container" id="menubar">
           <a class="navbar-brand " href="/"></a>
           <ul class="navbar-nav mr-auto toggle_lefts" style="display: flex; flex-direction: row;">　
             <li class="nav-item mr-1">
               <a class="btn btn-info navbtns  text-nowrap
-                          {% if '/tasklist' in request.path  %}
+                          {% if '/tasklist' in request.path or '/overview' in request.path  %}
                           active
                           {% endif %}
                           " href="/tasklist" role="button">
 
-                一覧表示</a>
-            <li class="nav-item">
-              <a class="btn btn-info navbtns text-nowrap
-                          {% if '/overview' in request.path  %}
-                          active
-                          {% endif %}
-                          " href="/overview" role="button">時間割表示</a>
-            </li>
+                課題一覧</a>
             <li class="nav-item navbtns">
               <a class="btn btn-info navbtns text-nowrap
                           {% if '/resourcelist' in request.path  %}
@@ -219,9 +169,12 @@
                 onclick="window.open('/help/tasklist', '', 'width=800,height=500'); return false;" {% elif '/overview'
                 in request.path %} onclick="window.open('/help/overview', '', 'width=800,height=500'); return false;" {%
                 elif '/resourcelist' in request.path %}
-                onclick="window.open('/help/resdownload', '', 'width=800,height=500'); return false;" {% else %}
-                class="d-none" {% endif %} role="button" 　data-toggle="tooltip" title="ヘルプ">
+                onclick="window.open('/help/resdownload', '', 'width=800,height=500'); return false;" {% elif '/chat' in
+                request.path %} onclick="window.open('/help/chatroom', '', 'width=800,height=500'); return false;" {%
+                else %} class="d-none" {% endif %} role="button" 　data-toggle="tooltip" title="ヘルプ">
+                <small>
                 <i class="fas fa-2x fa-question-circle"></i>
+                </small>
               </a>
             </li>
           </ul>
@@ -233,46 +186,37 @@
           <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown2">
             <section>
               <ul class="navbar-nav ml-auto pr-3 toggle_rights">
-
-                <li id="logout_button" class="nav-item mr-3 text-nowrap btn-block">
-                  <a class="btn btn-danger btn-block" href="/logout" data-toggle="tooltip" title="ログアウトします">ログアウト</a>
+                <li class="nav-item mr-3 my-auto text-nowrap btn-block">
+                  <a class="nav-link" href="/chat" data-toggle="tooltip"
+                    title="チャットルーム一覧を表示します" style="text-decoration: none;">チャットルーム</a>
                 </li>
-
-
-
-                <!-- <li class="nav-item my-auto">
-                <a id="ContactUs_link" class="nav-item text-nowrap" href="/ContactUs" 　data-toggle="tooltip"
-                  title="疑問点がございます場合はこちらをクリックしてください">お問い合わせ</a>
-              </li> -->
-
-
+                <li id="logout_button" class="nav-item mr-3 my-auto text-nowrap btn-block">
+                  <a class="nav-link" href="/announce" data-toggle="tooltip"
+                    title="PandAからのお知らせを表示します" style="text-decoration: none;">お知らせ</a>
+                </li>
                 <li class="nav-item my-auto">
                   <div class="dropdown">
                     <button type="button" id="menu_dropdown" class="btn btn-outline-light dropdown-toggle btn-block"
                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       メニュー
                     </button>
-                    <div id="menu_dropdown_list" class="dropdown-menu" aria-labelledby="menu_dropdown">
+                    <div id="menu_dropdown_list" class="dropdown-menu dropdown-menu-right" aria-labelledby="menu_dropdown">
                       <a class="dropdown-item menu_link border-bottom" href="/ical" data-toggle="tooltip"
-                        title="iCalファイルをダウンロードします">iCalと共有</a>
-                      <a class="dropdown-item menu_link border-bottom" href="/option">設定</a>
-                      <a class="dropdown-item menu_link border-bottom" href="/ContactUs">お問い合わせ</a>
+                        title="iCalファイルをダウンロードします"><i class="fas fa-calendar"></i> iCalと共有</a>
+                      <a class="dropdown-item menu_link border-bottom" href="/option"><i class="fas fa-cog"></i> 設定</a>
+                      <a class="dropdown-item menu_link border-bottom" href="/ContactUs"><i class="fas fa-paper-plane"></i> お問い合わせ</a>
+                    </div>
+                  </div>
+                </li>
+              </ul>
             </section>
           </div>
         </div>
-        </li>
-
-
-        </ul>
-
+      </nav>
     </div>
-    </div>
-    </nav>
-    </div>
-
   </header>
 
-  <div id="wrapper">
+  <div id="wrapper" class="mt-5">
     <main id="contents">
       <div id="bodycontent">
         {% block bodycontent %}
@@ -281,56 +225,16 @@
       </div>
     </main>
   </div>
+</body>
 
-  <footer>
-    <div id="footercont" class="container-fluid">
-      <div class="mx-auto" style="width: fit-content;">
-        <div class="row">
-          <a href="https://www.kyoto-u.ac.jp/ja"><img id="kyoudailogo"
-              src="https://panda.ecs.kyoto-u.ac.jp/library/image/footer-1.png"></a>
-          <a href="http://www.iimc.kyoto-u.ac.jp/ja/"><img id="KIMClogo"
-              src="https://panda.ecs.kyoto-u.ac.jp/library/image/footer-3.png"></a>
-        </div>
-      </div>
-      <div class="mx-auto" style="width: fit-content;">
+<footer>
+  <div id="footercont" class="container-fluid">
+    <div class="row">
+      <div class="ml-auto mr-3">
         <small>Copyright 2020 Institute for Information Management and Communication. All rights
           reserved.</small><br>
         <small>PandAsh</small>
       </div>
-      <div class="row ml-auto mr-1" style="width: fit-content;">
-        <small>サーバーシステム時間：</small>
-        <small>
-          <span id="view_clock"></span>
-
-          <script type="text/javascript">
-            timerID = setInterval('clock()', 500); //0.5秒毎にclock()を実行
-
-            function clock() {
-              document.getElementById("view_clock").innerHTML = getNow();
-            }
-
-            function getNow() {
-              var now = new Date();
-              var year = now.getFullYear();
-              var mon = now.getMonth(); //１を足すこと
-              var day = now.getDate();
-              var hour = now.getHours();
-              var min = now.getMinutes();
-              var sec = now.getSeconds();
-              var you = now.getDay();
-
-              //曜日の選択肢
-              var youbi = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
-              //月名の選択肢
-              var month = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
-
-              //出力用
-              var s = youbi[you] + ', ' + day + ' ' + month[mon] + ' ' + year + ' ' + hour + ':' + min + ':' + sec + ' JST';
-              return s;
-            }
-          </script>
-        </small>
-      </div>
     </div>
-  </footer>
-</body>
+  </div>
+</footer>

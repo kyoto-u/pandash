@@ -20,7 +20,6 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding-top:200px;
 }
 
 #wrapper {
@@ -31,7 +30,7 @@ body {
 
 footer {
     margin-top: auto;
-    width: 100%;
+    max-width: 100%;
 }
 
 #footercont{
@@ -75,15 +74,14 @@ footer {
 }
 
 #menu_dropdown_list{
-    background-color: #63a3db;
+    background-color: #333333;
 }
 
 .menu_link{
     color:white;
-    background-color:#63a3db;
+    background-color:#333333;
     border-bottom: white;
 }
-
 
 
 
@@ -104,11 +102,11 @@ th,td{
 }
 
 body{
-  padding-top: 140px;
+
 }
 
 #overviewtable > thead > tr {
-    min-height:60px;
+    min-height:40px;
     height: fit-content;
 }
 
@@ -126,7 +124,7 @@ body{
 }
 
 #searchlabel{
-  font-size: xx-small;
+
 }
 
 #select0a > option{
@@ -223,4 +221,14 @@ label > .downloaded{
 
 .fa-exclamation-circle{
     color:deeppink;
+}
+
+/*オプション*/
+.option-content{
+    background-color: whitesmoke;
+}
+
+.optiontablink{
+    color:black;
+    background-color:gainsboro;
 }

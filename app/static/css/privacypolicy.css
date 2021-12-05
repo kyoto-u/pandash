@@ -1,0 +1,11 @@
+﻿footer{
+    background-color:silver;
+    margin-top: 50px;
+}
+.container{
+    min-height: 100vh;
+}
+h1{
+    margin-top:10px;
+    margin-bottom:20px;
+}

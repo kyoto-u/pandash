@@ -20,20 +20,19 @@
 </head>
 
 <body>
-    <div class="fixed-top logos">
+    <div class="logos">
         <nav class="navbar navbar-light bg-light" id="logonav">
             <div class="row">
-                <a href="/" class=navbar-brand>
-                    <img id="siteface" src="{{ url_for('static', filename='images/headerlogo.jpg') }}" alt="ロゴ"
-                        width="60px" height="60px">
+                <a href="/welcome" class=navbar-brand>
+                    <img id="siteface" src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ"
+                        height="50">
                 </a>
-                <h1 id="sitename">PandAsh</h1>
             </div>
         </nav>
         <!--メニュー-->
         <nav class="navbar navbar-expand md_fixed navbar-dark bg-dark">
             <div class="container" id="menubar">
-                <a class="navbar-brand" href="/"></a>
+                <a class="navbar-brand" href="/welcome"></a>
                 <button id="logotoggle" class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown2" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -42,7 +41,7 @@
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown2">
                     <ul class="navbar-nav mr-auto toggle_lefts">　
                         <li class="nav-item">
-                            <a class="nav-link" href="/">ホーム</a>
+                            <a class="nav-link" href="/welcome">ホーム</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/faq">FAQ</a>
@@ -66,7 +65,7 @@
             {% include "home_pagetransition.htm" %}
         </div>
     </div>
-    <div class="col-12">
+    <div class="col-12 pt-5">
         {% block homebodycontent %}
         Replace This
         {% endblock %}
@@ -77,49 +76,11 @@
     <footer>
         <div id="footercont" class="container-fluid">
             <div class="row">
-                <a href="https://www.kyoto-u.ac.jp/ja"><img id="kyoudailogo"
-                        src="https://panda.ecs.kyoto-u.ac.jp/library/image/footer-1.png"></a>
-                <a href="http://www.iimc.kyoto-u.ac.jp/ja/"><img id="KIMClogo"
-                        src="https://panda.ecs.kyoto-u.ac.jp/library/image/footer-3.png"></a>
-            </div>
-            <div class="mx-auto" style="width: fit-content;">
-                <small>Copyright 2020 Institute for Information Management and Communication. All rights
-                    reserved.</small><br>
-                <small>PandAsh</small>
-            </div>
-            <div class="row ml-auto mr-1" style="width: fit-content;">
-                <small>サーバーシステム時間：</small>
-                <small>
-                    <span id="view_clock"></span>
-
-                    <script type="text/javascript">
-                        timerID = setInterval('clock()', 500); //0.5秒毎にclock()を実行
-
-                        function clock() {
-                            document.getElementById("view_clock").innerHTML = getNow();
-                        }
-
-                        function getNow() {
-                            var now = new Date();
-                            var year = now.getFullYear();
-                            var mon = now.getMonth(); //１を足すこと
-                            var day = now.getDate();
-                            var hour = now.getHours();
-                            var min = now.getMinutes();
-                            var sec = now.getSeconds();
-                            var you = now.getDay();
-
-                            //曜日の選択肢
-                            var youbi = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
-                            //月名の選択肢
-                            var month = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
-
-                            //出力用
-                            var s = youbi[you] + ', ' + day + ' ' + month[mon] + ' ' + year + ' ' + hour + ':' + min + ':' + sec + ' JST';
-                            return s;
-                        }
-                    </script>
-                </small>
+                <div class="ml-auto mr-5">
+                    <small>Copyright 2020 Institute for Information Management and Communication. All rights
+                        reserved.</small><br>
+                    <small>PandAsh</small>
+                </div>
             </div>
         </div>
     </footer>

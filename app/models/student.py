@@ -7,8 +7,8 @@ class Student(settings.Base):
     __tablename__ = 'students'
     student_id = sqlalchemy.Column(String(40), primary_key=True, index = True)
     fullname = sqlalchemy.Column(String(40))
-    last_update = sqlalchemy.Column(sqlalchemy.BigInteger())
-    last_update_subject = sqlalchemy.Column(sqlalchemy.BigInteger())
+    last_update = sqlalchemy.Column(sqlalchemy.BigInteger()) # milliseconds e.g. 1600000000000
+    last_update_subject = sqlalchemy.Column(sqlalchemy.BigInteger()) # milliseconds e.g. 1600000000000
     language = sqlalchemy.Column(String(40))
     # studentcourse table の更新が必要かどうか
     need_to_update_sitelist = sqlalchemy.Column(Integer(), default=0)

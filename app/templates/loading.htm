@@ -46,8 +46,9 @@
     <div id="loading"></div>
     <div class="container mx-auto">
         <div class="mx-auto">
-            <img id="loading_logo" src="{{ url_for('static', filename='images/logo.jpg') }}" width="300" height="300"
-                style="z-index: -20; position: relative;">
+            <!-- <img id="loading_logo" src="{{ url_for('static', filename='images/logo.jpg') }}" width="300" height="300"
+                style="z-index: -20; position: relative;"> -->
+            <img src="{{ url_for('static', filename='images/loading.gif') }}" alt="Loading..." width="300" height="300" style="z-index: -20; position: relative;">
             <h2 id="how_percent_loaded">Loading...</h2>
         </div>
     </div>
