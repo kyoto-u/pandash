@@ -420,7 +420,7 @@ def update_comment_checked(studentid, courseid):
     return
 
 # コースのコメントが追加されたときに実行
-def update_commnet_unchecked(courseid):
+def update_comment_unchecked(courseid):
     sc_ids = session.query(studentcourse.Studentcourse.sc_id).filter(
         studentcourse.Studentcourse.course_id==courseid).all()
     update_list = []
