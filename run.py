@@ -406,7 +406,7 @@ def resources_sample():
 # コメントを取得/表示
 @app.route('/chat/course/<courseid>')
 def chat_course(courseid):
-    studentid = session.get('studentid')
+    studentid = session.get('student_id')
     if studentid:
         studentdata = get_student(studentid)
         if studentdata == None:
