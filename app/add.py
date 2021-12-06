@@ -267,9 +267,7 @@ def add_student_assignment(studentid, data, last_update):
         for i in sa:
             if i.assignment_id == item["assignment_id"]:
                 assignment_exist = True
-                # TODO:clicked==1のときは内容に更新があるかを調べたい
-                if item["status"] !=Status.AlreadyDue.value and i.clicked==0:
-                    update=True
+
                 break
         if assignment_exist == False:
             new_sa.append(item)
@@ -299,9 +297,7 @@ def add_student_quiz(studentid, data, last_update):
         for i in sq:
             if i.quiz_id == item["quiz_id"]:
                 quiz_exist = True
-                # TODO:clicked==1のときは内容に更新があるかを調べたい
-                if item["status"] !=Status.AlreadyDue.value and i.clicked == 0:
-                    update=True
+                
                 break
         if quiz_exist == False:
             new_sq.append(item)
