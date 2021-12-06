@@ -2,11 +2,39 @@
 #
 
 from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment,\
-                    forum, quiz, studentquiz, comment, coursecomment
+                    forum, quiz, studentquiz, comment, coursecomment,announcement,studentannouncement
 from .settings import session
 from .get import get_courseids
 import time
 from .original_classes import Status
+
+def add_announcement(studentid, data):
+    course_ids = get_courseids(studentid)
+    announcements = session.query(
+        announcement.Announcement).filter(announcement.Announcement.course_id.in_(course_ids)).all()
+    new_announcement=[]
+    upd_announcement = []
+    for item in data:
+        announcement_exist = False
+        update=False
+        if item["course_id"] not in course_ids:
+            continue
+        for i in announcements:
+            if i.announcement_id == item["announcement_id"]:
+                announcement_exist = True
+                if item["createddate"] !=i.createddate:
+                    update=True
+                break
+        if announcement_exist == False:
+            new_announcement.append(item)
+        elif update == True:
+            upd_announcement.append(item)
+    if len(new_announcement) != 0:
+        session.execute(announcement.Announcement.__table__.insert(),new_announcement)
+    if len(upd_announcement) != 0:
+        session.bulk_update_mappings(announcement.Announcement, upd_announcement)
+    session.commit()
+    return
 
 def add_assignment(studentid, data, last_update):
     course_ids = get_courseids(studentid)
@@ -247,6 +275,35 @@ def add_studentcourse(studentid, data, allow_delete = 1):
         session.execute(studentcourse.Studentcourse.__table__.insert(),new_sc)
     if len(upd_sc) != 0:
         session.bulk_update_mappings(studentcourse.Studentcourse, upd_sc)
+    session.commit()
+    return
+
+def add_student_announcement(studentid, data, last_update):
+    """
+        data:announcement_id, student_id, status
+    """
+    sa = session.query(
+        studentannouncement.Student_Announcement).filter(studentannouncement.Student_Announcement.student_id == studentid).all()
+    course_ids = get_courseids(studentid)
+    new_sa = []
+    upd_sa = []
+    for item in data:
+        announcement_exist = False
+        update=False
+        if not item["course_id"] in course_ids:
+            continue
+        for i in sa:
+            if i.announcement_id == item["announcement_id"]:
+                announcement_exist = True
+                break
+        if announcement_exist == False:
+            new_sa.append(item)
+        elif update == True:
+            upd_sa.append(item)
+    if len(new_sa) != 0:
+        session.execute(studentannouncement.Student_Announcement.__table__.insert(),new_sa)
+    if len(upd_sa) != 0:
+        session.bulk_update_mappings(studentannouncement.Student_Announcement, upd_sa)
     session.commit()
     return
 

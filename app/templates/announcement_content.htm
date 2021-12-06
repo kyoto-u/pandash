@@ -1,0 +1,26 @@
+﻿{% extends "_base.htm" %}
+{% block bodycontent %}
+<div class="container container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="row border-bottom">
+                <a type="button" class="btn btn-success" href="javascript:history.back();"><i class="fas fa-2x fa-arrow-left"></i></a>
+                <h1>{{title}}</h1>
+            </div>
+            <ul style="list-style-type: none">
+                <li>保存者：{{publisher}}</li>
+                <li>公開日時：{{publish_date}}</li>
+                <li>サイト：{{site_name}}</li>
+            </ul>
+            <div id="message_container">
+                <div class="col-12 mt-1">
+                    <p class="pt-2">
+                        {{html_file|safe}}
+                    </p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

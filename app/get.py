@@ -1,14 +1,57 @@
 # データベース操作を伴い情報を取得する関数の一覧
 #
 from math import *
-from .models import student, assignment, course, studentassignment, studentcourse, resource, studentresource,quiz,studentquiz
+from .models import student, assignment, course, studentassignment, studentcourse, resource, studentresource, quiz, studentquiz, announcement, studentannouncement
 from .models import comment, coursecomment
 from .settings import SHOW_YEAR_SEMESTER, session, panda_url
 from .original_classes import TimeLeft ,Status
 import datetime
 import hashlib
 from typing import List
-from pprint import pprint
+import datetime
+
+def get_announcements(studentid,show_only_unchecked, courseid, day):
+    enrollments = session.query(studentannouncement.Student_Announcement).filter(
+        studentannouncement.Student_Announcement.student_id == studentid).all()
+    announcementids =[i.announcement_id for i in enrollments]
+    course_to_be_taken=get_courses_to_be_taken(studentid)
+    courseids = [i.course_id for i in course_to_be_taken]
+    announcementdata = session.query(announcement.Announcement).filter(
+        announcement.Announcement.announcement_id.in_(announcementids)).all()
+    
+    coursedata = session.query(course.Course).filter(
+            course.Course.course_id.in_(courseids)).all()
+    
+    returns = []
+    for data in enrollments:
+        if show_only_unchecked==1:
+            if data.checked==1:
+                continue
+        anndata = [i for i in announcementdata if i.announcement_id == data.announcement_id]
+        crsdata = [i for i in coursedata if i.course_id == anndata[0].course_id]
+        
+        if courseid != None:
+            if courseid != anndata[0].course_id:
+                continue
+        if anndata[0].course_id not in courseids:
+            continue
+        if day != None:
+            if day not in crsdata[0].classschedule:
+                continue
+        
+        announce = {}
+        announce["checked"]=data.checked
+        announce["title"]=anndata[0].title
+        announce["html_file"]=anndata[0].body
+        announce["subject"]=crsdata[0].coursename
+        announce["classschedule"]=crsdata[0].classschedule
+        announce["course_id"]=anndata[0].course_id
+        announce["publisher"]="xxxx"
+        announce["time_ms"]=anndata[0].createddate
+        announce["publish_date"]=datetime.datetime.fromtimestamp(anndata[0].createddate//1000).strftime("%Y/%m/%d %H:%M:%S")
+        returns.append(announce)
+    return returns
+
 
 def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
     if show_only_unfinished == False:

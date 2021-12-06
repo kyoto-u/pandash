@@ -11,6 +11,14 @@ from .get import *
 from .api import *
 
 # 複合的な関数
+def get_announcementlist(studentid, show_only_unchecked = False,courseid=None, day=None):
+    """
+
+    """
+    announcements=get_announcements(studentid, show_only_unchecked,courseid, day)
+
+    return announcements
+
 def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_sitelist):
     """
         ユーザーの履修科目を取得し、対象科目の課題、授業資料、テスト・クイズの情報を更新する
@@ -19,17 +27,17 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         0 -> すでにデータベースに格納してあるユーザー履修状況をもとに対象科目を定める
         1 -> APIで履修科目を取得し、うちデータベースに格納していない科目のみを対象とする
     """
-    get_membership = {"student_id": "", "site_list":[]}
+    membership = {"student_id": "", "site_list":[]}
     if need_to_update_sitelist == 0:                
-        get_membership["student_id"] = student_id
-        get_membership["site_list"] = get_courses_id_to_be_taken(student_id)
+        membership["student_id"] = student_id
+        membership["site_list"] = get_courses_id_to_be_taken(student_id)
     else:
         # 時間かかる
         last_update = 0
         # membership.json 使用
-        # get_membership = get_course_id_from_api(get_membership_json(ses))
+        # membership = get_course_id_from_api(membership_json(ses))
         # site.json 使用
-        get_membership = get_course_id_from_site_api(get_site_json(ses),student_id)
+        membership = get_course_id_from_site_api(get_site_json(ses),student_id)
         already_known= get_courses_id_to_be_taken(student_id)
         
         # 既存の教科情報を更新
@@ -38,70 +46,101 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         add_studentcourse(student_id,sc_known)
 
         # 新規のもののみを取り上げる
-        get_membership["site_list"] = [i for i in get_membership["site_list"] if i not in already_known]
-        
+        membership["site_list"] = [i for i in membership["site_list"] if i not in already_known]
     if student_id != "":
         # get_assignments = get_assignments_from_api(assignments.json(), student_id)
-        get_sites = {"courses":[],"student_courses":[]}
-        get_resources = {"resources":[],"student_resources":[]}
-        get_quizzes = {"quizzes":[], "student_quizzes":[]}
+        rslt_courses = {"courses":[],"student_courses":[]}
+        rslt_resources = {"resources":[],"student_resources":[]}
+        rslt_quizzes = {"quizzes":[], "student_quizzes":[]}
         asyncio.set_event_loop(asyncio.SelectorEventLoop())
         loop = asyncio.get_event_loop()
-        c_statements = []
-        s_statements = []
-        q_statements = []
-        p_statements = []
-        for courseid in get_membership["site_list"]:
-            c_statements.append(async_get_content(courseid, ses))
-            s_statements.append(async_get_site(courseid, ses))
-            p_statements.append(async_get_site_pages(courseid, ses))
-            q_statements.append(async_get_quiz(courseid, ses))
-            # site = s.get(f"{api_url}site/{courseid}.json")
-            # resources = s.get(f"{api_url}content/site/{courseid}.json")
-            # get_site = get_course_from_api(site.json(), student_id)
-            # get_sites["courses"].append(get_site["course"])
-            # get_sites["student_courses"].append(get_site["student_course"])
-            # get_resource = get_resources_from_api(resources.json(),courseid,student_id)
-            # get_resources["resources"].append(get_resource["resources"])
-            # get_resources["student_resources"].append(get_resources["student_resources"])
-        c_statements.extend(s_statements)
-        c_statements.extend(p_statements)
-        c_statements.extend(q_statements)
-        c_statements.extend([async_get_assignments(ses),async_get_user_info(ses)])
-        tasks = asyncio.gather(*c_statements)
-        content_site = loop.run_until_complete(tasks)
-        content_site_len = int(len(content_site))-2
-        one_forrth_content_site_len = content_site_len//4
-        contents = content_site[0:one_forrth_content_site_len]
-        sites = content_site[one_forrth_content_site_len:one_forrth_content_site_len*2]
-        pages = content_site[one_forrth_content_site_len*2:one_forrth_content_site_len*3]
-        quizzes = content_site[one_forrth_content_site_len*3:content_site_len]
-        get_assignments = get_assignments_from_api(content_site[content_site_len],student_id)
-        user_info = get_user_info_from_api(content_site[content_site_len+1])
+        content_statements = []
+        site_statements = []
+        quiz_statements = []
+        page_statements = []
+        for courseid in membership["site_list"]:
+            content_statements.append(async_get_content(courseid, ses))
+            site_statements.append(async_get_site(courseid, ses))
+            page_statements.append(async_get_site_pages(courseid, ses))
+            quiz_statements.append(async_get_quiz(courseid, ses))
+        statements = [*content_statements,*page_statements,*quiz_statements,async_get_assignments(ses),async_get_user_info(ses),async_get_announcement(ses)]
+        tasks = asyncio.gather(*statements)
+        results = loop.run_until_complete(tasks)
+        results_len = int(len(results))-3
+        one_forth_results_len = results_len//4
+        rslt_contents = results[0:one_forth_results_len]
+        rslt_sites = results[one_forth_results_len:one_forth_results_len*2]
+        rslt_pages = results[one_forth_results_len*2:one_forth_results_len*3]
+        rslt_quizzes = results[one_forth_results_len*3:results_len]
+        assignments = get_assignments_from_api(results[results_len],student_id)
+        user_info = get_user_info_from_api(results[results_len+1])
+        announcements = get_announcement_from_api(results[results_len+2])
         index = 0
-        for courseid in get_membership["site_list"]:
-            get_resource = get_resources_from_api(contents[index],courseid,student_id)
-            get_quiz = get_quizzes_from_api(quizzes[index],courseid,student_id)
-            get_site = get_course_from_api(sites[index], student_id)
-            if get_site:
-                get_site["course"]["page_id"] = get_page_from_api(pages[index],"assignment")
-                get_site["course"]["quiz_page_id"] = get_page_from_api(pages[index],"quiz")
-                get_sites["courses"].append(get_site["course"])
-                get_sites["student_courses"].append(get_site["student_course"])
-                get_resources["resources"].extend(get_resource["resources"])
-                get_resources["student_resources"].extend(get_resource["student_resources"])
+        for courseid in membership["site_list"]:
+            get_res = get_resources_from_api(rslt_contents[index],courseid,student_id)
+            get_quiz = get_quizzes_from_api(rslt_quizzes[index],courseid,student_id)
+            get_crs = get_course_from_api(rslt_sites[index], student_id)
+            if get_crs:
+                get_crs["course"]["page_id"] = get_page_from_api(rslt_pages[index]["page_id"])
+                get_crs["course"]["announcement_page_id"] = get_page_from_api(rslt_pages[index]["announcement_page_id"])
+                get_courses["courses"].append(get_crs["course"])
+                get_courses["student_courses"].append(get_crs["student_course"])
+                get_resources["resources"].extend(get_res["resources"])
+                get_resources["student_resources"].extend(get_res["student_resources"])
                 get_quizzes["quizzes"].extend(get_quiz["quizzes"])
                 get_quizzes["student_quizzes"].extend(get_quiz["student_quizzes"])
             index += 1
-        # student_id       student_id
-        # get_membership   {"student_id": , "site_list": []}
-        # get_assignments  {"assignments": [], student_assignments: []}
-        # get_sites        {"courses": [], "student_courses": []}
-        # get_resources    {"resources":[], "student_resources": []}
-        # student_quizzes  {"quizzes:[], "student_quizzes":[]}
-        # user_info        {"student_id": , "fullname": }
-        # + get_quizzes 
-        sync_student_contents(student_id, get_sites, get_assignments, get_resources, get_quizzes, now, last_update=last_update, need_to_update_sitelist=need_to_update_sitelist)
+        # student_id   student_id
+        # membership   {"student_id": , "site_list": []}
+        # assignments  {"assignments": [], student_assignments: []}
+        # courses      {"courses": [], "student_courses": []}
+        # resources    {"resources":[], "student_resources": []}
+        # quizzes      {"quizzes:[], "student_quizzes":[]}
+        # user_info    {"student_id": , "fullname": }
+        # quizzes      {"quizzes":[], "student_quizzes":[]}
+        # announcements{"announcements":[], "studnet_announcements":[]}
+        sync_student_contents(student_id, get_courses, get_assignments, get_resources, get_quizzes, get_announcements, now, last_update=last_update,need_to_update_sitelist=need_to_update_sitelist)
+
+def get_data_from_api_and_update(student_id,access_param,ses,now,last_update):
+    last_update = 0
+    timetables = get_kulasis_lecture_and_department_no_from_timetable_api(get_timetable(ses,access_param),student_id)
+    lectures = {"lectures":[], "student_lectreus":[]}
+    # announcements = {"announcements":[], "student_announcements":[]}
+    asyncio.set_event_loop(asyncio.SelectorEventLoop())
+    loop = asyncio.get_event_loop()
+    lecture_statements = []
+    lecture_material_statements = []
+    mail_list_statements = []
+    for lecture in timetables["site_list"]:
+        lecture_statements.append(get_lecture_detail(ses,access_param,lecture["department_no"],lecture["lecture_no"]))
+        lecture_material_statements.append(get_lecture_material(ses,access_param,lecture["department_no"],lecture["lecture_no"]))
+        mail_list_statements.append(get_mail_list(ses,access_param,lecture["department_no"],lecture["lecture_no"]))
+    statements = [*lecture_statements,*lecture_material_statements,*mail_list_statements]
+    tasks = asyncio.gather(*statements)
+    results = loop.run_until_complete(tasks)
+    results_len = int(len(results))
+    one_third_results_len = results_len//3
+    rslt_lecture_details = results[0:one_third_results_len]
+    rslt_lecture_materials = results[one_third_results_len:one_third_results_len*2]
+    rslt_mail_lists = results[one_third_results_len*2:results_len]
+    index = 0
+    lecture_details = {"lectures":[]}
+    mail_lists = []
+    for lecture in timetables["site_list"]:
+        lecture_detail = get_lecture_detail_from_api(rslt_lecture_details[index])
+        lecture_material = get_lecture_material_from_api(rslt_lecture_details[index])
+        mail_list = get_mail_list_from_api(rslt_mail_lists[index])
+        lecture_details["lectures"].append(lecture_detail)
+        mail_lists.extend(mail_list)
+
+    mail_detail_statements = []
+    for mail in mail_lists:
+        mail_detail_statements.extend(get_mail_detail(ses,access_param,mail['department_no'],mail['courseMailNo']))
+    # 2度目の非同期処理, メール本文の取得
+    task_mail = asyncio.gather(*mail_detail_statements)
+    mail_detail_result = loop.run_until_complete(task_mail)
+    # この後メールの本文取得，追加処理
+        
 
 def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):
     """
@@ -115,13 +154,19 @@ def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None
     # assignmentsとquizzesを結合
     return assignments+quizzes
 
+def sync_student_announcement(studentid, sa, anc): 
+    # 追加、更新をする
+    add_student_announcement(studentid, sa)
+    add_announcement(studentid, anc)
+    return 0
+
 def sync_student_assignment(studentid, sa, asm,last_update): 
     # 追加、更新をする
     add_student_assignment(studentid,sa, last_update)
     add_assignment(studentid, asm, last_update)
     return 0
 
-def sync_student_contents(studentid, crs, asm, res, qz, now,last_update=0,need_to_update_sitelist=0):
+def sync_student_contents(studentid, crs, asm, res, qz, anc, now,last_update=0,need_to_update_sitelist=0):
     # 以下主な方針
     #
     # studentテーブルにlast_updateを用意し、毎回update後に記録しておく
@@ -138,6 +183,7 @@ def sync_student_contents(studentid, crs, asm, res, qz, now,last_update=0,need_t
     sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"], last_update)
     sync_student_resource(studentid, res["student_resources"], res["resources"], last_update)
     sync_student_quiz(studentid, qz["student_quizzes"], qz["quizzes"], last_update)
+    sync_student_announcement(studentid, anc["student_announcement", anc["announcements"]])
 
     return 0
 
@@ -336,7 +382,7 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
         """ + html_deleted_courseid + "</div></div>"
     return html
 
-def setdefault_for_overview(studentid, mode='tasklist'):
+def setdefault_for_overview(studentid, mode='tasklist',tasks_name="tasks"):
     """
         履修科目をデータベースから取得し、overviewで使用するdataの枠組みを作る
         data:
@@ -359,7 +405,7 @@ def setdefault_for_overview(studentid, mode='tasklist'):
     """
     data={}
     days =["mon", "tue", "wed", "thu", "fri"]
-    default = {"subject": "", "shortname": "", "searchURL": "","tasks": []}
+    default = {"subject": "", "shortname": "", "searchURL": "",tasks_name: []}
     for day in days:
         for i in range(5):
             data[day+str(i+1)]=copy.copy(default)
@@ -398,15 +444,36 @@ def setdefault_for_overview(studentid, mode='tasklist'):
                 data["others"][index]["subject"] = course.coursename
                 data["others"][index]["shortname"] = re.sub(
                     "\[.*\]", "", course.coursename)
-                data["others"][index]["tasks"] = []
+                data["others"][index][tasks_name] = []
 
         elif add_subject == True:
             data[course.classschedule]["searchURL"] = app_url+ f"/{mode}/course/"+course.course_id
             data[course.classschedule]["subject"] = course.coursename
             data[course.classschedule]["shortname"] = re.sub(
                 "\[.*\]", "", course.coursename)
-            data[course.classschedule]["tasks"] = []
+            data[course.classschedule][tasks_name] = []
     return data
+
+def sort_announcements(announcements,criterion,ascending):
+    """
+        
+        criterion 並び替えの順
+        0: 保存者 1: 公開日時 2: サイト名
+
+        ascending 0: 降順 1: 昇順
+    """
+    
+
+    keyname=""
+    if criterion==0:
+        keyname="publisher"
+    elif criterion==1:
+        keyname="time_ms"
+    else:
+        keyname="subject"
+    # keynameの値で並べ変える。降順ならreverseをTrueにする
+    new_announcements = sorted(announcements, key=lambda x: x[keyname],reverse=ascending==0)
+    return new_announcements
 
 def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
     """
@@ -430,7 +497,7 @@ def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
     new_tasks = sorted(new_tasks, key=lambda x: order_status(x["status"]))
     return new_tasks
 
-def task_arrange_for_overview(tasks,task_arranged):
+def task_arrange_for_overview(tasks,task_arranged,key_name="tasks"):
 
     for task in tasks:
         add_in_others = False
@@ -453,7 +520,7 @@ def task_arrange_for_overview(tasks,task_arranged):
                     break
                 index += 1
             if subject_exist:
-                task_arranged["others"][index]["tasks"].append(task)
+                task_arranged["others"][index][key_name].append(task)
             else:
                 # 新しい教科を追加(setdefault_for_overviewで型は作ってあるはずなので本来ここに到達することはない)
                 task_arranged["others"].append({})
@@ -461,10 +528,10 @@ def task_arrange_for_overview(tasks,task_arranged):
                 task_arranged["others"][index]["subject"] = task["subject"]
                 task_arranged["others"][index]["shortname"] = re.sub(
                     "\[.*\]", "", task["subject"])
-                task_arranged["others"][index]["tasks"] = [task]
+                task_arranged["others"][index][key_name] = [task]
 
         else:
-            task_arranged[task["classschedule"]]["tasks"].append(task)
+            task_arranged[task["classschedule"]][key_name].append(task)
     return task_arranged
 
 def timejudge(task, max_time_left):
