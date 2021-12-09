@@ -81,8 +81,9 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
             quiz = get_quizzes_from_api(rslt_quizzes[index],courseid,student_id)
             crs = get_course_from_api(rslt_sites[index], student_id)
             if crs:
-                crs["course"]["page_id"] = get_page_from_api(rslt_pages[index]["page_id"])
-                crs["course"]["announcement_page_id"] = get_page_from_api(rslt_pages[index]["announcement_page_id"])
+                crs["course"]["page_id"] = get_page_from_api(rslt_pages[index],"assignment")
+                crs["course"]["quiz_page_id"] = get_page_from_api(rslt_pages[index],"quiz")
+                crs["course"]["announcement_page_id"] = get_page_from_api(rslt_pages[index],"announcement")
                 courses["courses"].append(crs["course"])
                 courses["student_courses"].append(crs["student_course"])
                 resources["resources"].extend(res["resources"])
