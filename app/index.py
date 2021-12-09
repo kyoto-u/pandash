@@ -74,7 +74,7 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         rslt_quizzes = results[one_forth_results_len*3:results_len]
         assignments = get_assignments_from_api(results[results_len],student_id)
         user_info = get_user_info_from_api(results[results_len+1])
-        announcements = get_announcement_from_api(results[results_len+2])
+        announcements = get_announcement_from_api(results[results_len+2],student_id)
         index = 0
         for courseid in membership["site_list"]:
             res = get_resources_from_api(rslt_contents[index],courseid,student_id)
