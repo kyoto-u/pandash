@@ -11,7 +11,7 @@ import functools
 def get_announcement_from_api(announcements, student_id):
     announcement_list = []
     st_anouncement_list = []
-    an_st_collection = announcements.get("assnoucement_collection")
+    an_st_collection = announcements.get("announcement_collection")
     for announce in an_st_collection:
         announcement_id = announce.get('announcementId')
         title = announce.get('title')
