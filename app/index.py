@@ -63,7 +63,7 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
             site_statements.append(async_get_site(courseid, ses))
             page_statements.append(async_get_site_pages(courseid, ses))
             quiz_statements.append(async_get_quiz(courseid, ses))
-        statements = [*content_statements,*page_statements,*quiz_statements,async_get_assignments(ses),async_get_user_info(ses),async_get_announcement(ses)]
+        statements = [*content_statements,*site_statements,*page_statements,*quiz_statements,async_get_assignments(ses),async_get_user_info(ses),async_get_announcement(ses)]
         tasks = asyncio.gather(*statements)
         results = loop.run_until_complete(tasks)
         results_len = int(len(results))-3
