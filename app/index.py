@@ -41,7 +41,7 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         already_known= get_courses_id_to_be_taken(student_id)
         
         # 既存の教科情報を更新
-        site_list_known = [i for i in get_membership["site_list"] if i in already_known]
+        site_list_known = [i for i in membership["site_list"] if i in already_known]
         sc_known = [{"sc_id":f"{student_id}:{i}","student_id":student_id,"course_id":i} for i in site_list_known]
         add_studentcourse(student_id,sc_known)
 
@@ -49,9 +49,9 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         membership["site_list"] = [i for i in membership["site_list"] if i not in already_known]
     if student_id != "":
         # get_assignments = get_assignments_from_api(assignments.json(), student_id)
-        rslt_courses = {"courses":[],"student_courses":[]}
-        rslt_resources = {"resources":[],"student_resources":[]}
-        rslt_quizzes = {"quizzes":[], "student_quizzes":[]}
+        courses = {"courses":[],"student_courses":[]}
+        resources = {"resources":[],"student_resources":[]}
+        quizzes = {"quizzes":[], "student_quizzes":[]}
         asyncio.set_event_loop(asyncio.SelectorEventLoop())
         loop = asyncio.get_event_loop()
         content_statements = []
@@ -77,18 +77,18 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         announcements = get_announcement_from_api(results[results_len+2])
         index = 0
         for courseid in membership["site_list"]:
-            get_res = get_resources_from_api(rslt_contents[index],courseid,student_id)
-            get_quiz = get_quizzes_from_api(rslt_quizzes[index],courseid,student_id)
-            get_crs = get_course_from_api(rslt_sites[index], student_id)
-            if get_crs:
-                get_crs["course"]["page_id"] = get_page_from_api(rslt_pages[index]["page_id"])
-                get_crs["course"]["announcement_page_id"] = get_page_from_api(rslt_pages[index]["announcement_page_id"])
-                get_courses["courses"].append(get_crs["course"])
-                get_courses["student_courses"].append(get_crs["student_course"])
-                get_resources["resources"].extend(get_res["resources"])
-                get_resources["student_resources"].extend(get_res["student_resources"])
-                get_quizzes["quizzes"].extend(get_quiz["quizzes"])
-                get_quizzes["student_quizzes"].extend(get_quiz["student_quizzes"])
+            res = get_resources_from_api(rslt_contents[index],courseid,student_id)
+            quiz = get_quizzes_from_api(rslt_quizzes[index],courseid,student_id)
+            crs = get_course_from_api(rslt_sites[index], student_id)
+            if crs:
+                crs["course"]["page_id"] = get_page_from_api(rslt_pages[index]["page_id"])
+                crs["course"]["announcement_page_id"] = get_page_from_api(rslt_pages[index]["announcement_page_id"])
+                courses["courses"].append(crs["course"])
+                courses["student_courses"].append(crs["student_course"])
+                resources["resources"].extend(res["resources"])
+                resources["student_resources"].extend(res["student_resources"])
+                quizzes["quizzes"].extend(quiz["quizzes"])
+                quizzes["student_quizzes"].extend(quiz["student_quizzes"])
             index += 1
         # student_id   student_id
         # membership   {"student_id": , "site_list": []}
@@ -99,9 +99,9 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         # user_info    {"student_id": , "fullname": }
         # quizzes      {"quizzes":[], "student_quizzes":[]}
         # announcements{"announcements":[], "studnet_announcements":[]}
-        sync_student_contents(student_id, get_courses, get_assignments, get_resources, get_quizzes, get_announcements, now, last_update=last_update,need_to_update_sitelist=need_to_update_sitelist)
+        sync_student_contents(student_id, courses, assignments, resources, quizzes, announcements, now, last_update=last_update,need_to_update_sitelist=need_to_update_sitelist)
 
-def get_data_from_api_and_update(student_id,access_param,ses,now,last_update):
+def get_data_from_kulais_api_and_update(student_id,access_param,ses,now,last_update):
     last_update = 0
     timetables = get_kulasis_lecture_and_department_no_from_timetable_api(get_timetable(ses,access_param),student_id)
     lectures = {"lectures":[], "student_lectreus":[]}
