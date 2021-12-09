@@ -184,7 +184,7 @@ def sync_student_contents(studentid, crs, asm, res, qz, anc, now,last_update=0,n
     sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"], last_update)
     sync_student_resource(studentid, res["student_resources"], res["resources"], last_update)
     sync_student_quiz(studentid, qz["student_quizzes"], qz["quizzes"], last_update)
-    sync_student_announcement(studentid, anc["student_announcements", anc["announcements"]])
+    sync_student_announcement(studentid, anc["student_announcements"], anc["announcements"])
 
     return 0
 
