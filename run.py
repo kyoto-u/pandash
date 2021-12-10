@@ -443,7 +443,7 @@ def chat_course(courseid):
         studentdata = get_student(studentid)
         if studentdata == None:
             return redirect(url_for('login'))
-        last_update = str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        last_update = str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         return comment_general(courseid)
     else:
         return redirect(url_for('login'))
@@ -457,7 +457,7 @@ def announcement_overview():
         if studentdata == None:
             # なければstudentの記録がないことになるので一度ログインへ
             return redirect(url_for('login'))
-        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         logging.debug(f"last update = {last_update}\npage = announcement")
         data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcemnts")
         announcements = get_announcementlist(studentid)
@@ -485,7 +485,7 @@ def announcementlist_general(courseid,criterion,ascending):
             # なければstudentの記録がないことになるので一度ログインへ
             return redirect(url_for('login'))
         
-        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         logging.debug(f"last update = {last_update}\npage = announcementlist")
         announcements = get_announcementlist(studentid,courseid=courseid)
         announcements = sort_announcements(announcements,criterion=criterion,ascending=ascending)
@@ -730,7 +730,7 @@ def comment_general(courseid = None):
         studentdata = get_student(studentid)
         if studentdata == None:
             return redirect(url_for('login'))
-        last_update = str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        last_update = str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         data = setdefault_for_overview(studentid)
         all_comments = get_comments(studentid, courseid)
         if len(all_comments) == 1:
