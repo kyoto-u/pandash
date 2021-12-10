@@ -16,9 +16,13 @@ def get_announcement_from_api(announcements, student_id):
         announcement_id = announce.get('announcementId')
         title = announce.get('title')
         body = announce.get('body')
+        too_long=0
+        if len(body>1000):
+            body = body[:1000]
+            too_long=1
         createddate = announce.get('createdOn')
         course_id = announce.get('siteId')
-        announcement_list.append({"announcement_id":announcement_id,"title":title,"body":body,"createddate":createddate,"course_id":course_id}) 
+        announcement_list.append({"announcement_id":announcement_id,"title":title,"body":body,"createddate":createddate,"course_id":course_id,"too_long":too_long}) 
         st_anouncement_list.append({"sa_id":f"{student_id}:{announcement_id}","announcement_id":announcement_id,"course_id":course_id,"student_id":student_id})
     announcement_dict = {"student_announcements":st_anouncement_list, "announcements":announcement_list}
     return announcement_dict
