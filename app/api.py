@@ -18,8 +18,8 @@ def get_announcement_from_api(announcements, student_id):
         body = announce.get('body')
         createddate = announce.get('createdOn')
         course_id = announce.get('siteId')
-        announcement_list.append({"sa_id":f"{student_id}:{announcement_id}","announcement_id":announcement_id,"title":title,"body":body,"createddate":createddate,"course_id":course_id}) 
-        st_anouncement_list.append({"announcement_id":announcement_id,"course_id":course_id})
+        announcement_list.append({"announcement_id":announcement_id,"title":title,"body":body,"createddate":createddate,"course_id":course_id}) 
+        st_anouncement_list.append({"sa_id":f"{student_id}:{announcement_id}","announcement_id":announcement_id,"course_id":course_id,"student_id":student_id})
     announcement_dict = {"student_announcements":st_anouncement_list, "announcements":announcement_list}
     return announcement_dict
 
