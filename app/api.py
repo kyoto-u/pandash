@@ -17,7 +17,7 @@ def get_announcement_from_api(announcements, student_id):
         title = announce.get('title')
         body = announce.get('body')
         too_long=0
-        if len(body>1000):
+        if len(body)>1000:
             body = body[:1000]
             too_long=1
         createddate = announce.get('createdOn')
