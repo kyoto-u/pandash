@@ -459,7 +459,7 @@ def announcement_overview():
             return redirect(url_for('login'))
         last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         logging.debug(f"last update = {last_update}\npage = announcement")
-        data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcemnts")
+        data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcements")
         announcements = get_announcementlist(studentid)
         data = task_arrange_for_overview(announcements,data,key_name="announcements")
 
