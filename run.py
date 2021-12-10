@@ -471,7 +471,7 @@ def announcement_overview():
         for i in range(len(data["others"])):
             data["others"][i]["announcements"] = sort_announcements(data["others"][i]["announcements"],1,0)
         # TODO: 適切なテンプレートを選択する
-        return flask.render_template('overview.htm',data = data,last_update=last_update)
+        return flask.render_template('announcement_overview.htm',data = data,announcements=data,last_update=last_update)
     else:
         return redirect(url_for('login'))
 

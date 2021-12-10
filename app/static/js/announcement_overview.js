@@ -15,7 +15,7 @@ $(function (){
         var element_id = $(this).parent().attr('id');
         var course = announcements[element_id]
         var subject = course["subject"]
-        var announcements_details = course["assignments"];
+        var announcements_details = course["announcements"];
         var parent_div = $('<div></div>',{
             'id': 'announcement_card',
             'class': 'card text-white',
