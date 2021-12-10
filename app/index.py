@@ -163,7 +163,7 @@ def sync_student_announcement(studentid, sa, anc):
 
 def sync_student_assignment(studentid, sa, asm,last_update): 
     # 追加、更新をする
-    add_student_assignment(studentid,sa, last_update)
+    add_student_assignment(studentid,sa)
     add_assignment(studentid, asm, last_update)
     return 0
 
@@ -204,7 +204,7 @@ def sync_student_resource(studentid, sr, res, last_update):
     return 0
 
 def sync_student_quiz(studentid, sq, quiz, last_update):
-    add_student_quiz(studentid, sq, last_update)
+    add_student_quiz(studentid, sq)
     add_quiz(studentid, quiz, last_update)
     return 0
 

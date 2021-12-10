@@ -278,7 +278,7 @@ def add_studentcourse(studentid, data, allow_delete = 1):
     session.commit()
     return
 
-def add_student_announcement(studentid, data, last_update):
+def add_student_announcement(studentid, data):
     """
         data:announcement_id, student_id, status
     """
@@ -307,7 +307,7 @@ def add_student_announcement(studentid, data, last_update):
     session.commit()
     return
 
-def add_student_assignment(studentid, data, last_update):
+def add_student_assignment(studentid, data):
     """
         data:assignment_id, student_id, status
     """
@@ -337,7 +337,7 @@ def add_student_assignment(studentid, data, last_update):
     session.commit()
     return
 
-def add_student_quiz(studentid, data, last_update):
+def add_student_quiz(studentid, data):
     """
         data:quiz_id, student_id, status
     """
