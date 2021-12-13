@@ -505,7 +505,7 @@ def announcement_list():
         if page<=0:
             # 範囲外のページ番号
             page=1
-        return flask.render_template('announcement.htm',data = data,announcements=announcements,num=num,page=page,last_update=last_update)
+        return flask.render_template('announcement.htm',data = data,announcements=announcements,num=num,page=page,page_num=per_page,last_update=last_update)
     else:
         return redirect(url_for('login'))
 
