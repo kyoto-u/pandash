@@ -481,11 +481,12 @@ def announcement_list():
     studentid = session.get('student_id')
     if studentid:
         page=1
-        try:
-            page=int(session.args.get("page"))
-        except:
-            # 不正なページ番号
-            page=1
+        if session.get("page"):
+            try:
+                page=int(session.get("page"))
+            except:
+                # 不正なページ番号
+                page=1
         # 課題の最終更新時間を取得
         studentdata = get_student(studentid)
         if studentdata == None:
