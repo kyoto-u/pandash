@@ -160,7 +160,7 @@
         btn.setAttribute("class", "d-none");
     }
 </script>
-<script type="text/javascript" src="/static/js/announcement_overview.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/announcement_overview.js') }}"></script>
 
 <script type="text/javascript">
     var announcements = {{ announcements | tojson }};
