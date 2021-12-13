@@ -448,7 +448,7 @@ def chat_course(courseid):
     else:
         return redirect(url_for('login'))
 
-@app.route('/announcement')
+@app.route('/announcement_overview')
 def announcement_overview():
     studentid = session.get('student_id')
     if studentid:
@@ -474,6 +474,40 @@ def announcement_overview():
         return flask.render_template('announcement_overview.htm',data = data,announcements=data,last_update=last_update)
     else:
         return redirect(url_for('login'))
+
+@app.route('/announcement_list')
+def announcement_overview():
+    per_page=20
+    studentid = session.get('student_id')
+    if studentid:
+        page=1
+        try:
+            page=int(session.args.get("page"))
+        except:
+            # 不正なページ番号
+            page=1
+        # 課題の最終更新時間を取得
+        studentdata = get_student(studentid)
+        if studentdata == None:
+            # なければstudentの記録がないことになるので一度ログインへ
+            return redirect(url_for('login'))
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        logging.debug(f"last update = {last_update}\npage = announcement_list")
+        data = setdefault_for_overview(studentid)
+        announcements = get_announcementlist(studentid)
+        sort_announcements(announcements,1,0)
+        num=len(announcements)
+        if (page-1)*per_page>=num:
+            # 範囲外のページ番号
+            page=((num-1)//per_page) + 1
+            # 0件の時に0となってしまうが下で対応
+        if page<=0:
+            # 範囲外のページ番号
+            page=1
+        return flask.render_template('announcement.htm',data = data,announcements=announcements,num=num,page=page,last_update=last_update)
+    else:
+        return redirect(url_for('login'))
+
 
 @app.route('/announcement/course/<courseid>/<criterion>/<ascending>')
 def announcementlist_general(courseid,criterion,ascending):
