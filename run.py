@@ -476,7 +476,7 @@ def announcement_overview():
         return redirect(url_for('login'))
 
 @app.route('/announcement_list')
-def announcement_overview():
+def announcement_list():
     per_page=20
     studentid = session.get('student_id')
     if studentid:
