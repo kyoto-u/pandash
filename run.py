@@ -496,7 +496,7 @@ def announcement_list():
         logging.debug(f"last update = {last_update}\npage = announcement_list")
         data = setdefault_for_overview(studentid)
         announcements = get_announcementlist(studentid)
-        sort_announcements(announcements,1,0)
+        announcements = sort_announcements(announcements,1,0)
         num=len(announcements)
         if (page-1)*per_page>=num:
             # 範囲外のページ番号
@@ -505,7 +505,7 @@ def announcement_list():
         if page<=0:
             # 範囲外のページ番号
             page=1
-        return flask.render_template('announcement.htm',data = data,announcements=announcements,num=num,page=page,page_num=per_page,last_update=last_update)
+        return flask.render_template('announcement.htm',data = data,announcements=announcements,num=num,page=page,per_page=per_page,last_update=last_update)
     else:
         return redirect(url_for('login'))
 
