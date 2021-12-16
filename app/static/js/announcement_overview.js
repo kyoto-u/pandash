@@ -8,8 +8,8 @@ $(function (){
 
     $('a.element').on('click', function(){
         // もとの表示を消す
-        $('.announcement_card').fadeOut('fast').queue(function(){
-            $('.announcement_card').remove();
+        $('#announcement_card').fadeOut('fast').queue(function(){
+            $('#announcement_card').remove();
         })
 
         var element_id = $(this).parent().attr('id');
@@ -37,21 +37,24 @@ $(function (){
 
         var body_div = $('<div></div>',{
             'class': 'card-body bg-secondary',
-            'style': 'overflow-x:auto; overflow-y:hidden'
+            'style': 'overflow-x:auto; overflow-y:hidden',
+            'id': 'card-body'
         });
         var body_table = $('<table></table>',{
             'class': 'table'
         });
         for(let i=0;i<announcements_details.length;i++){
             var tr = $('<tr></tr>');
+            tr.addClass('text-white');
             var th1 = $('<th></th>');
             th1.addClass('col-8');
             th1.html(announcements_details[i]['title']);
             var th2 = $('<th></th>');
             th2.addClass('col-4');
             th2.html(announcements_details[i]['createdate']);
-            body_table.append(th1);
-            body_table.append(th2);
+            tr.append(th1);
+            tr.append(th2);
+            body_table.append(tr);
         };
         body_div.append(body_table);
         body_div.append(body_table);
@@ -60,7 +63,7 @@ $(function (){
         parent_div.append(body_div);
 
         // アニメーションをつける
-        $('.course_announcement').append(parent_div);
+        $('#course_announcement').append(parent_div);
 
     });
 
