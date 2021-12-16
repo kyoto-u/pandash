@@ -47,6 +47,7 @@
                 </tr>
                 {% for announcement in announcements %}
                 <tr class="announcement_tr">
+                    <td>{{announcement.subject}}</td>
                     <td>
                         <a href="#" style="color:black">
                             {% if announcement.checked == False %}
@@ -54,9 +55,8 @@
                             {% endif %} {{announcement.title}}
                         </a>
                     </td>
-                    <td>{{announcement.publisher}}</td>
                     <td>{{announcement.publish_date}}</td>
-                    <td>{{announcement.site_name}}</td>
+                    
                 </tr>
                 {% endfor %}
             </table>
