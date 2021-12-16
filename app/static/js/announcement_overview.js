@@ -46,10 +46,10 @@ $(function (){
         for(let i=0;i<announcements_details.length;i++){
             var tr = $('<tr></tr>');
             tr.addClass('text-white');
-            var th1 = $('<th></th>');
+            var th1 = $('<td></td>');
             th1.addClass('col-8');
             th1.html(announcements_details[i]['title']);
-            var th2 = $('<th></th>');
+            var th2 = $('<td></td>');
             th2.addClass('col-4');
             th2.html(announcements_details[i]['createdate']);
             tr.append(th1);
