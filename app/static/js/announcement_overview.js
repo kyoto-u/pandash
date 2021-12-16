@@ -6,13 +6,13 @@ $(function (){
         var display_width = $(window).width();
     }
 
-    $('a.element').on('click', function(){
+    $('td.tcell_announce_overview').on('click', function(){
         // もとの表示を消す
         $('#announcement_card').fadeOut('fast').queue(function(){
             $('#announcement_card').remove();
         })
 
-        var element_id = $(this).parent().attr('id');
+        var element_id = $(this).attr('id');
         var course = announcements[element_id]
         var subject = course["subject"]
         var announcements_details = course["announcements"];
