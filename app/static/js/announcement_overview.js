@@ -51,7 +51,7 @@ $(function (){
             th1.html(announcements_details[i]['title']);
             var th2 = $('<td></td>');
             th2.addClass('col-4');
-            th2.html(announcements_details[i]['createdate']);
+            th2.html(announcements_details[i]['publish_date']);
             tr.append(th1);
             tr.append(th2);
             body_table.append(tr);
