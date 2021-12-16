@@ -20,23 +20,23 @@
         </div>
         
         <div class="col-11 ml-md-3 ml-sm-1 mr-auto">
-            {% set page_num = num // 20 %}
+            {% set page_num = num // per_page %}
             <form>
                 <div class="form-group row">
                     <label class="col-6">全{{num}}件
                         {% if page != page_num %}
-                            ({{(page-1)*20+1}}-{{page * 20}}件まで表示)
+                            ({{(page-1)*per_page+1}}-{{page * per_page}}件まで表示)
                         {% else %}
-                            ({{(page-1)*20+1}}-{{num}}件まで表示)
+                            ({{(page-1)*per_page+1}}-{{num}}件まで表示)
                         {% endif %}
                     </label>
                     <select id="select1a" class="form-control col-6">
                         {% set ns = namespace(cnt=1) %}
                         {% for i in range(page_num) %}
                             {% if ns.cnt != page_num %}
-                                <option {% if ns.cnt == page %}selected{% endif %}>{{ns.cnt}}ページ目 ({{(ns.cnt-1)*20 + 1}}-{{ns.cnt * 20}}件)</option>
+                                <option {% if ns.cnt == page %}selected{% endif %}>{{ns.cnt}}ページ目 ({{(ns.cnt-1)*per_page + 1}}-{{ns.cnt * per_page}}件)</option>
                             {% else %}
-                                <option {% if ns.cnt == page %}selected{% endif %}>{{ns.cnt}}ページ目 ({{(ns.cnt-1)*20 + 1}}-{{num}}件)</option>
+                                <option {% if ns.cnt == page %}selected{% endif %}>{{ns.cnt}}ページ目 ({{(ns.cnt-1)*per_page + 1}}-{{num}}件)</option>
                             {% endif %}
                             {% set ns.cnt = ns.cnt + 1 %}
                         {% endfor %}
