@@ -161,10 +161,13 @@ def sync_student_announcement(studentid, sa, anc):
     add_announcement(studentid, anc)
     return 0
 
-def sync_student_assignment(studentid, sa, asm,last_update): 
+def sync_student_assignment(studentid, sa, asm,last_update,need_to_update_sitelist): 
     # 追加、更新をする
     add_student_assignment(studentid,sa)
-    add_assignment(studentid, asm, last_update)
+    if need_to_update_sitelist:
+        add_assignment(studentid, asm, last_update,allow_delete=0)
+    else:
+        add_assignment(studentid, asm, last_update)
     return 0
 
 def sync_student_contents(studentid, crs, asm, res, qz, anc, now,last_update=0,need_to_update_sitelist=0):
@@ -181,9 +184,9 @@ def sync_student_contents(studentid, crs, asm, res, qz, anc, now,last_update=0,n
 
     # courseが最初!!!
     sync_student_course(studentid, crs["student_courses"], crs["courses"], last_update,need_to_update_sitelist)
-    sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"], last_update)
+    sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"], last_update,need_to_update_sitelist)
     sync_student_resource(studentid, res["student_resources"], res["resources"], last_update)
-    sync_student_quiz(studentid, qz["student_quizzes"], qz["quizzes"], last_update)
+    sync_student_quiz(studentid, qz["student_quizzes"], qz["quizzes"], last_update,need_to_update_sitelist)
     sync_student_announcement(studentid, anc["student_announcements"], anc["announcements"])
 
     return 0
@@ -203,9 +206,12 @@ def sync_student_resource(studentid, sr, res, last_update):
     add_resource(studentid, res, last_update)
     return 0
 
-def sync_student_quiz(studentid, sq, quiz, last_update):
+def sync_student_quiz(studentid, sq, quiz, last_update,need_to_update_sitelist):
     add_student_quiz(studentid, sq)
-    add_quiz(studentid, quiz, last_update)
+    if need_to_update_sitelist:
+        add_quiz(studentid, quiz, last_update,allow_delete=0)
+    else:
+        add_quiz(studentid, quiz, last_update)
     return 0
 
 
