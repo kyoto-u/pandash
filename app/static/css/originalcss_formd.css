@@ -91,9 +91,6 @@ footer {
   display: flex;
   flex-direction: column;  
   left:0;
-  width:98vw;
-  margin-left: 1vw;
-  margin-right: 1vw;
   pointer-events: all;
 }
 
