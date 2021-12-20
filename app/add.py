@@ -36,7 +36,7 @@ def add_announcement(studentid, data):
     session.commit()
     return
 
-def add_assignment(studentid, data, last_update):
+def add_assignment(studentid, data, last_update,allow_delete=1):
     course_ids = get_courseids(studentid)
     assignments = session.query(
         assignment.Assignment).filter(assignment.Assignment.course_id.in_(course_ids)).all()
@@ -57,6 +57,21 @@ def add_assignment(studentid, data, last_update):
             new_asm.append(item)
         elif update == True:
             upd_asm.append(item)
+    if allow_delete == 1:
+        # 逆に、テーブルに格納されている課題情報について、今回のAPIで取得できたかを調べる。
+        now = int(time.time())
+        for i in assignments:
+            assignment_deleted = True
+            for item in data:
+                if item["assignment_id"] == i.assignment_id:
+                    assignment_deleted = False
+                    break
+            if now>i.time_ms:
+                # 期限切れなら課題削除ではない可能性が高い
+                assignment_deleted = False
+            if assignment_deleted and i.deleted == 0:
+                upd_asm.append({"assignment_id": i.assignment_id, "deleted": 1})
+    
     if len(new_asm) != 0:
         session.execute(assignment.Assignment.__table__.insert(),new_asm)
     if len(upd_asm) != 0:
@@ -160,7 +175,7 @@ def add_instructor(instructorid, fullname, emailaddress):
         session.commit()
     return
 
-def add_quiz(studentid, data, last_update):
+def add_quiz(studentid, data, last_update,allow_delete=1):
     course_ids = get_courseids(studentid)
     quizzes = session.query(
         quiz.Quiz).filter(quiz.Quiz.course_id.in_(course_ids)).all()
@@ -181,6 +196,20 @@ def add_quiz(studentid, data, last_update):
             new_quiz.append(item)
         elif update == True:
             upd_quiz.append(item)
+    if allow_delete == 1:
+        # 逆に、テーブルに格納されている課題情報について、今回のAPIで取得できたかを調べる。
+        now = int(time.time())
+        for i in quizzes:
+            quiz_deleted = True
+            for item in data:
+                if item["quiz_id"] == i.quiz_id:
+                    quiz_deleted = False
+                    break
+            if now>i.time_ms:
+                # 期限切れなら課題削除ではない可能性が高い
+                quiz_deleted = False
+            if quiz_deleted and i.deleted == 0:
+                upd_quiz.append({"quiz_id": i.quiz_id, "deleted": 1})
     if len(new_quiz) != 0:
         session.execute(quiz.Quiz.__table__.insert(),new_quiz)
     if len(upd_quiz) != 0:
