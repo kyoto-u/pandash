@@ -15,14 +15,14 @@
 </div>
 {% endmacro %}
 
-<div class="container container-fluid">
+<div class="container-fluid">
   <div class="row">
 
     <div id="taskmain" class="col-sm-12 col-md-10">
       <!-- drag and drop時に意図しない動作をするため削除
          style="left:1vw; overflow: hidden;" -->
 
-      <div class="container" style="background-color: silver;">
+      <div class="container-fluid" style="background-color: silver;">
         <!-- See line 7 
         pointer-events: all; -->
         <div class="d-flex mx-md-5 py-md-2 mb-md-2">
@@ -50,7 +50,7 @@
       </div>
 
       <!--タイトル-->
-      <div class="container">
+      <div class="container-fluid">
         <div class="row">
           <h3>あなたの課題</h3>
           <div class="ml-5">
@@ -136,7 +136,7 @@
 
 
     <div class="col-md-2 border-left d-none d-md-block" id="finish_form">
-      <div style="position:sticky; top:130px;">
+      <div style="position:sticky; top:20px;">
         {% include "finished_box.htm" %}
       </div>
     </div>
