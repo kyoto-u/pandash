@@ -94,6 +94,10 @@ footer {
   pointer-events: all;
 }
 
+table{
+    word-break: break-all;
+}
+
 th,td{
   font-size: small;
 }
