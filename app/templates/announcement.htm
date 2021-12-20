@@ -1,11 +1,6 @@
 ﻿{% extends "_base.htm" %}
 {% block bodycontent %}
-
 <div class="container-fluid">
-    <button id="button_modal_announcement" type="button" class="btn btn-dark text-nowrap" data-toggle="modal" data-target="#modal_announcement">ボタン</button>
-</div>
-
-<div class="container container-fluid">
     <div class="row">
         <div class="container-fluid">
             <div class="row">
@@ -19,7 +14,7 @@
             </div>
         </div>
         
-        <div class="col-11 ml-md-3 ml-sm-1 mr-auto">
+        <div class="col-sm-12 col-md-11 ml-md-3 ml-sm-1 mr-auto">
             {% set page_num = num // per_page %}
             <form>
                 <div class="form-group row">
@@ -45,10 +40,9 @@
             </form>
             <table class="table tale-sm">
                 <tr>
-                    <th>件名</th>
-                    <th><a style="color:black">保存者</a></th>
-                    <th><a style="color:black">公開日時</a></th>
                     <th><a style="color:black">サイト</a></th>
+                    <th>件名</th>
+                    <th><a style="color:black">公開日時</a></th>
                 </tr>
                 {% for announcement in announcements %}
                 <tr class="announcement_tr">
