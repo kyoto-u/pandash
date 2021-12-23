@@ -53,7 +53,7 @@ def get_announcements(studentid,show_only_unchecked, courseid, day):
     return returns
 
 
-def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
+def get_assignments(studentid, show_only_unfinished,courseid, day, mode,include_deleted = 0):
     if show_only_unfinished == False:
         enrollments = session.query(studentassignment.Student_Assignment).filter(
             studentassignment.Student_Assignment.student_id == studentid).all()
@@ -83,6 +83,8 @@ def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
         if day != None:
             if day not in crsdata[0].classschedule:
                 continue
+        if include_deleted==0 and asmdata[0].deleted == 1:
+            continue
         
         task = {}
         task["status"] = data.status
@@ -237,7 +239,7 @@ def get_courses_to_be_taken(studentid, mode = 0,include_deleted = 0,return_data 
                 data.append(coursedata[0])
     return data
 
-def get_quizzes(studentid, show_only_unfinished,courseid, day, mode):
+def get_quizzes(studentid, show_only_unfinished,courseid, day, mode,include_deleted = 0):
     # 未完了以外の課題も表示するかによってテーブルからの取り出し方が変わる
     if show_only_unfinished == False:
         enrollments = session.query(studentquiz.Student_Quiz).filter(
@@ -274,6 +276,8 @@ def get_quizzes(studentid, show_only_unfinished,courseid, day, mode):
             # day(曜日)での絞り込み
             if day not in crsdata[0].classschedule:
                 continue
+        if include_deleted==0 and qizdata[0].deleted == 1:
+            continue
         # 注：taskの構造はassignmentと構造をそろえているために一部の名称が不適切である
         task = {}
         task["status"] = data.status
