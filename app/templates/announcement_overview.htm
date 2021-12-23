@@ -2,7 +2,7 @@
 {% block bodycontent %}
 <div class="container-fluid">
     <div class="row">
-        <div class="col-8" style="min-height: 100vh;">
+        <div class="col-sm-12 col-md-8" style="min-height: 100vh;">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-8">
@@ -14,6 +14,7 @@
                     </div>
                 </div>
             </div>
+            
             <table class="table table-bordered table-striped">
                 <tr>
                     <td class="col-2" style="background-color:white;"></td>
@@ -25,8 +26,8 @@
                 </tr>
                 <tr>
                     <td class="col-2">１</td>
-                    <td class="col-2 tcell_announce_overview" id="mon1" style="color:dimgray">{{data.mon1.shortname}}</a></td>
-                    <td class="col-2 tcell_announce_overview" id="tue1" style="color:dimgray">{{data.tue1.shortname}}</a></td>
+                    <td class="col-2 tcell_announce_overview" id="mon1" style="color:dimgray">{{data.mon1.shortname}}</td>
+                    <td class="col-2 tcell_announce_overview" id="tue1" style="color:dimgray">{{data.tue1.shortname}}</td>
                     <td class="col-2 tcell_announce_overview" id="wed1" style="color:dimgray">{{data.wed1.shortname}}</td>
                     <td class="col-2 tcell_announce_overview" id="thu1" style="color:dimgray">{{data.thu1.shortname}}</td>
                     <td class="col-2 tcell_announce_overview" id="fri1" style="color:dimgray">{{data.fri1.shortname}}</td>
@@ -63,8 +64,20 @@
                     <td class="col-2 tcell_announce_overview" id="fri5" style="color:dimgray">{{data.fri5.shortname}}</td>
                 </tr>
             </table>
+            
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <td class="col-2" style="background-color:white;"></td>
+                    <td class="col-2 tcell_announce_overview" style="background-color:gainsboro;">月</td>
+                    <td class="col-2" style="background-color:gainsboro;">火</td>
+                    <td class="col-2 tcell_announce_overview" style="background-color:gainsboro;">水</td>
+                    <td class="col-2" style="background-color:gainsboro;">木</td>
+                    <td class="col-2" style="background-color:gainsboro;">金</td>
+                </tr>
+            </table>
+            
         </div>
-        <div class="col-4" id="course_announcement">
+        <div class="col-sm-12 col-md-4" id="course_announcement">
             <div id="announcement_card" class="card text-white" style="min-height: 100vh; max-height: 100vh;">
                 <div class="card-header" style="background-color:rgb(90, 98, 107)">
                     <div class="row">
@@ -78,7 +91,7 @@
                             <th class="col-4">公開日時</th>
                         </tr>
                         <tr class="announcement_row">
-                            <td class="col-8"><a href="#" style="color:inherit">お知らせ</a></td>
+                            <td class="col-8" data-toggle="modal" data-target="#modal_announcement"><a href="#" style="color:inherit">お知らせ</a></td>
                             <td class="col-4">2021/9/15 13:16</td>
                         </tr>
                     </table>
@@ -94,6 +107,7 @@
         </div>
     </div>
 </div>
+<!-- 時間割テーブルの、マウスが乗ったときと離れたときの処理 -->
 <script>
     var targets = document.getElementsByClassName("tcell_announce_overview");
 
@@ -107,6 +121,7 @@
         });
     }
 </script>
+<!--お知らせカードのマウスが乗ったときと離れたときの処理-->
 <script>
     var targets = document.getElementsByClassName("announcement_row");
     var links = document.getElementsByClassName("announcement_link");
@@ -123,6 +138,7 @@
         targets[i].setAttribute("style", "color: white;");
     };
 </script>
+<!--すべて開くボタンの処理-->
 <script>
     function button_OpenAll() {
         var card = document.getElementById("announcement_card");
@@ -135,7 +151,18 @@
         btn.setAttribute("class", "d-none");
     }
 </script>
+<!--スマホ表示のときに時間割をタップするとお知らせカードまで遷移する処理-->
+<script>
+    var targets = document.getElementsByClassName("tcell_announce_overview");
+    if(screen.width < 768){
+        for (var i = 0; i < targets.length; i++) {
+            targets[i].setAttribute("onclick", "window.location.href = '#announcement_card'")
+        }
+    }
+</script>
+
 <script type="text/javascript" src="{{ url_for('static', filename='js/announcement_overview.js') }}"></script>
+
 
 <script type="text/javascript">
     var announcements = {{ announcements | tojson }};
