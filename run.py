@@ -448,7 +448,7 @@ def chat_course(courseid):
     else:
         return redirect(url_for('login'))
 
-@app.route('/announcement_overview')
+@app.route('/announcement/overview')
 def announcement_overview():
     studentid = session.get('student_id')
     if studentid:
@@ -475,7 +475,7 @@ def announcement_overview():
     else:
         return redirect(url_for('login'))
 
-@app.route('/announcement_list')
+@app.route('/announcement/list')
 def announcement_list():
     per_page=20
     studentid = session.get('student_id')
@@ -506,6 +506,20 @@ def announcement_list():
             # 範囲外のページ番号
             page=1
         return flask.render_template('announcement.htm',data = data,announcements=announcements,num=num,page=page,per_page=per_page,last_update=last_update)
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/announcement/content/<announcement_id>')
+def announcement_content(announcement_id):
+    studentid = session.get('student_id')
+    if studentid:
+        studentdata = get_student(studentid)
+        if studentdata == None:
+            return redirect(url_for('login'))
+
+        data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcemnts")
+        announce = get_announcement(studentid,announcement_id)
+        return render_template('announcement_content.htm', announce=announce, data=data)
     else:
         return redirect(url_for('login'))
 
