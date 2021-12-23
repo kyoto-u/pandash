@@ -40,6 +40,7 @@ def get_announcements(studentid,show_only_unchecked, courseid, day):
                 continue
         
         announce = {}
+        announce["announcement_id"]=anndata[0].announcement_id
         announce["checked"]=data.checked
         announce["title"]=anndata[0].title
         announce["html_file"]=anndata[0].body
@@ -51,6 +52,44 @@ def get_announcements(studentid,show_only_unchecked, courseid, day):
         announce["publish_date"]=datetime.datetime.fromtimestamp(anndata[0].createddate//1000).strftime("%Y/%m/%d %H:%M:%S")
         returns.append(announce)
     return returns
+
+def get_announcement(studentid, announcementid):
+    # anm = session.query(announcement.Announcement).filter(
+    #     announcement.Announcement.announcement_id == announcementid).first()
+    # course_to_be_taken = get_courses_to_be_taken(studentid)
+    # courseids = [i.course_id for i in course_to_be_taken]
+
+    st_ans = session.query(studentannouncement.Student_Announcement).filter(
+        studentannouncement.Student_Announcement.sa_id == f'{studentid}:{announcementid}').all()
+    
+    if len(st_ans) != 0:
+        st_an = st_ans[0]
+        anndata = session.query(announcement.Announcement).filter(
+            announcement.Announcement.announcement_id==announcementid).all()
+        crsdata = session.query(course.Course).filter(
+            course.Course.course_id==anndata.course_id).all()
+        announce = {}
+        announce["announcement_id"]=anndata[0].announcement_id
+        announce["checked"]=st_an.checked
+        announce["title"]=anndata[0].title
+        announce["html_file"]=anndata[0].body
+        announce["subject"]=crsdata[0].coursename
+        announce["classschedule"]=crsdata[0].classschedule
+        announce["course_id"]=anndata[0].course_id
+        announce["publisher"]="xxxx"
+        announce["time_ms"]=anndata[0].createddate
+        announce["publish_date"]=datetime.datetime.fromtimestamp(anndata[0].createddate//1000).strftime("%Y/%m/%d %H:%M:%S")
+        return announce
+    else:
+        return {}
+
+
+
+    # for courseid in courseids:
+    #     if anm.course_id == courseid:
+    #         return {"announcement_id":anm.announcement_id,"title":anm.title,"html_file":anm.body}
+    # else:
+    #     return {}
 
 
 def get_assignments(studentid, show_only_unfinished,courseid, day, mode,include_deleted = 0):

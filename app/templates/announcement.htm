@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-4">
                     <i class="fas fa-2x fa-list mr-3" style="color:black;"></i>
-                    <a href="/announcement_overview"><i class="fas fa-2x fa-th ml-3" style="color:gray;"></i></a>
+                    <a href="/announcement/overview"><i class="fas fa-2x fa-th ml-3" style="color:gray;"></i></a>
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@
                 <tr class="announcement_tr">
                     <td>{{announcement.subject}}</td>
                     <td>
-                        <a href="#" style="color:black">
+                        <a href="/announcement_content/{{announcement.announcement_id}}" style="color:black">
                             {% if announcement.checked == False %}
                                 <i class="fas fa-exclamation-circle"></i>
                             {% endif %} {{announcement.title}}
