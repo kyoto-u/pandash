@@ -67,7 +67,7 @@ def get_announcement(studentid, announcementid):
         anndata = session.query(announcement.Announcement).filter(
             announcement.Announcement.announcement_id==announcementid).all()
         crsdata = session.query(course.Course).filter(
-            course.Course.course_id==anndata.course_id).all()
+            course.Course.course_id==anndata[0].course_id).all()
         announce = {}
         announce["announcement_id"]=anndata[0].announcement_id
         announce["checked"]=st_an.checked
