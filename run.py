@@ -517,8 +517,9 @@ def announcement_content(announcement_id):
         if studentdata == None:
             return redirect(url_for('login'))
 
+        data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcemnts")
         announce = get_announcement(studentid,announcement_id)
-        return render_template('announcement_content.htm', announce=announce)
+        return render_template('announcement_content.htm', announce=announce, data=data)
     else:
         return redirect(url_for('login'))
 
