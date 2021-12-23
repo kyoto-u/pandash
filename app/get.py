@@ -1,6 +1,10 @@
 # データベース操作を伴い情報を取得する関数の一覧
 #
 from math import *
+
+from sqlalchemy.sql.expression import false
+
+from app.models import forum
 from .models import student, assignment, course, studentassignment, studentcourse, resource, studentresource,quiz,studentquiz
 from .settings import SHOW_YEAR_SEMESTER, session, panda_url
 from .original_classes import TimeLeft ,Status
@@ -132,6 +136,26 @@ def get_courses_to_be_taken(studentid, mode = 0,return_data = 'course'):
                 #一応courseを返す
                 data.append(coursedata[0])
     return data
+
+def get_forums(show_only_not_replied):
+    if show_only_not_replied == False:
+        frms = session.query(forum.Forum).all()
+    else:
+        frms = session.query(forum.Forum).filter(
+            forum.Forum.replied==1).all()
+    frmsdata = []
+    for frm in frms:
+        frmdata = {}
+        frmdata["forum_id"] = frm.forum_id
+        frmdata["createdate"] = frm.createdate
+        frmdata["student_id"] = frm.student_id
+        frmdata["title"] = frm.title
+        frmdata["contents"] = frm.contents
+        frmdata["reply_contents"] = frm.reply_contents
+        frmdata["replied"] = frm.replied
+        frmsdata.append(frmdata)
+    return frmsdata
+
 
 def get_quizzes(studentid, show_only_unfinished,courseid, day, mode):
     # 未完了以外の課題も表示するかによってテーブルからの取り出し方が変わる

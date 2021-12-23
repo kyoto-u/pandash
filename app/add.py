@@ -73,11 +73,13 @@ def add_course(studentid, data, last_update):
     session.commit()
     return
 
+import time
 def add_forum(studentid,title,contents):
     inq = forum.Forum()
     inq.student_id = studentid
     inq.title = title
     inq.contents = contents
+    inq.createdate = int(time.time() * 1000)
     session.add(inq)
     session.commit()
     return f"""
