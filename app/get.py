@@ -345,7 +345,7 @@ def get_quizzes(studentid, show_only_unfinished,courseid, day, mode,include_dele
     return tasks
 
 
-def get_resource_list(studentid, course_id=None, day=None):
+def get_resource_list(studentid, course_id=None, day=None,include_deleted=0):
     srs = session.query(studentresource.Student_Resource).filter(
         studentresource.Student_Resource.student_id == studentid).all()
     
@@ -371,6 +371,8 @@ def get_resource_list(studentid, course_id=None, day=None):
         if day !=None:
             if day not in crsdata[0].classschedule:
                 continue
+        if include_deleted==0 and rscdata[0].deleted == 1:
+            continue
         resource_dict = {}
         resource_dict["resource_url"] = data.resource_url
         resource_dict["title"] = rscdata[0].title
