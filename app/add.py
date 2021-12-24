@@ -217,7 +217,7 @@ def add_quiz(studentid, data, last_update,allow_delete=1):
     session.commit()
     return
 
-def add_resource(studentid, data, last_update):
+def add_resource(studentid, data, last_update,allow_delete=1):
     course_ids = get_courseids(studentid)
     resources = session.query(
         resource.Resource).filter(resource.Resource.course_id.in_(course_ids)).all()
@@ -238,6 +238,17 @@ def add_resource(studentid, data, last_update):
             new_res.append(item)
         elif update == True:
             upd_res.append(item)
+    if allow_delete == 1:
+        # 逆に、テーブルに格納されている履修情報について、今回のAPIで取得できたかを調べる。
+        for i in resources:
+            resource_deleted = True
+            for item in data:
+                if item["resource_url"] == i.resource_url:
+                    resource_deleted = False
+                    break
+            if resource_deleted and i.deleted == 0:
+                upd_res.append({"resource_url": i.resource_url, "deleted": 1})
+    
     if len(new_res) != 0:
         session.execute(resource.Resource.__table__.insert(),new_res)
     if len(upd_res) != 0:

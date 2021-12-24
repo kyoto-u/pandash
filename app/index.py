@@ -185,7 +185,7 @@ def sync_student_contents(studentid, crs, asm, res, qz, anc, now,last_update=0,n
     # courseが最初!!!
     sync_student_course(studentid, crs["student_courses"], crs["courses"], last_update,need_to_update_sitelist)
     sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"], last_update,need_to_update_sitelist)
-    sync_student_resource(studentid, res["student_resources"], res["resources"], last_update)
+    sync_student_resource(studentid, res["student_resources"], res["resources"], last_update,need_to_update_sitelist=need_to_update_sitelist)
     sync_student_quiz(studentid, qz["student_quizzes"], qz["quizzes"], last_update,need_to_update_sitelist)
     sync_student_announcement(studentid, anc["student_announcements"], anc["announcements"])
 
@@ -200,10 +200,13 @@ def sync_student_course(studentid, sc, crs, last_update,need_to_update_sitelist)
     add_course(studentid, crs, last_update)
     return 0
 
-def sync_student_resource(studentid, sr, res, last_update):
+def sync_student_resource(studentid, sr, res, last_update,need_to_update_sitelist):
     # 追加、更新をする
     add_student_resource(studentid, sr)
-    add_resource(studentid, res, last_update)
+    if need_to_update_sitelist:
+        add_resource(studentid, res, last_update,allow_delete=0)
+    else:
+        add_resource(studentid, res, last_update)
     return 0
 
 def sync_student_quiz(studentid, sq, quiz, last_update,need_to_update_sitelist):
