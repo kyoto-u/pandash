@@ -52,6 +52,10 @@ def add_assignment(studentid, data, last_update,allow_delete=1):
                 assignment_exist = True
                 if item["modifieddate"] > last_update:
                     update=True
+                # もし削除扱いになっている場合はそれを直すためにupdateする
+                if i.deleted == 1:
+                    item["deleted"]=0
+                    update = True
                 break
         if assignment_exist == False:
             new_asm.append(item)
@@ -191,6 +195,10 @@ def add_quiz(studentid, data, last_update,allow_delete=1):
                 quiz_exist = True
                 if item["modifieddate"] > last_update:
                     update=True
+                # もし削除扱いになっている場合はそれを直すためにupdateする
+                if i.deleted == 1:
+                    item["deleted"]=0
+                    update = True
                 break
         if quiz_exist == False:
             new_quiz.append(item)
@@ -233,6 +241,10 @@ def add_resource(studentid, data, last_update,allow_delete=1):
                 resource_exist = True
                 if item["modifieddate"] > last_update:
                     update=True
+                # もし削除扱いになっている場合はそれを直すためにupdateする
+                if i.deleted == 1:
+                    item["deleted"]=0
+                    update = True
                 break
         if resource_exist == False:
             new_res.append(item)
