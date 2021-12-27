@@ -135,7 +135,7 @@
   <div class="modal-dialog modal-dialog-centered modal-dialog-fluid" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="label1">title</h5>
+        <h5 class="modal-title" id="label1">{{announce.title}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -144,11 +144,11 @@
         <div class="container-fluid">
           <div class="row">
             <ul class="col-12" style="list-style-type: none">
-              <li>サイト：</li>
-              <li>公開日時：</li>
+              <li>サイト：{{announce.subject}}</li>
+              <li>公開日時：{{announce.publish_date}}</li>
             </ul>
             <div class="col-12" id="message_container">
-              本文
+              {{announce.html_file|safe}}
             </div>
           </div>
         </div>
