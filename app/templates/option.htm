@@ -19,17 +19,6 @@
     <div class="tab-content">
         <div class="option-content tab-pane fade show active" id="item1" role="tabpanel" aria-labelledby="item1-tab">
             <div class="container-fluid pb-5">
-                <section class="pt-3 mb-4">
-                    <h3 class="pb-3">●表示科目の更新</h3>
-                    <div class="container">
-                        <div class="row">
-                            <div>現在PandAに表示されている科目は
-                                {{last_update_subject}}時点であなたが履修していた科目です。新しく科目を追加した場合は「更新する」ボタンを押して更新してください。</div>
-                            <button class="btn btn-secondary ml-auto"
-                                onclick="location.href='/update_subject'">更新する</button>
-                        </div>
-                    </div>
-                </section>
                 <section>
                     <h3 class="pb-3">●表示する科目の選択</h3>
                     <div class="container border-left">
@@ -61,6 +50,16 @@
                     <h3 id="cancel_msg" style="display: none;">
                         適用できませんでした。
                     </h3>
+                </section>
+                <section class="pt-3 mb-4">
+                    <h3 class="pb-3">●表示科目の更新</h3>
+                    <div class="container">
+                        <div class="row">
+                            <div>現在PandAに表示されている科目は
+                                {{last_update_subject}}時点であなたが履修していた科目です。新しく科目を追加した場合は「更新する」ボタンを押して更新してください。</div>
+                            <button class="btn btn-secondary ml-auto" onclick="location.href='/update_subject'">更新する</button>
+                        </div>
+                    </div>
                 </section>
             </div>
         </div>
