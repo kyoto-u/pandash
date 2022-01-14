@@ -7,6 +7,7 @@ from .settings import VALID_YEAR_SEMESTER, api_url, kulasis_api_url
 import re
 from .original_classes import Status
 import functools
+import time
 
 def get_announcement_from_api(announcements, student_id):
     announcement_list = []
@@ -193,8 +194,13 @@ def get_quizzes_from_api(quizzes, course_id, student_id):
         time_ms = content.get('dueDate') # millisecond
         if time_ms==None:
             # 期限のないものは2099-12-31T23:59:59Zとなるよう設定
-            time_ms=4102412399000				
+            time_ms=4102412399000
         modifieddate = int(content.get('lastModifiedDate')) #millisecond
+        if content.get('startDate'):
+            # 公開前か確認する
+            if int(content.get('startDate')) > floor(time.time() * 1000):
+                continue
+            modifieddate =max(modifieddate,int(content.get('startDate')))
         limit_at = datetime.datetime.fromtimestamp(time_ms//1000,datetime.timezone(datetime.timedelta(hours=9))).strftime("%Y-%m-%dT%H:%M:%SZ")
         quiz_list.append({'course_id':course_id, 'quiz_id': quiz_id, 'url':url, 'title': title, \
             'limit_at':limit_at, 'time_ms': time_ms, 'modifieddate': modifieddate, 'instructions':''})
