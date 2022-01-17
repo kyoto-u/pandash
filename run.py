@@ -166,33 +166,33 @@ def login_successful(ses):
     # PGTなどが入手できたにもかかわらずstudent_idがないのは不具合であるのでエラー画面に飛ばす
     return flask.redirect(url_for('login_failed'))
 
-@app.route('/kulasis/login', methods=['GET', 'POST'])
-def kulasis_login():
-    if request.method == 'GET':
-        return render_template('kulasis_login.htm')
-    elif request.method == 'POST':
-        try:
-            ecs_id = request.form["ecs_id"]
-            password = request.form["password"]
-            params = kulasis_login_get_api_keys(ecs_id, password)
-            if params != {}:
-                session["access_param"] = params
-                return url_for('kulasis_login_successful')
-            else:
-                return url_for('kulasis_login_faild')
-        except:
-            return url_for('kulasis_login_faild')
+# @app.route('/kulasis/login', methods=['GET', 'POST'])
+# def kulasis_login():
+#     if request.method == 'GET':
+#         return render_template('kulasis_login.htm')
+#     elif request.method == 'POST':
+#         try:
+#             ecs_id = request.form["ecs_id"]
+#             password = request.form["password"]
+#             params = kulasis_login_get_api_keys(ecs_id, password)
+#             if params != {}:
+#                 session["access_param"] = params
+#                 return url_for('kulasis_login_successful')
+#             else:
+#                 return url_for('kulasis_login_faild')
+#         except:
+#             return url_for('kulasis_login_faild')
 
-@app.route('/kulasis/login/failed')
-def kulasis_login_failed():
-    return render_template('kulasis_login_failed.htm')
+# @app.route('/kulasis/login/failed')
+# def kulasis_login_failed():
+#     return render_template('kulasis_login_failed.htm')
 
-@app.route('/kulasis/login/successful')
-def kulasis_login_successful():
-    studentid = session.get('studentid')
-    param = session.get('access_param')
-    if studentid and param:
-        ses = requests.Session()
+# @app.route('/kulasis/login/successful')
+# def kulasis_login_successful():
+#     studentid = session.get('studentid')
+#     param = session.get('access_param')
+#     if studentid and param:
+#         ses = requests.Session()
         
 
 
@@ -217,9 +217,9 @@ def root():
 def welcome():
     return flask.redirect(url_for('root'))
 
-@app.route('/hello')
-def main():
-    return "Hello World!"
+# @app.route('/hello')
+# def main():
+#     return "Hello World!"
 
 @app.route('/faq')
 def faq():
@@ -391,15 +391,15 @@ def overview():
         return redirect(url_for('login'))
 
 # chat 一覧（暫定）
-@app.route('/chat/overview')
-def chat_overview():
-    studentid = session.get('student_id')
-    if studentid:
-        chatrooms = get_chatrooms(studentid)
-        data = setdefault_for_overview(studentid)
-        return flask.render_template('chat.htm', chatrooms=chatrooms, data=data)
-    else:
-        return redirect(url_for('login'))
+# @app.route('/chat/overview')
+# def chat_overview():
+#     studentid = session.get('student_id')
+#     if studentid:
+#         chatrooms = get_chatrooms(studentid)
+#         data = setdefault_for_overview(studentid)
+#         return flask.render_template('chat.htm', chatrooms=chatrooms, data=data)
+#     else:
+#         return redirect(url_for('login'))
 
 @app.route('/tasklist/day/<day>')
 def tasklist_day_redirect(day):
@@ -453,17 +453,17 @@ def resources_sample():
     return resourcelist_general()
 
 # コメントを取得/表示
-@app.route('/chat/course/<courseid>')
-def chat_course(courseid):
-    studentid = session.get('student_id')
-    if studentid:
-        studentdata = get_student(studentid)
-        if studentdata == None:
-            return redirect(url_for('login'))
-        last_update = str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-        return comment_general(courseid)
-    else:
-        return redirect(url_for('login'))
+# @app.route('/chat/course/<courseid>')
+# def chat_course(courseid):
+#     studentid = session.get('student_id')
+#     if studentid:
+#         studentdata = get_student(studentid)
+#         if studentdata == None:
+#             return redirect(url_for('login'))
+#         last_update = str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+#         return comment_general(courseid)
+#     else:
+#         return redirect(url_for('login'))
 
 @app.route('/announcement/overview')
 def announcement_overview():
@@ -678,24 +678,24 @@ def show_already_due():
         return 'failed'
 
 # コメントを追加 post
-@app.route('/add_comment', methods=['POST'])
-def add_comment():
-    studentid = session.get('studentid')
-    if studentid:
-        courseid = request.json['courseid']
-        content = request.json['content']
-        reply_to = request.json['reply_to']
-        commentid = add_comment(studentid,reply_to,content)
-        have_auth = add_coursecomment(studentid,commentid,courseid)
-        update_comment_unchecked(courseid)
-        # 自分の未読チェックは外す
-        update_comment_checked(studentid,courseid)
-        if have_auth:
-            return 'success'
-        else:
-            return 'failed'
-    else:
-        return 'error'                
+# @app.route('/add_comment', methods=['POST'])
+# def add_comment():
+#     studentid = session.get('studentid')
+#     if studentid:
+#         courseid = request.json['courseid']
+#         content = request.json['content']
+#         reply_to = request.json['reply_to']
+#         commentid = add_comment(studentid,reply_to,content)
+#         have_auth = add_coursecomment(studentid,commentid,courseid)
+#         update_comment_unchecked(courseid)
+#         # 自分の未読チェックは外す
+#         update_comment_checked(studentid,courseid)
+#         if have_auth:
+#             return 'success'
+#         else:
+#             return 'failed'
+#     else:
+#         return 'error'                
 
 
 @app.route('/pgtCallback', methods=['GET'])
