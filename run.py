@@ -498,9 +498,9 @@ def announcement_list():
     studentid = session.get('student_id')
     if studentid:
         page=1
-        if session.get("page"):
+        if requests.args.get("page"):
             try:
-                page=int(session.get("page"))
+                page=int(requests.args.get("page"))
             except:
                 # 不正なページ番号
                 page=1
