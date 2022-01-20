@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
     <!-- jQuery読み込み -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
     <!-- BootstrapのJS読み込み -->
@@ -202,7 +202,7 @@
                                     <textarea id="reply_textarea" class="form-control"></textarea>
                                 </div>
                                 <div class="row">
-                                    <button type="submit" class="btn btn-primary ml-auto">送信する</button>
+                                    <button type="submit" class="btn btn-primary ml-auto" id="reply_send_button">送信する</button>
                                 </div>
                             </div>
                         </div>

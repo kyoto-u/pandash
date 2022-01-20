@@ -14,7 +14,7 @@ $(function () {
       }
       var task_ids = new Array();
       var task_id = $(this).parent().attr('id');
-    　$(this).parent().find('i').remove();
+      $(this).parent().find('i').remove();
       task_ids.push(task_id);
       var task_ids = JSON.stringify({"task_ids":task_ids});
       $.ajax({

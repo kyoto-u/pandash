@@ -350,3 +350,11 @@ def update_task_status(studentid, taskids: list, mode=0, taskmode="task"):
         session.bulk_update_mappings(studentquiz.Student_Quiz, update_list)
     session.commit()
     return
+
+def update_reply_content(studentid, form_id, reply_content):
+    frm = session.query(forum.Forum).filter(forum.Forum.forum_id == form_id).first()
+    frm.replied_student_id = studentid
+    frm.reply_contents = reply_content
+    frm.replied = 1
+    session.commit()
+    return

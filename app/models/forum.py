@@ -1,5 +1,5 @@
 import sqlalchemy
-from sqlalchemy import sql
+from sqlalchemy import column, sql
 import sqlalchemy.ext.declarative
 from sqlalchemy import Integer, String, Column
 from sqlalchemy.sql.sqltypes import Boolean
@@ -14,6 +14,7 @@ class Forum(settings.Base):
 
     createdate = Column(sqlalchemy.BigInteger())
 
+    replied_student_id = Column(String(40))
     reply_contents = Column(String(1000))
     replied = Column(Integer, default=0)
 

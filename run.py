@@ -618,6 +618,17 @@ def manage_oa():
     dashboard = get_accece_logs()
     return "manage_oa"
 
+@app.route('/manage_reply', methods=['POST'])
+def manage_reply():
+    studentid = session.get('student_id')
+    if studentid:
+        reply_content = request.json['reply_content']
+        form_id = request.json['form_id']
+        update_reply_content(studentid, form_id, reply_content)
+        return 'success'
+    else:
+        return 'failed'
+
 # 403
 @app.route('/loginfailed')
 def login_failed():
