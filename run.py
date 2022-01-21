@@ -844,7 +844,7 @@ def login_failed():
 def internal_server_error(error):
     msg = "---INTERNAL SERVER ERROR---\n"
     try:
-        msg += f'description:{error.description},\nmessage:{error.message},\
+        msg += f'description:{error.description},\nname:{error.name},\
             \nresponse:{error.response}'
     except:
         msg += 'failed to get the details of the error'
