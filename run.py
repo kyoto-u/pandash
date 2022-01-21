@@ -845,11 +845,11 @@ def internal_server_error(error):
     msg = "---INTERNAL SERVER ERROR---\n"
     try:
         msg += f'description:{error.description},\nmessage:{error.message},\
-            \nresponse:{error.response},\nwrap:{error.wrap}'
+            \nresponse:{error.response}'
     except:
         msg += 'failed to get the details of the error'
     logging.error(msg)    
-    return flask.render_template('error_500.htm'),500
+    return flask.render_template('error_500.htm',msg=msg),500
 
 @app.errorhandler(404)
 def page_not_found(error):
