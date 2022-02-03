@@ -209,7 +209,7 @@ footer {
 
 /*資料ダウンロードページ*/
 label >.undownloaded{
-    color: skyblue;
+    color: deepskyblue;
 }
 
 label >.downloaded{

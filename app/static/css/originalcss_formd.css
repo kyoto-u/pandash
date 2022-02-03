@@ -167,7 +167,7 @@ body{
   
 /*授業資料ページ*/
 label > .undownloaded{
-    color: skyblue;
+    color: deepskyblue;
 }
 
 label > .downloaded{
