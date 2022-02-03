@@ -43,17 +43,28 @@ $(function (){
         var body_table = $('<table></table>',{
             'class': 'table'
         });
+        var tr_top = $('<tr></tr>');
+        tr_top.addClass('text-white');
+        var th1 = $('<th></th>');
+        th1.addClass('col-8');
+        th1.html('件名');
+        var th2 = $('<th></th>');
+        th2.addClass('col-4');
+        th2.html('公開日時');
+        tr_top.append(th1);
+        tr_top.add(th2);
+        body_table.append(tr_top);
         for(let i=0;i<announcements_details.length;i++){
             var tr = $('<tr></tr>');
-            tr.addClass('text-white');
-            var th1 = $('<td></td>');
-            th1.addClass('col-8');
-            th1.html(announcements_details[i]['title']);
-            var th2 = $('<td></td>');
-            th2.addClass('col-4');
-            th2.html(announcements_details[i]['publish_date']);
-            tr.append(th1);
-            tr.append(th2);
+            tr.addClass('announcement_row');
+            var td1 = $('<td></td>');
+            td1.addClass('col-8');
+            td1.html(announcements_details[i]['title']);
+            var td2 = $('<td></td>');
+            td2.addClass('col-4');
+            td2.html(announcements_details[i]['publish_date']);
+            tr.append(td1);
+            tr.append(td2);
             body_table.append(tr);
         };
         body_div.append(body_table);
