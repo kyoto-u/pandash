@@ -840,16 +840,16 @@ def login_failed():
     return flask.render_template('login_failed.htm')
 
 # HTTP error 処理 debag=Trueとすると無効になる
-@app.errorhandler(500)
-def internal_server_error(error):
-    msg = "---INTERNAL SERVER ERROR---\n"
-    try:
-        msg += f'description:{error.description},\nname:{error.name},\
-            \nresponse:{error.response}'
-    except:
-        msg += 'failed to get the details of the error'
-    logging.error(msg)    
-    return flask.render_template('error_500.htm',msg=msg),500
+# @app.errorhandler(500)
+# def internal_server_error(error):
+#     msg = "---INTERNAL SERVER ERROR---\n"
+#     try:
+#         msg += f'description:{error.description},\nname:{error.name},\
+#             \nresponse:{error.response}'
+#     except:
+#         msg += 'failed to get the details of the error'
+#     logging.error(msg)    
+#     return flask.render_template('error_500.htm',msg=msg),500
 
 @app.errorhandler(404)
 def page_not_found(error):
