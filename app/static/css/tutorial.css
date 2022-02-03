@@ -1,4 +1,4 @@
-@media (min-width: 992px) {
+@media (min-width: 768px) {
   body {
     position: absolute;
     width: 100%;
@@ -10,7 +10,7 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 10vw;
+    width: 15vw;
     z-index: 1;
     background-color: #f6f6f6;
     font-size: small;
@@ -37,26 +37,27 @@
   }
 
   #section-other {
+    margin-top: 100px;
     height: 50px;
   }
 
   .tutorialtext {
-    height: 300px;
+    margin-bottom: 100px;
   }
 
   #example-main {
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 100%;
+    width: 100vw;
     padding-top: 20;
-    padding-left: 15vw;
+    padding-left: 20vw;
     padding-right: 3vw;
     overflow-y: scroll;
   }
 }
 
-@media (max-width: 991px) {
+@media (max-width: 767px) {
   #example-main {
     position: absolute;
     top: 0;
