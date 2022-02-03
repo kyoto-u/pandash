@@ -15,9 +15,13 @@
         </div>
         {% set page = 1 %}
         {% set num = 40 %}
-        {% set per_page = 11 %}
+        {% set per_page = 10 %}
         <div class="col-sm-12 col-md-11 ml-md-3 ml-sm-1 mr-auto">
-            {% set page_num = num // per_page + 1 %}
+            {% if num % per_page != 0 %}
+                {% set page_num = num // per_page + 1 %}
+            {% else %}
+                {% set page_num = num // per_page %}
+            {% endif %}
             <form>
                 <div class="form-group row">
                     <ul class="pagination nav nav-pills mb-3" id="pills-tab" role="tablist">
@@ -44,12 +48,14 @@
                     {% if ns.cnt != page_num %}
                     ({{(ns.cnt-1)*per_page + 1}}-{{ns.cnt * per_page}}件)
                         {% for j in range(per_page) %}
-                        {{list[(ns.cnt-1)*per_page + j]}}
+                        {% set n = (ns.cnt-1)*per_page + j %}
+                        {{list[n]}}
                         {% endfor %}
                     {% else %}
                     ({{(ns.cnt-1)*per_page + 1}}-{{num}}件)
                         {% for j in range(num-(ns.cnt-1)*(per_page)) %}
-                        {{list[(ns.cnt-1)*per_page + j]}}
+                        {% set n = (ns.cnt-1)*per_page + j %}
+                        {{list[n]}}
                         {% endfor %}
                     {% endif %}
                     </p>
@@ -82,13 +88,6 @@
                 #}
                 
             </table>
-            {% set list = ["a","b","c","d","e","f"] %}
-            {% for i in range(3) %}
-                {% for j in range(2) %}
-                    {{i}}
-                    {{list[i*2+j]}}
-                {% endfor %}
-            {% endfor %}
         </div>
 
     </div>
