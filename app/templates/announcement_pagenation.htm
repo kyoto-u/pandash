@@ -15,7 +15,7 @@
         </div>
         {% set page = 1 %}
         {% set num = 40 %}
-        {% set per_page = 15 %}
+        {% set per_page = 11 %}
         <div class="col-sm-12 col-md-11 ml-md-3 ml-sm-1 mr-auto">
             {% set page_num = num // per_page + 1 %}
             <form>
@@ -30,36 +30,34 @@
                         {% set ns.cnt = ns.cnt + 1 %}
                         {% endfor %}
                     </ul>
-                    <div class="tab-content" id="pills-tabContent">
-                        {% set ns = namespace(cnt=1) %}
-                        {% for i in range(page_num) %}
-                        <div class="tab-pane fade show" id="pills-page-{{ns.cnt}}" role="tabpanel" aria-labelledby="pills-page-{{ns.cnt}}-tab">
-                            {{ns.cnt}}ページ目のコンテンツ
-                            {% if ns.cnt != page_num %}
-                            ({{(ns.cnt-1)*per_page + 1}}-{{ns.cnt * per_page}}件)
-                            {% else %}
-                            ({{(ns.cnt-1)*per_page + 1}}-{{num}}件)
-                            {% endif %}
-                        </div>
-                        {% set ns.cnt = ns.cnt + 1 %}
-                        {% endfor %}
-                    </div>
-                    <select id="select1a" class="form-control col-6">
-                        
-                        {% set ns = namespace(cnt=1) %}
-                        {% for i in range(page_num) %}
-                        {% if ns.cnt != page_num %}
-                        <option {% if ns.cnt==page %}selected{% endif %}>{{ns.cnt}}ページ目 ({{(ns.cnt-1)*per_page +
-                            1}}-{{ns.cnt * per_page}}件)</option>
-                        {% else %}
-                        <option {% if ns.cnt==page %}selected{% endif %}>{{ns.cnt}}ページ目 ({{(ns.cnt-1)*per_page +
-                            1}}-{{num}}件)</option>
-                        {% endif %}
-                        {% set ns.cnt = ns.cnt + 1 %}
-                        {% endfor %}
-                    </select>
+                    
                 </div>
             </form>
+            <div class="tab-content" id="pills-tabContent">
+                {% set list = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39] %}
+                {% set ns = namespace(cnt=1) %}
+                {% for i in range(page_num) %}
+                <div class="tab-pane fade show" id="pills-page-{{ns.cnt}}" role="tabpanel"
+                    aria-labelledby="pills-page-{{ns.cnt}}-tab">
+                    <p>
+                    {{ns.cnt}}ページ目のコンテンツ
+                    {% if ns.cnt != page_num %}
+                    ({{(ns.cnt-1)*per_page + 1}}-{{ns.cnt * per_page}}件)
+                        {% for j in range(per_page) %}
+                        {{list[(ns.cnt-1)*per_page + j]}}
+                        {% endfor %}
+                    {% else %}
+                    ({{(ns.cnt-1)*per_page + 1}}-{{num}}件)
+                        {% for j in range(num-(ns.cnt-1)*(per_page)) %}
+                        {{list[(ns.cnt-1)*per_page + j]}}
+                        {% endfor %}
+                    {% endif %}
+                    </p>
+
+                </div>
+                {% set ns.cnt = ns.cnt + 1 %}
+                {% endfor %}
+            </div>
             <table class="table tale-sm">
                 <tr>
                     <th><a style="color:black">サイト</a></th>
@@ -82,10 +80,12 @@
                 </tr>
                 {% endfor %}
                 #}
+                
             </table>
             {% set list = ["a","b","c","d","e","f"] %}
             {% for i in range(3) %}
                 {% for j in range(2) %}
+                    {{i}}
                     {{list[i*2+j]}}
                 {% endfor %}
             {% endfor %}
