@@ -49,30 +49,30 @@
                         {% for j in range(per_page) %}
                         {% set n = (ns.cnt-1)*per_page + j %}
                         <tr class="announcement_tr">
-                            <td>{{announcement[n].subject}}</td>
+                            <td>{{announcements[n].subject}}</td>
                             <td>
-                                <a href="/announcement/content/{{announcement[n].announcement_id}}" style="color:black">
-                                    {% if announcement[n].checked == False %}
+                                <a href="/announcement/content/{{announcements[n].announcement_id}}" style="color:black">
+                                    {% if announcements[n].checked == False %}
                                     <i class="fas fa-exclamation-circle"></i>
-                                    {% endif %} {{announcement[n].title}}
+                                    {% endif %} {{announcements[n].title}}
                                 </a>
                             </td>
-                            <td>{{announcement[n].publish_date}}</td>
+                            <td>{{announcements[n].publish_date}}</td>
                         </tr>
                         {% endfor %}
                         {% else %}
                         {% for j in range(num-(ns.cnt-1)*(per_page)) %}
                         {% set n = (ns.cnt-1)*per_page + j %}
                         <tr class="announcement_tr">
-                            <td>{{announcement[n].subject}}</td>
+                            <td>{{announcements[n].subject}}</td>
                             <td>
-                                <a href="/announcement/content/{{announcement[n].announcement_id}}" style="color:black">
-                                    {% if announcement[n].checked == False %}
+                                <a href="/announcement/content/{{announcements[n].announcement_id}}" style="color:black">
+                                    {% if announcements[n].checked == False %}
                                     <i class="fas fa-exclamation-circle"></i>
-                                    {% endif %} {{announcement[n].title}}
+                                    {% endif %} {{announcements[n].title}}
                                 </a>
                             </td>
-                            <td>{{announcement[n].publish_date}}</td>
+                            <td>{{announcements[n].publish_date}}</td>
                         </tr>
                         {% endfor %}
                         {% endif %}
