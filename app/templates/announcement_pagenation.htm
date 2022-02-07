@@ -35,16 +35,19 @@
                 </div>
             </form>
             
-            <table class="table tale-sm">
-                <tr>
-                    <th><a style="color:black">サイト</a></th>
-                    <th>件名</th>
-                    <th><a style="color:black">公開日時</a></th>
-                </tr>
+            
                 
                 {% set ns = namespace(cnt=1) %}
+            <div class="tab-content">
                 {% for i in range(page_num) %}
                 <div class="tab-pane fade show" id="pills-page-{{ns.cnt}}" role="tabpanel" aria-labelledby="pills-page-{{ns.cnt}}-tab">
+                <table class="table">
+                    <tr>
+                        <th><a style="color:black">サイト</a></th>
+                        <th>件名</th>
+                        <th><a style="color:black">公開日時</a></th>
+                    </tr>
+                
                         {% if ns.cnt != page_num %}
                         {% for j in range(per_page) %}
                         {% set n = (ns.cnt-1)*per_page + j %}
@@ -76,11 +79,13 @@
                         </tr>
                         {% endfor %}
                         {% endif %}
+                
+                </table>
                 </div>
                 {% set ns.cnt = ns.cnt + 1 %}
                 {% endfor %}
-                
-            </table>
+            </div>
+            
         </div>
 
     </div>
