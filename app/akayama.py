@@ -5,21 +5,40 @@ from pprint import pprint
 
 app = Flask(__name__)
 
-@app.route('/<name>')
+def get_announcement(id):
+    result = {}
+    result["title"] = "お知らせ"+str(id)
+    result["subject"] = "test"
+    result["publish_date"] = "2022/02/07"
+    result["html_file"] = "<h1>hogehoge" + str(id) + "</h1>"
+    return result
+
+
+@app.route('/r_announcement_clicked', methods=["POST"])
+def r_announcement_clicked():
+    r_id = request.json['r_id']
+    s_id = r_id[0].split("_")[1]
+    print(s_id)
+    announcement = get_announcement(int(s_id))
+    print(announcement)
+    return announcement
+
+
+@app.route('/<name>', methods=["GET"])
 def main(name):
     templname = name + '.htm'
     announcements = {}
     n = 50
     for i in range(n):
-        announcements[i] = {"title":"お知らせ"+str(i),"subject":"test","publish_date":"2022/02/07","html_file":"<h1>hogehoge</h1>"}
+        announcements[i] = {"id":str(i),"title":"お知らせ"+str(i),"subject":"test","publish_date":"2022/02/07"}
 
-    announce={"title":"OAサンプル","subject":"サイト１","publish_date":"2021/12/27","html_file":"<h1>hogehoge</h1>"}
-
-    return render_template(templname, path=name, announce=announce, announcements=announcements,num=n,per_page=15)
+    return render_template(templname, path=name, announcements=announcements,num=n,per_page=15)
 
 @app.route('/')
 def root():
     return redirect(url_for('main', name='tasklist'))
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

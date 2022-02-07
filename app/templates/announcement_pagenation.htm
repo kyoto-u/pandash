@@ -54,7 +54,7 @@
                         <tr class="announcement_tr">
                             <td>{{announcements[n].subject}}</td>
                             <td>
-                                <a href="/announcement/content/{{announcements[n].announcement_id}}" style="color:black">
+                                <a id="announcement_{{announcements[n].id}}" data-toggle="modal" data-target="#modal_announcement" style="color:black">
                                     {% if announcements[n].checked == False %}
                                     <i class="fas fa-exclamation-circle"></i>
                                     {% endif %} {{announcements[n].title}}
@@ -69,7 +69,7 @@
                         <tr class="announcement_tr">
                             <td>{{announcements[n].subject}}</td>
                             <td>
-                                <a href="/announcement/content/{{announcements[n].announcement_id}}" style="color:black">
+                                <a data-toggle="modal" data-target="#modal_announcement" style="color:black">
                                     {% if announcements[n].checked == False %}
                                     <i class="fas fa-exclamation-circle"></i>
                                     {% endif %} {{announcements[n].title}}
@@ -115,4 +115,5 @@
             cont.classList.add("show")
         };
     </script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/announcement_modal.js') }}"></script>
     {% endblock %}

@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/originalcss_formd.css') }}" type="text/css"
     media="screen and (max-width:768px)" />
 </head>
-
+{#
 <div class="modal fade" id="modal_timeboard_select" tabindex="-1" role="dialog" aria-labelledby="label1"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-fluid" role="document">
@@ -129,13 +129,13 @@
     </div>
   </div>
 </div>
-
+#}
 
 <div class="modal fade" id="modal_announcement" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-fluid" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="label1">{{announce.title}}</h5>
+        <h5 class="modal-title" id="modal_announcement_title"></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -144,11 +144,10 @@
         <div class="container-fluid">
           <div class="row">
             <ul class="col-12" style="list-style-type: none">
-              <li>サイト：{{announce.subject}}</li>
-              <li>公開日時：{{announce.publish_date}}</li>
+              <li id="modal_announcement_subject"></li>
+              <li id="modal_announcement_publish_date"></li>
             </ul>
-            <div class="col-12" id="message_container">
-              {{announce.html_file|safe}}
+            <div class="col-12" id="modal_announcement_html_file">
             </div>
           </div>
         </div>
