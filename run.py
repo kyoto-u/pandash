@@ -3,6 +3,7 @@ from flask.templating import render_template
 from app.app import app
 from app.settings import app_url,app_logout_url,app_login_url,proxy_callback
 from app.settings import cas_client
+from app.settings import factory
 import flask
 from app.index import *
 from app.decorators import check_oa, login_required, check_admin
@@ -98,13 +99,15 @@ def login_successful(ses):
     user = get_user_json(ses)
     student_id = user.get('id')
 
+    email = user.get('email')
+
     # trial_release ではここで認証済みユーザーのアクセスだけを許可する
     f = open('users.txt', 'r', encoding='UTF-8')
     auth_users = f.readlines()
     f.close()
     authenticated = False
     for auth_user in auth_users:
-        if auth_user == f'{student_id}\n':
+        if auth_user == f'{email}\n':
             authenticated = True
             break
     
@@ -899,6 +902,7 @@ def before_request():
     session.permanent = True
     app.permanent_session_lifetime = datetime.timedelta(minutes = 30)
     session.modified = True
+
 
 if __name__ == '__main__':
     pgtids={}
