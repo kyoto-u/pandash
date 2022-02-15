@@ -97,6 +97,20 @@ def login_successful(ses):
     start_time = time.perf_counter()
     user = get_user_json(ses)
     student_id = user.get('id')
+
+    # trial_release ではここで認証済みユーザーのアクセスだけを許可する
+    f = open('users.txt', 'r', encoding='UTF-8')
+    auth_users = f.readlines()
+    f.close()
+    authenticated = False
+    for auth_user in auth_users:
+        if auth_user == f'{student_id}\n':
+            authenticated = True
+            break
+    
+    if authenticated == False:
+        flask.redirect(url_for('not_authenticated'))
+
     fullname = user.get('displayName')
     session["student_id"] = student_id
     now = floor(time.time() * 1000) #millisecond
@@ -838,6 +852,11 @@ def manage_oa():
 @app.route('/loginfailed')
 def login_failed():
     return flask.render_template('login_failed.htm')
+
+#trial_releaseでは認証済みでないユーザーのアクセスを制限する
+@app.route('/access-restriction')
+def not_authenticated():
+    return flask.render_template('access_restriction.htm')
 
 # HTTP error 処理 debag=Trueとすると無効になる
 # @app.errorhandler(500)
