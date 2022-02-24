@@ -1,12 +1,42 @@
 # データベースの情報を書き換える関数の一覧
 #
 
-from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment, forum,quiz,studentquiz
+from .models import student, assignment, course, studentassignment, instructor, studentcourse, resource, studentresource, assignment_attachment,\
+                    forum, quiz, studentquiz, comment, coursecomment,announcement,studentannouncement
 from .settings import session
 from .get import get_courseids
+import time
 from .original_classes import Status
 
-def add_assignment(studentid, data, last_update):
+def add_announcement(studentid, data):
+    course_ids = get_courseids(studentid)
+    announcements = session.query(
+        announcement.Announcement).filter(announcement.Announcement.course_id.in_(course_ids)).all()
+    new_announcement=[]
+    upd_announcement = []
+    for item in data:
+        announcement_exist = False
+        update=False
+        if item["course_id"] not in course_ids:
+            continue
+        for i in announcements:
+            if i.announcement_id == item["announcement_id"]:
+                announcement_exist = True
+                if item["createddate"] !=i.createddate:
+                    update=True
+                break
+        if announcement_exist == False:
+            new_announcement.append(item)
+        elif update == True:
+            upd_announcement.append(item)
+    if len(new_announcement) != 0:
+        session.execute(announcement.Announcement.__table__.insert(),new_announcement)
+    if len(upd_announcement) != 0:
+        session.bulk_update_mappings(announcement.Announcement, upd_announcement)
+    session.commit()
+    return
+
+def add_assignment(studentid, data, last_update,allow_delete=1):
     course_ids = get_courseids(studentid)
     assignments = session.query(
         assignment.Assignment).filter(assignment.Assignment.course_id.in_(course_ids)).all()
@@ -22,11 +52,30 @@ def add_assignment(studentid, data, last_update):
                 assignment_exist = True
                 if item["modifieddate"] > last_update:
                     update=True
+                # もし削除扱いになっている場合はそれを直すためにupdateする
+                if i.deleted == 1:
+                    item["deleted"]=0
+                    update = True
                 break
         if assignment_exist == False:
             new_asm.append(item)
         elif update == True:
             upd_asm.append(item)
+    if allow_delete == 1:
+        # 逆に、テーブルに格納されている課題情報について、今回のAPIで取得できたかを調べる。
+        now = int(time.time())
+        for i in assignments:
+            assignment_deleted = True
+            for item in data:
+                if item["assignment_id"] == i.assignment_id:
+                    assignment_deleted = False
+                    break
+            if now>i.time_ms:
+                # 期限切れなら課題削除ではない可能性が高い
+                assignment_deleted = False
+            if assignment_deleted and i.deleted == 0:
+                upd_asm.append({"assignment_id": i.assignment_id, "deleted": 1})
+    
     if len(new_asm) != 0:
         session.execute(assignment.Assignment.__table__.insert(),new_asm)
     if len(upd_asm) != 0:
@@ -46,6 +95,21 @@ def add_assignment_attachment(url, title, assignment_id):
         session.add(new_assignment_attachment)
         session.commit()
     return
+
+
+def add_comment(student_id, reply_to, content):
+    update_time = int(time.time())
+    new_comment = comment.Comment(student_id=student_id, reply_to=reply_to, update_time=update_time, content=content)
+    try:
+        session.add(new_comment)
+        session.commit()
+    # primarykeyが同じ時について繰り返し処理にする
+    except:
+        session.add(new_comment)
+        session.commit()
+    session.refresh(new_comment)
+    return new_comment.comment_id
+
 
 def add_course(studentid, data, last_update):
     course_ids = get_courseids(studentid)
@@ -74,6 +138,21 @@ def add_course(studentid, data, last_update):
     return
 
 import time
+
+def add_coursecomment(studentid, comment_id, course_id):
+    course_ids = get_courseids(studentid)
+    if course_id not in course_ids:
+        return False
+    new_coursecomment = coursecomment.Coursecomment(comment_id=comment_id, course_id=course_id)
+    # course table の comment_lat_update を更新する
+    last_update = int(time.time())
+    crs = session.query(course.Course).filter(course.Course.course_id).first()
+    crs.comment_last_update = last_update
+    session.add(new_coursecomment)
+    session.commit()
+    return True
+    
+
 def add_forum(studentid,title,contents):
     inq = forum.Forum()
     inq.student_id = studentid
@@ -102,7 +181,7 @@ def add_instructor(instructorid, fullname, emailaddress):
         session.commit()
     return
 
-def add_quiz(studentid, data, last_update):
+def add_quiz(studentid, data, last_update,allow_delete=1):
     course_ids = get_courseids(studentid)
     quizzes = session.query(
         quiz.Quiz).filter(quiz.Quiz.course_id.in_(course_ids)).all()
@@ -118,11 +197,29 @@ def add_quiz(studentid, data, last_update):
                 quiz_exist = True
                 if item["modifieddate"] > last_update:
                     update=True
+                # もし削除扱いになっている場合はそれを直すためにupdateする
+                if i.deleted == 1:
+                    item["deleted"]=0
+                    update = True
                 break
         if quiz_exist == False:
             new_quiz.append(item)
         elif update == True:
             upd_quiz.append(item)
+    if allow_delete == 1:
+        # 逆に、テーブルに格納されている課題情報について、今回のAPIで取得できたかを調べる。
+        now = int(time.time())
+        for i in quizzes:
+            quiz_deleted = True
+            for item in data:
+                if item["quiz_id"] == i.quiz_id:
+                    quiz_deleted = False
+                    break
+            if now>i.time_ms:
+                # 期限切れなら課題削除ではない可能性が高い
+                quiz_deleted = False
+            if quiz_deleted and i.deleted == 0:
+                upd_quiz.append({"quiz_id": i.quiz_id, "deleted": 1})
     if len(new_quiz) != 0:
         session.execute(quiz.Quiz.__table__.insert(),new_quiz)
     if len(upd_quiz) != 0:
@@ -130,7 +227,7 @@ def add_quiz(studentid, data, last_update):
     session.commit()
     return
 
-def add_resource(studentid, data, last_update):
+def add_resource(studentid, data, last_update,allow_delete=1):
     course_ids = get_courseids(studentid)
     resources = session.query(
         resource.Resource).filter(resource.Resource.course_id.in_(course_ids)).all()
@@ -144,13 +241,28 @@ def add_resource(studentid, data, last_update):
         for i in resources:
             if i.resource_url == item["resource_url"]:
                 resource_exist = True
-                if i.modifieddate > last_update:
+                if item["modifieddate"] > last_update:
                     update=True
+                # もし削除扱いになっている場合はそれを直すためにupdateする
+                if i.deleted == 1:
+                    item["deleted"]=0
+                    update = True
                 break
         if resource_exist == False:
             new_res.append(item)
         elif update == True:
             upd_res.append(item)
+    if allow_delete == 1:
+        # 逆に、テーブルに格納されている履修情報について、今回のAPIで取得できたかを調べる。
+        for i in resources:
+            resource_deleted = True
+            for item in data:
+                if item["resource_url"] == i.resource_url:
+                    resource_deleted = False
+                    break
+            if resource_deleted and i.deleted == 0:
+                upd_res.append({"resource_url": i.resource_url, "deleted": 1})
+    
     if len(new_res) != 0:
         session.execute(resource.Resource.__table__.insert(),new_res)
     if len(upd_res) != 0:
@@ -173,26 +285,83 @@ def add_student(studentid, fullname, last_update = 0, last_update_subject = 0, l
     session.commit()
     return
 
-def add_studentcourse(studentid, data):
+def add_studentcourse(studentid, data, allow_delete = 1):
     """
-        data:[{student_id:"", course_id:""},{}]
+        学生の履修状況をテーブルに追加する
+
+        data: [{"sc_id":"","student_id":"", "course_id":""},{}]
+        allow_delete: 逆にdataにない情報を削除する
+        APIなどで全取得したデータの場合は1、そうでない場合は0にする
     """
     sc = session.query(studentcourse.Studentcourse).filter(studentcourse.Studentcourse.student_id == studentid).all()
     new_sc = []
+    upd_sc = []
+    # APIで取得した履修情報について、既にテーブルに格納されているか調べる
     for item in data:
         course_exist = False
+        update = False
         for i in sc:
             if i.course_id == item["course_id"]:
                 course_exist = True
+
+                # もし履修取り消し扱いになっている場合はそれを直すためにupdateする
+                if i.deleted == 1:
+                    update = True
                 break
-        if course_exist == False:
+        
+        # 追加・更新リストに上の結果に応じて加える
+        if not course_exist:
             new_sc.append(item)
-    if len(new_sc)!=0:
+        if update:
+            upd_sc.append({"sc_id": item["sc_id"], "deleted": 0})
+
+    if allow_delete == 1:
+        # 逆に、テーブルに格納されている履修情報について、今回のAPIで取得できたかを調べる。
+        for i in sc:
+            course_deleted = True
+            for item in data:
+                if item["course_id"] == i.course_id:
+                    course_deleted = False
+                    break
+            if course_deleted and i.deleted == 0:
+                upd_sc.append({"sc_id": i.sc_id, "deleted": 1})
+    if len(new_sc) != 0:
         session.execute(studentcourse.Studentcourse.__table__.insert(),new_sc)
+    if len(upd_sc) != 0:
+        session.bulk_update_mappings(studentcourse.Studentcourse, upd_sc)
     session.commit()
     return
 
-def add_student_assignment(studentid, data, last_update):
+def add_student_announcement(studentid, data):
+    """
+        data:announcement_id, student_id, status
+    """
+    sa = session.query(
+        studentannouncement.Student_Announcement).filter(studentannouncement.Student_Announcement.student_id == studentid).all()
+    course_ids = get_courseids(studentid)
+    new_sa = []
+    upd_sa = []
+    for item in data:
+        announcement_exist = False
+        update=False
+        if not item["course_id"] in course_ids:
+            continue
+        for i in sa:
+            if i.announcement_id == item["announcement_id"]:
+                announcement_exist = True
+                break
+        if announcement_exist == False:
+            new_sa.append(item)
+        elif update == True:
+            upd_sa.append(item)
+    if len(new_sa) != 0:
+        session.execute(studentannouncement.Student_Announcement.__table__.insert(),new_sa)
+    if len(upd_sa) != 0:
+        session.bulk_update_mappings(studentannouncement.Student_Announcement, upd_sa)
+    session.commit()
+    return
+
+def add_student_assignment(studentid, data):
     """
         data:assignment_id, student_id, status
     """
@@ -209,8 +378,7 @@ def add_student_assignment(studentid, data, last_update):
         for i in sa:
             if i.assignment_id == item["assignment_id"]:
                 assignment_exist = True
-                if item["status"] !=Status.AlreadyDue.value:
-                    update=True
+
                 break
         if assignment_exist == False:
             new_sa.append(item)
@@ -223,7 +391,7 @@ def add_student_assignment(studentid, data, last_update):
     session.commit()
     return
 
-def add_student_quiz(studentid, data, last_update):
+def add_student_quiz(studentid, data):
     """
         data:quiz_id, student_id, status
     """
@@ -240,8 +408,7 @@ def add_student_quiz(studentid, data, last_update):
         for i in sq:
             if i.quiz_id == item["quiz_id"]:
                 quiz_exist = True
-                if item["status"] !=Status.AlreadyDue.value:
-                    update=True
+                
                 break
         if quiz_exist == False:
             new_sq.append(item)
@@ -270,7 +437,7 @@ def add_student_resource(studentid,data):
         for i in sr:
             if i.resource_url == item["resource_url"]:
                 resource_exist = True
-                if item["status"] !=0:
+                if item["status"] !=0 and i.status ==0:
                     update=True
                 break
         if resource_exist == False:
@@ -356,5 +523,21 @@ def update_reply_content(studentid, form_id, reply_content):
     frm.replied_student_id = studentid
     frm.reply_contents = reply_content
     frm.replied = 1
+# コースのコメントをチェックしたときに実行
+def update_comment_checked(studentid, courseid):
+    sc_id = f"{studentid}:{courseid}"
+    sc = session.query(studentcourse.Studentcourse).filter(studentcourse.Studentcourse.sc_id==sc_id).first()
+    sc.comment_checked = 1
+    session.commit()
+    return
+
+# コースのコメントが追加されたときに実行
+def update_comment_unchecked(courseid):
+    sc_ids = session.query(studentcourse.Studentcourse.sc_id).filter(
+        studentcourse.Studentcourse.course_id==courseid).all()
+    update_list = []
+    for sc_id in sc_ids:
+        update_list.append({"sc_id":sc_id, "comment_checked":0})
+    session.bulk_update_mappings(studentcourse.Studentcourse, update_list)
     session.commit()
     return

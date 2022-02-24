@@ -1,0 +1,80 @@
+﻿{% extends "_base.htm" %}
+{% block bodycontent %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-8">
+                    <h1 class="mb-5">お知らせ一覧</h1>
+                </div>
+                <div class="col-4">
+                    <i class="fas fa-2x fa-list mr-3" style="color:black;"></i>
+                    <a href="/announcement/overview"><i class="fas fa-2x fa-th ml-3" style="color:gray;"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sm-12 col-md-11 ml-md-3 ml-sm-1 mr-auto">
+            {% set page_num = num // per_page %}
+            <form>
+                <div class="form-group row">
+                    <label class="col-6">全{{num}}件
+                        {% if page != page_num %}
+                            ({{(page-1)*per_page+1}}-{{page * per_page}}件まで表示)
+                        {% else %}
+                            ({{(page-1)*per_page+1}}-{{num}}件まで表示)
+                        {% endif %}
+                    </label>
+                    <select id="select1a" class="form-control col-6">
+                        {% set ns = namespace(cnt=1) %}
+                        {% for i in range(page_num) %}
+                            {% if ns.cnt != page_num %}
+                                <option {% if ns.cnt == page %}selected{% endif %}>{{ns.cnt}}ページ目 ({{(ns.cnt-1)*per_page + 1}}-{{ns.cnt * per_page}}件)</option>
+                            {% else %}
+                                <option {% if ns.cnt == page %}selected{% endif %}>{{ns.cnt}}ページ目 ({{(ns.cnt-1)*per_page + 1}}-{{num}}件)</option>
+                            {% endif %}
+                            {% set ns.cnt = ns.cnt + 1 %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+            <table class="table tale-sm">
+                <tr>
+                    <th><a style="color:black">サイト</a></th>
+                    <th>件名</th>
+                    <th><a style="color:black">公開日時</a></th>
+                </tr>
+                {% for announcement in announcements %}
+                <tr class="announcement_tr">
+                    <td>{{announcement.subject}}</td>
+                    <td>
+                        <a href="/announcement/content/{{announcement.announcement_id}}" style="color:black">
+                            {% if announcement.checked == False %}
+                                <i class="fas fa-exclamation-circle"></i>
+                            {% endif %} {{announcement.title}}
+                        </a>
+                    </td>
+                    <td>{{announcement.publish_date}}</td>
+                    
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        
+    </div>
+    <script>
+        var targets = document.getElementsByClassName("announcement_tr");
+
+        for (var i = 0; i < targets.length; i++) {
+            targets[i].addEventListener("mouseover", function () {
+                this.setAttribute("style", "background-color:whitesmoke;")
+            });
+
+            targets[i].addEventListener("mouseleave", function () {
+                this.setAttribute('style', "")
+            });
+
+        }
+    </script>
+
+    {% endblock %}

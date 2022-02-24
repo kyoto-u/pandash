@@ -13,5 +13,6 @@ class Quiz(settings.Base):
     time_ms = Column(sqlalchemy.BigInteger()) # deadline (milliseconds) e.g. 1600000000000
     modifieddate = Column(sqlalchemy.BigInteger()) # 出題内容の最終修正日時 (milliseconds) e.g. 1600000000000
     course_id = Column(sqlalchemy.String(40),index=True)
+    deleted = Column(Integer(),default=0)
 
 settings.Base.metadata.create_all(settings.engine)

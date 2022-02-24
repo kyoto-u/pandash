@@ -156,8 +156,9 @@ footer {
 
 
 #finished_taskslist{
-    overflow-y:hidden;
+    overflow-y:scroll;
     overflow-x: visible;
+    max-height: 300px;
 }
 
 .finished-list-item{
@@ -207,8 +208,8 @@ footer {
 
 
 /*資料ダウンロードページ*/
-label >　.undownloaded{
-    color: skyblue;
+label >.undownloaded{
+    color: deepskyblue;
 }
 
 label >.downloaded{
@@ -267,4 +268,9 @@ label >.downloaded{
 
 .fa-exclamation-circle{
     color:deeppink;
+}
+
+#message_container{
+    min-height:200px; 
+    background-color:rgb(236, 236, 236);
 }

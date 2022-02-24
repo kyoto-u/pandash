@@ -5,13 +5,98 @@ from math import *
 from sqlalchemy.sql.expression import false
 
 from app.models import forum
-from .models import student, assignment, course, studentassignment, studentcourse, resource, studentresource,quiz,studentquiz
+from .models import student, assignment, course, studentassignment, studentcourse, resource, studentresource, quiz, studentquiz, announcement, studentannouncement
+from .models import comment, coursecomment
 from .settings import SHOW_YEAR_SEMESTER, session, panda_url
 from .original_classes import TimeLeft ,Status
+import datetime
+import hashlib
 from typing import List
-from pprint import pprint
+import datetime
 
-def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
+def get_announcements(studentid,show_only_unchecked, courseid, day):
+    enrollments = session.query(studentannouncement.Student_Announcement).filter(
+        studentannouncement.Student_Announcement.student_id == studentid).all()
+    announcementids =[i.announcement_id for i in enrollments]
+    course_to_be_taken=get_courses_to_be_taken(studentid)
+    courseids = [i.course_id for i in course_to_be_taken]
+    announcementdata = session.query(announcement.Announcement).filter(
+        announcement.Announcement.announcement_id.in_(announcementids)).all()
+    
+    coursedata = session.query(course.Course).filter(
+            course.Course.course_id.in_(courseids)).all()
+    
+    returns = []
+    for data in enrollments:
+        if show_only_unchecked==1:
+            if data.checked==1:
+                continue
+        anndata = [i for i in announcementdata if i.announcement_id == data.announcement_id]
+        crsdata = [i for i in coursedata if i.course_id == anndata[0].course_id]
+        
+        if courseid != None:
+            if courseid != anndata[0].course_id:
+                continue
+        if anndata[0].course_id not in courseids:
+            continue
+        if day != None:
+            if day not in crsdata[0].classschedule:
+                continue
+        
+        announce = {}
+        announce["announcement_id"]=anndata[0].announcement_id
+        announce["checked"]=data.checked
+        announce["title"]=anndata[0].title
+        announce["html_file"]=anndata[0].body
+        announce["subject"]=crsdata[0].coursename
+        announce["classschedule"]=crsdata[0].classschedule
+        announce["course_id"]=anndata[0].course_id
+        announce["publisher"]="xxxx"
+        announce["time_ms"]=anndata[0].createddate
+        announce["publish_date"]=datetime.datetime.fromtimestamp(anndata[0].createddate//1000).strftime("%Y/%m/%d %H:%M:%S")
+        returns.append(announce)
+    return returns
+
+def get_announcement(studentid, announcementid):
+    # anm = session.query(announcement.Announcement).filter(
+    #     announcement.Announcement.announcement_id == announcementid).first()
+    # course_to_be_taken = get_courses_to_be_taken(studentid)
+    # courseids = [i.course_id for i in course_to_be_taken]
+
+    st_ans = session.query(studentannouncement.Student_Announcement).filter(
+        studentannouncement.Student_Announcement.sa_id == f'{studentid}:{announcementid}').all()
+    
+    if len(st_ans) != 0:
+        st_an = st_ans[0]
+        anndata = session.query(announcement.Announcement).filter(
+            announcement.Announcement.announcement_id==announcementid).all()
+        crsdata = session.query(course.Course).filter(
+            course.Course.course_id==anndata[0].course_id).all()
+        announce = {}
+        announce["announcement_id"]=anndata[0].announcement_id
+        announce["checked"]=st_an.checked
+        announce["title"]=anndata[0].title
+        announce["html_file"]=anndata[0].body
+        announce["subject"]=crsdata[0].coursename
+        announce["classschedule"]=crsdata[0].classschedule
+        announce["course_id"]=anndata[0].course_id
+        announce["publisher"]="xxxx"
+        announce["time_ms"]=anndata[0].createddate
+        announce["publish_date"]=datetime.datetime.fromtimestamp(anndata[0].createddate//1000).strftime("%Y/%m/%d %H:%M:%S")
+        return announce
+    else:
+        return {}
+
+
+
+    # for courseid in courseids:
+    #     if anm.course_id == courseid:
+    #         return {"announcement_id":anm.announcement_id,"title":anm.title,"html_file":anm.body}
+    # else:
+    #     return {}
+
+
+def get_assignments(studentid, show_only_unfinished,courseid, day, mode,include_deleted = 0):
     if show_only_unfinished == False:
         enrollments = session.query(studentassignment.Student_Assignment).filter(
             studentassignment.Student_Assignment.student_id == studentid).all()
@@ -41,6 +126,8 @@ def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
         if day != None:
             if day not in crsdata[0].classschedule:
                 continue
+        if include_deleted==0 and asmdata[0].deleted == 1:
+            continue
         
         task = {}
         task["status"] = data.status
@@ -68,15 +155,63 @@ def get_assignments(studentid, show_only_unfinished,courseid, day, mode):
         tasks.append(task)
     return tasks
 
+# コメントを取得する courseid = None のときすべてのコメントを取得
+def get_comments(studentid, courseid):
+    courseids = []
+    if courseid:
+        courseids.append(courseid)
+    else:
+        courses_to_be_taken=get_courses_to_be_taken(studentid)
+        courseids = [i.course_id for i in courses_to_be_taken]
+    all_comments = []
+    for courseid in courseids:
+        coursecomemnts = session.query(coursecomment.Course_Comment).filter(
+            coursecomment.Course_Comment.course_id == courseid).all()
+        commentids = [i.comment_id for i in coursecomemnts]
+        # 全て取得せず　limit()で制限してページなどで分ける様にする場合は 降順で取得
+        # commentdata = session.query(comment.Comment).filter(
+        #     comment.Comment.comment_id.in_(commentids)).order_by(comment.Comment.update_time.desc()).all()
+        # 昇順で取得
+        commentdata = session.query(comment.Comment).filter(
+               comment.Comment.comment_id.in_(commentids)).order_by(comment.Comment.update_time).limit(1000).all()
+        comments = []
+        index = 1
+        for data in commentdata:
+            # student_id のハッシュ化
+            userid = hashlib.md5(data.sutdent_id.encode()).hexdigest()[:6]
+            cmnt = {"commentid":data.comment_id,"userid":userid,"reply_to":data.reply_to,"update_time":data.update_time,"content":data.content,"index":index}
+            index += 1
+            comments.append(cmnt)
+        coursename = get_coursename(courseid)
+        all_comments.append({"roomname":coursename, "commnets":comments})
+    return all_comments
 
-def get_courseids(studentid: str) ->List[str]:
+def get_chatrooms(studentid, courseid):
+    courseids = []
+    chatrooms = []
+    if courseid:
+        courseids.append(courseid)
+    else:
+        courses_to_be_taken=get_courses_to_be_taken(studentid)
+        courseids = [i.course_id for i in courses_to_be_taken]
+    for courseid in courseids:
+        crs = session.query(course.Course).filter(course.Course.course_id==courseid).first()
+        coursename = crs[0].coursename
+        link = f"/chat/course/{courseid}"
+        last_update = str(datetime.datetime.fromtimestamp(course[0].comment_last_update,datetime.timezone(datetime.timedelta(hours=9))))[:6]
+        checked = session.query(studentcourse.Studentcourse.comment_checked).filter(studentcourse.Studentcourse.sc_id==f"{studentid}:{courseid}").first()[0]
+        chatrooms.append({"name":coursename,"link":link,"checked":checked,"last_update":last_update})
+    return chatrooms
+
+
+def get_courseids(studentid: str,include_deleted = 0) ->List[str]:
     """
         データベース上でstudent_idと結びつけられたcourse_idを集めてリストを返す
 
         ユーザーの非表示に設定している教科や表示開講期外のものも収集される
     """
-    course_ids = session.query(studentcourse.Studentcourse.course_id).filter(studentcourse.Studentcourse.student_id==studentid).all()
-    return [i.course_id for i in course_ids]
+    course_ids = session.query(studentcourse.Studentcourse).filter(studentcourse.Studentcourse.student_id==studentid).all()
+    return [i.course_id for i in course_ids if include_deleted == 1 or i.deleted == 0]
 
 def get_coursename(courseid: str) -> str:
     """
@@ -85,7 +220,7 @@ def get_coursename(courseid: str) -> str:
     coursename = session.query(course.Course.coursename).filter(course.Course.course_id==courseid).first()
     return coursename[0]
 
-def get_courses_id_to_be_taken(studentid, mode=0) ->List[str]:
+def get_courses_id_to_be_taken(studentid, mode=0,include_deleted=0) ->List[str]:
     """
         データベース上でstudent_idと結びつけられたcourse_idを集めてリストを返す
 
@@ -93,12 +228,17 @@ def get_courses_id_to_be_taken(studentid, mode=0) ->List[str]:
         mode:
         0 -> ユーザーが非表示設定にしているものを収集しない
         1 -> ユーザーが非表示設定にしているものも収集する
+        include_deleted:
+        0 -> ユーザーが履修取り消ししたものを収集しない
+        1 -> ユーザーが履修取り消ししたものも収集する
     """
     data=[]
     courses = session.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
     for i in courses:
         if mode==0 and i.hide == 1:
+            continue
+        if include_deleted==0 and i.deleted == 1:
             continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
@@ -107,7 +247,7 @@ def get_courses_id_to_be_taken(studentid, mode=0) ->List[str]:
     return data
 
 # mode = 1 のときはhideのものも取得
-def get_courses_to_be_taken(studentid, mode = 0,return_data = 'course'):
+def get_courses_to_be_taken(studentid, mode = 0,include_deleted = 0,return_data = 'course'):
     """
         データベース上でstudent_idと結びつけられた教科情報を集めてリストを返す
 
@@ -115,6 +255,9 @@ def get_courses_to_be_taken(studentid, mode = 0,return_data = 'course'):
         mode:
         0 -> ユーザーが非表示設定にしているものを収集しない
         1 -> ユーザーが非表示設定にしているものも収集する
+        include_deleted:
+        0 -> ユーザーが履修取り消ししたものを収集しない
+        1 -> ユーザーが履修取り消ししたものも収集する
         return_data:戻り値の型
         'course' -> course.Course
         'student_course' -> studentcourse.Studentcourse
@@ -124,6 +267,8 @@ def get_courses_to_be_taken(studentid, mode = 0,return_data = 'course'):
         studentcourse.Studentcourse.student_id == studentid).all()
     for i in courses:
         if mode==0 and i.hide==1:
+            continue
+        if include_deleted==0 and i.deleted == 1:
             continue
         coursedata = session.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
@@ -157,7 +302,7 @@ def get_forums(show_only_not_replied):
     return frmsdata
 
 
-def get_quizzes(studentid, show_only_unfinished,courseid, day, mode):
+def get_quizzes(studentid, show_only_unfinished,courseid, day, mode,include_deleted = 0):
     # 未完了以外の課題も表示するかによってテーブルからの取り出し方が変わる
     if show_only_unfinished == False:
         enrollments = session.query(studentquiz.Student_Quiz).filter(
@@ -194,6 +339,8 @@ def get_quizzes(studentid, show_only_unfinished,courseid, day, mode):
             # day(曜日)での絞り込み
             if day not in crsdata[0].classschedule:
                 continue
+        if include_deleted==0 and qizdata[0].deleted == 1:
+            continue
         # 注：taskの構造はassignmentと構造をそろえているために一部の名称が不適切である
         task = {}
         task["status"] = data.status
@@ -222,7 +369,7 @@ def get_quizzes(studentid, show_only_unfinished,courseid, day, mode):
     return tasks
 
 
-def get_resource_list(studentid, course_id=None, day=None):
+def get_resource_list(studentid, course_id=None, day=None,include_deleted=0):
     srs = session.query(studentresource.Student_Resource).filter(
         studentresource.Student_Resource.student_id == studentid).all()
     
@@ -248,6 +395,8 @@ def get_resource_list(studentid, course_id=None, day=None):
         if day !=None:
             if day not in crsdata[0].classschedule:
                 continue
+        if include_deleted==0 and rscdata[0].deleted == 1:
+            continue
         resource_dict = {}
         resource_dict["resource_url"] = data.resource_url
         resource_dict["title"] = rscdata[0].title

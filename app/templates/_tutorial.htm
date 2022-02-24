@@ -20,16 +20,16 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div id="example-menu" class="list-group d-none d-lg-block col-3">
+            <div id="example-menu" class="list-group d-none d-md-block col-md-3">
                 <div class="mx-auto">チュートリアル</div>
                 <a class="list-group-item list-group-item-action active" href="#section-outline">PandAshでできること</a>
                 <a class="list-group-item list-group-item-action" href="#section-tasklist">課題表：一覧表示</a>
                 <a class="list-group-item list-group-item-action" href="#section-overview">課題表：時間割表示</a>
                 <a class="list-group-item list-group-item-action" href="#section-resdownload">授業資料ダウンロード</a>
-                <a class="list-group-item list-group-item-action" href="#section-iCal">iCalと共有</a>
+                <!-- <a class="list-group-item list-group-item-action" href="#section-iCal">iCalと共有</a> -->
                 <a class="list-group-item list-group-item-action" href="#section-other">分からないことがあるときは</a>
             </div>
-            <div id="example-main" class="col-9">
+            <div id="example-main" class="col-sm-12 col-md-12">
                 <p>
                 <h1 class="mb-5">PandAshチュートリアル</h1>
                 </p>
@@ -40,8 +40,6 @@
                 {% include "Tutorial_fragments/tutorial_overview.htm" %}
 
                 {% include "Tutorial_fragments/tutorial_resdownload.htm" %}
-
-                {% include "Tutorial_fragments/tutorial_iCal.htm" %}
 
                 {% include "Tutorial_fragments/tutorial_other.htm" %}
 
