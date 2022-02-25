@@ -14,7 +14,7 @@
                     </div>
                 </div>
             </div>
-            
+ 
             <table class="table table-bordered table-striped">
                 <tr>
                     <td class="col-2" style="background-color:white;"></td>
@@ -63,14 +63,14 @@
                     <td class="col-2 tcell_announce_overview" id="thu5" style="color:dimgray">{{data.thu5.shortname}}</td>
                     <td class="col-2 tcell_announce_overview" id="fri5" style="color:dimgray">{{data.fri5.shortname}}</td>
                 </tr>
-            </table>
-            
+           </table>
+           
             <table class="table table-bordered table-striped">
                 <tr>
                     <td class="col-2" style="background-color:white;"></td>
-                    <td class="col-2 tcell_announce_overview" style="background-color:gainsboro;">月</td>
+                    <td class="col-2" style="background-color:gainsboro;">月</td>
                     <td class="col-2" style="background-color:gainsboro;">火</td>
-                    <td class="col-2 tcell_announce_overview" style="background-color:gainsboro;">水</td>
+                    <td class="col-2" style="background-color:gainsboro;">水</td>
                     <td class="col-2" style="background-color:gainsboro;">木</td>
                     <td class="col-2" style="background-color:gainsboro;">金</td>
                 </tr>
@@ -90,8 +90,10 @@
                             <th class="col-8">件名</th>
                             <th class="col-4">公開日時</th>
                         </tr>
-                        <tr class="announcement_row">
-                            <td class="col-8" data-toggle="modal" data-target="#modal_announcement"><a href="#" style="color:inherit">お知らせ</a></td>
+                        <tr class="announcement_tr"  id="announcement_1" data-toggle="modal" data-target="#modal_announcement">
+                            <td class="col-8">
+                                <a href="#" style="color:inherit">授業に関するお知らせ</a>
+                            </td>
                             <td class="col-4">2021/9/15 13:16</td>
                         </tr>
                     </table>
@@ -123,7 +125,7 @@
 </script>
 <!--お知らせカードのマウスが乗ったときと離れたときの処理-->
 <script>
-    var targets = document.getElementsByClassName("announcement_row");
+    var targets = document.getElementsByClassName("announcement_tr");
     var links = document.getElementsByClassName("announcement_link");
     for (var i = 0; i < targets.length; i++) {
         targets[i].addEventListener("mouseover", function () {
@@ -162,7 +164,7 @@
 </script>
 
 <script type="text/javascript" src="{{ url_for('static', filename='js/announcement_overview.js') }}"></script>
-
+<script type="text/javascript" src="{{ url_for('static', filename='js/announcement_modal.js') }}"></script>
 
 <script type="text/javascript">
     var announcements = {{ announcements | tojson }};

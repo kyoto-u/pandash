@@ -51,10 +51,10 @@
                         {% if ns.cnt != page_num %}
                         {% for j in range(per_page) %}
                         {% set n = (ns.cnt-1)*per_page + j %}
-                        <tr class="announcement_tr">
+                        <tr class="announcement_tr" id="announcement_{{announcements[n].id}}" data-toggle="modal" data-target="#modal_announcement">
                             <td>{{announcements[n].subject}}</td>
                             <td>
-                                <a id="announcement_{{announcements[n].id}}" data-toggle="modal" data-target="#modal_announcement" style="color:black">
+                                <a style="color:black">
                                     {% if announcements[n].checked == False %}
                                     <i class="fas fa-exclamation-circle"></i>
                                     {% endif %} {{announcements[n].title}}
@@ -66,10 +66,10 @@
                         {% else %}
                         {% for j in range(num-(ns.cnt-1)*(per_page)) %}
                         {% set n = (ns.cnt-1)*per_page + j %}
-                        <tr class="announcement_tr">
+                        <tr class="announcement_tr" id="announcement_{{announcements[n].id}}" data-toggle="modal" data-target="#modal_announcement">
                             <td>{{announcements[n].subject}}</td>
                             <td>
-                                <a id="announcement_{{announcements[n].id}}" data-toggle="modal" data-target="#modal_announcement" style="color:black">
+                                <a style="color:black">
                                     {% if announcements[n].checked == False %}
                                     <i class="fas fa-exclamation-circle"></i>
                                     {% endif %} {{announcements[n].title}}
