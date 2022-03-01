@@ -77,6 +77,7 @@
             </table>
             
         </div>
+
         <div class="col-sm-12 col-md-4" id="course_announcement">
             <div id="announcement_card" class="card text-white" style="min-height: 100vh; max-height: 100vh;">
                 <div class="card-header" style="background-color:rgb(90, 98, 107)">
@@ -164,7 +165,7 @@
 </script>
 
 <script type="text/javascript" src="{{ url_for('static', filename='js/announcement_overview.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/announcement_modal.js') }}"></script>
+<!-- <script type="text/javascript" src="{{ url_for('static', filename='js/announcement_modal.js') }}"></script> -->
 
 <script type="text/javascript">
     var announcements = {{ announcements | tojson }};
