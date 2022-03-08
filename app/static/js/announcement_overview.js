@@ -96,10 +96,10 @@ $(function (){
             var subject = course["subject"];
             var announcements_detail = course["announcements"][index];
     
-            var r_links = new Array();
-            var link = $(this).attr('id');
-            r_links.push(link);
-            var resourcedata = JSON.stringify({ "r_id": r_links });
+            var announcement_ids = new Array();
+            var announcement_id = $(this).attr('id');
+            announcement_ids.push(announcement_id);
+            var ancdata = JSON.stringify({ "announcement_ids": announcement_ids });
         
             $('#modal_announcement_title').html("件名："+announcements_detail['title']);
             $('#modal_announcement_subject').html("コースサイト：" + subject);
@@ -108,8 +108,8 @@ $(function (){
     
             $.ajax({
                 type: 'POST',
-                url: '/r_announcement_clicked',
-                data: resourcedata,
+                url: '/announcement_clicked',
+                data: ancdata,
                 contentType: 'application/json',
                 success: function (response) {
                     $('#modal_announcement_html_file').html(response["html_file"]);
@@ -144,10 +144,10 @@ $(function (){
         var subject = course["subject"];
         var announcements_detail = course["announcements"][index];
 
-        var r_links = new Array();
-        var link = $(this).attr('id');
-        r_links.push(link);
-        var resourcedata = JSON.stringify({ "r_id": r_links });
+        var announcement_ids = new Array();
+        var announcement_id = $(this).attr('id');
+        announcement_ids.push(announcement_id);
+        var ancdata = JSON.stringify({ "announcement_ids": announcement_ids });
 
         // モーダルにタイトル、コースサイト名、公開日時を表示する準備
         // var anno_list = "announcement_pagenation";
@@ -165,8 +165,8 @@ $(function (){
 
         $.ajax({
             type: 'POST',
-            url: '/r_announcement_clicked',
-            data: resourcedata,
+            url: '/announcement_clicked',
+            data: ancdata,
             contentType: 'application/json',
             success: function (response) {
                 $('#modal_announcement_html_file').html(response["html_file"]);

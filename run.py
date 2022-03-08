@@ -517,6 +517,7 @@ def announcement_content(announcement_id):
         if studentdata == None:
             return redirect(url_for('login'))
 
+        update_task_clicked_status(studentid, [announcement_id], mode="anc")
         data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcemnts")
         announce = get_announcement(studentid,announcement_id)
         return render_template('announcement_content.htm', announce=announce, data=data)
@@ -635,6 +636,16 @@ def quiz_clicked():
     if studentid:
         task_ids = request.json['task_ids']
         update_task_clicked_status(studentid, task_ids, mode="quiz")
+        return 'success'
+    else:
+        return 'failed'
+
+@app.route('/announcement_clicked', methods=['POST'])
+def announcement_clicked():
+    studentid = session.get('student_id')
+    if studentid:
+        announcement_ids = request.json['announcement_ids']
+        update_task_clicked_status(studentid, announcement_ids, mode="anc")
         return 'success'
     else:
         return 'failed'
