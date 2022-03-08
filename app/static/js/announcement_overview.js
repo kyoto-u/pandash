@@ -88,6 +88,38 @@ $(function (){
         // アニメーションをつける
         $('#course_announcement').append(parent_div);
 
+        // trigger
+        $('tr.announcement_tr').on('click', function(){
+            var element_id = $('.active_course').attr('name');
+            var index = $(this).attr('name');
+            var course = announcements[element_id];
+            var subject = course["subject"];
+            var announcements_detail = course["announcements"][index];
+    
+            var r_links = new Array();
+            var link = $(this).attr('id');
+            r_links.push(link);
+            var resourcedata = JSON.stringify({ "r_id": r_links });
+        
+            $('#modal_announcement_title').html("件名："+announcements_detail['title']);
+            $('#modal_announcement_subject').html("コースサイト：" + subject);
+            $('#modal_announcement_publish_date').html("公開日時：" + announcements_detail["publish_date"]);
+            $('#modal_announcement_html_file').html(announcements_detail["html_file"]);
+    
+            $.ajax({
+                type: 'POST',
+                url: '/r_announcement_clicked',
+                data: resourcedata,
+                contentType: 'application/json',
+                success: function (response) {
+                    $('#modal_announcement_html_file').html(response["html_file"]);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+
         // mouse over
         var targets = document.getElementsByClassName("announcement_tr");
         for (var i = 0; i < targets.length; i++) {
@@ -105,7 +137,6 @@ $(function (){
 
     });
 
-    // ？トリガーが不安定
     $('tr.announcement_tr').on('click', function(){
         var element_id = $('.active_course').attr('name');
         var index = $(this).attr('name');
@@ -130,7 +161,7 @@ $(function (){
         $('#modal_announcement_title').html("件名："+announcements_detail['title']);
         $('#modal_announcement_subject').html("コースサイト：" + subject);
         $('#modal_announcement_publish_date').html("公開日時：" + announcements_detail["publish_date"]);
-        $('#modal_announcement_html_file').html("<h3>"+ announcements_detail["html_file"] +"</h3>");
+        $('#modal_announcement_html_file').html(announcements_detail["html_file"]);
 
         $.ajax({
             type: 'POST',
