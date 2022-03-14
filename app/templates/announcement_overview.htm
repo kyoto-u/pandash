@@ -14,7 +14,7 @@
                     </div>
                 </div>
             </div>
- 
+
             <table class="table table-bordered table-striped">
                 <tr>
                     <td class="col-2" style="background-color:white;"></td>
@@ -64,7 +64,7 @@
                     <td class="col-2 tcell_announce_overview" id="fri5" style="color:dimgray">{{data.fri5.shortname}}</td>
                 </tr>
            </table>
-           
+
             <table class="table table-bordered table-striped">
                 <tr>
                     <td class="col-2" style="background-color:white;"></td>
@@ -93,7 +93,7 @@
                         </tr>
                         <tr class="announcement_tr"  id="announcement_1" data-toggle="modal" data-target="#modal_announcement">
                             <td class="col-8">
-                                <a href="#" style="color:inherit">授業に関するお知らせ</a>
+                                <div class="announcement_link">授業に関するお知らせ</div>
                             </td>
                             <td class="col-4">2021/9/15 13:16</td>
                         </tr>
@@ -131,10 +131,12 @@
     for (var i = 0; i < targets.length; i++) {
         targets[i].addEventListener("mouseover", function () {
             this.setAttribute("style", "color:black; background-color:whitesmoke;");
+            links[i].setAttribute("style", "color:black; background-color:whitesmoke;");
         });
 
         targets[i].addEventListener("mouseleave", function () {
-            this.setAttribute("style", "color:white;");
+            this.setAttribute("style", "color:white");
+            links[i].setAttribute("style", "color:white;");
         });
     }
     for (var i = 0; i < targets.length; i++) {
