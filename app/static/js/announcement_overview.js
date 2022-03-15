@@ -66,9 +66,8 @@ $(function (){
             });
             var td1 = $('<td></td>');
             td1.addClass('col-8');
-            var a_link = $('<a></a>',{
-                'href': '#',
-                'style': 'color:inherit'
+            var a_link = $('<div></div>',{
+                'class':'announcement_link'
             });
             a_link.html(announcements_details[i]['title']);
             td1.append(a_link);
