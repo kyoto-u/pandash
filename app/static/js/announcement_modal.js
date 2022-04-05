@@ -37,7 +37,7 @@ function loading(obj){
 }
 
 //前のページボタンをクリックしたときの処理
-$("#pills-forward-tab").on('click',function(){
+$("#pills-previous-tab").on('click',function(){
     var page_now = $("a.page-link.active").attr("id");
     var page_now_num = Number(page_now.split("-")[2]);
     if(page_now_num != 1){
@@ -46,16 +46,26 @@ $("#pills-forward-tab").on('click',function(){
 });
 
 //前のページボタンを押した後、タブ遷移したあとの処理
-$("#pills-forward-tab").on("shown.bs.tab",function(event){
+$("#pills-previous-tab").on("shown.bs.tab",function(event){
     var page_now = event.target["href"].split("#")[1]
     $("#" + page_now + "-tab").attr("class","page-link nav-link page-num-link active show")
     if(page_now == "pills-page-1"){
         $(this).attr("class","page-link nav-link disabled")
+        $("#alternative-previous-button").attr("class", "btn btn-link mr-auto px-5 d-none")
     }else{
         $(this).attr("class", "page-link nav-link")
     }
     $("#pills-next-tab").attr("class", "page-link nav-link")
+    $("#alternative-next-button").attr("class", "btn btn-link ml-auto px-5")
 });
+
+//ページ数が１のときに次のページボタンを無効化する処理
+$("#pills-next-tab").ready(function(){
+    var max_page_num = $("a.page-num-link").length;
+    if(max_page_num == 1){
+        $("#pills-next-tab").attr("class","page-link nav-link disabled")
+    }
+})
 
 //次のページボタンをクリックしたときの処理
 $("#pills-next-tab").on('click', function () {
@@ -75,10 +85,12 @@ $("#pills-next-tab").on("shown.bs.tab", function (event) {
     $("#" + page_now + "-tab").attr("class", "page-link nav-link page-num-link active show")
     if (page_now == "pills-page-" + String(max_page_num)) {
         $(this).attr("class", "page-link nav-link disabled")
+        $("#alternative-next-button").attr("class", "btn btn-link ml-auto px-5 d-none")
     } else {
         $(this).attr("class", "page-link nav-link")
     }
-    $("#pills-forward-tab").attr("class", "page-link nav-link")
+    $("#pills-previous-tab").attr("class", "page-link nav-link")
+    $("#alternative-previous-button").attr("class", "btn btn-link mr-auto px-5")
 });
 
 //数字タブボタンを押してタブ遷移をしたあとの処理
@@ -86,15 +98,66 @@ $("a.page-num-link").on("shown.bs.tab",function(event){
     var page_now = event.target["href"].split("#")[1]
     var max_page_num = $("a.page-num-link").length;
     if (page_now == "pills-page-1") {
-        $("#pills-forward-tab").attr("class", "page-link nav-link disabled")
+        $("#pills-previous-tab").attr("class", "page-link nav-link disabled")
+        $("#alternative-previous-button").attr("class", "btn btn-link mr-auto px-5 d-none")
         $("#pills-next-tab").attr("class", "page-link nav-link")
+        $("#alternative-next-button").attr("class", "btn btn-link ml-auto px-5")
     } else if (page_now == "pills-page-" + String(max_page_num)){
-        $("#pills-forward-tab").attr("class", "page-link nav-link")
+        $("#pills-previous-tab").attr("class", "page-link nav-link")
+        $("#alternative-previous-button").attr("class", "btn btn-link mr-auto px-5")
         $("#pills-next-tab").attr("class", "page-link nav-link disabled")
+        $("#alternative-next-button").attr("class", "btn btn-link ml-auto px-5 d-none")
     }else{
-        $("#pills-forward-tab").attr("class", "page-link nav-link")
+        $("#pills-previous-tab").attr("class", "page-link nav-link")
+        $("#alternative-previous-button").attr("class", "btn btn-link mr-auto px-5")
         $("#pills-next-tab").attr("class", "page-link nav-link")
+        $("#alternative-next-button").attr("class", "btn btn-link ml-auto px-5")
     }
 });
 
+//テーブル下部の前へ戻るボタンの処理
+$("#alternative-previous-button").on("click",function(){
+    var page_now = "#" + $("div.tab-pane.active").attr("id");
+    var page_now_num = Number(page_now.split("-")[2]);
+    if (page_now_num != 1) {
+        var next_page = "#pills-page-" + String(page_now_num - 1)
+        $(page_now).attr("class", "tab-pane fade")
+        $(next_page).tab("show")
+        $(page_now + "-tab").attr("class", "page-link nav-link page-num-link")
+        $(next_page + "-tab").attr("class", "page-link nav-link page-num-link active")
+
+        if (next_page == "#pills-page-1") {
+            $("#pills-previous-tab").attr("class", "page-link nav-link disabled")
+            $("#alternative-previous-button").attr("class", "btn btn-link mr-auto px-5 d-none")
+        }
+        $("#pills-next-tab").attr("class", "page-link nav-link")
+        $("#alternative-next-button").attr("class", "btn btn-link ml-auto px-5")
+
+    }
+    window.scrollTo(100, 0);
+})
+
+//テーブル下部の次のページボタンの処理
+$("#alternative-next-button").on("click", function () {
+    var page_now = "#" + $("div.tab-pane.active").attr("id");
+    var page_now_num = Number(page_now.split("-")[2]);
+    var max_page_num = $("a.page-num-link").length;
+    if (page_now_num != max_page_num) {
+        var next_page = "#pills-page-" + String(page_now_num + 1)
+        $(page_now).attr("class", "tab-pane fade")
+        $(next_page).tab("show")
+        $(page_now + "-tab").attr("class", "page-link nav-link page-num-link")
+        $(next_page + "-tab").attr("class", "page-link nav-link page-num-link active")
+
+        if(next_page == "#pills-page-" + String(max_page_num)){
+            $("#pills-next-tab").attr("class", "page-link nav-link disabled")
+            $("#alternative-next-button").attr("class", "btn btn-link ml-auto px-5 d-none")
+        }
+        $("#pills-previous-tab").attr("class", "page-link nav-link")
+        $("#alternative-previous-button").attr("class", "btn btn-link mr-auto px-5")
+
+
+    }
+    window.scrollTo(100, 0);
+})
 

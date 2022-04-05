@@ -24,7 +24,7 @@
                     
                     <ul class="pagination nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li class="page-item">
-                            <a class="page-link nav-link disabled" href="#" data-toggle="pill" aria-label="Previous" id="pills-forward-tab">
+                            <a class="page-link nav-link disabled" href="#" data-toggle="pill" aria-label="Previous" id="pills-previous-tab">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Previous</span>
                             </a>
@@ -98,6 +98,11 @@
                 {% set ns.cnt = ns.cnt + 1 %}
                 {% endfor %}
             </div>
+            <div class="row my-3">
+                <div class="btn btn-link mr-auto px-5 d-none" role="button" id="alternative-previous-button" style="border:1px solid gainsboro">前のページ</div>
+                <div class="btn btn-link ml-auto px-5" role="button" id="alternative-next-button" style="border:1px solid gainsboro">次のページ</div>
+            </div>
+            
             
         </div>
 
