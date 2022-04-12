@@ -64,6 +64,7 @@ $("#pills-next-tab").ready(function(){
     var max_page_num = $("a.page-num-link").length;
     if(max_page_num == 1){
         $("#pills-next-tab").attr("class","page-link nav-link disabled")
+        $("#alternative-next-button").attr("class", "btn btn-link ml-auto px-5 d-none")
     }
 })
 
@@ -74,6 +75,7 @@ $("#pills-next-tab").on('click', function () {
     var max_page_num = $("a.page-num-link").length;
     if (page_now_num != max_page_num) {
         $(this).attr("href", "#pills-page-" + String(page_now_num + 1))
+        
     }
 });
 
