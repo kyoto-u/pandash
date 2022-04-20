@@ -250,30 +250,24 @@ def help(page):
 @app.route('/option', methods=['GET'])
 def option():
     studentid = session.get('student_id')
-    if studentid:
-        data ={"others":[]}
-        studentdata = get_student(studentid)
-        coursesdata = get_courses_to_be_taken(studentid, mode=1, return_data='student_course')
-        courses_to_be_taken = []
-        for coursedata in coursesdata:
-            course_id = coursedata.course_id
-            hide = coursedata.hide
-            coursename = get_coursename(courseid=course_id)
-            courses_to_be_taken.append({'course_id':course_id,'coursename':coursename,'hide':hide})
-        data = setdefault_for_overview(studentid)
-        last_update_subject= str(datetime.datetime.fromtimestamp(studentdata.last_update_subject//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-        return flask.render_template(f"option.htm",data=data, show_already_due=studentdata.show_already_due, last_update_subject = last_update_subject, courses_to_be_taken=courses_to_be_taken)
-    else:
-        return redirect(url_for('login'))
+    data ={"others":[]}
+    studentdata = get_student(studentid)
+    coursesdata = get_courses_to_be_taken(studentid, mode=1, return_data='student_course')
+    courses_to_be_taken = []
+    for coursedata in coursesdata:
+        course_id = coursedata.course_id
+        hide = coursedata.hide
+        coursename = get_coursename(courseid=course_id)
+        courses_to_be_taken.append({'course_id':course_id,'coursename':coursename,'hide':hide})
+    data = setdefault_for_overview(studentid)
+    last_update_subject= str(datetime.datetime.fromtimestamp(studentdata.last_update_subject//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+    return flask.render_template(f"option.htm",data=data, show_already_due=studentdata.show_already_due, last_update_subject = last_update_subject, courses_to_be_taken=courses_to_be_taken)
 
 @app.route('/update_subject')
 def update_subject():
     studentid = session.get('student_id')
-    if studentid:
-        update_student_needs_to_update_sitelist(studentid,need_to_update_sitelist=1)
-        return redirect(url_for('login',page='option'))
-    else:
-        return redirect(url_for('login'))
+    update_student_needs_to_update_sitelist(studentid,need_to_update_sitelist=1)
+    return redirect(url_for('login',page='option'))
 
 # 旧バージョンの機能・デバッグ機能のためコメントアウト
 
@@ -344,15 +338,12 @@ def update_subject():
 @app.route('/tasklist')
 def tasklist_redirect():
     studentid = session.get('student_id')
-    if studentid:
-        studentdata=get_student(studentid)
-        if studentdata:
-            show_already_due = studentdata.show_already_due
-            show_only_unfinished = 0
-            if show_already_due==0:show_only_unfinished=1
-            return flask.redirect(flask.url_for('tasklist',show_only_unfinished=show_only_unfinished,max_time_left = 3))
-    else:
-        return redirect(url_for('login'))
+    studentdata=get_student(studentid)
+    show_already_due = studentdata.show_already_due
+    show_only_unfinished = 0
+    if show_already_due==0:
+        show_only_unfinished=1
+    return flask.redirect(flask.url_for('tasklist',show_only_unfinished=show_only_unfinished,max_time_left = 3))
 
 @app.route('/overview')
 def overview():
@@ -367,28 +358,23 @@ def overview():
     #     {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題7', 'status':'未', 'time_left':'あと1日', 'deadline':'2020-10-31T01:00:00Z','instructions':'なし'},
     #     {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題8', 'status':'未', 'time_left':'あと1日', 'deadline':'2020-10-31T00:00:00Z','instructions':'なし'}
     #     ]
-    if studentid:
-        # 課題の最終更新時間を取得
-        studentdata = get_student(studentid)
-        if studentdata == None:
-            # なければstudentの記録がないことになるので一度ログインへ
-            return redirect(url_for('login'))
-        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-        logging.debug(f"last update = {last_update}\npage = overview")
-        data = setdefault_for_overview(studentid)
-        tasks = get_tasklist(studentid, show_only_unfinished=1, mode=1)
-        data = task_arrange_for_overview(tasks,data)
 
-        days =["mon", "tue", "wed", "thu", "fri"]
-        for day in days:
-            for i in range(5):
-                data[day+str(i+1)]["tasks"] = sort_tasks(data[day+str(i+1)]["tasks"],show_only_unfinished = 1)
-        data.setdefault("others",[])
-        for i in range(len(data["others"])):
-            data["others"][i]["tasks"] = sort_tasks(data["others"][i]["tasks"],show_only_unfinished = 1)
-        return flask.render_template('overview.htm',data = data,last_update=last_update)
-    else:
-        return redirect(url_for('login'))
+    # 課題の最終更新時間を取得
+    studentdata = get_student(studentid)
+    last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+    logging.debug(f"last update = {last_update}\npage = overview")
+    data = setdefault_for_overview(studentid)
+    tasks = get_tasklist(studentid, show_only_unfinished=1, mode=1)
+    data = task_arrange_for_overview(tasks,data)
+
+    days =["mon", "tue", "wed", "thu", "fri"]
+    for day in days:
+        for i in range(5):
+            data[day+str(i+1)]["tasks"] = sort_tasks(data[day+str(i+1)]["tasks"],show_only_unfinished = 1)
+    data.setdefault("others",[])
+    for i in range(len(data["others"])):
+        data["others"][i]["tasks"] = sort_tasks(data["others"][i]["tasks"],show_only_unfinished = 1)
+    return flask.render_template('overview.htm',data = data,last_update=last_update)
 
 # chat 一覧（暫定）
 # @app.route('/chat/overview')
@@ -418,14 +404,13 @@ def tasklist_day_redirect(day):
 @app.route('/tasklist/course/<courseid>')
 def tasklist_course_redirect(courseid):
     studentid = session.get('student_id')
-    if studentid:
-        studentdata=get_student(studentid)
-        if studentdata:
-            show_already_due = studentdata.show_already_due
-            show_only_unfinished = 0
-            if show_already_due==0:show_only_unfinished=1
-            return flask.redirect(flask.url_for('tasklist_course',courseid=courseid,show_only_unfinished=show_only_unfinished,max_time_left = 3))
-    return redirect(url_for('login'))
+    studentdata=get_student(studentid)
+    show_already_due = studentdata.show_already_due
+    show_only_unfinished = 0
+    if show_already_due==0:
+        show_only_unfinished=1
+    return flask.redirect(flask.url_for('tasklist_course',courseid=courseid,show_only_unfinished=show_only_unfinished,max_time_left = 3))
+
 
 @app.route('/tasklist/day/<day>/<int:show_only_unfinished>/<int:max_time_left>')
 def tasklist_day(day,show_only_unfinished,max_time_left):
@@ -468,107 +453,82 @@ def resources_sample():
 @app.route('/announcement/overview')
 def announcement_overview():
     studentid = session.get('student_id')
-    if studentid:
-        # 課題の最終更新時間を取得
-        studentdata = get_student(studentid)
-        if studentdata == None:
-            # なければstudentの記録がないことになるので一度ログインへ
-            return redirect(url_for('login'))
-        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-        logging.debug(f"last update = {last_update}\npage = announcement")
-        data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcements")
-        announcements = get_announcementlist(studentid)
-        data = task_arrange_for_overview(announcements,data,key_name="announcements")
+    # 課題の最終更新時間を取得
+    studentdata = get_student(studentid)
+    last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+    logging.debug(f"last update = {last_update}\npage = announcement")
+    data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcements")
+    announcements = get_announcementlist(studentid)
+    data = task_arrange_for_overview(announcements,data,key_name="announcements")
 
-        days =["mon", "tue", "wed", "thu", "fri"]
-        for day in days:
-            for i in range(5):
-                data[day+str(i+1)]["announcements"] = sort_announcements(data[day+str(i+1)]["announcements"],1,0)
-        data.setdefault("others",[])
-        for i in range(len(data["others"])):
-            data["others"][i]["announcements"] = sort_announcements(data["others"][i]["announcements"],1,0)
-        # TODO: 適切なテンプレートを選択する
-        return flask.render_template('announcement_overview.htm',data = data,announcements=data,last_update=last_update)
-    else:
-        return redirect(url_for('login'))
+    days =["mon", "tue", "wed", "thu", "fri"]
+    for day in days:
+        for i in range(5):
+            data[day+str(i+1)]["announcements"] = sort_announcements(data[day+str(i+1)]["announcements"],1,0)
+    data.setdefault("others",[])
+    for i in range(len(data["others"])):
+        data["others"][i]["announcements"] = sort_announcements(data["others"][i]["announcements"],1,0)
+    # TODO: 適切なテンプレートを選択する
+    return flask.render_template('announcement_overview.htm',data = data,announcements=data,last_update=last_update)
 
 @app.route('/announcement/list')
 def announcement_list():
     per_page=20
-    studentid = session.get('student_id')
-    if studentid:
-        page=1
-        if requests.args.get("page"):
-            try:
-                page=int(requests.args.get("page"))
-            except:
-                # 不正なページ番号
-                page=1
-        # 課題の最終更新時間を取得
-        studentdata = get_student(studentid)
-        if studentdata == None:
-            # なければstudentの記録がないことになるので一度ログインへ
-            return redirect(url_for('login'))
-        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-        logging.debug(f"last update = {last_update}\npage = announcement_list")
-        data = setdefault_for_overview(studentid)
-        announcements = get_announcementlist(studentid)
-        announcements = sort_announcements(announcements,1,0)
-        num=len(announcements)
-        if (page-1)*per_page>=num:
-            # 範囲外のページ番号
-            page=((num-1)//per_page) + 1
-            # 0件の時に0となってしまうが下で対応
-        if page<=0:
-            # 範囲外のページ番号
+    page=1
+    if requests.args.get("page"):
+        try:
+            page=int(requests.args.get("page"))
+        except:
+            # 不正なページ番号
             page=1
-        return flask.render_template('announcement.htm',data = data,announcements=announcements,num=num,page=page,per_page=per_page,last_update=last_update)
-    else:
-        return redirect(url_for('login'))
+    studentid = session.get('student_id')
+    # 課題の最終更新時間を取得
+    studentdata = get_student(studentid)
+    last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+    logging.debug(f"last update = {last_update}\npage = announcement_list")
+    data = setdefault_for_overview(studentid)
+    announcements = get_announcementlist(studentid)
+    announcements = sort_announcements(announcements,1,0)
+    num=len(announcements)
+    if (page-1)*per_page>=num:
+        # 範囲外のページ番号
+        page=((num-1)//per_page) + 1
+        # 0件の時に0となってしまうが下で対応
+    if page<=0:
+        # 範囲外のページ番号
+        page=1
+    return flask.render_template('announcement.htm',data = data,announcements=announcements,num=num,page=page,per_page=per_page,last_update=last_update)
 
 @app.route('/announcement/content/<announcement_id>')
 def announcement_content(announcement_id):
     studentid = session.get('student_id')
-    if studentid:
-        studentdata = get_student(studentid)
-        if studentdata == None:
-            return redirect(url_for('login'))
-
-        data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcemnts")
-        announce = get_announcement(studentid,announcement_id)
-        return render_template('announcement_content.htm', announce=announce, data=data)
-    else:
-        return redirect(url_for('login'))
+    data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcemnts")
+    announce = get_announcement(studentid,announcement_id)
+    return render_template('announcement_content.htm', announce=announce, data=data)
 
 
 @app.route('/announcement/course/<courseid>/<criterion>/<ascending>')
 def announcementlist_general(courseid,criterion,ascending):
     studentid = session.get('student_id')
-    if studentid:
-        # 課題の最終更新時間を取得
-        studentdata = get_student(studentid)
-        if studentdata == None:
-            # なければstudentの記録がないことになるので一度ログインへ
-            return redirect(url_for('login'))
-        
-        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-        logging.debug(f"last update = {last_update}\npage = announcementlist")
-        announcements = get_announcementlist(studentid,courseid=courseid)
-        announcements = sort_announcements(announcements,criterion=criterion,ascending=ascending)
-        unchecked_announcement_num=sum((i["checked"] == 0 for i in announcements))
-        logging.info(f"studentid={studentid}の未確認のお知らせ:{unchecked_announcement_num}個")
-        data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcemnts")
-        
-        sort_condition = {"criterion":criterion,"ascending":ascending==1}
-        return flask.render_template(
-            'announcement.htm',
-            announcements = announcements,
-            data = data,
-            sort_condition = sort_condition,
-            unchecked_task_num = unchecked_announcement_num,
-            last_update = last_update)
-    else:
-        return redirect(url_for('login'))
+    # 課題の最終更新時間を取得
+    studentdata = get_student(studentid)
+    
+    last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+    logging.debug(f"last update = {last_update}\npage = announcementlist")
+    announcements = get_announcementlist(studentid,courseid=courseid)
+    announcements = sort_announcements(announcements,criterion=criterion,ascending=ascending)
+    unchecked_announcement_num=sum((i["checked"] == 0 for i in announcements))
+    logging.info(f"studentid={studentid}の未確認のお知らせ:{unchecked_announcement_num}個")
+    data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcemnts")
+    
+    sort_condition = {"criterion":criterion,"ascending":ascending==1}
+    return flask.render_template(
+        'announcement.htm',
+        announcements = announcements,
+        data = data,
+        sort_condition = sort_condition,
+        unchecked_task_num = unchecked_announcement_num,
+        last_update = last_update)
 
 @app.route('/ical')
 def ical():
@@ -708,32 +668,27 @@ def pgtCallback():
 
 def resourcelist_general(day = None,courseid = None):
     studentid = session.get('student_id')
-    if studentid:
-        # 課題の最終更新時間を取得
-        studentdata = get_student(studentid)
-        if studentdata == None:
-            # なければstudentの記録がないことになるので一度ログインへ
-            return redirect(url_for('login'))
-        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-        logging.debug(f"last update = {last_update}\npage = resourcelist")
-        numofcourses = 0
-        courses = sort_courses_by_classschedule(get_courses_to_be_taken(studentid),mode='course_id_name')
-        html = ""
-        resource_list = get_resource_list(studentid, course_id = courseid, day=day)
-        for c in courses:
-            if resource_list[c[0]] != []:
-                numofcourses += 1
-                html += resource_arrange(resource_list[c[0]], c[1], c[0])
-        data = setdefault_for_overview(studentid, mode='resourcelist')
 
-        if courseid != None:
-            return flask.render_template('resources_sample.htm', html=html, data=data, numofcourses=1, last_update=last_update)
-        if day != None:
-            return flask.render_template('resources_sample.htm', html=html, data=data, day=day, numofcourses=numofcourses, last_update=last_update)
-        else:
-            return flask.render_template('resources_sample.htm', html=html, data=data, numofcourses=numofcourses, last_update=last_update)
+    # 課題の最終更新時間を取得
+    studentdata = get_student(studentid)
+    last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+    logging.debug(f"last update = {last_update}\npage = resourcelist")
+    numofcourses = 0
+    courses = sort_courses_by_classschedule(get_courses_to_be_taken(studentid),mode='course_id_name')
+    html = ""
+    resource_list = get_resource_list(studentid, course_id = courseid, day=day)
+    for c in courses:
+        if resource_list[c[0]] != []:
+            numofcourses += 1
+            html += resource_arrange(resource_list[c[0]], c[1], c[0])
+    data = setdefault_for_overview(studentid, mode='resourcelist')
+
+    if courseid != None:
+        return flask.render_template('resources_sample.htm', html=html, data=data, numofcourses=1, last_update=last_update)
+    if day != None:
+        return flask.render_template('resources_sample.htm', html=html, data=data, day=day, numofcourses=numofcourses, last_update=last_update)
     else:
-        return redirect(url_for('login'))
+        return flask.render_template('resources_sample.htm', html=html, data=data, numofcourses=numofcourses, last_update=last_update)
 
 def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = None):
     studentid = session.get('student_id')
@@ -898,10 +853,23 @@ def favicon():
 
 @app.before_request
 def before_request():
+    pages_open=['login','logout','proxy','proxyticket','static','welcome','root','welcome','faq','update','tutorial','what_is_pandash','privacypolicy']
+    
     # リクエストのたびにセッションの寿命を更新する
     session.permanent = True
     app.permanent_session_lifetime = datetime.timedelta(minutes = 30)
     session.modified = True
+    logged_in=True
+    studentid = session.get('studentid')
+    if studentid:
+        studentdata = get_student(studentid)
+        if studentdata == None:
+            logged_in=False
+            redirect(url_for('login'))
+    else:
+        logged_in=False
+    if (not logged_in) and request.endpoint not in pages_open:
+    redirect('/login')
 
 
 if __name__ == '__main__':
