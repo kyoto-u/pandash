@@ -1,7 +1,7 @@
 from app.login import kulasis_login_get_api_keys
 from flask.templating import render_template
 from app.app import app
-from app.settings import app_url,app_logout_url,app_login_url,proxy_callback
+from app.settings import app_url,app_logout_url,app_login_url,proxy_callback,USE_CAS,USERNAME,PASSWORD
 from app.settings import cas_client
 import flask
 from app.index import *
@@ -38,6 +38,10 @@ global pgtids
 
 @app.route('/login', methods=['GET'])
 def login():
+    if not USE_CAS:
+        session["logged-in"] = True
+        logging.debug("logged in without cas")
+        return flask.render_template("loading.htm", ticket="ticket")
     ticket = request.args.get('ticket')
     if ticket:
         # ticketのvalidateを行う
@@ -101,7 +105,29 @@ def proxyticket():
         # ticketがあるのでPandAのAPIを利用できる
         ses = requests.Session()
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}", verify=False)
-        if api_response.status_code == 200:
+        if not USE_CAS:
+            # PandAのログインページ
+            login_url = "https://panda.ecs.kyoto-u.ac.jp/cas/login"
+            ses = requests.Session()
+            time.sleep(1)
+            html = ses.get(login_url)
+            logging.debug(html)
+            soup = BeautifulSoup(html.text, "html.parser")
+            # inputを全て取得
+            inputs = soup.find_all("input")
+            data = {}
+            for tag in inputs:
+                data[tag["name"]] = tag["value"]
+
+            data["username"] = USERNAME
+            data["password"] = PASSWORD
+            # 一応いらなさそうなものは消去
+            del data["warn"]
+            del data["reset"]
+            ses.post(login_url, data=data)
+            portal=ses.get("https://panda.ecs.kyoto-u.ac.jp/portal/login")
+            logging.debug(portal)
+        if api_response.status_code == 200 or not USE_CAS:
             return login_successful(ses)
         return flask.redirect(url_for('login_failed',description='failed to use ticket at PandA'))
     return flask.redirect(url_for('login_failed',description='no ticket is given'))
