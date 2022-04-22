@@ -117,39 +117,40 @@ def login_successful(ses):
     fullname = user.get('displayName')
     session["student_id"] = student_id
     now = floor(time.time() * 1000) #millisecond
-    studentdata = get_student(student_id)
-    show_only_unfinished = 0
-    need_to_update_sitelist = 1
-    last_update=0
-    last_update_subject=0
-    language='ja'
-    if studentdata:
-        if studentdata.show_already_due == 0:
-            # ユーザーが期限の過ぎた課題は表示しないように設定しているので、適用する
-            show_only_unfinished = 1
-        need_to_update_sitelist = studentdata.need_to_update_sitelist
-        # ここで、履修状況について前回の更新から1週間以上経過している場合は履修状況を更新する
-        if (now - studentdata.last_update_subject) >= 1*7*24*60*60*1000:
-            need_to_update_sitelist = 1
+    with open_db_ses() as db_ses:
+        studentdata = get_student(student_id,db_ses)
+        show_only_unfinished = 0
+        need_to_update_sitelist = 1
+        last_update=0
+        last_update_subject=0
+        language='ja'
+        if studentdata:
+            if studentdata.show_already_due == 0:
+                # ユーザーが期限の過ぎた課題は表示しないように設定しているので、適用する
+                show_only_unfinished = 1
+            need_to_update_sitelist = studentdata.need_to_update_sitelist
+            # ここで、履修状況について前回の更新から1週間以上経過している場合は履修状況を更新する
+            if (now - studentdata.last_update_subject) >= 1*7*24*60*60*1000:
+                need_to_update_sitelist = 1
+            
+            last_update = studentdata.last_update
+            last_update_subject = studentdata.last_update_subject
+            
+        else:
+            add_student(student_id, fullname, db_ses, last_update = 0, last_update_subject = 0,language='ja')
         
-        last_update = studentdata.last_update
-        last_update_subject = studentdata.last_update_subject
-        
-    else:
-        add_student(student_id, fullname, last_update = 0, last_update_subject = 0,language='ja')
-    
-    get_data_from_api_and_update(student_id, ses, now, last_update, 0)
-    if need_to_update_sitelist == 1:
-        get_data_from_api_and_update(student_id, ses, now, 0, 1)
-    if student_id != "":
-        update_student_needs_to_update_sitelist(student_id)
+        get_data_from_api_and_update(student_id, ses, now, last_update, 0, db_ses)
+        if need_to_update_sitelist == 1:
+            get_data_from_api_and_update(student_id, ses, now, 0, 1, db_ses)
+        if student_id != "":
+            update_student_needs_to_update_sitelist(student_id, db_ses)
 
-    if need_to_update_sitelist:
-        add_student(student_id, fullname, last_update = now, last_update_subject = now, language = language)
-    else:
-        add_student(student_id, fullname, last_update = now, last_update_subject = last_update_subject, language = language)
-    logging.info(f"TIME {student_id}: {time.perf_counter() - start_time}")
-    
+        if need_to_update_sitelist:
+            add_student(student_id, fullname, db_ses, last_update = now, last_update_subject = now, language = language)
+        else:
+            add_student(student_id, fullname, db_ses, last_update = now, last_update_subject = last_update_subject, language = language)
+        logging.info(f"TIME {student_id}: {time.perf_counter() - start_time}")
+        
     # リダイレクト先を決める
     if 'student_id' in session:
         if session['student_id'] in redirect_pages:
@@ -251,22 +252,27 @@ def help(page):
 def option():
     studentid = session.get('student_id')
     data ={"others":[]}
-    studentdata = get_student(studentid)
-    coursesdata = get_courses_to_be_taken(studentid, mode=1, return_data='student_course')
+    show_already_due=0
+    last_update_subject=0
     courses_to_be_taken = []
-    for coursedata in coursesdata:
-        course_id = coursedata.course_id
-        hide = coursedata.hide
-        coursename = get_coursename(courseid=course_id)
-        courses_to_be_taken.append({'course_id':course_id,'coursename':coursename,'hide':hide})
-    data = setdefault_for_overview(studentid)
-    last_update_subject= str(datetime.datetime.fromtimestamp(studentdata.last_update_subject//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-    return flask.render_template(f"option.htm",data=data, show_already_due=studentdata.show_already_due, last_update_subject = last_update_subject, courses_to_be_taken=courses_to_be_taken)
+    with open_db_ses() as db_ses:
+        studentdata = get_student(studentid,db_ses)
+        coursesdata = get_courses_to_be_taken(studentid, db_ses, mode=1, return_data='student_course')
+        for coursedata in coursesdata:
+            course_id = coursedata.course_id
+            hide = coursedata.hide
+            coursename = get_coursename(course_id,db_ses)
+            courses_to_be_taken.append({'course_id':course_id,'coursename':coursename,'hide':hide})
+        show_already_due = studentdata.show_already_due
+        data = setdefault_for_overview(studentid, db_ses)
+        last_update_subject= str(datetime.datetime.fromtimestamp(studentdata.last_update_subject//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+    return flask.render_template(f"option.htm",data=data, show_already_due=show_already_due, last_update_subject = last_update_subject, courses_to_be_taken=courses_to_be_taken)
 
 @app.route('/update_subject')
 def update_subject():
     studentid = session.get('student_id')
-    update_student_needs_to_update_sitelist(studentid,need_to_update_sitelist=1)
+    with open_db_ses() as db_ses:
+        update_student_needs_to_update_sitelist(studentid,db_ses need_to_update_sitelist=1)
     return redirect(url_for('login',page='option'))
 
 # 旧バージョンの機能・デバッグ機能のためコメントアウト
@@ -338,11 +344,12 @@ def update_subject():
 @app.route('/tasklist')
 def tasklist_redirect():
     studentid = session.get('student_id')
-    studentdata=get_student(studentid)
-    show_already_due = studentdata.show_already_due
     show_only_unfinished = 0
-    if show_already_due==0:
-        show_only_unfinished=1
+    with open_db_ses() as db_ses:
+        studentdata=get_student(studentid, db_ses)
+        show_already_due = studentdata.show_already_due
+        if show_already_due==0:
+            show_only_unfinished=1
     return flask.redirect(flask.url_for('tasklist',show_only_unfinished=show_only_unfinished,max_time_left = 3))
 
 @app.route('/overview')
@@ -360,11 +367,12 @@ def overview():
     #     ]
 
     # 課題の最終更新時間を取得
-    studentdata = get_student(studentid)
-    last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-    logging.debug(f"last update = {last_update}\npage = overview")
-    data = setdefault_for_overview(studentid)
-    tasks = get_tasklist(studentid, show_only_unfinished=1, mode=1)
+    with open_db_ses() as db_ses:
+        studentdata = get_student(studentid,db_ses)
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        logging.debug(f"last update = {last_update}\npage = overview")
+        data = setdefault_for_overview(studentid,db_ses)
+        tasks = get_tasklist(studentid, db_ses, show_only_unfinished=1, mode=1)
     data = task_arrange_for_overview(tasks,data)
 
     days =["mon", "tue", "wed", "thu", "fri"]
@@ -390,25 +398,23 @@ def overview():
 @app.route('/tasklist/day/<day>')
 def tasklist_day_redirect(day):
     studentid = session.get('student_id')
-    if studentid:
-        studentdata=get_student(studentid)
-        if studentdata:
-            show_already_due = studentdata.show_already_due
-            show_only_unfinished = 0
-            if show_already_due==0:show_only_unfinished=1
-            return flask.redirect(flask.url_for('tasklist_day',day=day, show_only_unfinished=show_only_unfinished,max_time_left = 3))
-    else:
-        # student_idがないのでログイン画面に飛ばす
-        return redirect(url_for('login'))
+    show_only_unfinished = 0
+    with open_db_ses() as db_ses:
+        studentdata=get_student(studentid,db_ses)
+        show_already_due = studentdata.show_already_due
+        if show_already_due==0:
+            show_only_unfinished=1
+    return flask.redirect(flask.url_for('tasklist_day',day=day, show_only_unfinished=show_only_unfinished,max_time_left = 3))
 
 @app.route('/tasklist/course/<courseid>')
 def tasklist_course_redirect(courseid):
     studentid = session.get('student_id')
-    studentdata=get_student(studentid)
-    show_already_due = studentdata.show_already_due
     show_only_unfinished = 0
-    if show_already_due==0:
-        show_only_unfinished=1
+    with open_db_ses() as db_ses:
+        studentdata=get_student(studentid,db_ses)
+        show_already_due = studentdata.show_already_due
+        if show_already_due==0:
+            show_only_unfinished=1
     return flask.redirect(flask.url_for('tasklist_course',courseid=courseid,show_only_unfinished=show_only_unfinished,max_time_left = 3))
 
 
@@ -454,11 +460,12 @@ def resources_sample():
 def announcement_overview():
     studentid = session.get('student_id')
     # 課題の最終更新時間を取得
-    studentdata = get_student(studentid)
-    last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-    logging.debug(f"last update = {last_update}\npage = announcement")
-    data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcements")
-    announcements = get_announcementlist(studentid)
+    with open_db_ses() as db_ses:
+        studentdata = get_student(studentid,db_ses)
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        logging.debug(f"last update = {last_update}\npage = announcement")
+        data = setdefault_for_overview(studentid, db_ses, mode="announcement",tasks_name="announcements")
+        announcements = get_announcementlist(studentid, db_ses)
     data = task_arrange_for_overview(announcements,data,key_name="announcements")
 
     days =["mon", "tue", "wed", "thu", "fri"]
@@ -482,12 +489,13 @@ def announcement_list():
             # 不正なページ番号
             page=1
     studentid = session.get('student_id')
-    # 課題の最終更新時間を取得
-    studentdata = get_student(studentid)
-    last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-    logging.debug(f"last update = {last_update}\npage = announcement_list")
-    data = setdefault_for_overview(studentid)
-    announcements = get_announcementlist(studentid)
+    with open_db_ses() as db_ses:
+        # 課題の最終更新時間を取得
+        studentdata = get_student(studentid,db_ses)
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        logging.debug(f"last update = {last_update}\npage = announcement_list")
+        data = setdefault_for_overview(studentid, db_ses)
+        announcements = get_announcementlist(studentid, db_ses)
     announcements = sort_announcements(announcements,1,0)
     num=len(announcements)
     if (page-1)*per_page>=num:
@@ -501,25 +509,27 @@ def announcement_list():
 
 @app.route('/announcement/content/<announcement_id>')
 def announcement_content(announcement_id):
-    studentid = session.get('student_id')
-    data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcemnts")
-    announce = get_announcement(studentid,announcement_id)
+    with open_db_ses() as db_ses:
+        studentid = session.get('student_id',db_ses)
+        data = setdefault_for_overview(studentid, db_ses, mode="announcement",tasks_name="announcemnts")
+        announce = get_announcement(studentid,announcement_id,db_ses)
     return render_template('announcement_content.htm', announce=announce, data=data)
 
 
 @app.route('/announcement/course/<courseid>/<criterion>/<ascending>')
 def announcementlist_general(courseid,criterion,ascending):
     studentid = session.get('student_id')
-    # 課題の最終更新時間を取得
-    studentdata = get_student(studentid)
-    
-    last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-    logging.debug(f"last update = {last_update}\npage = announcementlist")
-    announcements = get_announcementlist(studentid,courseid=courseid)
+    with open_db_ses() as db_ses:
+        # 課題の最終更新時間を取得
+        studentdata = get_student(studentid,db_ses)
+        
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        logging.debug(f"last update = {last_update}\npage = announcementlist")
+        announcements = get_announcementlist(studentid, db_ses, courseid=courseid)
+        unchecked_announcement_num=sum((i["checked"] == 0 for i in announcements))
+        data = setdefault_for_overview(studentid, db_ses, mode="announcement",tasks_name="announcemnts")
     announcements = sort_announcements(announcements,criterion=criterion,ascending=ascending)
-    unchecked_announcement_num=sum((i["checked"] == 0 for i in announcements))
     logging.info(f"studentid={studentid}の未確認のお知らせ:{unchecked_announcement_num}個")
-    data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcemnts")
     
     sort_condition = {"criterion":criterion,"ascending":ascending==1}
     return flask.render_template(
@@ -533,7 +543,8 @@ def announcementlist_general(courseid,criterion,ascending):
 @app.route('/ical')
 def ical():
     studentid = session.get('student_id')
-    data = setdefault_for_overview(studentid)
+    with open_db_ses() as db_ses:
+        data = setdefault_for_overview(studentid, db_ses)
     return flask.render_template('coming_soon.htm',data=data)
 
 
@@ -551,7 +562,8 @@ def r_status_change():
     studentid = session.get('student_id')
     if studentid:
         r_links = request.json['r_links']
-        update_resource_status(studentid, r_links)
+        with open_db_ses() as db_ses:
+            update_resource_status(studentid, r_links, db_ses)
         return 'success'
     else:
         return 'failed'
@@ -561,7 +573,8 @@ def task_finish():
     studentid = session.get('student_id')
     if studentid:
         task_id = request.json['task_id']
-        update_task_status(studentid, task_id)
+        with open_db_ses() as db_ses:
+            update_task_status(studentid, task_id, db_ses)
         return 'success'
     else:
         return 'failed'
@@ -571,7 +584,8 @@ def task_unfinish():
     studentid = session.get('student_id')
     if studentid:
         task_id = request.json['task_id']
-        update_task_status(studentid, task_id, mode=1)
+        with open_db_ses() as db_ses:
+            update_task_status(studentid, task_id, db_ses, mode=1)
         return 'success'
     else:
         return 'failed'
@@ -581,7 +595,8 @@ def quiz_finish():
     studentid = session.get('student_id')
     if studentid:
         task_id = request.json['task_id']
-        update_task_status(studentid, task_id, mode=0, taskmode="quiz")
+        with open_db_ses() as db_ses:
+            update_task_status(studentid, db_ses, task_id, mode=0, taskmode="quiz")
         return 'success'
     else:
         return 'failed'
@@ -591,7 +606,8 @@ def quiz_unfinish():
     studentid = session.get('student_id')
     if studentid:
         task_id = request.json['task_id']
-        update_task_status(studentid, task_id, mode=1, taskmode="quiz")
+        with open_db_ses() as db_ses:
+            update_task_status(studentid, task_id, db_ses, mode=1, taskmode="quiz")
         return 'success'
     else:
         return 'failed'
@@ -601,7 +617,8 @@ def task_clicked():
     studentid = session.get('student_id')
     if studentid:
         task_ids = request.json['task_ids']
-        update_task_clicked_status(studentid, task_ids, mode="task")
+        with open_db_ses() as db_ses:
+            update_task_clicked_status(studentid, task_ids, db_ses, mode="task")
         return 'success'
     else:
         return 'failed'
@@ -611,7 +628,8 @@ def quiz_clicked():
     studentid = session.get('student_id')
     if studentid:
         task_ids = request.json['task_ids']
-        update_task_clicked_status(studentid, task_ids, mode="quiz")
+        with open_db_ses() as db_ses:
+            update_task_clicked_status(studentid, task_ids, db_ses, mode="quiz")
         return 'success'
     else:
         return 'failed'
@@ -622,7 +640,8 @@ def course_hide():
     if studentid:
         course_list = request.json['course_list']
         hide = request.json['hide']
-        update_student_course_hide(studentid,course_list,hide)
+        with open_db_ses() as db_ses:
+            update_student_course_hide(studentid,course_list,hide, db_ses)
         return 'success'
     else:
         return 'failed'
@@ -669,19 +688,20 @@ def pgtCallback():
 def resourcelist_general(day = None,courseid = None):
     studentid = session.get('student_id')
 
-    # 課題の最終更新時間を取得
-    studentdata = get_student(studentid)
-    last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-    logging.debug(f"last update = {last_update}\npage = resourcelist")
-    numofcourses = 0
-    courses = sort_courses_by_classschedule(get_courses_to_be_taken(studentid),mode='course_id_name')
-    html = ""
-    resource_list = get_resource_list(studentid, course_id = courseid, day=day)
-    for c in courses:
-        if resource_list[c[0]] != []:
-            numofcourses += 1
-            html += resource_arrange(resource_list[c[0]], c[1], c[0])
-    data = setdefault_for_overview(studentid, mode='resourcelist')
+    with open_db_ses() as db_ses:
+        # 課題の最終更新時間を取得
+        studentdata = get_student(studentid,db_ses)
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        logging.debug(f"last update = {last_update}\npage = resourcelist")
+        numofcourses = 0
+        courses = sort_courses_by_classschedule(get_courses_to_be_taken(studentid,db_ses),mode='course_id_name')
+        html = ""
+        resource_list = get_resource_list(studentid, db_ses, course_id = courseid, day=day)
+        for c in courses:
+            if resource_list[c[0]] != []:
+                numofcourses += 1
+                html += resource_arrange(resource_list[c[0]], c[1], c[0])
+        data = setdefault_for_overview(studentid, db_ses, mode='resourcelist')
 
     if courseid != None:
         return flask.render_template('resources_sample.htm', html=html, data=data, numofcourses=1, last_update=last_update)
@@ -692,20 +712,18 @@ def resourcelist_general(day = None,courseid = None):
 
 def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = None):
     studentid = session.get('student_id')
-    if studentid:
+
+    with open_db_ses() as db_ses:
         # 課題の最終更新時間を取得
-        studentdata = get_student(studentid)
-        if studentdata == None:
-            # なければstudentの記録がないことになるので一度ログインへ
-            return redirect(url_for('login'))
+        studentdata = get_student(studentid,db_ses)
         last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         logging.debug(f"last update = {last_update}\npage = tasklist")
         if courseid != None:
-            tasks = get_tasklist(studentid,courseid=courseid)
+            tasks = get_tasklist(studentid, db_ses, courseid=courseid)
         elif day != None:
-            tasks = get_tasklist(studentid,day=day)
+            tasks = get_tasklist(studentid, db_ses, day=day)
         else:
-            tasks = get_tasklist(studentid)
+            tasks = get_tasklist(studentid, db_ses)
         # tasks = [
         #     {'subject':'[2020前期月1]線形代数学', 'classschedule':'mon1','taskname':'課題1', 'status':'未', 'time_left': "あと50分", 'deadline':'2020-10-30T00:50:00Z','instructions':'なし'},
         #     {'subject':'[2020前期月1]線形代数学', 'classschedule':'mon1','taskname':'課題2', 'status':'未', 'time_left':'あと2時間', 'deadline':'2020-10-30T02:00:00Z','instructions':'なし'},
@@ -718,42 +736,38 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
         unfinished_task_num=sum((i["status"] == Status.NotYet.value for i in tasks))
         logging.info(f"studentid={studentid}の未完了課題:{unfinished_task_num}個")
         data ={"others":[]}
-        data = setdefault_for_overview(studentid)
-        if courseid != None:
-            search_condition = get_search_condition(show_only_unfinished, max_time_left, course=courseid)
-        elif day != None:
-            search_condition = get_search_condition(show_only_unfinished, max_time_left, day=day)
-            return flask.render_template(
-                'tasklist.htm',
-                tasks = tasks,
-                data = data,
-                day = day,
-                search_condition = search_condition,
-                unfinished_task_num = unfinished_task_num,
-                last_update = last_update)
-        else:
-            search_condition = get_search_condition(show_only_unfinished, max_time_left)
+        data = setdefault_for_overview(studentid, db_ses)
+    if courseid != None:
+        search_condition = get_search_condition(show_only_unfinished, max_time_left, db_ses, course=courseid)
+    elif day != None:
+        search_condition = get_search_condition(show_only_unfinished, max_time_left, db_ses, day=day)
         return flask.render_template(
             'tasklist.htm',
             tasks = tasks,
             data = data,
-            day = 'oth',
+            day = day,
             search_condition = search_condition,
             unfinished_task_num = unfinished_task_num,
             last_update = last_update)
     else:
-        return redirect(url_for('login'))
+        search_condition = get_search_condition(show_only_unfinished, max_time_left, db_ses)
+    return flask.render_template(
+        'tasklist.htm',
+        tasks = tasks,
+        data = data,
+        day = 'oth',
+        search_condition = search_condition,
+        unfinished_task_num = unfinished_task_num,
+        last_update = last_update)
 
 
 def comment_general(courseid = None):
     studentid = session.get('studentid')
-    if studentid:
-        studentdata = get_student(studentid)
-        if studentdata == None:
-            return redirect(url_for('login'))
+    with open_db_ses() as db_ses:
+        studentdata = get_student(studentid,db_ses)
         last_update = str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-        data = setdefault_for_overview(studentid)
-        all_comments = get_comments(studentid, courseid)
+        data = setdefault_for_overview(studentid,db_ses)
+        all_comments = get_comments(studentid, courseid, db_ses)
         if len(all_comments) == 1:
             return flask.render_template(
                 'comment.htm',
@@ -767,14 +781,12 @@ def comment_general(courseid = None):
                 comments = all_comments,
                 data = data
             )
-    else:
-        return redirect(url_for('login'))
 
 @app.route('/ContactUs', methods=['GET', 'POST'])
 def forum():
     studentid = session.get('student_id')
-    if studentid:
-        data = setdefault_for_overview(studentid)
+    with open_db_ses() as db_ses:
+        data = setdefault_for_overview(studentid, db_ses)
         if request.method == 'GET':
             return flask.render_template('ContactUs.htm', error=False, data=data)
         elif request.method == 'POST':
@@ -786,14 +798,12 @@ def forum():
                 #     TITLE: {title},
                 #     CONTENTS: {contents}
                 #     --------------"""
-                msg = add_forum(studentid,title,contents)
+                msg = add_forum(studentid,title,contents, db_ses)
                 logging.info(msg)
                 return flask.render_template('Contacted.htm', data=data)
             except:
                 logging.info(f"FORUM STUDENT:{studentid} sending failed")
                 return flask.render_template('ContactUs.htm', error=True, data=data)
-    else:
-        return redirect('/login')
 
 # 管理画面
 @app.route('/manage/admin')
@@ -862,14 +872,14 @@ def before_request():
     logged_in=True
     studentid = session.get('studentid')
     if studentid:
-        studentdata = get_student(studentid)
-        if studentdata == None:
-            logged_in=False
-            redirect(url_for('login'))
+        with open_db_ses() as db_ses:
+            studentdata = get_student(studentid,db_ses)
+            if studentdata == None:
+                logged_in=False
     else:
         logged_in=False
     if (not logged_in) and request.endpoint not in pages_open:
-    redirect('/login')
+        redirect(url_for('login'))
 
 
 if __name__ == '__main__':

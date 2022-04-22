@@ -1,7 +1,7 @@
 # 他ファイルの複数の関数を利用する関数、あるいはどれにも属さない関数
 
 from math import *
-from .settings import app_url
+from .settings import app_url,session
 import re
 from pprint import pprint
 import copy
@@ -9,17 +9,18 @@ import asyncio
 from .add import *
 from .get import *
 from .api import *
+import contextlib
 
 # 複合的な関数
-def get_announcementlist(studentid, show_only_unchecked = False,courseid=None, day=None):
+def get_announcementlist(studentid,db_ses, show_only_unchecked = False,courseid=None, day=None):
     """
 
     """
-    announcements=get_announcements(studentid, show_only_unchecked,courseid, day)
+    announcements=get_announcements(studentid, show_only_unchecked,courseid, day,db_ses)
 
     return announcements
 
-def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_sitelist):
+def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_sitelist,db_ses):
     """
         ユーザーの履修科目を取得し、対象科目の課題、授業資料、テスト・クイズの情報を更新する
 
@@ -30,7 +31,7 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
     membership = {"student_id": "", "site_list":[]}
     if need_to_update_sitelist == 0:                
         membership["student_id"] = student_id
-        membership["site_list"] = get_courses_id_to_be_taken(student_id)
+        membership["site_list"] = get_courses_id_to_be_taken(student_id, db_ses)
     else:
         # 時間かかる
         last_update = 0
@@ -38,12 +39,12 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         # membership = get_course_id_from_api(membership_json(ses))
         # site.json 使用
         membership = get_course_id_from_site_api(get_site_json(ses),student_id)
-        already_known= get_courses_id_to_be_taken(student_id)
+        already_known= get_courses_id_to_be_taken(student_id, db_ses)
         
         # 既存の教科情報を更新
         site_list_known = [i for i in membership["site_list"] if i in already_known]
         sc_known = [{"sc_id":f"{student_id}:{i}","student_id":student_id,"course_id":i} for i in site_list_known]
-        add_studentcourse(student_id,sc_known)
+        add_studentcourse(student_id,sc_known,db_ses)
 
         # 新規のもののみを取り上げる
         membership["site_list"] = [i for i in membership["site_list"] if i not in already_known]
@@ -100,7 +101,7 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         # user_info    {"student_id": , "fullname": }
         # quizzes      {"quizzes":[], "student_quizzes":[]}
         # announcements{"announcements":[], "studnet_announcements":[]}
-        sync_student_contents(student_id, courses, assignments, resources, quizzes, announcements, now, last_update=last_update,need_to_update_sitelist=need_to_update_sitelist)
+        sync_student_contents(student_id, courses, assignments, resources, quizzes, announcements, now, db_ses, last_update=last_update,need_to_update_sitelist=need_to_update_sitelist)
 
 def get_data_from_kulais_api_and_update(student_id,access_param,ses,now,last_update):
     last_update = 0
@@ -143,34 +144,34 @@ def get_data_from_kulais_api_and_update(student_id,access_param,ses,now,last_upd
     # この後メールの本文取得，追加処理
         
 
-def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):
+def get_tasklist(studentid, db_ses, show_only_unfinished = False,courseid=None, day=None, mode=0):
     """
         mode
         0:tasklist
         1:tasklist for overview
     """
 
-    assignments=get_assignments(studentid, show_only_unfinished,courseid, day, mode)
-    quizzes=get_quizzes(studentid, show_only_unfinished,courseid, day, mode)
+    assignments=get_assignments(studentid, db_ses,show_only_unfinished,courseid, day, mode)
+    quizzes=get_quizzes(studentid, db_ses,show_only_unfinished,courseid, day, mode)
     # assignmentsとquizzesを結合
     return assignments+quizzes
 
-def sync_student_announcement(studentid, sa, anc): 
+def sync_student_announcement(studentid, sa, anc, db_ses): 
     # 追加、更新をする
-    add_student_announcement(studentid, sa)
-    add_announcement(studentid, anc)
+    add_student_announcement(studentid, sa,db_ses)
+    add_announcement(studentid, anc,db_ses)
     return 0
 
-def sync_student_assignment(studentid, sa, asm,last_update,need_to_update_sitelist): 
+def sync_student_assignment(studentid, sa, asm,last_update,need_to_update_sitelist, db_ses): 
     # 追加、更新をする
-    add_student_assignment(studentid,sa)
+    add_student_assignment(studentid,sa, db_ses)
     if need_to_update_sitelist:
-        add_assignment(studentid, asm, last_update,allow_delete=0)
+        add_assignment(studentid, asm, last_update, db_ses, allow_delete=0)
     else:
-        add_assignment(studentid, asm, last_update)
+        add_assignment(studentid, asm, last_update, db_ses)
     return 0
 
-def sync_student_contents(studentid, crs, asm, res, qz, anc, now,last_update=0,need_to_update_sitelist=0):
+def sync_student_contents(studentid, crs, asm, res, qz, anc, now,db_ses, last_update=0,need_to_update_sitelist=0):
     # 以下主な方針
     #
     # studentテーブルにlast_updateを用意し、毎回update後に記録しておく
@@ -183,38 +184,38 @@ def sync_student_contents(studentid, crs, asm, res, qz, anc, now,last_update=0,n
     # 加えて、assignment,course,resource,quizも同時に更新することにする。
 
     # courseが最初!!!
-    sync_student_course(studentid, crs["student_courses"], crs["courses"], last_update,need_to_update_sitelist)
-    sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"], last_update,need_to_update_sitelist)
-    sync_student_resource(studentid, res["student_resources"], res["resources"], last_update,need_to_update_sitelist=need_to_update_sitelist)
-    sync_student_quiz(studentid, qz["student_quizzes"], qz["quizzes"], last_update,need_to_update_sitelist)
-    sync_student_announcement(studentid, anc["student_announcements"], anc["announcements"])
+    sync_student_course(studentid, crs["student_courses"], crs["courses"], last_update,need_to_update_sitelist, db_ses)
+    sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"], last_update,need_to_update_sitelist, db_ses)
+    sync_student_resource(studentid, res["student_resources"], res["resources"], last_update, need_to_update_sitelist, db_ses)
+    sync_student_quiz(studentid, qz["student_quizzes"], qz["quizzes"], last_update,need_to_update_sitelist, db_ses)
+    sync_student_announcement(studentid, anc["student_announcements"], anc["announcements"], db_ses)
 
     return 0
 
-def sync_student_course(studentid, sc, crs, last_update,need_to_update_sitelist):
+def sync_student_course(studentid, sc, crs, last_update,need_to_update_sitelist, db_ses):
     # 追加、更新をする
     if need_to_update_sitelist:
-        add_studentcourse(studentid, sc,allow_delete=0)
+        add_studentcourse(studentid, sc,db_ses, allow_delete=0)
     else:
-        add_studentcourse(studentid, sc)
-    add_course(studentid, crs, last_update)
+        add_studentcourse(studentid, sc, db_ses)
+    add_course(studentid, crs, last_update, db_ses)
     return 0
 
-def sync_student_resource(studentid, sr, res, last_update,need_to_update_sitelist):
+def sync_student_resource(studentid, sr, res, last_update,need_to_update_sitelist, db_ses):
     # 追加、更新をする
-    add_student_resource(studentid, sr)
+    add_student_resource(studentid, sr,db_ses)
     if need_to_update_sitelist:
-        add_resource(studentid, res, last_update,allow_delete=0)
+        add_resource(studentid, res, db_ses, last_update,allow_delete=0)
     else:
-        add_resource(studentid, res, last_update)
+        add_resource(studentid, res, last_update, db_ses)
     return 0
 
-def sync_student_quiz(studentid, sq, quiz, last_update,need_to_update_sitelist):
-    add_student_quiz(studentid, sq)
+def sync_student_quiz(studentid, sq, quiz, last_update,need_to_update_sitelist, db_ses):
+    add_student_quiz(studentid, sq, db_ses)
     if need_to_update_sitelist:
-        add_quiz(studentid, quiz, last_update,allow_delete=0)
+        add_quiz(studentid, quiz, last_update,db_ses, allow_delete=0)
     else:
-        add_quiz(studentid, quiz, last_update)
+        add_quiz(studentid, quiz, last_update, db_ses)
     return 0
 
 
@@ -235,11 +236,11 @@ def day_to_str(day):
 
     return day_str
 
-def get_search_condition(show_only_unfinished ,max_time_left , course=None, day=None):
+def get_search_condition(show_only_unfinished, db_ses, max_time_left, course=None, day=None):
     condition=[]
     select3a_judge = 0
     if course != None:
-        condition.append(f"{get_coursename(course)}のみ")
+        condition.append(f"{get_coursename(course,db_ses)}のみ")
     elif day !=None:
         condition.append(f"{day_to_str(day)}のみ")
     if show_only_unfinished == 1:
@@ -392,7 +393,7 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
         """ + html_deleted_courseid + "</div></div>"
     return html
 
-def setdefault_for_overview(studentid, mode='tasklist',tasks_name="tasks"):
+def setdefault_for_overview(studentid, db_ses, mode='tasklist',tasks_name="tasks"):
     """
         履修科目をデータベースから取得し、overviewで使用するdataの枠組みを作る
         data:
@@ -420,7 +421,7 @@ def setdefault_for_overview(studentid, mode='tasklist',tasks_name="tasks"):
         for i in range(5):
             data[day+str(i+1)]=copy.copy(default)
     data["others"]=[]
-    coursedata = get_courses_to_be_taken(studentid)
+    coursedata = get_courses_to_be_taken(studentid,db_ses)
     for course in coursedata:
         add_in_others = False
         add_subject = False
@@ -552,7 +553,7 @@ def timejudge(task, max_time_left):
         0:一時間以内
         1:一日以内
         2:一週間以内
-        (3:無期限　この場合はそもそもこの関数を呼ばないが、Trueを返しておく。)
+        (3:無期限 この場合はそもそもこの関数を呼ばないが、Trueを返しておく。)
     """
     if max_time_left==3:
         return True
@@ -570,3 +571,10 @@ def timejudge(task, max_time_left):
         if units[i] in time_left["msg"]:
             return True
     return False
+
+@contextlib.contextmanager
+def open_db_ses():
+    db_ses=session()
+    yield db_ses
+    db_ses.commit()
+    db_ses.close()
