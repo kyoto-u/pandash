@@ -510,7 +510,7 @@ def announcement_list():
 @app.route('/announcement/content/<announcement_id>')
 def announcement_content(announcement_id):
     with open_db_ses() as db_ses:
-        studentid = session.get('student_id',db_ses)
+        studentid = session.get('student_id')
         data = setdefault_for_overview(studentid, db_ses, mode="announcement",tasks_name="announcemnts")
         announce = get_announcement(studentid,announcement_id,db_ses)
     return render_template('announcement_content.htm', announce=announce, data=data)
