@@ -651,7 +651,8 @@ def show_already_due():
     studentid = session.get('student_id')
     if studentid:
         show_already_due = request.json['show_already_due']
-        update_student_show_already_due(studentid, db_ses,show_already_due)
+        with open_db_ses() as db_ses:
+            update_student_show_already_due(studentid, db_ses,show_already_due)
         return 'success'
     else:
         return 'failed'
