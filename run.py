@@ -272,7 +272,7 @@ def option():
 def update_subject():
     studentid = session.get('student_id')
     with open_db_ses() as db_ses:
-        update_student_needs_to_update_sitelist(studentid,db_ses need_to_update_sitelist=1)
+        update_student_needs_to_update_sitelist(studentid,db_ses, need_to_update_sitelist=1)
     return redirect(url_for('login',page='option'))
 
 # 旧バージョンの機能・デバッグ機能のためコメントアウト
@@ -596,7 +596,7 @@ def quiz_finish():
     if studentid:
         task_id = request.json['task_id']
         with open_db_ses() as db_ses:
-            update_task_status(studentid, db_ses, task_id, mode=0, taskmode="quiz")
+            update_task_status(studentid, task_id, db_ses, mode=0, taskmode="quiz")
         return 'success'
     else:
         return 'failed'
@@ -651,7 +651,7 @@ def show_already_due():
     studentid = session.get('student_id')
     if studentid:
         show_already_due = request.json['show_already_due']
-        update_student_show_already_due(studentid, show_already_due)
+        update_student_show_already_due(studentid, db_ses,show_already_due)
         return 'success'
     else:
         return 'failed'

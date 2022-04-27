@@ -152,7 +152,7 @@ def get_tasklist(studentid, db_ses, show_only_unfinished = False,courseid=None, 
     """
 
     assignments=get_assignments(studentid, db_ses,show_only_unfinished,courseid, day, mode)
-    quizzes=get_quizzes(studentid, db_ses,show_only_unfinished,courseid, day, mode)
+    quizzes=get_quizzes(studentid,show_only_unfinished,courseid, day, mode, db_ses)
     # assignmentsとquizzesを結合
     return assignments+quizzes
 
@@ -205,7 +205,7 @@ def sync_student_resource(studentid, sr, res, last_update,need_to_update_sitelis
     # 追加、更新をする
     add_student_resource(studentid, sr,db_ses)
     if need_to_update_sitelist:
-        add_resource(studentid, res, db_ses, last_update,allow_delete=0)
+        add_resource(studentid, res, last_update, db_ses, allow_delete=0)
     else:
         add_resource(studentid, res, last_update, db_ses)
     return 0
@@ -236,7 +236,7 @@ def day_to_str(day):
 
     return day_str
 
-def get_search_condition(show_only_unfinished, db_ses, max_time_left, course=None, day=None):
+def get_search_condition(show_only_unfinished, max_time_left,db_ses, course=None, day=None):
     condition=[]
     select3a_judge = 0
     if course != None:
