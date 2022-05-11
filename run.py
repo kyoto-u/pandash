@@ -3,7 +3,6 @@ from flask.templating import render_template
 from app.app import app
 from app.settings import app_url,app_logout_url,app_login_url,proxy_callback
 from app.settings import cas_client
-from app.settings import factory
 import flask
 from app.index import *
 from app.decorators import check_oa, login_required, check_admin
@@ -864,7 +863,7 @@ def favicon():
 
 @app.before_request
 def before_request():
-    pages_open=['login','logout','proxy','proxyticket','static','welcome','root','welcome','faq','update','tutorial','what_is_pandash','privacypolicy']
+    pages_open=['login','logout','login_failed','not_authenticated','proxy','proxyticket','static','welcome','root','welcome','faq','update','tutorial','what_is_pandash','privacypolicy']
     
     # リクエストのたびにセッションの寿命を更新する
     session.permanent = True
