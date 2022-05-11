@@ -106,7 +106,7 @@ def login_successful(ses):
     f.close()
     authenticated = False
     for auth_user in auth_users:
-        if auth_user == f'{email}\n':
+        if auth_user == f'{email}\n'or auth_user == email:
             authenticated = True
             break
     
