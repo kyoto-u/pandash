@@ -111,7 +111,7 @@ def login_successful(ses):
             break
     
     if authenticated == False:
-        flask.redirect(url_for('not_authenticated'))
+        return flask.redirect(url_for('not_authenticated'))
 
     fullname = user.get('displayName')
     session["student_id"] = student_id
