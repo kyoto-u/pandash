@@ -86,7 +86,7 @@ def proxyticket():
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}", verify=False)
         if api_response.status_code == 200:
             return login_successful(ses)
-    return flask.redirect(url_for('login_failed'))
+    return flask.redirect(url_for('login_failed',description='failed to use ticket at PandA'))
 
 def login_successful(ses):
     """
@@ -164,7 +164,7 @@ def login_successful(ses):
         # 前回情報がない場合のdefaultページ
         return flask.redirect(flask.url_for('tasklist', show_only_unfinished = show_only_unfinished, max_time_left = 3))
     # PGTなどが入手できたにもかかわらずstudent_idがないのは不具合であるのでエラー画面に飛ばす
-    return flask.redirect(url_for('login_failed'))
+    return flask.redirect(url_for('login_failed',description='no student_id (unexpected situation)'))
 
 # @app.route('/kulasis/login', methods=['GET', 'POST'])
 # def kulasis_login():
@@ -818,8 +818,8 @@ def manage_oa():
 
 # 403
 @app.route('/loginfailed')
-def login_failed():
-    return flask.render_template('login_failed.htm')
+def login_failed(description="no description"):
+    return flask.render_template('login_failed.htm',description=description)
 
 #trial_releaseでは認証済みでないユーザーのアクセスを制限する
 @app.route('/access-restriction')
