@@ -128,8 +128,11 @@ def get_assignments(studentid, db_ses, show_only_unfinished,courseid, day, mode,
         task = {}
         task["status"] = data.status
         task["taskname"] = asmdata[0].title
+        task["time_ms"] = asmdata[0].time_ms
         task["assignmentid"] = data.assignment_id
         task["deadline"] = asmdata[0].limit_at
+        if task["deadline"] == "2099-12-31T23:59:59Z":
+            task["deadline"]="無期限"
         task["time_left"] = TimeLeft(asmdata[0].time_ms).time_left_to_str()
         task["clicked"] = data.clicked
         task["quiz"] = False
@@ -323,6 +326,9 @@ def get_quizzes(studentid, show_only_unfinished,courseid, day, mode, db_ses,incl
         task["taskname"] = qizdata[0].title
         task["assignmentid"] = data.quiz_id
         task["deadline"] = qizdata[0].limit_at
+        task["time_ms"] = qizdata[0].time_ms
+        if task["deadline"] == "2099-12-31T23:59:59Z":
+            task["deadline"]="無期限"
         task["time_left"] = TimeLeft(qizdata[0].time_ms).time_left_to_str()
         task["clicked"] = data.clicked
         task["quiz"] = True

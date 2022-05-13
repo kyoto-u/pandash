@@ -503,8 +503,8 @@ def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
             task["status"]=Status.AlreadyDue.value
 
     
-    new_tasks = sorted([i for i in tasks if i["status"] != Status.AlreadyDue.value], key=lambda x: x["deadline"])
-    new_tasks.extend(sorted([i for i in tasks if i["status"] == Status.AlreadyDue.value], key=lambda x: x["deadline"],reverse=True))
+    new_tasks = sorted([i for i in tasks if i["status"] != Status.AlreadyDue.value], key=lambda x: x["time_ms"])
+    new_tasks.extend(sorted([i for i in tasks if i["status"] == Status.AlreadyDue.value], key=lambda x: x["time_ms"],reverse=True))
     new_tasks = sorted(new_tasks, key=lambda x: order_status(x["status"]))
     return new_tasks
 
