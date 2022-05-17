@@ -3,7 +3,6 @@ from flask.templating import render_template
 from app.app import app
 from app.settings import app_url,app_logout_url,app_login_url,proxy_callback
 from app.settings import cas_client
-from app.settings import factory
 import flask
 from app.index import *
 from app.decorators import check_oa, login_required, check_admin
@@ -50,7 +49,7 @@ def login():
                 )              
         except:
             # CAS server is currently broken, try again later.
-            return redirect(url_for('root'))
+            return flask.redirect(url_for('login_failed',description='CAS server is broken'))
         if cas_response and cas_response.success:
             session['logged-in'] = True
             pgtiou= cas_response.data['proxyGrantingTicket']
@@ -73,7 +72,15 @@ def proxy(pgtiou=None):
     pgtid = pgtids[pgtiou]
     del(pgtids[pgtiou])
     cas_response = cas_client.perform_proxy(proxy_ticket=pgtid)
+    if not cas_response.success:
+        description=""
+        for error in cas_response.error.keys():
+            description+=error
+        return flask.redirect(url_for('login_failed',description=description))
     proxy_ticket = cas_response.data.get('proxyTicket')
+    if not proxy_ticket:
+        return flask.redirect(url_for('login_failed',description='failed to get proxy ticket from CAS'))
+
     # return redirect(url_for('proxyticket', ticket=proxy_ticket))
     # 時間かかる通知を行う
     return flask.render_template('loading.htm', ticket=proxy_ticket)
@@ -87,7 +94,8 @@ def proxyticket():
         api_response = ses.get(f"{proxy_callback}?ticket={ticket}", verify=False)
         if api_response.status_code == 200:
             return login_successful(ses)
-    return flask.redirect(url_for('login_failed'))
+        return flask.redirect(url_for('login_failed',description='failed to use ticket at PandA'))
+    return flask.redirect(url_for('login_failed',description='no ticket is given'))
 
 def login_successful(ses):
     """
@@ -107,12 +115,12 @@ def login_successful(ses):
     f.close()
     authenticated = False
     for auth_user in auth_users:
-        if auth_user == f'{email}\n':
+        if auth_user == f'{email}\n'or auth_user == email:
             authenticated = True
             break
     
     if authenticated == False:
-        flask.redirect(url_for('not_authenticated'))
+        return flask.redirect(url_for('not_authenticated'))
 
     fullname = user.get('displayName')
     session["student_id"] = student_id
@@ -165,7 +173,7 @@ def login_successful(ses):
         # 前回情報がない場合のdefaultページ
         return flask.redirect(flask.url_for('tasklist', show_only_unfinished = show_only_unfinished, max_time_left = 3))
     # PGTなどが入手できたにもかかわらずstudent_idがないのは不具合であるのでエラー画面に飛ばす
-    return flask.redirect(url_for('login_failed'))
+    return flask.redirect(url_for('login_failed',description='no student_id (unexpected situation)'))
 
 # @app.route('/kulasis/login', methods=['GET', 'POST'])
 # def kulasis_login():
@@ -820,7 +828,10 @@ def manage_oa():
 # 403
 @app.route('/loginfailed')
 def login_failed():
-    return flask.render_template('login_failed.htm')
+    description=request.args.get('description')
+    if not description:
+        description="no description"
+    return flask.render_template('login_failed.htm',description=description)
 
 #trial_releaseでは認証済みでないユーザーのアクセスを制限する
 @app.route('/access-restriction')
@@ -864,7 +875,7 @@ def favicon():
 
 @app.before_request
 def before_request():
-    pages_open=['login','logout','proxy','proxyticket','static','welcome','root','welcome','faq','update','tutorial','what_is_pandash','privacypolicy']
+    pages_open=['login','logout','login_failed','not_authenticated','proxy','proxyticket','static','welcome','root','welcome','faq','update','tutorial','what_is_pandash','privacypolicy']
     
     # リクエストのたびにセッションの寿命を更新する
     session.permanent = True

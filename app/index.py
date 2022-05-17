@@ -36,9 +36,9 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         # 時間かかる
         last_update = 0
         # membership.json 使用
-        # membership = get_course_id_from_api(membership_json(ses))
+        membership = get_course_id_from_api(get_membership_json(ses))
         # site.json 使用
-        membership = get_course_id_from_site_api(get_site_json(ses),student_id)
+        # membership = get_course_id_from_site_api(get_site_json(ses),student_id)
         already_known= get_courses_id_to_be_taken(student_id, db_ses)
         
         # 既存の教科情報を更新
@@ -503,8 +503,8 @@ def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
             task["status"]=Status.AlreadyDue.value
 
     
-    new_tasks = sorted([i for i in tasks if i["status"] != Status.AlreadyDue.value], key=lambda x: x["deadline"])
-    new_tasks.extend(sorted([i for i in tasks if i["status"] == Status.AlreadyDue.value], key=lambda x: x["deadline"],reverse=True))
+    new_tasks = sorted([i for i in tasks if i["status"] != Status.AlreadyDue.value], key=lambda x: x["time_ms"])
+    new_tasks.extend(sorted([i for i in tasks if i["status"] == Status.AlreadyDue.value], key=lambda x: x["time_ms"],reverse=True))
     new_tasks = sorted(new_tasks, key=lambda x: order_status(x["status"]))
     return new_tasks
 
