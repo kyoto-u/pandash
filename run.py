@@ -882,7 +882,7 @@ def before_request():
     app.permanent_session_lifetime = datetime.timedelta(minutes = 30)
     session.modified = True
     logged_in=True
-    studentid = session.get('studentid')
+    studentid = session.get('student_id')
     if studentid:
         with open_db_ses() as db_ses:
             studentdata = get_student(studentid,db_ses)
@@ -891,7 +891,7 @@ def before_request():
     else:
         logged_in=False
     if (not logged_in) and request.endpoint not in pages_open:
-        redirect(url_for('login'))
+        return redirect(url_for('login'))
 
 
 if __name__ == '__main__':
