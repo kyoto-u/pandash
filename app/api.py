@@ -126,7 +126,7 @@ def get_course_id_from_site_api(site, student_id):
     return {"student_id":student_id, "site_list":site_list}
 
 def get_membership_json(ses):
-    res = ses.get(f"{api_url}/membership.json", verify=True)
+    res = ses.get(f"{api_url}/membership.json?_limit=2000", verify=True)
     try:
         return res.json()
     except json.JSONDecodeError as e:
