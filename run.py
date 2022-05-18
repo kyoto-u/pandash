@@ -831,6 +831,11 @@ def login_failed():
     description=request.args.get('description')
     if not description:
         description="no description"
+    # ログイン情報を初期化
+    if "logged-in" in session and session["logged-in"]:
+        del(session['logged-in'])
+    if "student_id" in session and session["student_id"]:
+        del(session['student_id'])
     return flask.render_template('login_failed.htm',description=description)
 
 #trial_releaseでは認証済みでないユーザーのアクセスを制限する
