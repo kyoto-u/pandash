@@ -900,6 +900,9 @@ def before_request():
 
 
 if __name__ == '__main__':
+    log_handler = logging.FileHandler("DEBUG_LOG.log")
+    log_handler.setLevel(logging.DEBUG)
+    app.logger.addHandler(log_handler)
     pgtids={}
     redirect_pages={}
     app.run(debug=True, host='0.0.0.0', port=5000)
