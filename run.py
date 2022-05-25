@@ -831,6 +831,11 @@ def login_failed():
     description=request.args.get('description')
     if not description:
         description="no description"
+    # ログイン情報を初期化
+    if "logged-in" in session and session["logged-in"]:
+        del(session['logged-in'])
+    if "student_id" in session and session["student_id"]:
+        del(session['student_id'])
     return flask.render_template('login_failed.htm',description=description)
 
 #trial_releaseでは認証済みでないユーザーのアクセスを制限する
@@ -895,6 +900,9 @@ def before_request():
 
 
 if __name__ == '__main__':
+    log_handler = logging.FileHandler("DEBUG_LOG.log")
+    log_handler.setLevel(logging.DEBUG)
+    app.logger.addHandler(log_handler)
     pgtids={}
     redirect_pages={}
     app.run(debug=True, host='0.0.0.0', port=5000)
