@@ -518,7 +518,7 @@ def announcement_content(announcement_id):
             return redirect(url_for('login'))
 
         update_task_clicked_status(studentid, [announcement_id], mode="anc")
-        data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcemnts")
+        data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcements")
         announce = get_announcement(studentid,announcement_id)
         return render_template('announcement_content.htm', announce=announce, data=data)
     else:
@@ -541,7 +541,7 @@ def announcementlist_general(courseid,criterion,ascending):
         announcements = sort_announcements(announcements,criterion=criterion,ascending=ascending)
         unchecked_announcement_num=sum((i["checked"] == 0 for i in announcements))
         logging.info(f"studentid={studentid}の未確認のお知らせ:{unchecked_announcement_num}個")
-        data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcemnts")
+        data = setdefault_for_overview(studentid,mode="announcement",tasks_name="announcements")
         
         sort_condition = {"criterion":criterion,"ascending":ascending==1}
         return flask.render_template(
