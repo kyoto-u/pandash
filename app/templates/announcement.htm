@@ -45,10 +45,15 @@
                     <th><a style="color:black">公開日時</a></th>
                 </tr>
                 {% for announcement in announcements %}
-                <tr class="announcement_tr">
+                <tr class="announcement_tr" id="{{announcement.announcement_id}}" data-toggle="modal" data-target="#modal_announcement">
                     <td>{{announcement.subject}}</td>
                     <td>
-                        <a href="/announcement/content/{{announcement.announcement_id}}" style="color:black">
+                        <!-- <a href="/announcement/content/{{announcement.announcement_id}}" style="color:black">
+                            {% if announcement.checked == False %}
+                                <i class="fas fa-exclamation-circle"></i>
+                            {% endif %} {{announcement.title}}
+                        </a> -->
+                        <a style="color:black">
                             {% if announcement.checked == False %}
                                 <i class="fas fa-exclamation-circle"></i>
                             {% endif %} {{announcement.title}}
@@ -75,6 +80,12 @@
             });
 
         }
+    </script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/announcement_list.js') }}"></script>
+
+    <script type="text/javascript">
+        var announcements = {{ announcements | tojson }};
     </script>
 
     {% endblock %}
