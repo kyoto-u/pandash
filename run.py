@@ -884,7 +884,7 @@ def favicon():
 
 @app.before_request
 def before_request():
-    pages_open=['login','logout','login_failed','not_authenticated','proxy','proxyticket','static','welcome','root','welcome','faq','update','tutorial','what_is_pandash','privacypolicy']
+    pages_open=['login','logout','login_failed','not_authenticated','proxy','proxyticket','static','welcome','root','welcome','faq','update','tutorial','what_is_pandash','privacypolicy','page_not_found','pgtCallback']
     
     # リクエストのたびにセッションの寿命を更新する
     session.permanent = True
