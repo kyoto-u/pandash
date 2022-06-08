@@ -69,6 +69,10 @@ def login():
 
 @app.route('/login/proxy/<pgtiou>', methods=['GET'])
 def proxy(pgtiou=None):
+    if pgtiou==None:
+        return flask.redirect(url_for('login_failed',description='no pgtiou'))
+    if not pgtids.get(pgtiou):
+        return flask.redirect(url_for('login_failed',description='failed to get pgtid from pgtiou'))
     pgtid = pgtids[pgtiou]
     del(pgtids[pgtiou])
     cas_response = cas_client.perform_proxy(proxy_ticket=pgtid)
