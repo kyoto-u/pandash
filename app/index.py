@@ -579,7 +579,7 @@ def open_db_ses():
     try:
         yield db_ses
         db_ses.commit()
-    except sqlalchemy.exc.SQLAlchemyError as e:
+    except sqlalchemy.exc.SQLAlchemyError:
         db_ses.rollback()
         raise
     finally:
