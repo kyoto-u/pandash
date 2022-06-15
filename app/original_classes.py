@@ -94,15 +94,15 @@ class TimeLeft():
         elif weeks < 1:
             # 一週間未満
             if days==1:
-                judge_style = 'two days'
+                judge_style = 'two_day'
             elif days==2:
-                judge_style = 'three days'
+                judge_style = 'three_day'
             elif days==3:
-                judge_style = 'four days'
+                judge_style = 'four_day'
             elif days==4:
-                judge_style = 'five days'
+                judge_style = 'five_day'
             elif days==5:
-                judge_style = 'six days'
+                judge_style = 'six_day'
             else:
                 judge_style = 'one_week'
             if floor(days) == 1:
