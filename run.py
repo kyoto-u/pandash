@@ -69,6 +69,10 @@ def login():
 
 @app.route('/login/proxy/<pgtiou>', methods=['GET'])
 def proxy(pgtiou=None):
+    if pgtiou==None:
+        return flask.redirect(url_for('login_failed',description='no pgtiou'))
+    if not pgtids.get(pgtiou):
+        return flask.redirect(url_for('login_failed',description='failed to get pgtid from pgtiou'))
     pgtid = pgtids[pgtiou]
     del(pgtids[pgtiou])
     cas_response = cas_client.perform_proxy(proxy_ticket=pgtid)
@@ -880,7 +884,7 @@ def favicon():
 
 @app.before_request
 def before_request():
-    pages_open=['login','logout','login_failed','not_authenticated','proxy','proxyticket','static','welcome','root','welcome','faq','update','tutorial','what_is_pandash','privacypolicy']
+    pages_open=['login','logout','login_failed','not_authenticated','proxy','proxyticket','static','favicon','welcome','root','welcome','faq','update','tutorial','help','what_is_pandash','privacypolicy','page_not_found','internal_server_error','pgtCallback']
     
     # リクエストのたびにセッションの寿命を更新する
     session.permanent = True

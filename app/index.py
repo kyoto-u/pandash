@@ -10,6 +10,7 @@ from .add import *
 from .get import *
 from .api import *
 import contextlib
+import sqlalchemy.exc
 
 # 複合的な関数
 def get_announcementlist(studentid,db_ses, show_only_unchecked = False,courseid=None, day=None):
@@ -575,6 +576,11 @@ def timejudge(task, max_time_left):
 @contextlib.contextmanager
 def open_db_ses():
     db_ses=session()
-    yield db_ses
-    db_ses.commit()
-    db_ses.close()
+    try:
+        yield db_ses
+        db_ses.commit()
+    except sqlalchemy.exc.SQLAlchemyError:
+        db_ses.rollback()
+        raise
+    finally:
+        db_ses.close()

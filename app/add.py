@@ -50,7 +50,7 @@ def add_assignment(studentid, data, last_update,db_ses, allow_delete=1):
         for i in assignments:
             if i.assignment_id == item["assignment_id"]:
                 assignment_exist = True
-                if item["modifieddate"] > last_update:
+                if item["modifieddate"] != i.modifieddate:
                     update=True
                 # もし削除扱いになっている場合はそれを直すためにupdateする
                 if i.deleted == 1:
@@ -193,7 +193,7 @@ def add_quiz(studentid, data, last_update, db_ses, allow_delete=1):
         for i in quizzes:
             if i.quiz_id == item["quiz_id"]:
                 quiz_exist = True
-                if item["modifieddate"] > last_update:
+                if item["modifieddate"] != i.modifieddate:
                     update=True
                 # もし削除扱いになっている場合はそれを直すためにupdateする
                 if i.deleted == 1:
@@ -239,7 +239,7 @@ def add_resource(studentid, data, last_update, db_ses, allow_delete=1):
         for i in resources:
             if i.resource_url == item["resource_url"]:
                 resource_exist = True
-                if item["modifieddate"] > last_update:
+                if item["modifieddate"] != i.modifieddate:
                     update=True
                 # もし削除扱いになっている場合はそれを直すためにupdateする
                 if i.deleted == 1:
