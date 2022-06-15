@@ -239,19 +239,34 @@ label >.downloaded{
 
 /*課題の色*/
 .one_sec{
-    background-color: #ffdcdd;
+    background-color: rgb(255, 120, 120);
 }
 .one_min{
-    background-color: #ffdcdd;
+    background-color: rgb(255, 120, 120);
 }
 .one_hour{
-    background-color: #ffdcdd;
+    background-color: rgb(255, 120, 120);
 }
 .one_day{
-    background-color: #ffdcdd;
+    background-color: rgb(255, 120, 120);
+}
+.two_day {
+    background-color: rgb(255, 140, 140);
+}
+.three_day {
+    background-color: rgb(255, 160, 160);
+}
+.four_day {
+    background-color: rgb(255, 180, 180);
+}
+.five_day {
+    background-color: rgb(255, 200, 200);
+}
+.six_day{
+    background-color: rgb(255, 220, 220);
 }
 .one_week{
-    background-color: #ffdcbc;
+    background-color: rgb(255, 220, 188);
 }
 .one_month{
     background-color: #ffffbb;
