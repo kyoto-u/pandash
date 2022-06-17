@@ -167,6 +167,7 @@ def login_successful(ses):
     if 'student_id' in session:
         if session['student_id'] in redirect_pages:
             redirect_page = redirect_pages[session['student_id']]
+            del(redirect_pages[session['student_id']])
             redirect_page = f"{app_url}/{redirect_page}"
             if re.match(app_login_url, redirect_page):
                 logging.info(f"Requested redirect '{redirect_page}' is invalid because it is login page")
