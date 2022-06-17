@@ -897,6 +897,9 @@ def before_request():
             studentdata = get_student(studentid,db_ses)
             if studentdata == None:
                 logged_in=False
+            now = floor(time.time() * 1000)
+            if (now - studentdata.last_update) >= 30*60*1000:
+                logged_in=False
     else:
         logged_in=False
     if (not logged_in) and request.endpoint not in pages_open:
