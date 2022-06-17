@@ -111,6 +111,8 @@ def get_assignments(studentid, db_ses, show_only_unfinished,courseid, day, mode,
     
     tasks = []
     for data in enrollments:
+        if data.deleted==1:
+            continue
         asmdata = [i for i in assignmentdata if i.assignment_id == data.assignment_id]
         crsdata = [i for i in coursedata if i.course_id == asmdata[0].course_id]
         
@@ -303,6 +305,8 @@ def get_quizzes(studentid, show_only_unfinished,courseid, day, mode, db_ses,incl
     # taskをまとめたリストに条件を満たすものを追加していく
     tasks = []
     for data in enrollments:
+        if data.deleted==1:
+            continue
         # 各quizに対してquizの詳細データ、courseの詳細データがあるか探す
         qizdata = [i for i in quizdata if i.quiz_id == data.quiz_id]
         crsdata = [i for i in coursedata if i.course_id == qizdata[0].course_id]
@@ -366,6 +370,8 @@ def get_resource_list(studentid, db_ses, course_id=None, day=None,include_delete
     resource_list={i:[] for i in sorted_courseids}
 
     for data in srs:
+        if data.deleted==1:
+            continue
         rscdata = [i for i in resourcedata if i.resource_url == data.resource_url]
         crsdata = [i for i in coursedata if i.course_id == rscdata[0].course_id]
 
