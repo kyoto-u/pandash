@@ -32,7 +32,7 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
     membership = {"student_id": "", "site_list":[]}
     if need_to_update_sitelist == 0:                
         membership["student_id"] = student_id
-        membership["site_list"] = get_courses_id_to_be_taken(student_id, db_ses)
+        membership["site_list"] = get_courses_id_to_be_taken(student_id, db_ses, mode=1)
     else:
         # 時間かかる
         last_update = 0
