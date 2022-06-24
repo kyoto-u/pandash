@@ -151,9 +151,10 @@ def login_successful(ses):
         else:
             add_student(student_id, fullname, db_ses, last_update = 0, last_update_subject = 0,language='ja')
         
-        get_data_from_api_and_update(student_id, ses, now, last_update, 0, db_ses)
         if need_to_update_sitelist == 1:
-            get_data_from_api_and_update(student_id, ses, now, 0, 1, db_ses)
+            get_data_from_api_and_update(student_id, ses, now,  1, db_ses)
+        else:
+            get_data_from_api_and_update(student_id, ses, now,  0, db_ses)
         if student_id != "":
             update_student_needs_to_update_sitelist(student_id, db_ses)
 

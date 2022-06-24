@@ -21,7 +21,7 @@ def get_announcementlist(studentid,db_ses, show_only_unchecked = False,courseid=
 
     return announcements
 
-def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_sitelist,db_ses):
+def get_data_from_api_and_update(student_id,ses,now,need_to_update_sitelist,db_ses):
     """
         ユーザーの履修科目を取得し、対象科目の課題、授業資料、テスト・クイズの情報を更新する
 
@@ -35,20 +35,10 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         membership["site_list"] = get_courses_id_to_be_taken(student_id, db_ses, mode=1)
     else:
         # 時間かかる
-        last_update = 0
         # membership.json 使用
         membership = get_course_id_from_api(get_membership_json(ses))
         # site.json 使用
         # membership = get_course_id_from_site_api(get_site_json(ses),student_id)
-        already_known= get_courses_id_to_be_taken(student_id, db_ses)
-        
-        # 既存の教科情報を更新
-        site_list_known = [i for i in membership["site_list"] if i in already_known]
-        sc_known = [{"sc_id":f"{student_id}:{i}","student_id":student_id,"course_id":i} for i in site_list_known]
-        add_studentcourse(student_id,sc_known,db_ses)
-
-        # 新規のもののみを取り上げる
-        membership["site_list"] = [i for i in membership["site_list"] if i not in already_known]
     if student_id != "":
         # get_assignments = get_assignments_from_api(assignments.json(), student_id)
         courses = {"courses":[],"student_courses":[]}
@@ -102,7 +92,7 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         # user_info    {"student_id": , "fullname": }
         # quizzes      {"quizzes":[], "student_quizzes":[]}
         # announcements{"announcements":[], "studnet_announcements":[]}
-        sync_student_contents(student_id, courses, assignments, resources, quizzes, announcements, now, db_ses, last_update=last_update,need_to_update_sitelist=need_to_update_sitelist)
+        sync_student_contents(student_id, courses, assignments, resources, quizzes, announcements, now, db_ses,need_to_update_sitelist=need_to_update_sitelist)
 
 def get_data_from_kulais_api_and_update(student_id,access_param,ses,now,last_update):
     last_update = 0
@@ -163,16 +153,16 @@ def sync_student_announcement(studentid, sa, anc, db_ses):
     add_announcement(studentid, anc,db_ses)
     return 0
 
-def sync_student_assignment(studentid, sa, asm,last_update,need_to_update_sitelist, db_ses): 
+def sync_student_assignment(studentid, sa, asm,need_to_update_sitelist, db_ses): 
     # 追加、更新をする
     add_student_assignment(studentid,sa, db_ses)
     if need_to_update_sitelist:
-        add_assignment(studentid, asm, last_update, db_ses, allow_delete=0)
+        add_assignment(studentid, asm, db_ses, allow_delete=0)
     else:
-        add_assignment(studentid, asm, last_update, db_ses)
+        add_assignment(studentid, asm, db_ses)
     return 0
 
-def sync_student_contents(studentid, crs, asm, res, qz, anc, now,db_ses, last_update=0,need_to_update_sitelist=0):
+def sync_student_contents(studentid, crs, asm, res, qz, anc, now,db_ses, need_to_update_sitelist=0):
     # 以下主な方針
     #
     # studentテーブルにlast_updateを用意し、毎回update後に記録しておく
@@ -185,38 +175,38 @@ def sync_student_contents(studentid, crs, asm, res, qz, anc, now,db_ses, last_up
     # 加えて、assignment,course,resource,quizも同時に更新することにする。
 
     # courseが最初!!!
-    sync_student_course(studentid, crs["student_courses"], crs["courses"], last_update,need_to_update_sitelist, db_ses)
-    sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"], last_update,need_to_update_sitelist, db_ses)
-    sync_student_resource(studentid, res["student_resources"], res["resources"], last_update, need_to_update_sitelist, db_ses)
-    sync_student_quiz(studentid, qz["student_quizzes"], qz["quizzes"], last_update,need_to_update_sitelist, db_ses)
+    sync_student_course(studentid, crs["student_courses"], crs["courses"],need_to_update_sitelist, db_ses)
+    sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"],need_to_update_sitelist, db_ses)
+    sync_student_resource(studentid, res["student_resources"], res["resources"], need_to_update_sitelist, db_ses)
+    sync_student_quiz(studentid, qz["student_quizzes"], qz["quizzes"],need_to_update_sitelist, db_ses)
     sync_student_announcement(studentid, anc["student_announcements"], anc["announcements"], db_ses)
 
     return 0
 
-def sync_student_course(studentid, sc, crs, last_update,need_to_update_sitelist, db_ses):
+def sync_student_course(studentid, sc, crs, need_to_update_sitelist, db_ses):
     # 追加、更新をする
     if need_to_update_sitelist:
         add_studentcourse(studentid, sc,db_ses, allow_delete=0)
     else:
         add_studentcourse(studentid, sc, db_ses)
-    add_course(studentid, crs, last_update, db_ses)
+    add_course(studentid, crs, db_ses)
     return 0
 
-def sync_student_resource(studentid, sr, res, last_update,need_to_update_sitelist, db_ses):
+def sync_student_resource(studentid, sr, res, need_to_update_sitelist, db_ses):
     # 追加、更新をする
     add_student_resource(studentid, sr,db_ses)
     if need_to_update_sitelist:
-        add_resource(studentid, res, last_update, db_ses, allow_delete=0)
+        add_resource(studentid, res, db_ses, allow_delete=0)
     else:
-        add_resource(studentid, res, last_update, db_ses)
+        add_resource(studentid, res, db_ses)
     return 0
 
-def sync_student_quiz(studentid, sq, quiz, last_update,need_to_update_sitelist, db_ses):
+def sync_student_quiz(studentid, sq, quiz, need_to_update_sitelist, db_ses):
     add_student_quiz(studentid, sq, db_ses)
     if need_to_update_sitelist:
-        add_quiz(studentid, quiz, last_update,db_ses, allow_delete=0)
+        add_quiz(studentid, quiz, db_ses, allow_delete=0)
     else:
-        add_quiz(studentid, quiz, last_update, db_ses)
+        add_quiz(studentid, quiz, db_ses)
     return 0
 
 

@@ -36,7 +36,7 @@ def add_announcement(studentid, data,db_ses):
     db_ses.commit()
     return
 
-def add_assignment(studentid, data, last_update,db_ses, allow_delete=1):
+def add_assignment(studentid, data, db_ses, allow_delete=1):
     course_ids = get_courseids(studentid,db_ses)
     assignments = db_ses.query(
         assignment.Assignment).filter(assignment.Assignment.course_id.in_(course_ids)).all()
@@ -111,7 +111,7 @@ def add_comment(student_id, reply_to, content, db_ses):
     return new_comment.comment_id
 
 
-def add_course(studentid, data, last_update, db_ses):
+def add_course(studentid, data, db_ses):
     course_ids = get_courseids(studentid, db_ses)
     courses = db_ses.query(
         course.Course).filter(course.Course.course_id.in_(course_ids)).all()
@@ -179,7 +179,7 @@ def add_instructor(instructorid, fullname, emailaddress, db_ses):
         db_ses.commit()
     return
 
-def add_quiz(studentid, data, last_update, db_ses, allow_delete=1):
+def add_quiz(studentid, data, db_ses, allow_delete=1):
     course_ids = get_courseids(studentid,db_ses)
     quizzes = db_ses.query(
         quiz.Quiz).filter(quiz.Quiz.course_id.in_(course_ids)).all()
@@ -225,7 +225,7 @@ def add_quiz(studentid, data, last_update, db_ses, allow_delete=1):
     db_ses.commit()
     return
 
-def add_resource(studentid, data, last_update, db_ses, allow_delete=1):
+def add_resource(studentid, data, db_ses, allow_delete=1):
     course_ids = get_courseids(studentid, db_ses)
     resources = db_ses.query(
         resource.Resource).filter(resource.Resource.course_id.in_(course_ids)).all()
@@ -472,7 +472,7 @@ def add_student_resource(studentid,data, db_ses,allow_delete=1):
         if resource_exist == False:
             new_sr.append(item)
         elif update == True:
-            upd_sr.append(item)
+            upd_sr.append({"sr_id":item["sr_id"],"deleted":0})
     if allow_delete == 1:
         # 逆に、テーブルに格納されている情報について、今回のAPIで取得できたかを調べる。
         for i in sr:
