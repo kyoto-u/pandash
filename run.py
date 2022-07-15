@@ -496,12 +496,12 @@ def announcement_overview():
 def announcement_list():
     per_page=20
     page=1
-    if requests.args.get("page"):
-        try:
-            page=int(requests.args.get("page"))
-        except:
-            # 不正なページ番号
-            page=1
+    # if requests.args.get("page"):
+    #     try:
+    #         page=int(requests.args.get("page"))
+    #     except:
+    #         # 不正なページ番号
+    #         page=1
     studentid = session.get('student_id')
     with open_db_ses() as db_ses:
         # 課題の最終更新時間を取得
@@ -654,7 +654,8 @@ def announcement_clicked():
     studentid = session.get('student_id')
     if studentid:
         announcement_ids = request.json['announcement_ids']
-        update_task_clicked_status(studentid, announcement_ids, mode="anc")
+        with open_db_ses() as db_ses:
+            update_task_clicked_status(studentid, announcement_ids,db_ses, mode="anc")
         return 'success'
     else:
         return 'failed'
