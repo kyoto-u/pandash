@@ -536,6 +536,11 @@ def update_task_clicked_status(studentid, taskids:list,db_ses, mode="task"):
             sq_id = f'{studentid}:{t_id}'
             update_list.append({"sq_id":sq_id, "clicked":1})
         db_ses.bulk_update_mappings(studentquiz.Student_Quiz, update_list)
+    elif mode == "anc":
+        for a_id in taskids:
+            sa_id = f'{studentid}:{a_id}'
+            update_list.append({"sa_id":sa_id, "checked":1})
+        db_ses.bulk_update_mappings(studentannouncement.Student_Announcement, update_list)
     db_ses.commit() 
     return
 

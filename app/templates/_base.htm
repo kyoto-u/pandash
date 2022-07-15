@@ -91,7 +91,7 @@
                     <td class="col-2"><a class="btn btn-link" href="{{data.fri3.searchURL}}">{{data.fri3.shortname}}</a>
                     </td>
                   </tr>
-                  　<tr class="d-flex">
+                    <tr class="d-flex">
                     <td class="col-2">4</td>
                     <td class="col-2"><a class="btn btn-link" href="{{data.mon4.searchURL}}">{{data.mon4.shortname}}</a>
                     </td>
@@ -104,7 +104,7 @@
                     <td class="col-2"><a class="btn btn-link" href="{{data.fri4.searchURL}}">{{data.fri4.shortname}}</a>
                     </td>
                   </tr>
-                  　 <tr class="d-flex">
+                    <tr class="d-flex">
                     <td class="col-2">5</td>
                     <td class="col-2"><a class="btn btn-link" href="{{data.mon5.searchURL}}">{{data.mon5.shortname}}</a>
                     </td>
@@ -131,12 +131,11 @@
   </div>
 </div>
 
-
-{# <div class="modal fade" id="modal_announcement" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
+<div class="modal fade" id="modal_announcement" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-fluid" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="label1">{{announce.title}}</h5>
+        <h5 class="modal-title" id="modal_announcement_title"></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -145,25 +144,29 @@
         <div class="container-fluid">
           <div class="row">
             <ul class="col-12" style="list-style-type: none">
-              <li>サイト：{{announce.subject}}</li>
-              <li>公開日時：{{announce.publish_date}}</li>
+              <li id="modal_announcement_subject"></li>
+              <li id="modal_announcement_publish_date"></li>
             </ul>
-            <div class="col-12" id="message_container">
-              {{announce.html_file|safe}}
+            <div class="col-12" id="modal_announcement_html_file">
             </div>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer mr-auto">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">とじる</button>
-        <div class="mr-auto"><small>ESCキーを押しても閉じられます</small></div>
+        <div class="d-none d-md-block mr-auto"><small>ESCキーを押しても閉じられます</small></div>
       </div>
     </div>
   </div>
-</div> #}
+</div>
 
 
 <body>
+  <div class="sticky-top d-none" id="now_loading" style="background-color:rgba(255, 230, 0, 0.603)">
+    <div class="row">
+      <div class="mx-auto">読み込み中...</div>
+    </div>
+  </div>
   <header>
     <!-- ロゴとサイト名-->
     <div class="logos">
@@ -223,11 +226,11 @@
                 {# <li class="nav-item mr-3 my-auto text-nowrap btn-block">
                   <a class="nav-link" href="/chat" data-toggle="tooltip" title="チャットルーム一覧を表示します"
                     style="text-decoration: none;">チャットルーム</a>
-                </li>
+                </li> #}
                 <li id="logout_button" class="nav-item mr-3 my-auto text-nowrap btn-block">
                   <a class="nav-link" href="/announcement/overview" data-toggle="tooltip" title="PandAからのお知らせを表示します"
                     style="text-decoration: none;">お知らせ</a>
-                </li> #}
+                </li>
                 <li class="nav-item my-auto">
                   <div class="dropdown">
                     <button type="button" id="menu_dropdown" class="btn btn-outline-light dropdown-toggle btn-block"

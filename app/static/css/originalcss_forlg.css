@@ -289,3 +289,18 @@ label >.downloaded{
     min-height:200px; 
     background-color:rgb(236, 236, 236);
 }
+
+/* お知らせモーダル */
+#modal_announcement_title{
+    color:black
+}
+#modal_announcement_subject{
+    color:black
+}
+#modal_announcement_publish_date{
+    color:black
+}
+#modal_announcement_html_file{
+    background-color: #f5f5f5;
+    min-height: 200px;
+}

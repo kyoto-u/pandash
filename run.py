@@ -525,6 +525,7 @@ def announcement_list():
 def announcement_content(announcement_id):
     with open_db_ses() as db_ses:
         studentid = session.get('student_id')
+        update_task_clicked_status(studentid, [announcement_id],db_ses=db_ses ,mode="anc")
         data = setdefault_for_overview(studentid, db_ses, mode="announcement",tasks_name="announcemnts")
         announce = get_announcement(studentid,announcement_id,db_ses)
     return render_template('announcement_content.htm', announce=announce, data=data)
@@ -644,6 +645,16 @@ def quiz_clicked():
         task_ids = request.json['task_ids']
         with open_db_ses() as db_ses:
             update_task_clicked_status(studentid, task_ids, db_ses, mode="quiz")
+        return 'success'
+    else:
+        return 'failed'
+
+@app.route('/announcement_clicked', methods=['POST'])
+def announcement_clicked():
+    studentid = session.get('student_id')
+    if studentid:
+        announcement_ids = request.json['announcement_ids']
+        update_task_clicked_status(studentid, announcement_ids, mode="anc")
         return 'success'
     else:
         return 'failed'
