@@ -109,3 +109,7 @@
 
 
 </html>
+
+{% if darktheme %}
+<script src="{{ url_for('static', filename='js/darktheme.js') }}"></script>
+{%endif%}

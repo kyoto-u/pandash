@@ -3,3 +3,4 @@ __pycache__/
 /app/settings.py
 users.txt
 *.log
+/app/test_html.txt

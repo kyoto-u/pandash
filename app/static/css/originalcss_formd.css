@@ -1,8 +1,4 @@
 /*全ページ共通部分*/
-#siteface{
-  height: 50;
-  width: 50;
-}
 
 #SiteNamelabel{
     padding-top: 13;
@@ -251,4 +247,9 @@ label > .downloaded{
 #message_container{
     min-height:200px; 
     background-color:rgb(236, 236, 236);
+}
+
+#trial-running {
+    background-color: whitesmoke;
+    border: 1px solid gray;
 }

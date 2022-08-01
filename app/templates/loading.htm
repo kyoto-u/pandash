@@ -30,12 +30,9 @@
         <!-- ロゴとサイト名-->
         <div class="logos">
             <nav class="navbar navbar-light bg-light" id="logonav">
-                <div class="row">
-                    <a href="#" class=navbar-brand>
-                        <img id="siteface" src="{{ url_for('static', filename='images/headerlogo.jpg') }}" alt="ロゴ">
-                    </a>
-                    <h1 id="SiteNamelabel">PandAsh</h1>
-                </div>
+                <a href="#" class="navbar-brand">
+                    <img id="siteface" src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ" height="50">
+                </a>
             </nav>
             <nav class="navbar navbar-expand navbar-dark bg-dark">
             </nav>
@@ -65,7 +62,7 @@
             logo.style.transform = "rotate(" + d + "deg)";
         }, 100)
     </script>
-
+{#
     <script type="text/javascript">
         $('#loading_btn').trigger('click');
         function loading() {
@@ -75,7 +72,7 @@
             return false;
         }
     </script>
-
+#}
     <footer>
         <div id="footercont" class="container-fluid">
             <div class="mx-auto" style="width: fit-content;">
@@ -128,3 +125,7 @@
         </div>
     </footer>
 </body>
+
+{% if darktheme %}
+<script src="{{ url_for('static', filename='js/darktheme.js') }}"></script>
+{%endif%}

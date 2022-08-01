@@ -22,7 +22,7 @@
       <!-- drag and drop時に意図しない動作をするため削除
          style="left:1vw; overflow: hidden;" -->
 
-      <div class="container-fluid" style="background-color: silver;">
+      <div class="container-fluid target_select" style="background-color: silver;">
         <!-- See line 7 
         pointer-events: all; -->
         <div class="d-flex mx-md-5 py-md-2 mb-md-2">
@@ -54,8 +54,8 @@
         <div class="row">
           <h3>あなたの課題</h3>
           <div class="ml-5">
-            <i class="fas fa-2x fa-list mr-2" style="color:black;"></i>
-            <a href="/overview"><i class="fas fa-2x fa-th ml-2" style="color:gray;"></i></a>
+            <i class="fas fa-2x fa-list mr-2 task_selected_page" style="color:black;"></i>
+            <a href="/overview"><i class="fas fa-2x fa-th ml-2 task_another_page" style="color:gray;"></i></a>
           </div>
           <small class="ml-auto">最終更新：{{last_update}}</small>
           <button type="button" id="reflesh_button" class="btn  btn-info"
