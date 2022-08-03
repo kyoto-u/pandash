@@ -9,8 +9,8 @@
                         <h1 class="mb-5">お知らせ一覧</h1>
                     </div>
                     <div class="col-4">
-                        <a href="/announcement/list"><i class="fas fa-2x fa-list mr-3" style="color:gray;"></i></a>
-                        <i class="fas fa-2x fa-th ml-3" style="color:black;"></i>
+                        <a href="/announcement/list"><i class="fas fa-2x fa-list mr-3 another_page" style="color:gray;"></i></a>
+                        <i class="fas fa-2x fa-th ml-3 selected_page" style="color:black;"></i>
                     </div>
                 </div>
             </div>
@@ -64,18 +64,6 @@
                     <td class="col-2 tcell_announce_overview" id="fri5" style="color:dimgray">{{data.fri5.shortname}}</td>
                 </tr>
             </table>
-            
-            <table class="table table-bordered table-striped">
-                <tr>
-                    <td class="col-2" style="background-color:white;"></td>
-                    <td class="col-2 tcell_announce_overview" style="background-color:gainsboro;">月</td>
-                    <td class="col-2" style="background-color:gainsboro;">火</td>
-                    <td class="col-2 tcell_announce_overview" style="background-color:gainsboro;">水</td>
-                    <td class="col-2" style="background-color:gainsboro;">木</td>
-                    <td class="col-2" style="background-color:gainsboro;">金</td>
-                </tr>
-            </table>
-            
         </div>
         <div class="col-sm-12 col-md-4" id="course_announcement">
             <div id="announcement_card" class="card text-white" style="min-height: 100vh; max-height: 100vh;">
@@ -108,6 +96,7 @@
     </div>
 </div>
 <!-- 時間割テーブルの、マウスが乗ったときと離れたときの処理 -->
+{% if darktheme == False %}
 <script>
     var targets = document.getElementsByClassName("tcell_announce_overview");
 
@@ -121,6 +110,21 @@
         });
     }
 </script>
+{% else %}
+<script>
+    var targets = document.getElementsByClassName("tcell_announce_overview");
+
+    for (var i = 0; i < targets.length; i++) {
+        targets[i].addEventListener("mouseover", function () {
+            this.setAttribute("style", "background-color:gainsboro; color:black;")
+        });
+
+        targets[i].addEventListener("mouseleave", function () {
+            this.setAttribute('style', "")
+        });
+    }
+</script>
+{% endif %}
 <!--お知らせカードのマウスが乗ったときと離れたときの処理-->
 <script>
     var targets = document.getElementsByClassName("announcement_row");

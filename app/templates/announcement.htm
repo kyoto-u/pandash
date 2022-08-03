@@ -8,8 +8,8 @@
                     <h1 class="mb-5">お知らせ一覧</h1>
                 </div>
                 <div class="col-4">
-                    <i class="fas fa-2x fa-list mr-3" style="color:black;"></i>
-                    <a href="/announcement/overview"><i class="fas fa-2x fa-th ml-3" style="color:gray;"></i></a>
+                    <i class="fas fa-2x fa-list mr-3 selected_page" style="color:black;"></i>
+                    <a href="/announcement/overview"><i class="fas fa-2x fa-th ml-3 another_page" style="color:gray;"></i></a>
                 </div>
             </div>
         </div>
@@ -62,6 +62,7 @@
         </div>
         
     </div>
+    {% if darktheme == False %}
     <script>
         var targets = document.getElementsByClassName("announcement_tr");
 
@@ -76,5 +77,21 @@
 
         }
     </script>
+    {% else %}
+    <script>
+        var targets = document.getElementsByClassName("announcement_tr");
+
+        for (var i = 0; i < targets.length; i++) {
+            targets[i].addEventListener("mouseover", function () {
+                this.setAttribute("style", "background-color:whitesmoke; color:black")
+            });
+
+            targets[i].addEventListener("mouseleave", function () {
+                this.setAttribute('style', "")
+            });
+
+        }
+    </script>
+    {% endif %}
 
     {% endblock %}

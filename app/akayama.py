@@ -32,9 +32,12 @@ def main(name):
     data["mon1"]["tasks"] = [sampletask1]
     data["others"] = [{"shortname": "サンプルその他科目", "tasks": [sampletask1, sampletask1]}, {
         "shortname": "サンプルその他科目", "tasks": [sampletask1, sampletask1]}]
+    sample_announcement = {"subject": "サンプルコース１", "checked": False, "title": "サンプルお知らせ１",
+                    "publish_date": "2022/08/01 12:55", "html_file": "<h1>abc</h1>"}
+    announcements = [sample_announcement]
     with open("./test_html.txt",encoding="utf-8") as f:
         html = f.read()
-    return render_template(templname,html=html, numofcourses=2,path=name, data=data,darktheme = darktheme,search_condition=search_condition,tasks = tasks,last_update = last_update,num=20,per_page=10,page=1)
+    return render_template(templname,html=html, numofcourses=2,path=name, data=data,announcements = announcements,announce= sample_announcement,darktheme = darktheme,search_condition=search_condition,tasks = tasks,last_update = last_update,num=20,per_page=10,page=1)
 
 @app.route('/')
 def root():

@@ -30,8 +30,8 @@
     $(".table").css({"color":"white"})
     $(".task_link").css({ "color":"dodgerblue"})
     $(".target_select").css({ "background-color":"dimgray"})
-    $(".task_selected_page").css({"color":"dimgray"})
-    $(".task_another_page").css({ "color":"whitesmoke"})
+    $(".selected_page").css({"color":"dimgray"})
+    $(".another_page").css({ "color":"whitesmoke"})
 
     //課題_時間割表示
     $(".striped_gray").css({ "background-color":"#474d52"})
@@ -53,4 +53,7 @@
 
     //お知らせ
     $("th>a").css({"color":"white"})
+    $("#message_container").css({ "background-color": "#4d5154" })
+    $(".tcell_announce_overview").css({"color":"white"})
+    $("tr>.col-2").css({"background-color":"inherit","color":"white"})
 });
