@@ -41,9 +41,11 @@ $(function () {
             contentType: 'application/json',
             success: function(response){
                 console.log(response);
+                alert("送信が完了しました\nお問い合わせid:"+form_id+"\n返信内容:"+reply_content)
             },
             error: function(error){
                 console.log(error);
+                alert("送信に失敗しました")
             }
         });
     });
