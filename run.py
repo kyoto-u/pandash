@@ -495,13 +495,6 @@ def announcement_overview():
 @app.route('/announcement/list')
 def announcement_list():
     per_page=20
-    page=1
-    # if requests.args.get("page"):
-    #     try:
-    #         page=int(requests.args.get("page"))
-    #     except:
-    #         # 不正なページ番号
-    #         page=1
     studentid = session.get('student_id')
     with open_db_ses() as db_ses:
         # 課題の最終更新時間を取得
@@ -512,14 +505,7 @@ def announcement_list():
         announcements = get_announcementlist(studentid, db_ses)
     announcements = sort_announcements(announcements,1,0)
     num=len(announcements)
-    if (page-1)*per_page>=num:
-        # 範囲外のページ番号
-        page=((num-1)//per_page) + 1
-        # 0件の時に0となってしまうが下で対応
-    if page<=0:
-        # 範囲外のページ番号
-        page=1
-    return flask.render_template('announcement.htm',data = data,announcements=announcements,num=num,page=page,per_page=per_page,last_update=last_update)
+    return flask.render_template('announcement_pagenation.htm',data = data,announcements=announcements,num=num,per_page=per_page,last_update=last_update)
 
 @app.route('/announcement/content/<announcement_id>')
 def announcement_content(announcement_id):
