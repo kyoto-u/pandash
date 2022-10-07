@@ -526,7 +526,7 @@ def announcement_content(announcement_id):
     with open_db_ses() as db_ses:
         studentid = session.get('student_id')
         update_task_clicked_status(studentid, [announcement_id],db_ses=db_ses ,mode="anc")
-        data = setdefault_for_overview(studentid, db_ses, mode="announcement",tasks_name="announcemnts")
+        data = setdefault_for_overview(studentid, db_ses, mode="announcement",tasks_name="announcements")
         announce = get_announcement(studentid,announcement_id,db_ses)
     return render_template('announcement_content.htm', announce=announce, data=data)
 
@@ -542,7 +542,7 @@ def announcementlist_general(courseid,criterion,ascending):
         logging.debug(f"last update = {last_update}\npage = announcementlist")
         announcements = get_announcementlist(studentid, db_ses, courseid=courseid)
         unchecked_announcement_num=sum((i["checked"] == 0 for i in announcements))
-        data = setdefault_for_overview(studentid, db_ses, mode="announcement",tasks_name="announcemnts")
+        data = setdefault_for_overview(studentid, db_ses, mode="announcement",tasks_name="announcements")
     announcements = sort_announcements(announcements,criterion=criterion,ascending=ascending)
     logging.info(f"studentid={studentid}の未確認のお知らせ:{unchecked_announcement_num}個")
     
