@@ -245,8 +245,8 @@ async def async_get_announcement(ses):
     except json.JSONDecodeError as e:
         return {'announcement_collection':[]}
 
-async def async_get_assignments(ses):
-    url = f"{api_url}/assignment/my.json"
+async def async_get_assignments(course_id,ses):
+    url = f"{api_url}/assignment/site/{course_id}.json"
     func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, func)

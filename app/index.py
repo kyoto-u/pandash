@@ -44,31 +44,35 @@ def get_data_from_api_and_update(student_id,ses,now,need_to_update_sitelist,db_s
         courses = {"courses":[],"student_courses":[]}
         resources = {"resources":[],"student_resources":[]}
         quizzes = {"quizzes":[], "student_quizzes":[]}
+        assignments = {"assignments":[], "student_assignments":[]}
         asyncio.set_event_loop(asyncio.SelectorEventLoop())
         loop = asyncio.get_event_loop()
         content_statements = []
         site_statements = []
         quiz_statements = []
         page_statements = []
+        assignment_statements = []
         for courseid in membership["site_list"]:
             content_statements.append(async_get_content(courseid, ses))
             site_statements.append(async_get_site(courseid, ses))
             page_statements.append(async_get_site_pages(courseid, ses))
             quiz_statements.append(async_get_quiz(courseid, ses))
-        statements = [*content_statements,*site_statements,*page_statements,*quiz_statements,async_get_assignments(ses),async_get_user_info(ses),async_get_announcement(ses)]
+            assignment_statements.append(async_get_assignments(courseid, ses))
+        statements = [*content_statements,*site_statements,*page_statements,*quiz_statements,*assignment_statements,async_get_user_info(ses),async_get_announcement(ses)]
         tasks = asyncio.gather(*statements)
         results = loop.run_until_complete(tasks)
-        results_len = int(len(results))-3
-        one_forth_results_len = results_len//4
+        results_len = int(len(results))-2
+        one_forth_results_len = results_len//5
         rslt_contents = results[0:one_forth_results_len]
         rslt_sites = results[one_forth_results_len:one_forth_results_len*2]
         rslt_pages = results[one_forth_results_len*2:one_forth_results_len*3]
-        rslt_quizzes = results[one_forth_results_len*3:results_len]
-        assignments = get_assignments_from_api(results[results_len],student_id)
-        user_info = get_user_info_from_api(results[results_len+1])
-        announcements = get_announcement_from_api(results[results_len+2],student_id)
+        rslt_quizzes = results[one_forth_results_len*3:results_len*4]
+        rslt_assignments = results[one_forth_results_len*4:results_len]
+        user_info = get_user_info_from_api(results[results_len])
+        announcements = get_announcement_from_api(results[results_len+1],student_id)
         index = 0
         for courseid in membership["site_list"]:
+            asm = get_assignments_from_api(rslt_assignments[index],student_id)
             res = get_resources_from_api(rslt_contents[index],courseid,student_id)
             quiz = get_quizzes_from_api(rslt_quizzes[index],courseid,student_id)
             crs = get_course_from_api(rslt_sites[index], student_id)
@@ -82,6 +86,8 @@ def get_data_from_api_and_update(student_id,ses,now,need_to_update_sitelist,db_s
                 resources["student_resources"].extend(res["student_resources"])
                 quizzes["quizzes"].extend(quiz["quizzes"])
                 quizzes["student_quizzes"].extend(quiz["student_quizzes"])
+                assignments["assignments"].extend(asm["assignments"])
+                assignments["student_assignments"].extend(asm["student_assignments"])
             index += 1
         # student_id   student_id
         # membership   {"student_id": , "site_list": []}
