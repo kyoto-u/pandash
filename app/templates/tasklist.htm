@@ -105,13 +105,19 @@
             {% endif %}
               <td class="col-3 subject">
               {{task.subject}}
+              
               </td>
               <td class="col-3 task_title"><a target="_blank"
                   href="{{task.assignment_url}}"
                   class="task_tag task_link" name="{{task.quiz}}">              
                   {% if task.clicked == 0 %}
                   <i class="fas fa-exclamation-circle"></i>
-                  {% endif %}{{task.taskname}}</a></td>
+                  {% endif %}{{task.taskname}}
+                </a>
+                {% if task.quiz == True %}
+                <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                {% endif %}
+              </td>
               <td class="col-3">{{task.time_left.msg}}</td>
               <td class="col-3">{{task.deadline}}</td>
             </tr>

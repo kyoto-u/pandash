@@ -33,7 +33,33 @@ def main(name):
     for i in range(n):
         announcements[i] = {"id":str(i),"title":"お知らせ"+str(i),"subject":"test","publish_date":"2022/02/07"}
 
-    return render_template(templname, path=name, announcements=announcements,num=n,per_page=15)
+    search_condition = "全て"
+    sampletask1 = {"status": "未",
+                   "assignment_url": "#",
+                   "assignmentid": 1,
+                   "time_left": {"msg": "2日", "judge": ""},
+                   "deadline": "2022/3/2",
+                   "subject": "サンプルサイト",
+                   "clicked":0,
+                   "quiz":True,
+                   "taskname": "サンプル課題１"
+                   }
+    tasks = [sampletask1]
+    last_update = "2020/3/2"
+    data = {}
+    for i in range(1, 6):
+        data["mon"+str(i)] = {"searchURL": "#", "shortname": "サンプル月"+str(i)}
+        data["tue"+str(i)] = {"searchURL": "#", "shortname": "サンプル火"+str(i)}
+        data["wed"+str(i)] = {"searchURL": "#", "shortname": "サンプル水"+str(i)}
+        data["thu"+str(i)] = {"searchURL": "#", "shortname": "サンプル木"+str(i)}
+        data["fri"+str(i)] = {"searchURL": "#", "shortname": "サンプル金"+str(i)}
+    data["mon4"]["tasks"] = [sampletask1]
+    data["others"] = [{"shortname": "サンプルその他科目", "tasks": [sampletask1, sampletask1]}, {
+        "shortname": "サンプルその他科目", "tasks": [sampletask1, sampletask1]}]
+    sample_announcement = {"subject": "サンプルコース１", "checked": False, "title": "サンプルお知らせ１",
+                           "publish_date": "2022/08/01 12:55", "html_file": "<h1>abc</h1>"}
+    announcements = [sample_announcement]
+    return render_template(templname, path=name, announcements=announcements,num=n,per_page=15,data=data,search_condition=search_condition,tasks=tasks)
 
 @app.route('/')
 def root():
