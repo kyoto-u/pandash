@@ -32,7 +32,11 @@ $(function (){
             'class': 'ml-3 my-2 active_course',
             'name': element_id
         });
-        title_h2.html(subject + "のお知らせ");
+        if (subject != ""){
+            title_h2.html(subject + "のお知らせ");
+        } else {
+            title_h2.html('時間割から科目を選択してください');
+        }
         title_div.append(title_h2);
         header_div.append(title_div);
 
