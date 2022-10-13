@@ -1,24 +1,34 @@
-﻿$('.announcement_tr').on('click', function () {
-    var r_links = new Array();
-    var link = $(this).attr('id');
-    r_links.push(link);
-    var resourcedata = JSON.stringify({ "r_id": r_links })
+﻿// announcement_listのモーダル表示に対応 
 
-    //モーダルにタイトル、コースサイト名、公開日時を表示する準備
-    var anno_list = "announcement_pagenation";
-    var IsList = location.pathname.includes(anno_list);
-    if(IsList){
-        var obj = { "title": $(this).find("td").find("a").html(), "subject": $(this).find("td").first().html(), "publish_date": $(this).parent().parent().find("td").last().html() }
-    }else{
-        var obj = { "title": $(this).find("td").first().html(), "subject": $("#announcement_card > .card-header > .row > h2").html().split("の")[0], "publish_date": $(this).parent().parent().find("td").last().html() }
-    }
-    
-    loading(obj);
+// announcements = [{'announcement_id': 'ddd', 'checked': 1, 
+// 'title': 'ddd', 'html_file': 'ddd_body', 'subject': 'ccc', 
+// 'classschedule': 'mon3', 'course_id': 'ccc', 
+// 'publisher': 'xxxx', 'time_ms': 999999, 
+// 'publish_date': '1970/01/01 09:16:39'}]
+
+$('.announcement_tr').on('click', function () {
+    var announcement_id = $(this).attr('id');
+    var index = 0;
+    $.each(announcements, function(key, value){
+        if(value.announcement_id == announcement_id){
+            return false;
+        }
+        index += 1;
+    })
+    // announcementsのリストを外したもの
+    announcement = announcements[index];
+
+    $('#modal_announcement_title').html("件名："+announcement['title']);
+    $('#modal_announcement_subject').html("コースサイト：" + announcement['subject']);
+    $('#modal_announcement_publish_date').html("公開日時：" + announcement["publish_date"]);
+    $('#modal_announcement_html_file').html(announcement["html_file"]);
+
+    var ancdata = JSON.stringify({"announcement_ids": [announcement_id]});
 
     $.ajax({
         type: 'POST',
-        url: '/r_announcement_clicked',
-        data: resourcedata,
+        url: '/announcement_clicked',
+        data: ancdata,
         contentType: 'application/json',
         success: function (response) {
             $('#modal_announcement_html_file').html(response["html_file"])
@@ -28,13 +38,6 @@
         }
     });
 });
-
-function loading(obj){
-    $('#modal_announcement_title').html("件名："+obj["title"])
-    $('#modal_announcement_subject').html("コースサイト：" + obj["subject"])
-    $('#modal_announcement_publish_date').html("公開日時：" + obj["publish_date"])
-    $('#modal_announcement_html_file').html("<h3>読み込み中...</h3>")
-}
 
 //前のページボタンをクリックしたときの処理
 $("#pills-previous-tab").on('click',function(){

@@ -64,7 +64,7 @@
                         {% if ns.cnt != page_num %}
                         {% for j in range(per_page) %}
                         {% set n = (ns.cnt-1)*per_page + j %}
-                        <tr class="announcement_tr" id="announcement_{{announcements[n].id}}" data-toggle="modal" data-target="#modal_announcement">
+                        <tr class="announcement_tr" id="{{announcements[n].announcement_id}}" data-toggle="modal" data-target="#modal_announcement">
                             <td>{{announcements[n].subject}}</td>
                             <td>
                                 <a style="color:black">
@@ -134,4 +134,8 @@
         };
     </script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/announcement_modal.js') }}"></script>
+    
+    <script type="text/javascript">
+        var announcements = {{ announcements | tojson }};
+    </script>
     {% endblock %}
