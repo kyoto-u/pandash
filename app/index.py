@@ -258,6 +258,15 @@ def get_search_condition(show_only_unfinished, max_time_left,db_ses, course=None
         search_condition="全て"
     return {"search_condition":search_condition, "select3a_judge":select3a_judge}
 
+def order_course(course):
+    order = ['mon1','mon2','mon3','mon4','mon5','tue1','tue2','tue3','tue4','tue5','wed1','wed2','wed3','wed4','wed5',\
+        'thu1','thu2','thu3','thu4','thu5','fri1','fri2','fri3','fri4','fri5','oth']
+    value=order.index(course["classschedule"])
+    value-=course["yearsemester"]*100
+    if course["yearsemester"]==10009:
+        value+=20000*100
+    return value
+
 def order_status(status):
     if status == Status.NotYet.value:
         return 0
@@ -482,6 +491,10 @@ def sort_announcements(announcements,criterion,ascending):
     # keynameの値で並べ変える。降順ならreverseをTrueにする
     new_announcements = sorted(announcements, key=lambda x: x[keyname],reverse=ascending==0)
     return new_announcements
+
+def sort_courses(courses):
+    new_courses = sorted(courses,key=lambda x: order_course(x))
+    return new_courses
 
 def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
     """

@@ -279,12 +279,16 @@ def option():
     courses_to_be_taken = []
     with open_db_ses() as db_ses:
         studentdata = get_student(studentid,db_ses)
-        coursesdata = get_courses_to_be_taken(studentid, db_ses, mode=1, return_data='student_course')
-        for coursedata in coursesdata:
-            course_id = coursedata.course_id
-            hide = coursedata.hide
-            coursename = get_coursename(course_id,db_ses)
-            courses_to_be_taken.append({'course_id':course_id,'coursename':coursename,'hide':hide})
+        scsdata = get_courses_to_be_taken(studentid, db_ses, mode=1, return_data='student_course')
+        coursesdata = get_courses_to_be_taken(studentid, db_ses, mode=1, return_data='course')
+        for i in range(len(scsdata)):
+            course_id = scsdata[i].course_id
+            hide = scsdata[i].hide
+            coursename = coursesdata[i].coursename
+            yearsemester = coursesdata[i].yearsemester
+            classschedule = coursesdata[i].classschedule
+            courses_to_be_taken.append({'course_id':course_id,'coursename':coursename,'yearsemester':yearsemester,'classschedule':classschedule,'hide':hide})
+        courses_to_be_taken=sort_courses(courses_to_be_taken)
         show_already_due = studentdata.show_already_due
         data = setdefault_for_overview(studentid, db_ses)
         last_update_subject= str(datetime.datetime.fromtimestamp(studentdata.last_update_subject//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
