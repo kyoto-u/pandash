@@ -42,8 +42,8 @@ def get_assignments_from_api(assignments, student_id):
         course_id = assignment.get('context')
         modifieddate = assignment.get('timeLastModified').get('epochSecond')*1000 #millisecond
         status = assignment.get('status')
-        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":Status.NotYet.value,"student_id":student_id,"clicked":0})
-        assignment_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifieddate":modifieddate,"course_id":course_id})
+        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":Status.NotYet.value,"student_id":student_id,"clicked":0,"deleted":0})
+        assignment_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifieddate":modifieddate,"course_id":course_id,"deleted":0})
     assignment_dict = {"student_assignments":sa_list, "assignments":assignment_list}
     return assignment_dict
 
