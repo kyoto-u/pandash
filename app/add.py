@@ -382,6 +382,7 @@ def add_student_assignment(studentid, data, db_ses,allow_delete=1):
 
                 # もし削除扱いになっている場合はそれを直すためにupdateする
                 if i.deleted == 1:
+                    item["deleted"]=0
                     update = True
 
                 break
@@ -426,6 +427,7 @@ def add_student_quiz(studentid, data, db_ses,allow_delete=1):
 
                 # もし削除扱いになっている場合はそれを直すためにupdateする
                 if i.deleted == 1:
+                    item["deleted"]=0
                     update = True
                 
                 break

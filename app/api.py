@@ -204,8 +204,8 @@ def get_quizzes_from_api(quizzes, course_id, student_id):
             modifieddate =max(modifieddate,int(content.get('startDate')))
         limit_at = datetime.datetime.fromtimestamp(time_ms//1000,datetime.timezone(datetime.timedelta(hours=9))).strftime("%Y-%m-%dT%H:%M:%SZ")
         quiz_list.append({'course_id':course_id, 'quiz_id': quiz_id, 'url':url, 'title': title, \
-            'limit_at':limit_at, 'time_ms': time_ms, 'modifieddate': modifieddate, 'instructions':''})
-        sq_list.append({"sq_id":f"{student_id}:{quiz_id}", "quiz_id":quiz_id, "student_id":student_id, "course_id":course_id, "status":Status.NotYet.value,"clicked":0})
+            'limit_at':limit_at, 'time_ms': time_ms, 'modifieddate': modifieddate, 'instructions':'',"deleted":0})
+        sq_list.append({"sq_id":f"{student_id}:{quiz_id}", "quiz_id":quiz_id, "student_id":student_id, "course_id":course_id, "status":Status.NotYet.value,"clicked":0,"deleted":0})
     quiz_dict = {"student_quizzes":sq_list, "quizzes":quiz_list}
     return quiz_dict
 
