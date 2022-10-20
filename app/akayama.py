@@ -65,7 +65,14 @@ def main(name):
     sample_announcement = {"subject": "サンプルコース１", "checked": False, "title": "サンプルお知らせ１",
                            "publish_date": "2022/08/01 12:55", "html_file": "<h1>abc</h1>"}
     announcements = [sample_announcement]
-    return render_template(templname, path=name, announcements=announcements,num=n,per_page=15,data=data,search_condition=search_condition,tasks=tasks)
+
+    sample_frm = {
+        "title":"サンプルお問い合わせ",
+        "content":"サンプルお問い合わせのサンプル内容<br>これはサンプル改行",
+        "reply":"サンプルお問い合わせのサンプル返信内容"
+    }
+    frms = [sample_frm]    
+    return render_template(templname, path=name, announcements=announcements,num=n,per_page=15,data=data,search_condition=search_condition,tasks=tasks,frms=frms)
 
 @app.route('/')
 def root():
