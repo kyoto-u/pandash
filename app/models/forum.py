@@ -18,4 +18,10 @@ class Forum(settings.Base):
     reply_contents = Column(String(1000))
     replied = Column(Integer, default=0)
 
+    name = Column(String(40))
+    email = Column(String(100))
+
+    reply_checked =Column(Integer, default=0)
+
+
 settings.Base.metadata.create_all(settings.engine)
