@@ -34,29 +34,31 @@ from sqlalchemy.dialects.mysql import insert
 
 #     return
 
-def check_and_insert_all_accesses(student_id, today):
+def check_and_insert_all_accesses(student_id, today,db_ses):
     """
     最終ログイン日時とアクセス日時を比較してその月初めてのアクセスならunique_usersに+1
     上に関わらずtotal_usersに+1
     """
     this_month = today.month
-    last_update = session.query(student.Student.last_update).filter(
+    last_update = db_ses.query(student.Student.last_update).filter(
         student.Student.student_id==student_id).first()
     try:
         last_update_month = datetime.datetime.fromtimestamp(last_update[0]//1000).month
     except:
-        return
+        last_update_month = 0
     # primary key
     last_date = get_last_date(today)
-    accesslog = session.query(access.Access).filter(
+    accesslog = db_ses.query(access.Access).filter(
         access.Access.access_month_at==int(last_date*1000)).first()
     if accesslog == None:
-        accesslog = session.add(access.Access(access_month_at=int(last_date*1000)))
-        session.commit()
+        db_ses.add(access.Access(access_month_at=int(last_date*1000)))
+        db_ses.commit()
+        accesslog = accesslog = db_ses.query(access.Access).filter(
+        access.Access.access_month_at==int(last_date*1000)).first()
     if this_month != last_update_month:
         accesslog.unique_users += 1
     accesslog.total_users += 1
-    session.commit()
+    db_ses.commit()
     return  
     
 
@@ -84,7 +86,7 @@ def get_today(today):
     return datetime.datetime.timestamp(pytz.timezone('Asia/Tokyo').localize(td_native))
 
 from dateutil.relativedelta import relativedelta
-def get_accece_logs():
+def get_access_logs(db_ses):
     dashboard = {"labels":{}, "unique_data":{}, "total_data":{}}
     now = datetime.datetime.now()
     last_dates = [get_last_date(now.date())]
@@ -96,7 +98,7 @@ def get_accece_logs():
         last_dates.append(get_last_date(l_i_date))
     index = 0
     for last_date in last_dates:
-        accesslog = session.query(access.Access).filter(
+        accesslog = db_ses.query(access.Access).filter(
                 access.Access.access_month_at==int(last_date*1000)).first()
         try:
             dashboard["unique_data"][f"d_{(7-index)}"] = accesslog.unique_users

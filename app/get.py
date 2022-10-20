@@ -287,11 +287,11 @@ def get_courses_to_be_taken(studentid, db_ses, mode = 0,include_deleted = 0,retu
                 data.append(coursedata[0])
     return data
 
-def get_forums(show_only_not_replied):
+def get_forums(show_only_not_replied,db_ses):
     if show_only_not_replied == False:
-        frms = session.query(forum.Forum).all()
+        frms = db_ses.query(forum.Forum).all()
     else:
-        frms = session.query(forum.Forum).filter(
+        frms = db_ses.query(forum.Forum).filter(
             forum.Forum.replied==1).all()
     frmsdata = []
     for frm in frms:

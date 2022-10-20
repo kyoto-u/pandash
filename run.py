@@ -13,7 +13,7 @@ import requests
 import datetime
 import time
 from bs4 import BeautifulSoup
-from app.accesscount import check_and_insert_all_accesses, get_accece_logs
+from app.accesscount import check_and_insert_all_accesses, get_access_logs
 
 logging.basicConfig(level=logging.INFO)
 app.secret_key ='pandash'
@@ -70,7 +70,8 @@ def login():
 
 
 def count_accesses(student_id):
-    check_and_insert_all_accesses(student_id,datetime.datetime.today())
+    with open_db_ses() as db_ses:
+        check_and_insert_all_accesses(student_id,datetime.datetime.today(),db_ses)
     return ''
 
 @app.route('/login/proxy/<pgtiou>', methods=['GET'])
@@ -116,9 +117,9 @@ def login_successful(ses):
     start_time = time.perf_counter()
     user = get_user_json(ses)
     student_id = user.get('id')
+    count_accesses(student_id)
 
     email = user.get('email')
-
     # trial_release ではここで認証済みユーザーのアクセスだけを許可する
     f = open('users.txt', 'r', encoding='UTF-8')
     auth_users = f.readlines()
@@ -834,19 +835,20 @@ def manage_admin():
 @check_oa
 def manage_oa():
     # !dashboardの情報
-    dashboard = get_accece_logs()
-    return "manage_oa"
+    
+    with open_db_ses() as db_ses: 
+        dashboard = get_access_logs(db_ses)
+        frms=get_forums(False,db_ses)
+    return flask.render_template('manage_oa.htm', dashboard=dashboard,frms=frms)
 
 @app.route('/manage_reply', methods=['POST'])
 def manage_reply():
-    studentid = session.get('student_id')
-    if studentid:
+    student_id = session.get('student_id')
+    with open_db_ses() as db_ses:
         reply_content = request.json['reply_content']
         form_id = request.json['form_id']
-        update_reply_content(studentid, form_id, reply_content)
-        return 'success'
-    else:
-        return 'failed'
+        update_reply_content(student_id, form_id, reply_content,db_ses)
+    return 'success'
 
 # 403
 @app.route('/loginfailed')
