@@ -56,21 +56,24 @@ def main(name):
         "createdate":"2020/11/2",
         "title":"フォーラム１",
         "contents":"問い合わせ内容１",
-        "replied_contents":"返信内容１"
+        "replied_contents":"返信内容１",
+        "replied":1
     }
     frms[1] = {
         "forum_id": "forum2",
         "createdate": "2020/3/2",
         "title": "フォーラム２",
         "contents": "問い合わせ内容２",
-        "replied_contents": "返信内容２"
+        "replied_contents": "返信内容２",
+        "replied": 0
     }
     frms[2] = {
         "forum_id": "forum3",
         "createdate": "2020/5/2",
         "title": "フォーラム３",
         "contents": "問い合わせ内容３",
-        "replied_contents": "返信内容３"
+        "replied_contents": "返信内容３",
+        "replied": 0
     }
     return render_template(templname, path=name,dashboard=dashboard,frms=frms)
 

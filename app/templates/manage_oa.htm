@@ -179,7 +179,12 @@
                                 {% for frm in frms %}
                                 <tr class="inquery_row" id="{{frm.forum_id}}">
                                     <td class="date">{{frm.createdate}}</td>
-                                    <td class="title">{{frm.title}}</td>
+                                    <td class="title">
+                                        {{frm.title}}
+                                        {% if frm.replied == 1 %}
+                                        <i class="fas fa-check" style="color:limegreen"></i>
+                                        {% endif %}
+                                    </td>
                                     <td class="contents">{{frm.contents}}</td>
                                     <td class="replied_contents">{{frm.replied_contents}}</td>
                                 </tr>
