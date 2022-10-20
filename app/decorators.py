@@ -47,5 +47,17 @@ def check_oa(func):
 def check_role(student_id):
     if student_id == "###":
         return "admin"
+    # trial_release ではここで認証済みユーザーのアクセスだけを許可する
+    f = open('users_oa.txt', 'r', encoding='UTF-8')
+    auth_users = f.readlines()
+    f.close()
+    authenticated = False
+    for auth_user in auth_users:
+        if auth_user == f'{student_id}\n'or auth_user == student_id:
+            authenticated = True
+            break
+    
+    if authenticated:
+        return "oa"
     else:
         return "student"
