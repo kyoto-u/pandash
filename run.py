@@ -808,7 +808,7 @@ def forum():
     with open_db_ses() as db_ses:
         data = setdefault_for_overview(student_id, db_ses)
         if request.method == 'GET':
-            frms=get_forums(student_id,false,db_ses)
+            frms=get_forums(student_id,True,db_ses)
             return flask.render_template('ContactUs.htm', error=False, data=data,frms=frms)
         elif request.method == 'POST':
             try:
