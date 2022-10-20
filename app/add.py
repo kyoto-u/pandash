@@ -137,6 +137,7 @@ def add_course(studentid, data, db_ses):
     db_ses.commit()
     return
 
+import time
 
 def add_coursecomment(studentid, comment_id, course_id, db_ses):
     course_ids = get_courseids(studentid, db_ses)
@@ -562,6 +563,11 @@ def update_task_status(studentid, taskids: list,db_ses, mode=0, taskmode="task")
     db_ses.commit()
     return
 
+def update_reply_content(studentid, form_id, reply_content):
+    frm = session.query(forum.Forum).filter(forum.Forum.forum_id == form_id).first()
+    frm.replied_student_id = studentid
+    frm.reply_contents = reply_content
+    frm.replied = 1
 # コースのコメントをチェックしたときに実行
 def update_comment_checked(studentid, courseid,db_ses):
     sc_id = f"{studentid}:{courseid}"

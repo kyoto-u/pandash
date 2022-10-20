@@ -12,6 +12,8 @@ import logging
 import requests
 import datetime
 import time
+from bs4 import BeautifulSoup
+from app.accesscount import check_and_insert_all_accesses, get_accece_logs
 
 logging.basicConfig(level=logging.INFO)
 app.secret_key ='pandash'
@@ -35,7 +37,6 @@ global redirect_pages
 # "/resourcelist" 授業資料一覧を取得
 # "/resourcelist/course/<str:courseid>" 教科で絞り込み <courceid>にはデータベースで登録した教科idが入る
 # 
-
 
 @app.route('/login', methods=['GET'])
 def login():
@@ -66,6 +67,11 @@ def login():
         redirect_pages[session['student_id']] = redirect_page
     cas_login_url = cas_client.get_login_url(service_url=app_login_url)
     return redirect(cas_login_url)
+
+
+def count_accesses(student_id):
+    check_and_insert_all_accesses(student_id,datetime.datetime.today())
+    return ''
 
 @app.route('/login/proxy/<pgtiou>', methods=['GET'])
 def proxy(pgtiou=None):
@@ -827,7 +833,20 @@ def manage_admin():
 @app.route('/manage/oa')
 @check_oa
 def manage_oa():
+    # !dashboardの情報
+    dashboard = get_accece_logs()
     return "manage_oa"
+
+@app.route('/manage_reply', methods=['POST'])
+def manage_reply():
+    studentid = session.get('student_id')
+    if studentid:
+        reply_content = request.json['reply_content']
+        form_id = request.json['form_id']
+        update_reply_content(studentid, form_id, reply_content)
+        return 'success'
+    else:
+        return 'failed'
 
 # 403
 @app.route('/loginfailed')

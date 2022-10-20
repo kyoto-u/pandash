@@ -14,6 +14,12 @@ def get_announcement(id):
     result["html_file"] = "<h1>hogehoge" + str(id) + "</h1>"
     return result
 
+@app.route('/manage_reply', methods=['POST'])
+def manage_reply():
+    reply_content = request.json['reply_content']
+    form_id = request.json['form_id']
+    print(reply_content,form_id)    
+    return 'success'
 
 @app.route('/r_announcement_clicked', methods=["POST"])
 def r_announcement_clicked():
