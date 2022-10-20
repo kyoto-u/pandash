@@ -6,19 +6,21 @@ $(function (){
         var display_width = $(window).width();
     }
 
+    // 時間割のタイルをクリックしたときの処理
     $('td.tcell_announce_overview').on('click', function(){
         // もとの表示を消す
-        $('#announcement_card').fadeOut('fast').queue(function(){
-            $('#announcement_card').remove();
-        })
+        $('#course_announcement').children().remove();
 
+        // 時間割のid(ex mon1)を取得
         var element_id = $(this).attr('id');
-        var course = announcements[element_id]
-        var subject = course["subject"]
+        // element_idからcourse, announcement情報を取得
+        var course = announcements[element_id];
+        var subject = course["subject"];
         var announcements_details = course["announcements"];
+        // カードを作成
         var parent_div = $('<div></div>',{
             'id': 'announcement_card',
-            'class': 'card text-white',
+            'class': 'card text-white announcement_card',
             'style': 'min-height: 100vh; max-height: 100vh;'
         });
         var header_div = $('<div></div>',{
@@ -59,6 +61,7 @@ $(function (){
         tr1.append(th1);
         tr1.append(th2);
         body_table.append(tr1);
+        // 各お知らせの表示
         for(let i=0;i<announcements_details.length;i++){
             var tr2 = $('<tr></tr>',{
                 'class': 'announcement_tr',
@@ -88,10 +91,13 @@ $(function (){
         parent_div.append(header_div);
         parent_div.append(body_div);
 
-        // アニメーションをつける
+        // カードの表示をアニメーション形式にする
+        // parent_div.hide().fadeIn(200);
+
+        // 要素を追加してお知らせ一覧を表示
         $('#course_announcement').append(parent_div);
 
-        // trigger
+        // 各お知らせをクリックしたときのtrigger
         $('tr.announcement_tr').on('click', function(){
             var element_id = $('.active_course').attr('name');
             var index = $(this).attr('name');
@@ -124,22 +130,25 @@ $(function (){
         });
 
         // mouse over
-        var targets = document.getElementsByClassName("announcement_tr");
-        for (var i = 0; i < targets.length; i++) {
-            targets[i].addEventListener("mouseover", function () {
-                this.setAttribute("style", "color:black; background-color:whitesmoke;");
-            });
-    
-            targets[i].addEventListener("mouseleave", function () {
-                this.setAttribute("style", "color:white;");
-            });
-        }
-        for (var i = 0; i < targets.length; i++) {
-            targets[i].setAttribute("style", "color: white;");
+        {
+            var targets = document.getElementsByClassName("announcement_tr");
+            for (var i = 0; i < targets.length; i++) {
+                targets[i].addEventListener("mouseover", function () {
+                    this.setAttribute("style", "color:black; background-color:whitesmoke;");
+                });
+        
+                targets[i].addEventListener("mouseleave", function () {
+                    this.setAttribute("style", "color:white;");
+                });
+            }
+            for (var i = 0; i < targets.length; i++) {
+                targets[i].setAttribute("style", "color: white;");
+            };
         };
 
     });
 
+    // 各お知らせをクリックしたときの処理
     $('tr.announcement_tr').on('click', function(){
         var element_id = $('.active_course').attr('name');
         var index = $(this).attr('name');
@@ -151,15 +160,6 @@ $(function (){
         var announcement_id = $(this).attr('id');
         announcement_ids.push(announcement_id);
         var ancdata = JSON.stringify({ "announcement_ids": announcement_ids });
-
-        // モーダルにタイトル、コースサイト名、公開日時を表示する準備
-        // var anno_list = "announcement_pagenation";
-        // var IsList = location.pathname.includes(anno_list);
-        // if(IsList){
-        //     var obj = { "title": $(this).find("td").find("a").html(), "subject": $(this).find("td").first().html(), "publish_date": $(this).parent().parent().find("td").last().html() }
-        // }else{
-        //     var obj = { "title": $(this).find("td").first().html(), "subject": $("#announcement_card > .card-header > .row > h2").html().split("の")[0], "publish_date": $(this).parent().parent().find("td").last().html() }
-        // }
     
         $('#modal_announcement_title').html("件名："+announcements_detail['title']);
         $('#modal_announcement_subject').html("コースサイト：" + subject);
