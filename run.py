@@ -804,11 +804,12 @@ def comment_general(courseid = None):
 
 @app.route('/ContactUs', methods=['GET', 'POST'])
 def forum():
-    studentid = session.get('student_id')
+    student_id = session.get('student_id')
     with open_db_ses() as db_ses:
-        data = setdefault_for_overview(studentid, db_ses)
+        data = setdefault_for_overview(student_id, db_ses)
         if request.method == 'GET':
-            return flask.render_template('ContactUs.htm', error=False, data=data)
+            frms=get_forums(student_id,false,db_ses)
+            return flask.render_template('ContactUs.htm', error=False, data=data,frms=frms)
         elif request.method == 'POST':
             try:
                 title = request.form["title"]
@@ -818,11 +819,11 @@ def forum():
                 #     TITLE: {title},
                 #     CONTENTS: {contents}
                 #     --------------"""
-                msg = add_forum(studentid,title,contents, db_ses)
+                msg = add_forum(student_id,title,contents, db_ses)
                 logging.info(msg)
                 return flask.render_template('Contacted.htm', data=data)
             except:
-                logging.info(f"FORUM STUDENT:{studentid} sending failed")
+                logging.info(f"FORUM STUDENT:{student_id} sending failed")
                 return flask.render_template('ContactUs.htm', error=True, data=data)
 
 # 管理画面
@@ -838,7 +839,7 @@ def manage_oa():
     
     with open_db_ses() as db_ses: 
         dashboard = get_access_logs(db_ses)
-        frms=get_forums(False,db_ses)
+        frms=get_forums("",False,db_ses,all=True)
     return flask.render_template('manage_oa.htm', dashboard=dashboard,frms=frms)
 
 @app.route('/manage_reply', methods=['POST'])
