@@ -249,7 +249,9 @@ def faq():
 
 @app.route('/update')
 def update():
-    return flask.render_template("update.htm")
+    with open_db_ses() as db_ses: 
+        dashboard = get_access_logs(db_ses)
+    return flask.render_template("update.htm",dashboard = dashboard)
 
 @app.route('/privacypolicy')
 def privacypolicy():
