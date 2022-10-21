@@ -303,7 +303,8 @@ def get_forums(student_id,show_only_not_replied,db_ses,all=false):
     for frm in frms:
         frmdata = {}
         frmdata["forum_id"] = frm.forum_id
-        frmdata["createdate"] = frm.createdate
+        frmdata["createdate_ms"] = frm.createdate
+        frmdata["createdate"] = str(datetime.datetime.fromtimestamp(frm.createdate//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         frmdata["student_id"] = frm.student_id
         frmdata["title"] = frm.title
         frmdata["contents"] = frm.contents

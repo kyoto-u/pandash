@@ -7,6 +7,7 @@ from .settings import session
 from .get import get_courseids
 import time
 from .original_classes import Status
+import math
 
 def add_announcement(studentid, data,db_ses):
     course_ids = get_courseids(studentid,db_ses)
@@ -158,6 +159,7 @@ def add_forum(studentid,title,contents, db_ses):
     inq.student_id = studentid
     inq.title = title
     inq.contents = contents
+    inq.createdate = math.floor(time.time()*1000)
     db_ses.add(inq)
     db_ses.commit()
     return f"""
