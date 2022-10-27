@@ -12,7 +12,6 @@ import logging
 import requests
 import datetime
 import time
-from bs4 import BeautifulSoup
 from app.accesscount import check_and_insert_all_accesses, get_access_logs
 
 logging.basicConfig(level=logging.INFO)
