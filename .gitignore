@@ -5,3 +5,4 @@ users.txt
 users_oa.txt
 year_semester.json
 *.log
+/app/akayama.py
