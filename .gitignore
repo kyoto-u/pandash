@@ -3,4 +3,5 @@ __pycache__/
 /app/settings.py
 users.txt
 users_oa.txt
+year_semester.json
 *.log

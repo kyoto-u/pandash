@@ -7,12 +7,12 @@ from sqlalchemy.sql.expression import false
 from app.models import forum
 from .models import student, assignment, course, studentassignment, studentcourse, resource, studentresource, quiz, studentquiz, announcement, studentannouncement
 from .models import comment, coursecomment
-from .settings import SHOW_YEAR_SEMESTER, panda_url
+from .settings import panda_url
 from .original_classes import TimeLeft ,Status
 import datetime
 import hashlib
 from typing import List
-import datetime
+import json
 
 def get_announcements(studentid,show_only_unchecked, courseid, day, db_ses):
     enrollments = db_ses.query(studentannouncement.Student_Announcement).filter(
@@ -240,6 +240,7 @@ def get_courses_id_to_be_taken(studentid, db_ses, mode=0,include_deleted=0) ->Li
     data=[]
     courses = db_ses.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
+    show_year_semester = get_show_year_semester()
     for i in courses:
         if mode==0 and i.hide == 1:
             continue
@@ -247,7 +248,7 @@ def get_courses_id_to_be_taken(studentid, db_ses, mode=0,include_deleted=0) ->Li
             continue
         coursedata = db_ses.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
-        if coursedata[0].yearsemester in SHOW_YEAR_SEMESTER:
+        if coursedata[0].yearsemester in show_year_semester:
             data.append(coursedata[0].course_id)
     return data
 
@@ -270,6 +271,7 @@ def get_courses_to_be_taken(studentid, db_ses, mode = 0,include_deleted = 0,retu
     data=[]
     courses = db_ses.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
+    show_year_semester = get_show_year_semester()
     for i in courses:
         if mode==0 and i.hide==1:
             continue
@@ -277,7 +279,7 @@ def get_courses_to_be_taken(studentid, db_ses, mode = 0,include_deleted = 0,retu
             continue
         coursedata = db_ses.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
-        if coursedata[0].yearsemester in SHOW_YEAR_SEMESTER:
+        if coursedata[0].yearsemester in show_year_semester:
             if return_data == 'course':
                 data.append(coursedata[0])
             elif return_data == 'student_course':
@@ -447,3 +449,13 @@ def get_student(studentid: str, db_ses) -> student.Student:
     else:
         studentdata = None
     return studentdata
+
+
+def get_show_year_semester():
+    """
+        show_year_semesterを取得する
+    """
+    with open('./year_semester.json', 'r') as f:
+        year_semesters = json.load(f)
+        show_year_semester = year_semesters["show_year_semester"]
+        return show_year_semester

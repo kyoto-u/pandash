@@ -92,7 +92,8 @@ def get_course_from_api(site, student_id):
     except:
         # return None
         pass
-    if int(yearsemester) not in VALID_YEAR_SEMESTER:
+    valid_year_semester = get_valid_year_semester()
+    if int(yearsemester) not in valid_year_semester:
         return None
     course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule,"page_id":"","announcement_page_id":""}
     student_course_dict = {"sc_id":f"{student_id}:{course_id}","course_id":course_id,"student_id":student_id}
@@ -552,3 +553,12 @@ def get_mail_detail_from_api(mail_detail, mail_list_index):
     mail_list_index["body"] = body
     announcement = mail_list_index
     return announcement
+
+def get_valid_year_semester():
+    """
+        valid_year_semesterを取得する
+    """
+    with open('./year_semester.json', 'r') as f:
+        year_semesters = json.load(f)
+        valid_year_semester = year_semesters["valid_year_semester"]
+        return valid_year_semester
