@@ -580,3 +580,53 @@ def open_db_ses():
         raise
     finally:
         db_ses.close()
+
+
+def auto_collect_year_semester(dt):
+    """
+        dt = datetime.date.today()
+        現在の日付からvalid,show year semesterを返す
+    """
+
+    # 4月-9月なら前期
+    # 10月-3月なら後期判定
+    def is_first_semester(dt):
+        if 4 <= dt.month and dt.month <= 9:
+            return 1
+        else:
+            return 0
+
+    valid_year_semester = [10009]
+    show_year_semester = [10009]
+    str_pre_year = str(dt.year-1)
+    str_year = str(dt.year)
+    str_nex_year = str(dt.year+1)
+    first_or_not = is_first_semester(dt)
+
+    # 今が前期の場合
+    if first_or_not:
+        # 前年度後期以降
+        valid_extend1 = [int(f'{str_pre_year}2'),int(f'{str_pre_year}3'),int(f'{str_pre_year}4'),\
+            int(f'{str_pre_year}5'),int(f'{str_pre_year}9')]
+        # 今年度前期/後期/通年すべて
+        valid_extend2 = [int(f'{str_year}0'),int(f'{str_year}1'),int(f'{str_year}2'),\
+            int(f'{str_year}3'),int(f'{str_year}4'),int(f'{str_year}5'),int(f'{str_year}9')]
+        valid_year_semester = valid_year_semester + valid_extend1 + valid_extend2
+
+        show_year_semester = show_year_semester + [int(f'{str_year}0'),int(f'{str_year}1'),\
+            int(f'{str_year}4'),int(f'{str_year}5'),int(f'{str_year}9')]
+
+    # 今が後期の場合
+    else:
+        # 今年度前期/後期/通年すべて
+        valid_extend1 = [int(f'{str_year}0'),int(f'{str_year}1'),int(f'{str_year}2'),int(f'{str_year}3'),\
+            int(f'{str_year}4'),int(f'{str_year}5'),int(f'{str_year}9')]
+        # 来年度前期
+        valid_extend2 = [int(f'{str_nex_year}0'),int(f'{str_nex_year}1'),int(f'{str_nex_year}4'),\
+            int(f'{str_nex_year}5'),int(f'{str_nex_year}9')]
+        valid_year_semester = valid_year_semester + valid_extend1 + valid_extend2
+
+        show_year_semester = show_year_semester + [int(f'{str_year}2'),int(f'{str_year}3'),\
+            int(f'{str_year}4'),int(f'{str_year}5'),int(f'{str_year}9')]
+
+    return {'valid_year_semester':valid_year_semester, 'show_year_semester':show_year_semester}

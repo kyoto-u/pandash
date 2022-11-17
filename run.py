@@ -841,7 +841,26 @@ def manage_oa():
     with open_db_ses() as db_ses: 
         dashboard = get_access_logs(db_ses)
         frms=get_forums("",False,db_ses,all=True)
-    return flask.render_template('manage_oa.htm', dashboard=dashboard,frms=frms)
+    return flask.render_template('manage_oa.htm', dashboard=dashboard,frms=frms,year_sems={})
+
+# oa 管理ページに/manage/year_semesterのリンクを設置
+@app.route('/manage/year_semester_update')
+@check_oa
+def manage_year_semester_update():
+    dt = datetime.date.today()
+    year_sems = auto_collect_year_semester(dt=dt)
+    # json ファイルにsemester情報を格納
+    with open('year_semester.json', 'w') as f:
+        json.dump(year_sems,f)
+    
+    with open_db_ses() as db_ses: 
+        dashboard = get_access_logs(db_ses)
+        frms=get_forums("",False,db_ses,all=True)
+
+    # 更新したデータを表示
+    return flask.render_template('manage_oa.htm', dashboard=dashboard,frms=frms,year_sems=year_sems)
+    
+
 
 @app.route('/manage_reply', methods=['POST'])
 def manage_reply():
