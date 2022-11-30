@@ -53,3 +53,7 @@
     background-color:rgb(92, 154, 179);
     color: white;
 }
+
+.inquery_selected{
+    background-color: skyblue;
+}
