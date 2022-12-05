@@ -251,10 +251,13 @@ async def async_get_assignments(course_id,ses):
     func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, func)
+    if res.status_code == 404:
+        # 恐らく履修解除等によりアクセスが出来なくなった
+        return {"assignment_collection":[]}
     try:
         return res.json()
     except json.JSONDecodeError as e:
-        return {}
+        return {"assignment_collection":[]}
 
 async def async_get_content(site_id, ses):
     url = f"{api_url}/content/site/{site_id}.json"
@@ -294,6 +297,9 @@ async def async_get_site_pages(site_id, ses):
     func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, func)
+    if res.status_code == 403:
+        # 恐らく履修解除等によりアクセスが出来なくなった
+        return {}
     try:
         return res.json()
     except json.JSONDecodeError as e:
