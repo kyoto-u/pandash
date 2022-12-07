@@ -113,6 +113,13 @@ footer {
     flex-direction: row;
 }
 
+a.fa-home:hover::before {
+    color: gainsboro;
+}
+a.fa-home {
+    color: gray;
+    text-decoration: none;
+}
 /*一覧表示ページ*/
 #ScrollSearchbar{
    background-color:silver;
@@ -144,6 +151,7 @@ footer {
 .testquiz-icon{
     color:white;
 }
+
 
 
 /*時間割表示ページ*/

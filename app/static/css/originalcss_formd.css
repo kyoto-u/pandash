@@ -83,7 +83,14 @@ footer {
     border-bottom: white;
 }
 
+a.fa-home:hover::before {
+    color: gainsboro;
+}
 
+a.fa-home {
+    color: gray;
+    text-decoration: none;
+}
 
 
 /*時間割表示ページ*/
