@@ -12,6 +12,7 @@ import logging
 import requests
 import datetime
 import time
+from app.accesscount import check_and_insert_all_accesses, get_access_logs
 
 logging.basicConfig(level=logging.INFO)
 app.secret_key ='pandash'
@@ -35,7 +36,6 @@ global redirect_pages
 # "/resourcelist" 授業資料一覧を取得
 # "/resourcelist/course/<str:courseid>" 教科で絞り込み <courceid>にはデータベースで登録した教科idが入る
 # 
-
 
 @app.route('/login', methods=['GET'])
 def login():
@@ -66,6 +66,12 @@ def login():
         redirect_pages[session['student_id']] = redirect_page
     cas_login_url = cas_client.get_login_url(service_url=app_login_url)
     return redirect(cas_login_url)
+
+
+def count_accesses(student_id):
+    with open_db_ses() as db_ses:
+        check_and_insert_all_accesses(student_id,datetime.datetime.today(),db_ses)
+    return ''
 
 @app.route('/login/proxy/<pgtiou>', methods=['GET'])
 def proxy(pgtiou=None):
@@ -110,9 +116,9 @@ def login_successful(ses):
     start_time = time.perf_counter()
     user = get_user_json(ses)
     student_id = user.get('id')
+    count_accesses(student_id)
 
     email = user.get('email')
-
     # trial_release ではここで認証済みユーザーのアクセスだけを許可する
     f = open('users.txt', 'r', encoding='UTF-8')
     auth_users = f.readlines()
@@ -242,7 +248,9 @@ def faq():
 
 @app.route('/update')
 def update():
-    return flask.render_template("update.htm")
+    with open_db_ses() as db_ses: 
+        dashboard = get_access_logs(db_ses)
+    return flask.render_template("update.htm",dashboard = dashboard)
 
 @app.route('/privacypolicy')
 def privacypolicy():
@@ -271,12 +279,16 @@ def option():
     courses_to_be_taken = []
     with open_db_ses() as db_ses:
         studentdata = get_student(studentid,db_ses)
-        coursesdata = get_courses_to_be_taken(studentid, db_ses, mode=1, return_data='student_course')
-        for coursedata in coursesdata:
-            course_id = coursedata.course_id
-            hide = coursedata.hide
-            coursename = get_coursename(course_id,db_ses)
-            courses_to_be_taken.append({'course_id':course_id,'coursename':coursename,'hide':hide})
+        scsdata = get_courses_to_be_taken(studentid, db_ses, mode=1, return_data='student_course')
+        coursesdata = get_courses_to_be_taken(studentid, db_ses, mode=1, return_data='course')
+        for i in range(len(scsdata)):
+            course_id = scsdata[i].course_id
+            hide = scsdata[i].hide
+            coursename = coursesdata[i].coursename
+            yearsemester = coursesdata[i].yearsemester
+            classschedule = coursesdata[i].classschedule
+            courses_to_be_taken.append({'course_id':course_id,'coursename':coursename,'yearsemester':yearsemester,'classschedule':classschedule,'hide':hide})
+        courses_to_be_taken=sort_courses(courses_to_be_taken)
         show_already_due = studentdata.show_already_due
         data = setdefault_for_overview(studentid, db_ses)
         last_update_subject= str(datetime.datetime.fromtimestamp(studentdata.last_update_subject//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
@@ -797,11 +809,12 @@ def comment_general(courseid = None):
 
 @app.route('/ContactUs', methods=['GET', 'POST'])
 def forum():
-    studentid = session.get('student_id')
+    student_id = session.get('student_id')
     with open_db_ses() as db_ses:
-        data = setdefault_for_overview(studentid, db_ses)
+        data = setdefault_for_overview(student_id, db_ses)
         if request.method == 'GET':
-            return flask.render_template('ContactUs.htm', error=False, data=data)
+            frms=get_forums(student_id,True,db_ses)
+            return flask.render_template('ContactUs.htm', error=False, data=data,frms=frms)
         elif request.method == 'POST':
             try:
                 title = request.form["title"]
@@ -811,11 +824,11 @@ def forum():
                 #     TITLE: {title},
                 #     CONTENTS: {contents}
                 #     --------------"""
-                msg = add_forum(studentid,title,contents, db_ses)
+                msg = add_forum(student_id,title,contents, db_ses)
                 logging.info(msg)
                 return flask.render_template('Contacted.htm', data=data)
             except:
-                logging.info(f"FORUM STUDENT:{studentid} sending failed")
+                logging.info(f"FORUM STUDENT:{student_id} sending failed")
                 return flask.render_template('ContactUs.htm', error=True, data=data)
 
 # 管理画面
@@ -827,7 +840,40 @@ def manage_admin():
 @app.route('/manage/oa')
 @check_oa
 def manage_oa():
-    return "manage_oa"
+    # !dashboardの情報
+    
+    with open_db_ses() as db_ses: 
+        dashboard = get_access_logs(db_ses)
+        frms=get_forums("",False,db_ses,all=True)
+    return flask.render_template('manage_oa.htm', dashboard=dashboard,frms=frms,year_sems={})
+
+# oa 管理ページに/manage/year_semesterのリンクを設置
+@app.route('/manage/year_semester_update')
+@check_oa
+def manage_year_semester_update():
+    dt = datetime.date.today()
+    year_sems = auto_collect_year_semester(dt=dt)
+    # json ファイルにsemester情報を格納
+    with open('year_semester.json', 'w') as f:
+        json.dump(year_sems,f)
+    
+    with open_db_ses() as db_ses: 
+        dashboard = get_access_logs(db_ses)
+        frms=get_forums("",False,db_ses,all=True)
+
+    # 更新したデータを表示
+    return flask.render_template('manage_oa.htm', dashboard=dashboard,frms=frms,year_sems=year_sems)
+    
+
+
+@app.route('/manage_reply', methods=['POST'])
+def manage_reply():
+    student_id = session.get('student_id')
+    with open_db_ses() as db_ses:
+        reply_content = request.json['reply_content']
+        form_id = request.json['form_id']
+        update_reply_content(student_id, form_id, reply_content,db_ses)
+    return 'success'
 
 # 403
 @app.route('/loginfailed')

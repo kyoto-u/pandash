@@ -42,8 +42,8 @@ def get_assignments_from_api(assignments, student_id):
         course_id = assignment.get('context')
         modifieddate = assignment.get('timeLastModified').get('epochSecond')*1000 #millisecond
         status = assignment.get('status')
-        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":Status.NotYet.value,"student_id":student_id,"clicked":0})
-        assignment_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifieddate":modifieddate,"course_id":course_id})
+        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":Status.NotYet.value,"student_id":student_id,"clicked":0,"deleted":0})
+        assignment_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifieddate":modifieddate,"course_id":course_id,"deleted":0})
     assignment_dict = {"student_assignments":sa_list, "assignments":assignment_list}
     return assignment_dict
 
@@ -92,7 +92,8 @@ def get_course_from_api(site, student_id):
     except:
         # return None
         pass
-    if int(yearsemester) not in VALID_YEAR_SEMESTER:
+    valid_year_semester = get_valid_year_semester()
+    if int(yearsemester) not in valid_year_semester:
         return None
     course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule,"page_id":"","announcement_page_id":""}
     student_course_dict = {"sc_id":f"{student_id}:{course_id}","course_id":course_id,"student_id":student_id}
@@ -203,8 +204,8 @@ def get_quizzes_from_api(quizzes, course_id, student_id):
             modifieddate =max(modifieddate,int(content.get('startDate')))
         limit_at = datetime.datetime.fromtimestamp(time_ms//1000,datetime.timezone(datetime.timedelta(hours=9))).strftime("%Y-%m-%dT%H:%M:%SZ")
         quiz_list.append({'course_id':course_id, 'quiz_id': quiz_id, 'url':url, 'title': title, \
-            'limit_at':limit_at, 'time_ms': time_ms, 'modifieddate': modifieddate, 'instructions':''})
-        sq_list.append({"sq_id":f"{student_id}:{quiz_id}", "quiz_id":quiz_id, "student_id":student_id, "course_id":course_id, "status":Status.NotYet.value,"clicked":0})
+            'limit_at':limit_at, 'time_ms': time_ms, 'modifieddate': modifieddate, 'instructions':'',"deleted":0})
+        sq_list.append({"sq_id":f"{student_id}:{quiz_id}", "quiz_id":quiz_id, "student_id":student_id, "course_id":course_id, "status":Status.NotYet.value,"clicked":0,"deleted":0})
     quiz_dict = {"student_quizzes":sq_list, "quizzes":quiz_list}
     return quiz_dict
 
@@ -250,10 +251,13 @@ async def async_get_assignments(course_id,ses):
     func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, func)
+    if res.status_code == 404:
+        # 恐らく履修解除等によりアクセスが出来なくなった
+        return {"assignment_collection":[]}
     try:
         return res.json()
     except json.JSONDecodeError as e:
-        return {}
+        return {"assignment_collection":[]}
 
 async def async_get_content(site_id, ses):
     url = f"{api_url}/content/site/{site_id}.json"
@@ -293,6 +297,9 @@ async def async_get_site_pages(site_id, ses):
     func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
     res = await loop.run_in_executor(None, func)
+    if res.status_code == 403:
+        # 恐らく履修解除等によりアクセスが出来なくなった
+        return {}
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -552,3 +559,12 @@ def get_mail_detail_from_api(mail_detail, mail_list_index):
     mail_list_index["body"] = body
     announcement = mail_list_index
     return announcement
+
+def get_valid_year_semester():
+    """
+        valid_year_semesterを取得する
+    """
+    with open('./year_semester.json', 'r') as f:
+        year_semesters = json.load(f)
+        valid_year_semester = year_semesters["valid_year_semester"]
+        return valid_year_semester

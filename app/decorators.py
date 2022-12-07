@@ -22,7 +22,7 @@ def check_admin(func):
                 return func(*arg, **kwargs)
             else:
                 flash('管理者アカウントでログインしてください','danger')
-                return redirect(url_for('home'))
+                return redirect(url_for('root'))
         else:
             flash('ログインが完了していません。ログインしてください。','danger')
             return redirect(url_for('login'))
@@ -33,11 +33,11 @@ def check_oa(func):
     def decorated_function(*arg, **kwargs):
         student_id = session.get('student_id')
         if "logged-in" in session:
-            if check_role(student_id) == "oa" or "admin":
+            if check_role(student_id) == "oa" or check_role(student_id) == "admin":
                 return func(*arg, **kwargs)
             else:
                 flash('管理者アカウントでログインしてください','danger')
-                return redirect(url_for('home'))
+                return redirect(url_for('root'))
         else:
             flash('ログインが完了していません。ログインしてください。','danger')
             return redirect(url_for('login'))
@@ -47,5 +47,17 @@ def check_oa(func):
 def check_role(student_id):
     if student_id == "###":
         return "admin"
+    # trial_release ではここで認証済みユーザーのアクセスだけを許可する
+    f = open('users_oa.txt', 'r', encoding='UTF-8')
+    auth_users = f.readlines()
+    f.close()
+    authenticated = False
+    for auth_user in auth_users:
+        if auth_user == f'{student_id}\n'or auth_user == student_id:
+            authenticated = True
+            break
+    
+    if authenticated:
+        return "oa"
     else:
         return "student"

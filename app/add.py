@@ -7,6 +7,7 @@ from .settings import session
 from .get import get_courseids
 import time
 from .original_classes import Status
+import math
 
 def add_announcement(studentid, data,db_ses):
     course_ids = get_courseids(studentid,db_ses)
@@ -137,6 +138,7 @@ def add_course(studentid, data, db_ses):
     db_ses.commit()
     return
 
+import time
 
 def add_coursecomment(studentid, comment_id, course_id, db_ses):
     course_ids = get_courseids(studentid, db_ses)
@@ -157,6 +159,7 @@ def add_forum(studentid,title,contents, db_ses):
     inq.student_id = studentid
     inq.title = title
     inq.contents = contents
+    inq.createdate = math.floor(time.time()*1000)
     db_ses.add(inq)
     db_ses.commit()
     return f"""
@@ -379,6 +382,7 @@ def add_student_assignment(studentid, data, db_ses,allow_delete=1):
 
                 # もし削除扱いになっている場合はそれを直すためにupdateする
                 if i.deleted == 1:
+                    item["deleted"]=0
                     update = True
 
                 break
@@ -423,6 +427,7 @@ def add_student_quiz(studentid, data, db_ses,allow_delete=1):
 
                 # もし削除扱いになっている場合はそれを直すためにupdateする
                 if i.deleted == 1:
+                    item["deleted"]=0
                     update = True
                 
                 break
@@ -562,6 +567,11 @@ def update_task_status(studentid, taskids: list,db_ses, mode=0, taskmode="task")
     db_ses.commit()
     return
 
+def update_reply_content(studentid, form_id, reply_content,db_ses):
+    frm = db_ses.query(forum.Forum).filter(forum.Forum.forum_id == form_id).first()
+    frm.replied_student_id = studentid
+    frm.reply_contents = reply_content
+    frm.replied = 1
 # コースのコメントをチェックしたときに実行
 def update_comment_checked(studentid, courseid,db_ses):
     sc_id = f"{studentid}:{courseid}"

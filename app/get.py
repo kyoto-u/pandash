@@ -1,14 +1,18 @@
 # データベース操作を伴い情報を取得する関数の一覧
 #
 from math import *
+
+from sqlalchemy.sql.expression import false
+
+from app.models import forum
 from .models import student, assignment, course, studentassignment, studentcourse, resource, studentresource, quiz, studentquiz, announcement, studentannouncement
 from .models import comment, coursecomment
-from .settings import SHOW_YEAR_SEMESTER, panda_url
+from .settings import panda_url
 from .original_classes import TimeLeft ,Status
 import datetime
 import hashlib
 from typing import List
-import datetime
+import json
 
 def get_announcements(studentid,show_only_unchecked, courseid, day, db_ses):
     enrollments = db_ses.query(studentannouncement.Student_Announcement).filter(
@@ -236,6 +240,7 @@ def get_courses_id_to_be_taken(studentid, db_ses, mode=0,include_deleted=0) ->Li
     data=[]
     courses = db_ses.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
+    show_year_semester = get_show_year_semester()
     for i in courses:
         if mode==0 and i.hide == 1:
             continue
@@ -243,7 +248,7 @@ def get_courses_id_to_be_taken(studentid, db_ses, mode=0,include_deleted=0) ->Li
             continue
         coursedata = db_ses.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
-        if coursedata[0].yearsemester in SHOW_YEAR_SEMESTER:
+        if coursedata[0].yearsemester in show_year_semester:
             data.append(coursedata[0].course_id)
     return data
 
@@ -266,6 +271,7 @@ def get_courses_to_be_taken(studentid, db_ses, mode = 0,include_deleted = 0,retu
     data=[]
     courses = db_ses.query(studentcourse.Studentcourse).filter(
         studentcourse.Studentcourse.student_id == studentid).all()
+    show_year_semester = get_show_year_semester()
     for i in courses:
         if mode==0 and i.hide==1:
             continue
@@ -273,7 +279,7 @@ def get_courses_to_be_taken(studentid, db_ses, mode = 0,include_deleted = 0,retu
             continue
         coursedata = db_ses.query(course.Course).filter(
             course.Course.course_id == i.course_id).all()
-        if coursedata[0].yearsemester in SHOW_YEAR_SEMESTER:
+        if coursedata[0].yearsemester in show_year_semester:
             if return_data == 'course':
                 data.append(coursedata[0])
             elif return_data == 'student_course':
@@ -283,7 +289,34 @@ def get_courses_to_be_taken(studentid, db_ses, mode = 0,include_deleted = 0,retu
                 data.append(coursedata[0])
     return data
 
-def get_quizzes(studentid, show_only_unfinished,courseid, day, mode, db_ses,include_deleted = 0):
+def get_forums(student_id,show_only_not_replied,db_ses,all=false):
+    if all:
+        if show_only_not_replied == False:
+            frms = db_ses.query(forum.Forum).all()
+        else:
+            frms = db_ses.query(forum.Forum).filter(
+                forum.Forum.replied==1).all()
+    else:
+        if show_only_not_replied == False:
+            frms = db_ses.query(forum.Forum).filter(forum.Forum.student_id==student_id).all()
+        else:
+            frms = db_ses.query(forum.Forum).filter(forum.Forum.replied==1).filter(forum.Forum.student_id==student_id).all()
+    frmsdata = []
+    for frm in frms:
+        frmdata = {}
+        frmdata["forum_id"] = frm.forum_id
+        frmdata["createdate_ms"] = frm.createdate
+        frmdata["createdate"] = str(datetime.datetime.fromtimestamp(frm.createdate//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        frmdata["student_id"] = frm.student_id
+        frmdata["title"] = frm.title
+        frmdata["contents"] = frm.contents
+        frmdata["reply_contents"] = frm.reply_contents
+        frmdata["replied"] = frm.replied
+        frmsdata.append(frmdata)
+    return frmsdata
+
+
+def get_quizzes(studentid, show_only_unfinished,courseid, day, mode,db_ses,include_deleted = 0):
     # 未完了以外の課題も表示するかによってテーブルからの取り出し方が変わる
     if show_only_unfinished == False:
         enrollments = db_ses.query(studentquiz.Student_Quiz).filter(
@@ -416,3 +449,13 @@ def get_student(studentid: str, db_ses) -> student.Student:
     else:
         studentdata = None
     return studentdata
+
+
+def get_show_year_semester():
+    """
+        show_year_semesterを取得する
+    """
+    with open('./year_semester.json', 'r') as f:
+        year_semesters = json.load(f)
+        show_year_semester = year_semesters["show_year_semester"]
+        return show_year_semester

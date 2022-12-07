@@ -1,4 +1,4 @@
-<html>
+﻿<html>
 
 <head>
     <meta charset="UTF-8">
@@ -17,7 +17,6 @@
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
     <script src="https://kit.fontawesome.com/7bb95e7ca3.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" type="text/css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 </head>
 
 <body>
@@ -26,35 +25,13 @@
             <div class="row">
                 <a href="/welcome" class=navbar-brand>
                     <img id="siteface" src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ"
-                        height="50">
+                        width="175px" height="60px">
                 </a>
             </div>
         </nav>
         <!--メニュー-->
-        <nav class="navbar navbar-expand md_fixed navbar-dark bg-dark">
-            <div class="container" id="menubar">
-                <a class="navbar-brand" href="/welcome"></a>
-                <button id="logotoggle" class="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown2" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown2">
-                    <ul class="navbar-nav mr-auto toggle_lefts">　
-                        <li class="nav-item">
-                            <a class="nav-link" href="/welcome">ホーム</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/faq">FAQ</a>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav ml-auto pr-3 toggle_rights">
-                        <li class="nav-item">
-                            <a class="btn btn-secondary mx-auto" href="/login" role="button">ログイン</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+        <nav class="navbar navbar-expand md_fixed navbar-dark bg-dark" style="min-height:30px">
+
         </nav>
         <div class="
         {% if '/_help' in request.path  %}
@@ -63,13 +40,41 @@
             d-block d-md-none
         {% endif %}
         ">
-            {% include "home_pagetransition.htm" %}
         </div>
     </div>
-    <div class="col-12 pt-5">
-        {% block homebodycontent %}
-        Replace This
-        {% endblock %}
+    <div class="col-12">
+        <div class="container ml-md-5">
+            <div class="row mt-4">
+                <div class="col-sm-12 col-md-6 ml-md-5">
+                    <div class="mx-auto mt-2 mb-5">
+                        <h1 style="font-family:Lucida Console; font-size: xx-large;">403 Forbidden</h1>
+                        <h2>このページヘのアクセス権限がありません</h2>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-4 mr-md-5 ml-sm-5">
+                    <img id="404image" class="mt-5" src="{{ url_for('static', filename='images/panda_sleeping.jpg') }}"
+                        alt="ロゴ" width="280px" height="280px">
+                    <script>
+                        const target = document.getElementById('404image');
+
+                        //マウスが要素上に入った時
+                        target.addEventListener('mouseover', () => {
+
+                            target.setAttribute('src', "{{ url_for('static', filename='images/logo.jpg') }}")
+
+                        }, false);
+
+                        //マウスが要素上から離れた時
+                        target.addEventListener('mouseleave', () => {
+
+                            target.setAttribute('src', "{{ url_for('static', filename='images/panda_sleeping.jpg') }}")
+
+                        }, false);
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
     </div>
 
 
