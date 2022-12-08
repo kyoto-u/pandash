@@ -39,6 +39,20 @@ $('.announcement_tr').on('click', function () {
     });
 });
 
+//全て既読にするボタンを押した時の処理(トリガーは暫定)
+$('.unmarkbutton').on('click', function(){
+    $.ajax({
+        type: 'POST',
+        url: '/announcement_all_clicked',
+        success: function (response) {
+            console.log(response)
+        },
+        error: function (error){
+            console.log(error);
+        }
+    })
+});
+
 //前のページボタンをクリックしたときの処理
 $("#pills-previous-tab").on('click',function(){
     var page_now = $("a.page-link.active").attr("id");

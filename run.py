@@ -658,6 +658,17 @@ def announcement_clicked():
     else:
         return 'failed'
 
+        
+@app.route('/announcement_all_clicked', method=['POST'])
+def annoucnement_all_clicked():
+    studentid = session.get('student_id')
+    if studentid:
+        with open_db_ses as db_ses:
+            update_all_tasks_clicked_status(studentid, db_ses, mode="anc")
+        return 'success'
+    else:
+        return 'failed'
+
 @app.route('/course_hide', methods=['POST'])
 def course_hide():
     studentid = session.get('student_id')

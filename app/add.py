@@ -549,6 +549,27 @@ def update_task_clicked_status(studentid, taskids:list,db_ses, mode="task"):
     db_ses.commit() 
     return
 
+def update_all_tasks_clicked_status(studentid, db_ses, mode="task"):
+    if mode == "task":
+        # assignementsを全て既読にする
+        enrollments = db_ses.query(studentassignment.Student_Assignment).filter(
+            studentassignment.Student_Assignment.student_id == studentid).all()
+        update_list = []
+        for i in enrollments:
+            update_list.append({"sa_id":f"{studentid}:{i.assignment_id}","clicked":1})
+        db_ses.bulk_update_mappings(studentassignment.Student_Assignment,update_list)
+    elif mode == "anc":
+        # announcementsを全て既読にする
+        enrollments = db_ses.query(studentannouncement.Student_Announcement).filter(
+            studentannouncement.Student_Announcement.student_id == studentid).all()
+        update_list = []
+        for i in enrollments:
+            update_list.append({"sa_id":f"{studentid}:{i.announcement_id}","checked":1})
+        db_ses.bulk_update_mappings(studentannouncement.Student_Announcement,update_list)
+    db_ses.comit()
+    return
+
+
 def update_task_status(studentid, taskids: list,db_ses, mode=0, taskmode="task"):
     update_list = []
     status = Status.NotYet.value
