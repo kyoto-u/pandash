@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import flash, session, redirect, url_for
+from flask import flash, session, redirect, url_for, abort
 
 def login_required(func):
     @wraps(func)
@@ -22,10 +22,10 @@ def check_admin(func):
                 return func(*arg, **kwargs)
             else:
                 flash('管理者アカウントでログインしてください','danger')
-                return redirect(url_for('root'))
+                abort(403, 'you don\'t have permission to access the page.')
         else:
             flash('ログインが完了していません。ログインしてください。','danger')
-            return redirect(url_for('login'))
+            abort(403, 'Not logged in')
     return decorated_function
 
 def check_oa(func):
@@ -37,10 +37,10 @@ def check_oa(func):
                 return func(*arg, **kwargs)
             else:
                 flash('管理者アカウントでログインしてください','danger')
-                return redirect(url_for('root'))
+                abort(403, 'you don\'t have permission to access the page.')
         else:
             flash('ログインが完了していません。ログインしてください。','danger')
-            return redirect(url_for('login'))
+            abort(403, 'Not logged in')
     return decorated_function
 
 # role
