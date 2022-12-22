@@ -1,18 +1,18 @@
 from app.login import kulasis_login_get_api_keys
 from flask.templating import render_template
 from app.app import app
-from app.settings import engine,app_url,app_logout_url,app_login_url,cas_url,proxy_url,proxy_callback,api_url
+from app.settings import app_url,app_logout_url,app_login_url,proxy_callback
 from app.settings import cas_client
 import flask
-from sqlalchemy.orm import sessionmaker
 from app.index import *
+from app.decorators import check_oa, login_required, check_admin
 from pprint import pprint
-from cas_client import CASClient
-from flask import Flask, redirect, request, session, url_for
+from flask import redirect, request, session, url_for
 import logging
 import requests
 import datetime
 import time
+from app.accesscount import check_and_insert_all_accesses, get_access_logs
 
 logging.basicConfig(level=logging.INFO)
 app.secret_key ='pandash'
@@ -37,47 +37,60 @@ global redirect_pages
 # "/resourcelist/course/<str:courseid>" 教科で絞り込み <courceid>にはデータベースで登録した教科idが入る
 # 
 
-
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET'])
 def login():
-    if request.method == 'GET':
-        ticket = request.args.get('ticket')
-        if ticket:
-            # ticketのvalidateを行う
-            try:
-                cas_response = cas_client.perform_service_validate(
-                    ticket=ticket,
-                    service_url=app_login_url,
-                    )              
-            except:
-                # CAS server is currently broken, try again later.
-                return redirect(url_for('root'))
-            if cas_response and cas_response.success:
-                session['logged-in'] = True
-                pgtiou= cas_response.data['proxyGrantingTicket']
-                return redirect(url_for('proxy', pgtiou=pgtiou))
-        if "logged-in" in session and session["logged-in"]:
-            del(session['logged-in'])
-        if "student_id" in session:
-            # student_idがセッションにありかつログインページへ来るのは
-            # 長時間放置での接続切れまたは意図的な移動
-            # ログイン後のページとして遷移元ページを指定しておく
-            redirect_page = request.args.get('page')
-            if not redirect_page:
-                redirect_page =""
-            redirect_pages[session['student_id']] = redirect_page
-        cas_login_url = cas_client.get_login_url(service_url=app_login_url)
-        return redirect(cas_login_url)
-    elif request.method == 'POST':
-        pgt = request.form
-        return ''
+    ticket = request.args.get('ticket')
+    if ticket:
+        # ticketのvalidateを行う
+        try:
+            cas_response = cas_client.perform_service_validate(
+                ticket=ticket,
+                service_url=app_login_url,
+                )              
+        except:
+            # CAS server is currently broken, try again later.
+            return flask.redirect(url_for('login_failed',description='CAS server is broken'))
+        if cas_response and cas_response.success:
+            session['logged-in'] = True
+            pgtiou= cas_response.data['proxyGrantingTicket']
+            return redirect(url_for('proxy', pgtiou=pgtiou))
+    if "logged-in" in session and session["logged-in"]:
+        del(session['logged-in'])
+    if "student_id" in session:
+        # student_idがセッションにありかつログインページへ来るのは
+        # 長時間放置での接続切れまたは意図的な移動
+        # ログイン後のページとして遷移元ページを指定しておく
+        redirect_page = request.args.get('page')
+        if not redirect_page:
+            redirect_page =""
+        redirect_pages[session['student_id']] = redirect_page
+    cas_login_url = cas_client.get_login_url(service_url=app_login_url)
+    return redirect(cas_login_url)
+
+
+def count_accesses(student_id):
+    with open_db_ses() as db_ses:
+        check_and_insert_all_accesses(student_id,datetime.datetime.today(),db_ses)
+    return ''
 
 @app.route('/login/proxy/<pgtiou>', methods=['GET'])
 def proxy(pgtiou=None):
+    if pgtiou==None:
+        return flask.redirect(url_for('login_failed',description='no pgtiou'))
+    if not pgtids.get(pgtiou):
+        return flask.redirect(url_for('login_failed',description='failed to get pgtid from pgtiou'))
     pgtid = pgtids[pgtiou]
     del(pgtids[pgtiou])
     cas_response = cas_client.perform_proxy(proxy_ticket=pgtid)
+    if not cas_response.success:
+        description=""
+        for error in cas_response.error.keys():
+            description+=error
+        return flask.redirect(url_for('login_failed',description=description))
     proxy_ticket = cas_response.data.get('proxyTicket')
+    if not proxy_ticket:
+        return flask.redirect(url_for('login_failed',description='failed to get proxy ticket from CAS'))
+
     # return redirect(url_for('proxyticket', ticket=proxy_ticket))
     # 時間かかる通知を行う
     return flask.render_template('loading.htm', ticket=proxy_ticket)
@@ -85,63 +98,83 @@ def proxy(pgtiou=None):
 @app.route('/proxyticket', methods=["GET"])
 def proxyticket():
     ticket = request.args.get('ticket')
-    start_time = time.perf_counter()
-    show_only_unfinished = 0
     if ticket:
         # ticketがあるのでPandAのAPIを利用できる
         ses = requests.Session()
-        api_response = ses.get(f"{proxy_callback}?ticket={ticket}")
+        api_response = ses.get(f"{proxy_callback}?ticket={ticket}", verify=False)
         if api_response.status_code == 200:
-            cookies = ses['cookies']
-            MOD_AUTH_CAS = cookies['MOD_AUTH_CAS']
-            return flask.redirect(url_for('login_successful', MOD_AUTH_CAS = MOD_AUTH_CAS))
-    return flask.redirect(url_for('login_failed'))
+            return login_successful(ses)
+        return flask.redirect(url_for('login_failed',description='failed to use ticket at PandA'))
+    return flask.redirect(url_for('login_failed',description='no ticket is given'))
 
-@app.route('/login_successful', methods = ["GET"])
-def login_successful():
+def login_successful(ses):
     """
     proxyticket()で認証に成功した際に実行する。課題の取得・更新が主
-
     args
     'session':認証に成功したsession
     """
     start_time = time.perf_counter()
-    ses = requests.Session()
-    MOD_AUTH_CAS = request.args.get('MOD_AUTH_CAS')
-    cookies = {'MOD_AUTH_CAS':MOD_AUTH_CAS}
-    ses['cookies'] = cookies
     user = get_user_json(ses)
     student_id = user.get('id')
+    count_accesses(student_id)
+
+    email = user.get('email')
+    # trial_release ではここで認証済みユーザーのアクセスだけを許可する
+    f = open('users.txt', 'r', encoding='UTF-8')
+    auth_users = f.readlines()
+    f.close()
+    authenticated = False
+    for auth_user in auth_users:
+        if auth_user == f'{email}\n'or auth_user == email:
+            authenticated = True
+            break
+    
+    if authenticated == False:
+        return flask.redirect(url_for('not_authenticated'))
+
     fullname = user.get('displayName')
     session["student_id"] = student_id
     now = floor(time.time() * 1000) #millisecond
-    studentdata = get_student(student_id)
-    need_to_update_sitelist = 1
-    if studentdata:
-        if studentdata.show_already_due == 0:
-            # ユーザーが期限の過ぎた課題は表示しないように設定しているので、適用する
-            show_only_unfinished = 1
-        need_to_update_sitelist = studentdata.need_to_update_sitelist
-        last_update = studentdata.last_update
-        if need_to_update_sitelist:
-            add_student(student_id, fullname, last_update = now, last_update_subject = now, language = studentdata.language)
+    with open_db_ses() as db_ses:
+        studentdata = get_student(student_id,db_ses)
+        show_only_unfinished = 0
+        need_to_update_sitelist = 1
+        last_update=0
+        last_update_subject=0
+        language='ja'
+        if studentdata:
+            if studentdata.show_already_due == 0:
+                # ユーザーが期限の過ぎた課題は表示しないように設定しているので、適用する
+                show_only_unfinished = 1
+            need_to_update_sitelist = studentdata.need_to_update_sitelist
+            # ここで、履修状況について前回の更新から1週間以上経過している場合は履修状況を更新する
+            if (now - studentdata.last_update_subject) >= 1*7*24*60*60*1000:
+                need_to_update_sitelist = 1
+            
+            last_update = studentdata.last_update
+            last_update_subject = studentdata.last_update_subject
+            
         else:
-            add_student(student_id, fullname, last_update = now, last_update_subject = studentdata.last_update_subject, language = studentdata.language)
-    else:
-        last_update = 0
-        add_student(student_id, fullname, last_update = now, last_update_subject = now)
-    
-    get_data_from_api_and_update(student_id, ses, now, last_update, 0)
-    if need_to_update_sitelist == 1:
-        get_data_from_api_and_update(student_id, ses, now, 0, 1)
-    if student_id != "":
-        update_student_needs_to_update_sitelist(student_id)
-    logging.info(f"TIME {student_id}: {time.perf_counter() - start_time}")
-    
+            add_student(student_id, fullname, db_ses, last_update = 0, last_update_subject = 0,language='ja')
+        
+        if need_to_update_sitelist == 1:
+            get_data_from_api_and_update(student_id, ses, now,  1, db_ses)
+        else:
+            get_data_from_api_and_update(student_id, ses, now,  0, db_ses)
+        if student_id != "":
+            update_student_needs_to_update_sitelist(student_id, db_ses)
+
+        if need_to_update_sitelist:
+            add_student(student_id, fullname, db_ses, last_update = now, last_update_subject = now, language = language)
+        else:
+            add_student(student_id, fullname, db_ses, last_update = now, last_update_subject = last_update_subject, language = language)
+        logging.info(f"TIME {student_id}: {time.perf_counter() - start_time}")
+        
     # リダイレクト先を決める
     if 'student_id' in session:
         if session['student_id'] in redirect_pages:
             redirect_page = redirect_pages[session['student_id']]
+            del(redirect_pages[session['student_id']])
             redirect_page = f"{app_url}/{redirect_page}"
             if re.match(app_login_url, redirect_page):
                 logging.info(f"Requested redirect '{redirect_page}' is invalid because it is login page")
@@ -152,46 +185,46 @@ def login_successful():
         # 前回情報がない場合のdefaultページ
         return flask.redirect(flask.url_for('tasklist', show_only_unfinished = show_only_unfinished, max_time_left = 3))
     # PGTなどが入手できたにもかかわらずstudent_idがないのは不具合であるのでエラー画面に飛ばす
-    return flask.redirect(url_for('login_failed'))
+    return flask.redirect(url_for('login_failed',description='no student_id (unexpected situation)'))
 
-@app.route('/kulasis/login', methods=['GET', 'POST'])
-def kulasis_login():
-    if request.method == 'GET':
-        return render_template('kulasis_login.htm')
-    elif request.method == 'POST':
-        try:
-            ecs_id = request.form["ecs_id"]
-            password = request.form["password"]
-            params = kulasis_login_get_api_keys(ecs_id, password)
-            if params != {}:
-                session["access_param"] = params
-                return url_for('kulasis_login_successful')
-            else:
-                return url_for('kulasis_login_faild')
-        except:
-            return url_for('kulasis_login_faild')
+# @app.route('/kulasis/login', methods=['GET', 'POST'])
+# def kulasis_login():
+#     if request.method == 'GET':
+#         return render_template('kulasis_login.htm')
+#     elif request.method == 'POST':
+#         try:
+#             ecs_id = request.form["ecs_id"]
+#             password = request.form["password"]
+#             params = kulasis_login_get_api_keys(ecs_id, password)
+#             if params != {}:
+#                 session["access_param"] = params
+#                 return url_for('kulasis_login_successful')
+#             else:
+#                 return url_for('kulasis_login_faild')
+#         except:
+#             return url_for('kulasis_login_faild')
 
-@app.route('/kulasis/login/failed')
-def kulasis_login_failed():
-    return render_template('kulasis_login_failed.htm')
+# @app.route('/kulasis/login/failed')
+# def kulasis_login_failed():
+#     return render_template('kulasis_login_failed.htm')
 
-@app.route('/kulasis/login/successful')
-def kulasis_login_successful():
-    studentid = session.get('studentid')
-    param = session.get('access_param')
-    if studentid and param:
-        ses = requests.Session()
+# @app.route('/kulasis/login/successful')
+# def kulasis_login_successful():
+#     studentid = session.get('studentid')
+#     param = session.get('access_param')
+#     if studentid and param:
+#         ses = requests.Session()
         
 
 
 
-@app.route('/logout')
+@app.route('/_logout')
 def logout():
     if "logged-in" in session and session["logged-in"]:
         del(session['logged-in'])
     if "student_id" in session and session["student_id"]:
         del(session['student_id'])
-    cas_logout_url = cas_client.get_logout_url(service_url=app_logout_url)
+    cas_logout_url = cas_client.get_logout_url(service_url=app_url)
     return redirect(cas_logout_url)
 
 @app.route('/')
@@ -205,9 +238,9 @@ def root():
 def welcome():
     return flask.redirect(url_for('root'))
 
-@app.route('/hello')
-def main():
-    return "Hello World!"
+# @app.route('/hello')
+# def main():
+#     return "Hello World!"
 
 @app.route('/faq')
 def faq():
@@ -215,7 +248,17 @@ def faq():
 
 @app.route('/update')
 def update():
-    return flask.render_template("update.htm")
+    with open_db_ses() as db_ses: 
+        dashboard = get_access_logs(db_ses)
+    return flask.render_template("update.htm",dashboard = dashboard)
+
+@app.route('/privacypolicy')
+def privacypolicy():
+    return flask.render_template("privacypolicy.htm")
+
+@app.route('/what_is_pandash')
+def what_is_pandash():
+    return flask.render_template("what_is_pandash.htm")
 
 @app.route('/_tutorial')
 def tutorial():
@@ -230,30 +273,33 @@ def help(page):
 @app.route('/option', methods=['GET'])
 def option():
     studentid = session.get('student_id')
-    if studentid:
-        data ={"others":[]}
-        studentdata = get_student(studentid)
-        coursesdata = get_courses_to_be_taken(studentid, mode=1, return_data='student_course')
-        courses_to_be_taken = []
-        for coursedata in coursesdata:
-            course_id = coursedata.course_id
-            hide = coursedata.hide
-            coursename = get_coursename(courseid=course_id)
-            courses_to_be_taken.append({'course_id':course_id,'coursename':coursename,'hide':hide})
-        data = setdefault_for_overview(studentid)
-        last_update_subject= str(datetime.datetime.fromtimestamp(studentdata.last_update_subject,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-        return flask.render_template(f"option.htm",data=data, show_already_due=studentdata.show_already_due, last_update_subject = last_update_subject, courses_to_be_taken=courses_to_be_taken)
-    else:
-        return redirect(url_for('login'))
+    data ={"others":[]}
+    show_already_due=0
+    last_update_subject=0
+    courses_to_be_taken = []
+    with open_db_ses() as db_ses:
+        studentdata = get_student(studentid,db_ses)
+        scsdata = get_courses_to_be_taken(studentid, db_ses, mode=1, return_data='student_course')
+        coursesdata = get_courses_to_be_taken(studentid, db_ses, mode=1, return_data='course')
+        for i in range(len(scsdata)):
+            course_id = scsdata[i].course_id
+            hide = scsdata[i].hide
+            coursename = coursesdata[i].coursename
+            yearsemester = coursesdata[i].yearsemester
+            classschedule = coursesdata[i].classschedule
+            courses_to_be_taken.append({'course_id':course_id,'coursename':coursename,'yearsemester':yearsemester,'classschedule':classschedule,'hide':hide})
+        courses_to_be_taken=sort_courses(courses_to_be_taken)
+        show_already_due = studentdata.show_already_due
+        data = setdefault_for_overview(studentid, db_ses)
+        last_update_subject= str(datetime.datetime.fromtimestamp(studentdata.last_update_subject//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+    return flask.render_template(f"option.htm",data=data, show_already_due=show_already_due, last_update_subject = last_update_subject, courses_to_be_taken=courses_to_be_taken)
 
 @app.route('/update_subject')
 def update_subject():
     studentid = session.get('student_id')
-    if studentid:
-        update_student_needs_to_update_sitelist(studentid,need_to_update_sitelist=1)
-        return redirect(url_for('login',page='option'))
-    else:
-        return redirect(url_for('login'))
+    with open_db_ses() as db_ses:
+        update_student_needs_to_update_sitelist(studentid,db_ses, need_to_update_sitelist=1)
+    return redirect(url_for('login',page='option'))
 
 # 旧バージョンの機能・デバッグ機能のためコメントアウト
 
@@ -324,15 +370,13 @@ def update_subject():
 @app.route('/tasklist')
 def tasklist_redirect():
     studentid = session.get('student_id')
-    if studentid:
-        studentdata=get_student(studentid)
-        if studentdata:
-            show_already_due = studentdata.show_already_due
-            show_only_unfinished = 0
-            if show_already_due==0:show_only_unfinished=1
-            return flask.redirect(flask.url_for('tasklist',show_only_unfinished=show_only_unfinished,max_time_left = 3))
-    else:
-        return redirect(url_for('login'))
+    show_only_unfinished = 0
+    with open_db_ses() as db_ses:
+        studentdata=get_student(studentid, db_ses)
+        show_already_due = studentdata.show_already_due
+        if show_already_due==0:
+            show_only_unfinished=1
+    return flask.redirect(flask.url_for('tasklist',show_only_unfinished=show_only_unfinished,max_time_left = 3))
 
 @app.route('/overview')
 def overview():
@@ -347,54 +391,58 @@ def overview():
     #     {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題7', 'status':'未', 'time_left':'あと1日', 'deadline':'2020-10-31T01:00:00Z','instructions':'なし'},
     #     {'subject':'[2020前期月1]英語ライティングリスニング', 'classschedule':'mon1','taskname':'課題8', 'status':'未', 'time_left':'あと1日', 'deadline':'2020-10-31T00:00:00Z','instructions':'なし'}
     #     ]
-    if studentid:
-        # 課題の最終更新時間を取得
-        studentdata = get_student(studentid)
-        if studentdata == None:
-            # なければstudentの記録がないことになるので一度ログインへ
-            return redirect(url_for('login'))
-        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
-        logging.debug(f"last update = {last_update}\npage = overview")
-        data = setdefault_for_overview(studentid)
-        tasks = get_tasklist(studentid, show_only_unfinished=1, mode=1)
-        data = task_arrange_for_overview(tasks,data)
 
-        days =["mon", "tue", "wed", "thu", "fri"]
-        for day in days:
-            for i in range(5):
-                data[day+str(i+1)]["tasks"] = sort_tasks(data[day+str(i+1)]["tasks"],show_only_unfinished = 1)
-        data.setdefault("others",[])
-        for i in range(len(data["others"])):
-            data["others"][i]["tasks"] = sort_tasks(data["others"][i]["tasks"],show_only_unfinished = 1)
-        return flask.render_template('overview.htm',data = data,last_update=last_update)
-    else:
-        return redirect(url_for('login'))
+    # 課題の最終更新時間を取得
+    with open_db_ses() as db_ses:
+        studentdata = get_student(studentid,db_ses)
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        logging.debug(f"last update = {last_update}\npage = overview")
+        data = setdefault_for_overview(studentid,db_ses)
+        tasks = get_tasklist(studentid, db_ses, show_only_unfinished=1, mode=1)
+    data = task_arrange_for_overview(tasks,data)
+
+    days =["mon", "tue", "wed", "thu", "fri"]
+    for day in days:
+        for i in range(5):
+            data[day+str(i+1)]["tasks"] = sort_tasks(data[day+str(i+1)]["tasks"],show_only_unfinished = 1)
+    data.setdefault("others",[])
+    for i in range(len(data["others"])):
+        data["others"][i]["tasks"] = sort_tasks(data["others"][i]["tasks"],show_only_unfinished = 1)
+    return flask.render_template('overview.htm',data = data,last_update=last_update)
+
+# chat 一覧（暫定）
+# @app.route('/chat/overview')
+# def chat_overview():
+#     studentid = session.get('student_id')
+#     if studentid:
+#         chatrooms = get_chatrooms(studentid)
+#         data = setdefault_for_overview(studentid)
+#         return flask.render_template('chat.htm', chatrooms=chatrooms, data=data)
+#     else:
+#         return redirect(url_for('login'))
 
 @app.route('/tasklist/day/<day>')
 def tasklist_day_redirect(day):
     studentid = session.get('student_id')
-    if studentid:
-        studentdata=get_student(studentid)
-        if studentdata:
-            show_already_due = studentdata.show_already_due
-            show_only_unfinished = 0
-            if show_already_due==0:show_only_unfinished=1
-            return flask.redirect(flask.url_for('tasklist_day',day=day, show_only_unfinished=show_only_unfinished,max_time_left = 3))
-    else:
-        # student_idがないのでログイン画面に飛ばす
-        return redirect(url_for('login'))
+    show_only_unfinished = 0
+    with open_db_ses() as db_ses:
+        studentdata=get_student(studentid,db_ses)
+        show_already_due = studentdata.show_already_due
+        if show_already_due==0:
+            show_only_unfinished=1
+    return flask.redirect(flask.url_for('tasklist_day',day=day, show_only_unfinished=show_only_unfinished,max_time_left = 3))
 
 @app.route('/tasklist/course/<courseid>')
 def tasklist_course_redirect(courseid):
     studentid = session.get('student_id')
-    if studentid:
-        studentdata=get_student(studentid)
-        if studentdata:
-            show_already_due = studentdata.show_already_due
-            show_only_unfinished = 0
-            if show_already_due==0:show_only_unfinished=1
-            return flask.redirect(flask.url_for('tasklist_course',courseid=courseid,show_only_unfinished=show_only_unfinished,max_time_left = 3))
-    return redirect(url_for('login'))
+    show_only_unfinished = 0
+    with open_db_ses() as db_ses:
+        studentdata=get_student(studentid,db_ses)
+        show_already_due = studentdata.show_already_due
+        if show_already_due==0:
+            show_only_unfinished=1
+    return flask.redirect(flask.url_for('tasklist_course',courseid=courseid,show_only_unfinished=show_only_unfinished,max_time_left = 3))
+
 
 @app.route('/tasklist/day/<day>/<int:show_only_unfinished>/<int:max_time_left>')
 def tasklist_day(day,show_only_unfinished,max_time_left):
@@ -421,10 +469,95 @@ def resource_day(day):
 def resources_sample():
     return resourcelist_general()
 
+# コメントを取得/表示
+# @app.route('/chat/course/<courseid>')
+# def chat_course(courseid):
+#     studentid = session.get('student_id')
+#     if studentid:
+#         studentdata = get_student(studentid)
+#         if studentdata == None:
+#             return redirect(url_for('login'))
+#         last_update = str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+#         return comment_general(courseid)
+#     else:
+#         return redirect(url_for('login'))
+
+@app.route('/announcement/overview')
+def announcement_overview():
+    studentid = session.get('student_id')
+    # 課題の最終更新時間を取得
+    with open_db_ses() as db_ses:
+        studentdata = get_student(studentid,db_ses)
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        logging.debug(f"last update = {last_update}\npage = announcement")
+        data = setdefault_for_overview(studentid, db_ses, mode="announcement",tasks_name="announcements")
+        announcements = get_announcementlist(studentid, db_ses)
+    data = task_arrange_for_overview(announcements,data,key_name="announcements")
+
+    days =["mon", "tue", "wed", "thu", "fri"]
+    for day in days:
+        for i in range(5):
+            data[day+str(i+1)]["announcements"] = sort_announcements(data[day+str(i+1)]["announcements"],1,0)
+    data.setdefault("others",[])
+    for i in range(len(data["others"])):
+        data["others"][i]["announcements"] = sort_announcements(data["others"][i]["announcements"],1,0)
+    # TODO: 適切なテンプレートを選択する
+    return flask.render_template('announcement_overview.htm',data = data,announcements=data,last_update=last_update)
+
+@app.route('/announcement/list')
+def announcement_list():
+    per_page=20
+    studentid = session.get('student_id')
+    with open_db_ses() as db_ses:
+        # 課題の最終更新時間を取得
+        studentdata = get_student(studentid,db_ses)
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        logging.debug(f"last update = {last_update}\npage = announcement_list")
+        data = setdefault_for_overview(studentid, db_ses)
+        announcements = get_announcementlist(studentid, db_ses)
+    announcements = sort_announcements(announcements,1,0)
+    num=len(announcements)
+    return flask.render_template('announcement_pagenation.htm',data = data,announcements=announcements,num=num,per_page=per_page,last_update=last_update)
+
+@app.route('/announcement/content/<announcement_id>')
+def announcement_content(announcement_id):
+    with open_db_ses() as db_ses:
+        studentid = session.get('student_id')
+        update_task_clicked_status(studentid, [announcement_id],db_ses=db_ses ,mode="anc")
+        data = setdefault_for_overview(studentid, db_ses, mode="announcement",tasks_name="announcements")
+        announce = get_announcement(studentid,announcement_id,db_ses)
+    return render_template('announcement_content.htm', announce=announce, data=data)
+
+
+@app.route('/announcement/course/<courseid>/<criterion>/<ascending>')
+def announcementlist_general(courseid,criterion,ascending):
+    studentid = session.get('student_id')
+    with open_db_ses() as db_ses:
+        # 課題の最終更新時間を取得
+        studentdata = get_student(studentid,db_ses)
+        
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        logging.debug(f"last update = {last_update}\npage = announcementlist")
+        announcements = get_announcementlist(studentid, db_ses, courseid=courseid)
+        unchecked_announcement_num=sum((i["checked"] == 0 for i in announcements))
+        data = setdefault_for_overview(studentid, db_ses, mode="announcement",tasks_name="announcements")
+    announcements = sort_announcements(announcements,criterion=criterion,ascending=ascending)
+    logging.info(f"studentid={studentid}の未確認のお知らせ:{unchecked_announcement_num}個")
+    
+    sort_condition = {"criterion":criterion,"ascending":ascending==1}
+    return flask.render_template(
+        'announcement.htm',
+        announcements = announcements,
+        data = data,
+        sort_condition = sort_condition,
+        unchecked_task_num = unchecked_announcement_num,
+        last_update = last_update)
+
 @app.route('/ical')
 def ical():
     studentid = session.get('student_id')
-    data = setdefault_for_overview(studentid)
+    with open_db_ses() as db_ses:
+        data = setdefault_for_overview(studentid, db_ses)
     return flask.render_template('coming_soon.htm',data=data)
 
 
@@ -442,7 +575,8 @@ def r_status_change():
     studentid = session.get('student_id')
     if studentid:
         r_links = request.json['r_links']
-        update_resource_status(studentid, r_links)
+        with open_db_ses() as db_ses:
+            update_resource_status(studentid, r_links, db_ses)
         return 'success'
     else:
         return 'failed'
@@ -452,7 +586,8 @@ def task_finish():
     studentid = session.get('student_id')
     if studentid:
         task_id = request.json['task_id']
-        update_task_status(studentid, task_id)
+        with open_db_ses() as db_ses:
+            update_task_status(studentid, task_id, db_ses)
         return 'success'
     else:
         return 'failed'
@@ -462,7 +597,30 @@ def task_unfinish():
     studentid = session.get('student_id')
     if studentid:
         task_id = request.json['task_id']
-        update_task_status(studentid, task_id, mode=1)
+        with open_db_ses() as db_ses:
+            update_task_status(studentid, task_id, db_ses, mode=1)
+        return 'success'
+    else:
+        return 'failed'
+
+@app.route('/quiz_finish', methods=['POST'])
+def quiz_finish():
+    studentid = session.get('student_id')
+    if studentid:
+        task_id = request.json['task_id']
+        with open_db_ses() as db_ses:
+            update_task_status(studentid, task_id, db_ses, mode=0, taskmode="quiz")
+        return 'success'
+    else:
+        return 'failed'
+
+@app.route('/quiz_unfinish', methods=['POST'])
+def quiz_unfinish():
+    studentid = session.get('student_id')
+    if studentid:
+        task_id = request.json['task_id']
+        with open_db_ses() as db_ses:
+            update_task_status(studentid, task_id, db_ses, mode=1, taskmode="quiz")
         return 'success'
     else:
         return 'failed'
@@ -472,7 +630,41 @@ def task_clicked():
     studentid = session.get('student_id')
     if studentid:
         task_ids = request.json['task_ids']
-        update_task_clicked_status(studentid, task_ids)
+        with open_db_ses() as db_ses:
+            update_task_clicked_status(studentid, task_ids, db_ses, mode="task")
+        return 'success'
+    else:
+        return 'failed'
+
+@app.route('/quiz_clicked', methods=['POST'])
+def quiz_clicked():
+    studentid = session.get('student_id')
+    if studentid:
+        task_ids = request.json['task_ids']
+        with open_db_ses() as db_ses:
+            update_task_clicked_status(studentid, task_ids, db_ses, mode="quiz")
+        return 'success'
+    else:
+        return 'failed'
+
+@app.route('/announcement_clicked', methods=['POST'])
+def announcement_clicked():
+    studentid = session.get('student_id')
+    if studentid:
+        announcement_ids = request.json['announcement_ids']
+        with open_db_ses() as db_ses:
+            update_task_clicked_status(studentid, announcement_ids,db_ses, mode="anc")
+        return 'success'
+    else:
+        return 'failed'
+
+        
+@app.route('/announcement_all_clicked', method=['POST'])
+def annoucnement_all_clicked():
+    studentid = session.get('student_id')
+    if studentid:
+        with open_db_ses as db_ses:
+            update_all_tasks_clicked_status(studentid, db_ses, mode="anc")
         return 'success'
     else:
         return 'failed'
@@ -483,7 +675,8 @@ def course_hide():
     if studentid:
         course_list = request.json['course_list']
         hide = request.json['hide']
-        update_student_course_hide(studentid,course_list,hide)
+        with open_db_ses() as db_ses:
+            update_student_course_hide(studentid,course_list,hide, db_ses)
         return 'success'
     else:
         return 'failed'
@@ -493,68 +686,80 @@ def show_already_due():
     studentid = session.get('student_id')
     if studentid:
         show_already_due = request.json['show_already_due']
-        update_student_show_already_due(studentid, show_already_due)
+        with open_db_ses() as db_ses:
+            update_student_show_already_due(studentid, db_ses,show_already_due)
         return 'success'
     else:
         return 'failed'
 
-@app.route('/pgtCallback', methods=['GET', 'POST'])
+# コメントを追加 post
+# @app.route('/add_comment', methods=['POST'])
+# def add_comment():
+#     studentid = session.get('studentid')
+#     if studentid:
+#         courseid = request.json['courseid']
+#         content = request.json['content']
+#         reply_to = request.json['reply_to']
+#         commentid = add_comment(studentid,reply_to,content)
+#         have_auth = add_coursecomment(studentid,commentid,courseid)
+#         update_comment_unchecked(courseid)
+#         # 自分の未読チェックは外す
+#         update_comment_checked(studentid,courseid)
+#         if have_auth:
+#             return 'success'
+#         else:
+#             return 'failed'
+#     else:
+#         return 'error'                
+
+
+@app.route('/pgtCallback', methods=['GET'])
 def pgtCallback():
-    if request.method == 'GET':
-        pgtiou = request.args.get('pgtIou')
-        pgtid = request.args.get('pgtId')
-        pgtids[pgtiou] = pgtid
-        return ''
-    elif request.method == 'POST':
-        pgt = request.form
-        return ''
+    pgtiou = request.args.get('pgtIou')
+    pgtid = request.args.get('pgtId')
+    pgtids[pgtiou] = pgtid
+    return ''
 
 
 def resourcelist_general(day = None,courseid = None):
     studentid = session.get('student_id')
-    if studentid:
+
+    with open_db_ses() as db_ses:
         # 課題の最終更新時間を取得
-        studentdata = get_student(studentid)
-        if studentdata == None:
-            # なければstudentの記録がないことになるので一度ログインへ
-            return redirect(url_for('login'))
-        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        studentdata = get_student(studentid,db_ses)
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         logging.debug(f"last update = {last_update}\npage = resourcelist")
         numofcourses = 0
-        courses = get_courses_to_be_taken(studentid)
+        courses = sort_courses_by_classschedule(get_courses_to_be_taken(studentid,db_ses),mode='course_id_name')
         html = ""
-        resource_list = get_resource_list(studentid, course_id = courseid, day=day)
+        resource_list = get_resource_list(studentid, db_ses, course_id = courseid, day=day)
         for c in courses:
-            if resource_list[c.course_id] != []:
+            if resource_list[c[0]] != []:
                 numofcourses += 1
-                html += resource_arrange(resource_list[c.course_id], c.coursename, c.course_id)
-        data = setdefault_for_overview(studentid, mode='resourcelist')
+                html += resource_arrange(resource_list[c[0]], c[1], c[0])
+        data = setdefault_for_overview(studentid, db_ses, mode='resourcelist')
 
-        if courseid != None:
-            return flask.render_template('resources_sample.htm', html=html, data=data, numofcourses=1, last_update=last_update)
-        if day != None:
-            return flask.render_template('resources_sample.htm', html=html, data=data, day=day, numofcourses=numofcourses, last_update=last_update)
-        else:
-            return flask.render_template('resources_sample.htm', html=html, data=data, numofcourses=numofcourses, last_update=last_update)
+    if courseid != None:
+        return flask.render_template('resources_sample.htm', html=html, data=data, numofcourses=1, last_update=last_update)
+    if day != None:
+        return flask.render_template('resources_sample.htm', html=html, data=data, day=day, numofcourses=numofcourses, last_update=last_update)
     else:
-        return redirect(url_for('login'))
+        return flask.render_template('resources_sample.htm', html=html, data=data, numofcourses=numofcourses, last_update=last_update)
 
 def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = None):
     studentid = session.get('student_id')
-    if studentid:
+
+    with open_db_ses() as db_ses:
         # 課題の最終更新時間を取得
-        studentdata = get_student(studentid)
-        if studentdata == None:
-            # なければstudentの記録がないことになるので一度ログインへ
-            return redirect(url_for('login'))
-        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        studentdata = get_student(studentid,db_ses)
+        last_update= str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
         logging.debug(f"last update = {last_update}\npage = tasklist")
         if courseid != None:
-            tasks = get_tasklist(studentid,courseid=courseid)
+            tasks = get_tasklist(studentid, db_ses, courseid=courseid)
         elif day != None:
-            tasks = get_tasklist(studentid,day=day)
+            tasks = get_tasklist(studentid, db_ses, day=day)
         else:
-            tasks = get_tasklist(studentid)
+            tasks = get_tasklist(studentid, db_ses)
         # tasks = [
         #     {'subject':'[2020前期月1]線形代数学', 'classschedule':'mon1','taskname':'課題1', 'status':'未', 'time_left': "あと50分", 'deadline':'2020-10-30T00:50:00Z','instructions':'なし'},
         #     {'subject':'[2020前期月1]線形代数学', 'classschedule':'mon1','taskname':'課題2', 'status':'未', 'time_left':'あと2時間', 'deadline':'2020-10-30T02:00:00Z','instructions':'なし'},
@@ -567,40 +772,60 @@ def tasklist_general(show_only_unfinished,max_time_left,day = None,courseid = No
         unfinished_task_num=sum((i["status"] == Status.NotYet.value for i in tasks))
         logging.info(f"studentid={studentid}の未完了課題:{unfinished_task_num}個")
         data ={"others":[]}
-        data = setdefault_for_overview(studentid)
-        if courseid != None:
-            search_condition = get_search_condition(show_only_unfinished, max_time_left, course=courseid)
-        elif day != None:
-            search_condition = get_search_condition(show_only_unfinished, max_time_left, day=day)
-            return flask.render_template(
-                'tasklist.htm',
-                tasks = tasks,
-                data = data,
-                day = day,
-                search_condition = search_condition,
-                unfinished_task_num = unfinished_task_num,
-                last_update = last_update)
-        else:
-            search_condition = get_search_condition(show_only_unfinished, max_time_left)
+        data = setdefault_for_overview(studentid, db_ses)
+    if courseid != None:
+        search_condition = get_search_condition(show_only_unfinished, max_time_left, db_ses, course=courseid)
+    elif day != None:
+        search_condition = get_search_condition(show_only_unfinished, max_time_left, db_ses, day=day)
         return flask.render_template(
             'tasklist.htm',
             tasks = tasks,
             data = data,
-            day = 'oth',
+            day = day,
             search_condition = search_condition,
             unfinished_task_num = unfinished_task_num,
             last_update = last_update)
     else:
-        return redirect(url_for('login'))
+        search_condition = get_search_condition(show_only_unfinished, max_time_left, db_ses)
+    return flask.render_template(
+        'tasklist.htm',
+        tasks = tasks,
+        data = data,
+        day = 'oth',
+        search_condition = search_condition,
+        unfinished_task_num = unfinished_task_num,
+        last_update = last_update)
 
+
+def comment_general(courseid = None):
+    studentid = session.get('studentid')
+    with open_db_ses() as db_ses:
+        studentdata = get_student(studentid,db_ses)
+        last_update = str(datetime.datetime.fromtimestamp(studentdata.last_update//1000,datetime.timezone(datetime.timedelta(hours=9))))[:-6]
+        data = setdefault_for_overview(studentid,db_ses)
+        all_comments = get_comments(studentid, courseid, db_ses)
+        if len(all_comments) == 1:
+            return flask.render_template(
+                'comment.htm',
+                comments = all_comments[0]["comments"],
+                roomname = all_comments[0]["roomname"],
+                data = data)
+        else:
+            return flask.render_template(
+                'chatroom.htm',
+                # commnets: [{roomname:"", comments:[]}, ..]
+                comments = all_comments,
+                data = data
+            )
 
 @app.route('/ContactUs', methods=['GET', 'POST'])
 def forum():
-    studentid = session.get('student_id')
-    if studentid:
-        data = setdefault_for_overview(studentid)
+    student_id = session.get('student_id')
+    with open_db_ses() as db_ses:
+        data = setdefault_for_overview(student_id, db_ses)
         if request.method == 'GET':
-            return flask.render_template('ContactUs.htm', error=False, data=data)
+            frms=get_forums(student_id,True,db_ses)
+            return flask.render_template('ContactUs.htm', error=False, data=data,frms=frms)
         elif request.method == 'POST':
             try:
                 title = request.form["title"]
@@ -610,31 +835,91 @@ def forum():
                 #     TITLE: {title},
                 #     CONTENTS: {contents}
                 #     --------------"""
-                msg = add_forum(studentid,title,contents)
+                msg = add_forum(student_id,title,contents, db_ses)
                 logging.info(msg)
                 return flask.render_template('Contacted.htm', data=data)
             except:
-                logging.info(f"FORUM STUDENT:{studentid} sending failed")
+                logging.info(f"FORUM STUDENT:{student_id} sending failed")
                 return flask.render_template('ContactUs.htm', error=True, data=data)
-    else:
-        return redirect('/login')
+
+# 管理画面
+@app.route('/manage/admin')
+@check_admin
+def manage_admin():
+    return "manage pandash!"
+
+@app.route('/manage/oa')
+@check_oa
+def manage_oa():
+    # !dashboardの情報
+    
+    with open_db_ses() as db_ses: 
+        dashboard = get_access_logs(db_ses)
+        frms=get_forums("",False,db_ses,all=True)
+    return flask.render_template('manage_oa.htm', dashboard=dashboard,frms=frms,year_sems={})
+
+# oa 管理ページに/manage/year_semesterのリンクを設置
+@app.route('/manage/year_semester_update')
+@check_oa
+def manage_year_semester_update():
+    dt = datetime.date.today()
+    year_sems = auto_collect_year_semester(dt=dt)
+    # json ファイルにsemester情報を格納
+    with open('year_semester.json', 'w') as f:
+        json.dump(year_sems,f)
+    
+    with open_db_ses() as db_ses: 
+        dashboard = get_access_logs(db_ses)
+        frms=get_forums("",False,db_ses,all=True)
+
+    # 更新したデータを表示
+    return flask.render_template('manage_oa.htm', dashboard=dashboard,frms=frms,year_sems=year_sems)
+    
+
+
+@app.route('/manage_reply', methods=['POST'])
+def manage_reply():
+    student_id = session.get('student_id')
+    with open_db_ses() as db_ses:
+        reply_content = request.json['reply_content']
+        form_id = request.json['form_id']
+        update_reply_content(student_id, form_id, reply_content,db_ses)
+    return 'success'
 
 # 403
+@app.errorhandler(403)
+@app.route('/forbidden')
+def forbidden(error):
+    return flask.render_template('error_403.htm'),403
+
 @app.route('/loginfailed')
 def login_failed():
-    return flask.render_template('login_failed.htm')
+    description=request.args.get('description')
+    if not description:
+        description="no description"
+    # ログイン情報を初期化
+    if "logged-in" in session and session["logged-in"]:
+        del(session['logged-in'])
+    if "student_id" in session and session["student_id"]:
+        del(session['student_id'])
+    return flask.render_template('login_failed.htm',description=description)
+
+#trial_releaseでは認証済みでないユーザーのアクセスを制限する
+@app.route('/access-restriction')
+def not_authenticated():
+    return flask.render_template('access_restriction.htm')
 
 # HTTP error 処理 debag=Trueとすると無効になる
 @app.errorhandler(500)
 def internal_server_error(error):
     msg = "---INTERNAL SERVER ERROR---\n"
     try:
-        msg += f'description:{error.description},\nmessage:{error.message},\
-            \nresponse:{error.response},\nwrap:{error.wrap}'
+        msg += f'description:{error.description},\nname:{error.name},\
+            \nresponse:{error.response}'
     except:
         msg += 'failed to get the details of the error'
     logging.error(msg)    
-    return flask.render_template('error_500.htm'),500
+    return flask.render_template('error_500.htm',msg=msg),500
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -659,8 +944,34 @@ import os
 def favicon():
     return flask.send_from_directory(os.path.join(app.root_path,'static/images'),'favicon.ico',mimetype='image/vnd.microsoft.icon')
 
+@app.before_request
+def before_request():
+    pages_open=['login','logout','login_failed','not_authenticated','proxy','proxyticket','static','favicon','welcome','root','welcome','faq','update','tutorial','help','what_is_pandash','privacypolicy','page_not_found','internal_server_error','pgtCallback']
+    
+    # リクエストのたびにセッションの寿命を更新する
+    session.permanent = True
+    app.permanent_session_lifetime = datetime.timedelta(minutes = 30)
+    session.modified = True
+    logged_in=True
+    studentid = session.get('student_id')
+    if studentid:
+        with open_db_ses() as db_ses:
+            studentdata = get_student(studentid,db_ses)
+            if studentdata == None:
+                logged_in=False
+            now = floor(time.time() * 1000)
+            if (now - studentdata.last_update) >= 30*60*1000:
+                logged_in=False
+    else:
+        logged_in=False
+    if (not logged_in) and request.endpoint not in pages_open:
+        return redirect(url_for('login'))
+
 
 if __name__ == '__main__':
+    log_handler = logging.FileHandler("DEBUG_LOG.log")
+    log_handler.setLevel(logging.DEBUG)
+    app.logger.addHandler(log_handler)
     pgtids={}
     redirect_pages={}
     app.run(debug=True, host='0.0.0.0', port=5000)

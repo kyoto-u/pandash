@@ -6,20 +6,26 @@ from math import *
 from .settings import VALID_YEAR_SEMESTER, api_url, kulasis_api_url
 import re
 from .original_classes import Status
+import functools
+import time
 
 def get_announcement_from_api(announcements, student_id):
     announcement_list = []
     st_anouncement_list = []
-    an_st_collection = announcements.get("assnoucement_collection")
+    an_st_collection = announcements.get("announcement_collection")
     for announce in an_st_collection:
         announcement_id = announce.get('announcementId')
         title = announce.get('title')
         body = announce.get('body')
+        too_long=0
+        if len(body)>1000:
+            body = body[:1000]
+            too_long=1
         createddate = announce.get('createdOn')
         course_id = announce.get('siteId')
-        announcement_list.append({"sa_id":f"{student_id}:{announcement_id}","announcement_id":announcement_id,"title":title,"body":body,"createddate":createddate,"course_id":course_id}) 
-        st_anouncement_list.append({"announcement_id":announcement_id,"course_id":course_id})
-    announcement_dict = {"student_annoucement":st_anouncement_list, "annoouncements":announcement_list}
+        announcement_list.append({"announcement_id":announcement_id,"title":title,"body":body,"createddate":createddate,"course_id":course_id,"too_long":too_long}) 
+        st_anouncement_list.append({"sa_id":f"{student_id}:{announcement_id}","announcement_id":announcement_id,"course_id":course_id,"student_id":student_id})
+    announcement_dict = {"student_announcements":st_anouncement_list, "announcements":announcement_list}
     return announcement_dict
 
 def get_assignments_from_api(assignments, student_id):
@@ -30,14 +36,14 @@ def get_assignments_from_api(assignments, student_id):
         assignment_id = assignment.get('id')
         url = assignment.get('entityURL')
         title = assignment.get('title')[:80]
-        limit_at = assignment.get('dueTimeString')
         instructions = assignment.get('instructions')[:100]
         time_ms = assignment.get('dueTime').get('epochSecond')*1000 #millisecond
+        limit_at = datetime.datetime.fromtimestamp(time_ms//1000,datetime.timezone(datetime.timedelta(hours=9))).strftime("%Y-%m-%dT%H:%M:%SZ")
         course_id = assignment.get('context')
         modifieddate = assignment.get('timeLastModified').get('epochSecond')*1000 #millisecond
         status = assignment.get('status')
-        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":Status.NotYet.value,"student_id":student_id,"clicked":0})
-        assignment_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifieddate":modifieddate,"course_id":course_id})
+        sa_list.append({"sa_id":f"{student_id}:{assignment_id}","assignment_id":assignment_id,"course_id":course_id,"status":Status.NotYet.value,"student_id":student_id,"clicked":0,"deleted":0})
+        assignment_list.append({"assignment_id":assignment_id,"url":url,"title":title,"limit_at":limit_at,"instructions":instructions,"time_ms":time_ms,"modifieddate":modifieddate,"course_id":course_id,"deleted":0})
     assignment_dict = {"student_assignments":sa_list, "assignments":assignment_list}
     return assignment_dict
 
@@ -49,10 +55,10 @@ def get_course_from_api(site, student_id):
         instructor_id = site.get('siteOwner').get('userId')
         fullname = site.get('siteOwner').get('userDisplayName')
     coursename = site.get('title')
-    yearsch = re.match(r'\[.*\]', coursename)
     yearsemester = "10009"
     classschedule = "oth"
     try:
+        yearsch = re.match(r'\[.*\]', coursename)
         semnum = "9"
         semester = yearsch.group()[5:7]
         classsch = yearsch.group()[7:9]
@@ -86,7 +92,8 @@ def get_course_from_api(site, student_id):
     except:
         # return None
         pass
-    if int(yearsemester) not in VALID_YEAR_SEMESTER:
+    valid_year_semester = get_valid_year_semester()
+    if int(yearsemester) not in valid_year_semester:
         return None
     course_dict = {"course_id":course_id,"instructior_id":instructor_id,"coursename":coursename,"yearsemester":yearsemester,"classschedule":classschedule,"page_id":"","announcement_page_id":""}
     student_course_dict = {"sc_id":f"{student_id}:{course_id}","course_id":course_id,"student_id":student_id}
@@ -112,7 +119,7 @@ def get_course_id_from_site_api(site, student_id):
     site_collection = site.get('site_collection')
     site_list = []
     for s in site_collection:
-        if s.get('joinerRole') != "Student":
+        if s.get('joinerRole') != "Student" and s.get('joinerRole') != None:
             continue
         user_site_id = s.get('id')
         site_id = user_site_id.replace(f'{student_id}::site:','')
@@ -120,7 +127,7 @@ def get_course_id_from_site_api(site, student_id):
     return {"student_id":student_id, "site_list":site_list}
 
 def get_membership_json(ses):
-    res = ses.get(f"{api_url}/membership.json")
+    res = ses.get(f"{api_url}/membership.json?_limit=2000", verify=True)
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -128,30 +135,39 @@ def get_membership_json(ses):
 
 # get_membership_json(ses) の代わり
 def get_site_json(ses):
-    res = ses.get(f"{api_url}/site.json?_limit=2000")
+    res = ses.get(f"{api_url}/site.json?_limit=2000", verify=True)
     try:
         return res.json()
     except json.JSONDecodeError as e:
         return {"site_collection": []}
 
-def get_page_from_api(pages):
+def get_page_from_api(pages,mode):
     page_id = ""
     announcement_page_id = ""
     for page in pages:
         title = page.get('title')
-        if re.search('課題', title) or re.search('assignment', title):
-            page_id = page.get('tools')[0].get('id')
-        elif re.search('お知らせ', title) or re.search('announcement', title):
-            announcement_page_id = page.get('tools')[0].get('id')
-        if page_id != "" and announcement_page_id != "":
-            break
-    return {"page_id":page_id, "announcement_page_id":announcement_page_id}
+        if mode == "assignment":
+            if re.search('課題', title) or re.search('assignment', title):
+                page_id = page.get('tools')[0].get('id')
+                break
+        elif mode == "quiz":
+            if re.search('テスト・クイズ', title) or re.search('Quizzes', title):
+                page_id = page.get('tools')[0].get('id')
+                break
+        elif mode == "announcement":
+            if re.search('お知らせ', title) or re.search('announcement', title):
+                announcement_page_id = page.get('tools')[0].get('id')
+                break
+    return page_id
 
 def get_resources_from_api(resources, course_id, student_id):
     resource_list = []
     sr_list = []
     content_collection = resources.get("content_collection")
     for content in content_collection:
+        file_type = content.get('type')
+        if file_type == "collection":
+            continue
         resource_author = content.get('author')
         resource_container = content.get('container')
         md = str(int(content.get('modifiedDate'))//1000)
@@ -172,16 +188,24 @@ def get_quizzes_from_api(quizzes, course_id, student_id):
     sq_list = []
     quiz_collection = quizzes.get("sam_pub_collection")
     for content in quiz_collection:
-        quiz_id = content.get('publishedAssessmentId')
+        quiz_id = str(content.get('publishedAssessmentId'))
         # とりあえずsite_id
         url = content.get('ownerSiteId')
         title = content.get('entityTitle')
         time_ms = content.get('dueDate') # millisecond
+        if time_ms==None:
+            # 期限のないものは2099-12-31T23:59:59Zとなるよう設定
+            time_ms=4102412399000
         modifieddate = int(content.get('lastModifiedDate')) #millisecond
-        limit_at = datetime.datetime.fromtimestamp(time_ms//1000).strftime("%Y-%m-%dT%H:%M:%SZ")
+        if content.get('startDate'):
+            # 公開前か確認する
+            if int(content.get('startDate')) > floor(time.time() * 1000):
+                continue
+            modifieddate =max(modifieddate,int(content.get('startDate')))
+        limit_at = datetime.datetime.fromtimestamp(time_ms//1000,datetime.timezone(datetime.timedelta(hours=9))).strftime("%Y-%m-%dT%H:%M:%SZ")
         quiz_list.append({'course_id':course_id, 'quiz_id': quiz_id, 'url':url, 'title': title, \
-            'limit_at':limit_at, 'time_ms': time_ms, 'modifieddate': modifieddate, 'instructions':''})
-        sq_list.append({"sq_id":f"{student_id}:{quiz_id}", "quiz_id":quiz_id, "student_id":student_id, "course_id":course_id, "status":Status.NotYet.value,"clicked":0})
+            'limit_at':limit_at, 'time_ms': time_ms, 'modifieddate': modifieddate, 'instructions':'',"deleted":0})
+        sq_list.append({"sq_id":f"{student_id}:{quiz_id}", "quiz_id":quiz_id, "student_id":student_id, "course_id":course_id, "status":Status.NotYet.value,"clicked":0,"deleted":0})
     quiz_dict = {"student_quizzes":sq_list, "quizzes":quiz_list}
     return quiz_dict
 
@@ -199,14 +223,14 @@ def get_user_info_from_api(user):
     return {"student_id":student_id,"fullname":fullname}
 
 def get_user_json(ses):
-    res = ses.get(f"{api_url}/user/current.json")
+    res = ses.get(f"{api_url}/user/current.json", verify=True)
     try:
         return res.json()
     except json.JSONDecodeError as e:
         return {}
 
 def get_session_json(ses):
-    res = ses.get(f"{api_url}/session/current.json")
+    res = ses.get(f"{api_url}/session/current.json", verify=True)
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -222,28 +246,37 @@ async def async_get_announcement(ses):
     except json.JSONDecodeError as e:
         return {'announcement_collection':[]}
 
-async def async_get_assignments(ses):
-    url = f"{api_url}/assignment/my.json"
+async def async_get_assignments(course_id,ses):
+    url = f"{api_url}/assignment/site/{course_id}.json"
+    func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
-    res = await loop.run_in_executor(None, ses.get, url)
+    res = await loop.run_in_executor(None, func)
+    if res.status_code == 404:
+        # 恐らく履修解除等によりアクセスが出来なくなった
+        return {"assignment_collection":[]}
     try:
         return res.json()
     except json.JSONDecodeError as e:
-        return {}
+        return {"assignment_collection":[]}
 
 async def async_get_content(site_id, ses):
     url = f"{api_url}/content/site/{site_id}.json"
+    func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
-    res = await loop.run_in_executor(None, ses.get, url)
+    res = await loop.run_in_executor(None, func)
     try:
         return res.json()
     except json.JSONDecodeError as e:
         return {'content_collection':[]}
 
 async def async_get_quiz(site_id, ses):
-    url = f"{api_url}/sam_pub/content/{site_id}.json"
+    url = f"{api_url}/sam_pub/context/{site_id}.json"
+    func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
-    res = await loop.run_in_executor(None, ses.get, url)
+    res = await loop.run_in_executor(None, func)
+    if res.status_code == 403:
+        # 恐らく履修解除等によりアクセスが出来なくなった
+        return {'sam_pub_collection':[]}
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -251,8 +284,9 @@ async def async_get_quiz(site_id, ses):
 
 async def async_get_site(site_id, ses):
     url = f"{api_url}/site/{site_id}.json"
+    func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
-    res = await loop.run_in_executor(None, ses.get, url)
+    res = await loop.run_in_executor(None, func)
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -260,8 +294,12 @@ async def async_get_site(site_id, ses):
 
 async def async_get_site_pages(site_id, ses):
     url = f"{api_url}/site/{site_id}/pages.json"
+    func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
-    res = await loop.run_in_executor(None, ses.get, url)
+    res = await loop.run_in_executor(None, func)
+    if res.status_code == 403:
+        # 恐らく履修解除等によりアクセスが出来なくなった
+        return {}
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -269,8 +307,9 @@ async def async_get_site_pages(site_id, ses):
 
 async def async_get_user_info(ses):
     url = f"{api_url}/user/current.json"
+    func = functools.partial(ses.get, url, verify=True)
     loop = asyncio.get_event_loop()
-    res = await loop.run_in_executor(None, ses.get, url)
+    res = await loop.run_in_executor(None, func)
     try:
         return res.json()
     except json.JSONDecodeError as e:
@@ -520,3 +559,12 @@ def get_mail_detail_from_api(mail_detail, mail_list_index):
     mail_list_index["body"] = body
     announcement = mail_list_index
     return announcement
+
+def get_valid_year_semester():
+    """
+        valid_year_semesterを取得する
+    """
+    with open('./year_semester.json', 'r') as f:
+        year_semesters = json.load(f)
+        valid_year_semester = year_semesters["valid_year_semester"]
+        return valid_year_semester

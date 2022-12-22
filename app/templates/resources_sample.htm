@@ -1,33 +1,38 @@
 {% extends "_base.htm" %}
 {% block bodycontent %}
 <!--Modal-->
-<div class="row" style="pointer-events: all;">
-  <div class="col-sm-12 col-md-2 border-right">
-    <div class="container" id="resources_searchBox">
-      <div>
-        <!-- See line 7 
+<div class="container-fluid">
+  <div class="row" style="pointer-events: all;">
+    <div class="col-sm-12 col-md-2 border-right">
+      <div class="container-fluid" id="resources_searchBox">
+        <div>
+          <!-- See line 7 
                 pointer-events: all; -->
-        <div class="d-flex py-2 mb-2 flex-md-column">
-          <h6 id="searchlabel" class="text-nowrap">しぼりこみ検索</h6>
-          <!--曜日しぼりこみ-->
-          <div class="form-group mx-sm-5 mx-md-1">
-            <label for="select0a" class="text-nowrap">科目</label>
-            <select id="select0a" class="form-control text-nowrap" onchange="location.href=value;">
-              <option value="/resourcelist">全ての曜日</option>
-              <option value="/resourcelist/day/mon" {% if day=='mon' %}selected{% endif %}>月曜のみ</option>
-              <option value="/resourcelist/day/tue" {% if day=='tue' %}selected{% endif %}>火曜のみ</option>
-              <option value="/resourcelist/day/wed" {% if day=='wed' %}selected{% endif %}>水曜のみ</option>
-              <option value="/resourcelist/day/thu" {% if day=='thu' %}selected{% endif %}>木曜のみ</option>
-              <option value="/resourcelist/day/fri" {% if day=='fri' %}selected{% endif %}>金曜のみ</option>
-            </select>
+          <div class="d-flex py-2 mb-2 flex-md-column">
+            <h6 id="searchlabel" class="text-nowrap">しぼりこみ検索</h6>
+            <!--曜日しぼりこみ-->
+            <div class="form-group mx-sm-5 mx-md-1">
+              <label for="select0a" class="text-nowrap">科目</label>
+              <select id="select0a" class="form-control text-nowrap" onchange="location.href=value;">
+                <option value="/resourcelist">全ての曜日</option>
+                <option value="/resourcelist/day/mon" {% if day=='mon' %}selected{% endif %}>月曜のみ</option>
+                <option value="/resourcelist/day/tue" {% if day=='tue' %}selected{% endif %}>火曜のみ</option>
+                <option value="/resourcelist/day/wed" {% if day=='wed' %}selected{% endif %}>水曜のみ</option>
+                <option value="/resourcelist/day/thu" {% if day=='thu' %}selected{% endif %}>木曜のみ</option>
+                <option value="/resourcelist/day/fri" {% if day=='fri' %}selected{% endif %}>金曜のみ</option>
+              </select>
+            </div>
+            <!--時間割検索機能-->
+            <button id="timesearchbutton" type="button" class="btn btn-dark text-nowrap ml-sm-5 ml-md-1"
+              data-toggle="modal" data-target="#modal_timeboard_select">時間割で検索</button>
+            {% if request.path != '/resourcelist' %}
+            <a type="button" href="/resourcelist" id="search_clear" type="button"
+              class="btn btn-light mt-5 text-nowrap">条件クリア</a>
+            {% endif %}
           </div>
-          <!--時間割検索機能-->
-          <button id="timesearchbutton" type="button" class="btn btn-dark text-nowrap ml-sm-5 ml-md-1"
-            data-toggle="modal" data-target="#modal_timeboard_select">時間割で検索</button>
         </div>
       </div>
-    </div>
-    <!-- <form>
+      <!-- <form>
           このボタンは使用しません
           <a href="#" id="allclick" style="color: white; text-decoration: none;">
             <button class="btn btn-secondary btn mt-4 btn-block d-none">
@@ -42,43 +47,44 @@
             </button>
           </a>
         </form> -->
-  </div>
-
-  <div id="taskmain" class="col-sm-12 col-md-10">
-    <h2>未入手資料を選択しダウンロードできます</h2>
-    <div class="container">
-      <div class="row">
-        <small class=" ml-auto mt-auto mr-3">最終更新：{{last_update}}</small>
-        <button type="button" id="reflesh_button" class="btn  btn-info"
-          onclick="location.href='/login?page=resourcelist'">情報を更新</button>
-      </div>
     </div>
 
+    <div id="taskmain" class="col-sm-12 col-md-10">
+      <h2>未入手資料を選択しダウンロードできます</h2>
+      <div class="container-fluid">
+        <div class="row">
+          <small class=" ml-auto mt-auto mr-3">最終更新：{{last_update}}</small>
+          <button type="button" id="reflesh_button" class="btn  btn-info"
+            onclick="location.href='/login?page=resourcelist'">情報を更新</button>
+        </div>
+      </div>
 
 
 
-    <!-- <div class="col-12 pt-1" id="resdownload_body">
+
+      <!-- <div class="col-12 pt-1" id="resdownload_body">
             <h2>・授業資料</h2>
         </div> -->
-    <div class="col-12">
-      <!-- <span><i class="far fa-folder">[2020前期月5]ILASセミナーのリソース</i></span> -->
+      <div class="col-12">
+        <!-- <span><i class="far fa-folder">[2020前期月5]ILASセミナーのリソース</i></span> -->
 
-      {% if numofcourses < 3 %} <div class="card-columns" style="columns:{{numofcourses}}" id="card-columns">
-        {% else %}
-        <div class="card-columns" style="columns:3" id="card-columns">
-          {% endif %}
-          {{ html | safe}}
+        {% if numofcourses < 3 %} <div class="card-columns" style="columns:{{numofcourses}}" id="card-columns">
+          {% else %}
+          <div class="card-columns row row-cols-lg-3 row-cols-md-3 row-cols-sm-3 row-cols-xs-1" id="card-columns">
+            {% endif %}
+            {{ html | safe}}
 
-          <script>
-            var numofcourses = {{ numofcourses| tojson }};
-          </script>
-        </div>
+            <script>
+              var numofcourses = {{ numofcourses| tojson }};
+            </script>
+          </div>
+
+      </div>
 
     </div>
-
   </div>
-</div>
 </div>
 <!-- <script src="{{ url_for('static', filename='js/resource.js') }}"></script> -->
 <script type="text/javascript" src="/static/js/resource.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/resource_card.css') }}">
 {% endblock %}

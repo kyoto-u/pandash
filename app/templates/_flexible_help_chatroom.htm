@@ -19,13 +19,13 @@
 </head>
 
 <body>
-    <div id="example-menu" class="list-group d-none d-lg-block">
+    <div id="example-menu" class="list-group d-none d-lg-block col-md-3">
         <div class="mx-auto">チュートリアル</div>
         <a class="list-group-item list-group-item-action active" href="#section-outline">PandAshでできること</a>
         <a class="list-group-item list-group-item-action" href="#section-chatroom">チャットルーム</a>
-        <a class="list-group-item list-group-item-action" href="#section-iCal">iCalと共有</a>
+        <!-- <a class="list-group-item list-group-item-action" href="#section-iCal">iCalと共有</a> -->
     </div>
-    <div id="example-main">
+    <div id="example-main" class="col-sm-12 col-md-12">
         <p>
         <h1 class="mb-5">PandAshチュートリアル</h1>
         </p>
@@ -33,8 +33,7 @@
         {% include "FAQ_fragments/FAQ_outline.htm" %}
 
         {% include "Tutorial_fragments/tutorial_chatroom.htm" %}
-
-        {% include "Tutorial_fragments/tutorial_iCal.htm" %}
+        
         {% include "FAQ_fragments/FAQ_other.htm" %}
 
     </div>

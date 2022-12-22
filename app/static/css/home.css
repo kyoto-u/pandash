@@ -31,13 +31,16 @@ html{
     min-height: 100px;
 }
 
+.graph-canvas{
+    max-width: 500px;
+}
+
 @media screen and (min-width:760px){
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    padding-top: 160;
-    width:100vw;
+    width:100%;
 }
 }
 @media screen and (max-width:760px){
@@ -45,13 +48,12 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    padding-top: 200;
-    width:100vw;
+    width:100%;
 }
 }
 
 nav{
-    width:100vw;
+    width:100%;
     margin-left: 0;
 }
 

@@ -1,0 +1,141 @@
+﻿{% extends "_base.htm" %}
+{% block bodycontent %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-8">
+                    <h1 class="mb-5">お知らせ一覧</h1>
+                </div>
+                <div class="col-4">
+                    <i class="fas fa-2x fa-list mr-3" style="color:black;"></i>
+                    <a href="/announcement/overview"><i class="fas fa-2x fa-th ml-3" style="color:gray;"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-11 ml-md-3 ml-sm-1 mr-auto">
+            {% if num % per_page != 0 %}
+                {% set page_num = num // per_page + 1 %}
+            {% else %}
+                {% set page_num = num // per_page %}
+            {% endif %}
+            <form>
+                <div class="form-group row">
+                    
+                    <ul class="pagination nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li class="page-item">
+                            <a class="page-link nav-link disabled" href="#" data-toggle="pill" aria-label="Previous" id="pills-previous-tab">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                        {% set ns = namespace(cnt=1) %}
+                        {% for i in range(page_num) %}
+                        <li class="page-item">
+                            <a class="page-link nav-link page-num-link" id="pills-page-{{ns.cnt}}-tab" data-toggle="pill" href="#pills-page-{{ns.cnt}}" role="tab"
+                            aria-controls="pills-profile" aria-selected="false">{{ns.cnt}}</a>
+                        </li>
+                        {% set ns.cnt = ns.cnt + 1 %}
+                        {% endfor %}
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next" data-toggle="pill" id="pills-next-tab">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                    
+                </div>
+            </form>
+            
+            
+                
+                {% set ns = namespace(cnt=1) %}
+            <div class="tab-content">
+                {% for i in range(page_num) %}
+                <div class="tab-pane fade show" id="pills-page-{{ns.cnt}}" role="tabpanel" aria-labelledby="pills-page-{{ns.cnt}}-tab">
+                <table class="table">
+                    <tr>
+                        <th><a style="color:black">サイト</a></th>
+                        <th>件名</th>
+                        <th><a style="color:black">公開日時</a></th>
+                    </tr>
+                
+                        {% if ns.cnt != page_num %}
+                        {% for j in range(per_page) %}
+                        {% set n = (ns.cnt-1)*per_page + j %}
+                        <tr class="announcement_tr" id="{{announcements[n].announcement_id}}" data-toggle="modal" data-target="#modal_announcement">
+                            <td>{{announcements[n].subject}}</td>
+                            <td>
+                                <a style="color:black">
+                                    {% if announcements[n].checked == False %}
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {% endif %} {{announcements[n].title}}
+                                </a>
+                            </td>
+                            <td>{{announcements[n].publish_date}}</td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        {% for j in range(num-(ns.cnt-1)*(per_page)) %}
+                        {% set n = (ns.cnt-1)*per_page + j %}
+                        <tr class="announcement_tr" id="{{announcements[n].announcement_id}}" data-toggle="modal" data-target="#modal_announcement">
+                            <td>{{announcements[n].subject}}</td>
+                            <td>
+                                <a style="color:black">
+                                    {% if announcements[n].checked == False %}
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {% endif %} {{announcements[n].title}}
+                                </a>
+                            </td>
+                            <td>{{announcements[n].publish_date}}</td>
+                        </tr>
+                        {% endfor %}
+                        {% endif %}
+                
+                </table>
+                </div>
+                {% set ns.cnt = ns.cnt + 1 %}
+                {% endfor %}
+            </div>
+            <div class="row my-3">
+                <div class="btn btn-link mr-auto px-5 d-none" role="button" id="alternative-previous-button" style="border:1px solid gainsboro">前のページ</div>
+                <div class="btn btn-link ml-auto px-5" role="button" id="alternative-next-button" style="border:1px solid gainsboro">次のページ</div>
+            </div>
+            
+            
+        </div>
+
+    </div>
+    <script>
+        //テーブル列のマウスオーバー・マウスリーブの処理
+        var targets = document.getElementsByClassName("announcement_tr");
+
+        for (var i = 0; i < targets.length; i++) {
+            targets[i].addEventListener("mouseover", function () {
+                this.setAttribute("style", "background-color:whitesmoke;")
+            });
+
+            targets[i].addEventListener("mouseleave", function () {
+                this.setAttribute('style', "")
+            });
+
+        }
+    </script>
+    <script>
+        //読み込み時に１ページ目を表示する
+        var tab = document.getElementById("pills-page-1-tab")
+        var cont = document.getElementById("pills-page-1")
+        window.onload= function(){
+            tab.classList.add("active")
+            tab.classList.add("show")
+            cont.classList.add("active")
+            cont.classList.add("show")
+        };
+    </script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/announcement_pagenation.js') }}"></script>
+    
+    <script type="text/javascript">
+        var announcements = {{ announcements | tojson }};
+    </script>
+    {% endblock %}

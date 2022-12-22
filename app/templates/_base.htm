@@ -24,6 +24,7 @@
     media="screen and (max-width:768px)" />
 </head>
 
+
 <div class="modal fade" id="modal_timeboard_select" tabindex="-1" role="dialog" aria-labelledby="label1"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-fluid" role="document">
@@ -36,87 +37,90 @@
       </div>
 
       <div class="modal-body">
-        <div class="table-responsive table-considered">
-          <table class="table table-sm modaltable">
-            <thead>
-              <tr id="modaltable" class="d-flex">
-                <th class="col-2"></th>
-                <th class="col-2">月</th>
-                <th class="col-2">火</th>
-                <th class="col-2">水</th>
-                <th class="col-2">木</th>
-                <th class="col-2">金</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="d-flex">
-                <td class="col-2">1</td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.mon1.searchURL}}">{{data.mon1.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.tue1.searchURL}}">{{data.tue1.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.wed1.searchURL}}">{{data.wed1.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.thu1.searchURL}}">{{data.thu1.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.fri1.searchURL}}">{{data.fri1.shortname}}</a>
-                </td>
-              </tr>
-              <tr class="d-flex">
-                <td class="col-2">2</td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.mon2.searchURL}}">{{data.mon2.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.tue2.searchURL}}">{{data.tue2.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.wed2.searchURL}}">{{data.wed2.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.thu2.searchURL}}">{{data.thu2.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.fri2.searchURL}}">{{data.fri2.shortname}}</a>
-                </td>
-              </tr>
-              <tr class="d-flex">
-                <td class="col-2">3</td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.mon3.searchURL}}">{{data.mon3.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.tue3.searchURL}}">{{data.tue3.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.wed3.searchURL}}">{{data.wed3.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.thu3.searchURL}}">{{data.thu3.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.fri3.searchURL}}">{{data.fri3.shortname}}</a>
-                </td>
-              </tr>
-              　<tr class="d-flex">
-                <td class="col-2">4</td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.mon4.searchURL}}">{{data.mon4.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.tue4.searchURL}}">{{data.tue4.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.wed4.searchURL}}">{{data.wed4.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.thu4.searchURL}}">{{data.thu4.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.fri4.searchURL}}">{{data.fri4.shortname}}</a>
-                </td>
-              </tr>
-              　 <tr class="d-flex">
-                <td class="col-2">5</td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.mon5.searchURL}}">{{data.mon5.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.tue5.searchURL}}">{{data.tue5.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.wed5.searchURL}}">{{data.wed5.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.thu5.searchURL}}">{{data.thu5.shortname}}</a>
-                </td>
-                <td class="col-2"><a class="btn btn-link" href="{{data.fri5.searchURL}}">{{data.fri5.shortname}}</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
+        <div class="container-fluid">
+          <div class="row">
+            <div class="table-responsive table-considered  col-12">
+              <table class="table table-sm modaltable">
+                <thead>
+                  <tr id="modaltable" class="d-flex">
+                    <th class="col-2"></th>
+                    <th class="col-2">月</th>
+                    <th class="col-2">火</th>
+                    <th class="col-2">水</th>
+                    <th class="col-2">木</th>
+                    <th class="col-2">金</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="d-flex">
+                    <td class="col-2">1</td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.mon1.searchURL}}">{{data.mon1.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.tue1.searchURL}}">{{data.tue1.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.wed1.searchURL}}">{{data.wed1.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.thu1.searchURL}}">{{data.thu1.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.fri1.searchURL}}">{{data.fri1.shortname}}</a>
+                    </td>
+                  </tr>
+                  <tr class="d-flex">
+                    <td class="col-2">2</td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.mon2.searchURL}}">{{data.mon2.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.tue2.searchURL}}">{{data.tue2.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.wed2.searchURL}}">{{data.wed2.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.thu2.searchURL}}">{{data.thu2.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.fri2.searchURL}}">{{data.fri2.shortname}}</a>
+                    </td>
+                  </tr>
+                  <tr class="d-flex">
+                    <td class="col-2">3</td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.mon3.searchURL}}">{{data.mon3.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.tue3.searchURL}}">{{data.tue3.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.wed3.searchURL}}">{{data.wed3.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.thu3.searchURL}}">{{data.thu3.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.fri3.searchURL}}">{{data.fri3.shortname}}</a>
+                    </td>
+                  </tr>
+                    <tr class="d-flex">
+                    <td class="col-2">4</td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.mon4.searchURL}}">{{data.mon4.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.tue4.searchURL}}">{{data.tue4.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.wed4.searchURL}}">{{data.wed4.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.thu4.searchURL}}">{{data.thu4.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.fri4.searchURL}}">{{data.fri4.shortname}}</a>
+                    </td>
+                  </tr>
+                    <tr class="d-flex">
+                    <td class="col-2">5</td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.mon5.searchURL}}">{{data.mon5.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.tue5.searchURL}}">{{data.tue5.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.wed5.searchURL}}">{{data.wed5.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.thu5.searchURL}}">{{data.thu5.shortname}}</a>
+                    </td>
+                    <td class="col-2"><a class="btn btn-link" href="{{data.fri5.searchURL}}">{{data.fri5.shortname}}</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -127,18 +131,50 @@
   </div>
 </div>
 
+<div class="modal fade" id="modal_announcement" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-fluid" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal_announcement_title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="word-break: break-all;">
+        <div class="container-fluid">
+          <div class="row">
+            <ul class="col-12" style="list-style-type: none">
+              <li id="modal_announcement_subject"></li>
+              <li id="modal_announcement_publish_date"></li>
+            </ul>
+            <div class="col-12" id="modal_announcement_html_file">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer mr-auto">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">とじる</button>
+        <div class="d-none d-md-block mr-auto"><small>ESCキーを押しても閉じられます</small></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <body>
+  <div class="sticky-top d-none" id="now_loading" style="background-color:rgba(255, 230, 0, 0.603)">
+    <div class="row">
+      <div class="mx-auto">読み込み中...</div>
+    </div>
+  </div>
   <header>
     <!-- ロゴとサイト名-->
-    <div class="fixed-top logos">
+    <div class="logos">
       <div class="container-fluid">
         <div class="row">
           <nav class="navbar bg-light" id="logonav" style="width:100vw">
             <a href="/tasklist" class="navbar-brand">
-              <img src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ" width="175px"
-                height="60px">
+              <img src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ" height="50">
             </a>
             <a class="btn btn-dark" href="/_logout" data-toggle="tooltip" title="ログアウトします"><small>ログアウト</small></a>
           </nav>
@@ -150,19 +186,12 @@
           <ul class="navbar-nav mr-auto toggle_lefts" style="display: flex; flex-direction: row;">　
             <li class="nav-item mr-1">
               <a class="btn btn-info navbtns  text-nowrap
-                          {% if '/tasklist' in request.path  %}
+                          {% if '/tasklist' in request.path or '/overview' in request.path  %}
                           active
                           {% endif %}
                           " href="/tasklist" role="button">
 
-                一覧表示</a>
-            <li class="nav-item">
-              <a class="btn btn-info navbtns text-nowrap
-                          {% if '/overview' in request.path  %}
-                          active
-                          {% endif %}
-                          " href="/overview" role="button">時間割表示</a>
-            </li>
+                課題一覧</a>
             <li class="nav-item navbtns">
               <a class="btn btn-info navbtns text-nowrap
                           {% if '/resourcelist' in request.path  %}
@@ -181,7 +210,7 @@
                 request.path %} onclick="window.open('/help/chatroom', '', 'width=800,height=500'); return false;" {%
                 else %} class="d-none" {% endif %} role="button" 　data-toggle="tooltip" title="ヘルプ">
                 <small>
-                <i class="fas fa-2x fa-question-circle"></i>
+                  <i class="fas fa-2x fa-question-circle"></i>
                 </small>
               </a>
             </li>
@@ -194,13 +223,13 @@
           <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown2">
             <section>
               <ul class="navbar-nav ml-auto pr-3 toggle_rights">
-                <li class="nav-item mr-3 my-auto text-nowrap btn-block">
-                  <a class="nav-link" href="/chat" data-toggle="tooltip"
-                    title="チャットルーム一覧を表示します" style="text-decoration: none;">チャットルーム</a>
-                </li>
+                {# <li class="nav-item mr-3 my-auto text-nowrap btn-block">
+                  <a class="nav-link" href="/chat" data-toggle="tooltip" title="チャットルーム一覧を表示します"
+                    style="text-decoration: none;">チャットルーム</a>
+                </li> #}
                 <li id="logout_button" class="nav-item mr-3 my-auto text-nowrap btn-block">
-                  <a class="nav-link" href="/announcement" data-toggle="tooltip"
-                    title="PandAからのお知らせを表示します" style="text-decoration: none;">お知らせ</a>
+                  <a class="nav-link" href="/announcement/overview" data-toggle="tooltip" title="PandAからのお知らせを表示します"
+                    style="text-decoration: none;">お知らせ</a>
                 </li>
                 <li class="nav-item my-auto">
                   <div class="dropdown">
@@ -208,11 +237,13 @@
                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       メニュー
                     </button>
-                    <div id="menu_dropdown_list" class="dropdown-menu dropdown-menu-right" aria-labelledby="menu_dropdown">
-                      <a class="dropdown-item menu_link border-bottom" href="/ical" data-toggle="tooltip"
-                        title="iCalファイルをダウンロードします"><i class="fas fa-calendar"></i> iCalと共有</a>
+                    <div id="menu_dropdown_list" class="dropdown-menu dropdown-menu-right"
+                      aria-labelledby="menu_dropdown">
+                      {# <a class="dropdown-item menu_link border-bottom" href="/ical" data-toggle="tooltip"
+                        title="iCalファイルをダウンロードします"><i class="fas fa-calendar"></i> iCalと共有</a> #}
                       <a class="dropdown-item menu_link border-bottom" href="/option"><i class="fas fa-cog"></i> 設定</a>
-                      <a class="dropdown-item menu_link border-bottom" href="/ContactUs"><i class="fas fa-paper-plane"></i> お問い合わせ</a>
+                      <a class="dropdown-item menu_link border-bottom" href="/ContactUs"><i
+                          class="fas fa-paper-plane"></i> お問い合わせ</a>
                     </div>
                   </div>
                 </li>
@@ -224,7 +255,7 @@
     </div>
   </header>
 
-  <div id="wrapper">
+  <div id="wrapper" class="mt-5">
     <main id="contents">
       <div id="bodycontent">
         {% block bodycontent %}
@@ -233,6 +264,7 @@
       </div>
     </main>
   </div>
+
 </body>
 
 <footer>

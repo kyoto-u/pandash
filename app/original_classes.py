@@ -93,7 +93,18 @@ class TimeLeft():
                 msg = str(floor(hours)) + unit_hour[self.language]
         elif weeks < 1:
             # 一週間未満
-            judge_style = 'one_week'
+            if days==1:
+                judge_style = 'two_day'
+            elif days==2:
+                judge_style = 'three_day'
+            elif days==3:
+                judge_style = 'four_day'
+            elif days==4:
+                judge_style = 'five_day'
+            elif days==5:
+                judge_style = 'six_day'
+            else:
+                judge_style = 'one_week'
             if floor(days) == 1:
                 msg = str(floor(days)) + unit_day_single[self.language]
             else:

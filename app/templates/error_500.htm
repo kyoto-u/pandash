@@ -1,24 +1,89 @@
-{% extends "_homebase.htm" %}
-{% block homebodycontent %}
-<div class="container">
-    <div class="container ml-md-5">
-        <div class="row mt-4">
-            <div class="col-sm-12 col-md-6 ml-md-5">
-                <div class="mx-auto mt-2 mb-5">
-                    <h1 style="font-family:Lucida Console; font-size: xx-large;">500 Internal Server Error</h1>
-                    <h2>アクセスしようとしたページは表示できません</h2>
-                </div>
-                <div>
-                    システムエラーが発生しております。お手数ですが、時間をおいてから再度お試しください。
-                </div>
+<html>
 
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PandAsh</title>
+    <!-- BootstrapのCSS読み込み -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <!-- jQuery読み込み -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
+    <!-- BootstrapのJS読み込み -->
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+    <script src="https://kit.fontawesome.com/7bb95e7ca3.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" type="text/css">
+</head>
+
+<body>
+    <div class="logos">
+        <nav class="navbar navbar-light bg-light" id="logonav">
+            <div class="row">
+                <a href="/welcome" class=navbar-brand>
+                    <img id="siteface" src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ"
+                        width="175px" height="60px">
+                </a>
             </div>
-            <div class="col-sm-12 col-md-4 mr-md-5 ml-sm-5">
-                <img id="404image" class="mt-5" src="{{ url_for('static', filename='images/error500logo.jpg') }}"
-                    alt="ロゴ" width="280px" height="280px">
-            </div>
+        </nav>
+        <!--メニュー-->
+        <nav class="navbar navbar-expand md_fixed navbar-dark bg-dark" style="min-height:30px">
+
+        </nav>
+        <div class="
+        {% if '/_help' in request.path  %}
+            d-none
+        {% else %}
+            d-block d-md-none
+        {% endif %}
+        ">
         </div>
     </div>
-</div>
-</div>
-{% endblock %}
+    <div class="col-12">
+        <div class="container">
+            <div class="container ml-md-5">
+                <div class="row mt-4">
+                    <div class="col-sm-12 col-md-6 ml-md-5">
+                        <div class="mx-auto mt-2 mb-5">
+                            <h1 style="font-family:Lucida Console; font-size: xx-large;">500 Internal Server Error</h1>
+                            <h2>アクセスしようとしたページは表示できません</h2>
+                        </div>
+                        <div>
+                            システムエラーが発生しております。お手数ですが、時間をおいてから再度お試しください。
+                        </div>
+                        <div>
+                            {{msg}}
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4 mr-md-5 ml-sm-5">
+                        <img id="404image" class="mt-5" src="{{ url_for('static', filename='images/error500logo.jpg') }}"
+                            alt="ロゴ" width="280px" height="280px">
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+
+
+
+    <footer>
+        <div id="footercont" class="container-fluid">
+            <div class="row">
+                <div class="ml-auto mr-5">
+                    <small>Copyright 2020 Institute for Information Management and Communication. All rights
+                        reserved.</small><br>
+                    <small>PandAsh</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+
+
+</html>

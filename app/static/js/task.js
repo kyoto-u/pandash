@@ -5,6 +5,13 @@ $(function() {
     function window_load(){
       var display_width = $(window).width();
       $('a.task_link').on('click', function(){
+        var quiz = $(this).attr('name');
+        var post_url = ''
+        if (quiz=="True"){
+          post_url = '/quiz_clicked';
+        } else if (quiz=="False"){
+          post_url = '/task_clicked';
+        }
         var task_ids = new Array();
         var task_id = $(this).parent().parent().attr('id');
         $(this).parent().parent().find('i').remove();
@@ -12,7 +19,7 @@ $(function() {
         var task_ids = JSON.stringify({"task_ids":task_ids});
         $.ajax({
             type: 'POST',
-            url: '/task_clicked',
+            url: post_url,
             data: task_ids,
             contentType: 'application/json',
             success: function(response){
@@ -34,6 +41,13 @@ $(function() {
             dr_id = ui.draggable.find('.task_tag').attr("href");
             dr_sub = ui.draggable.find('.subject').text();
             assignment_id = ui.draggable.attr("id");
+            var quiz = ui.draggable.find('.task_tag').attr("name");
+            var post_url = ''
+            if (quiz=="True"){
+              post_url = '/quiz_finish';
+            } else if (quiz=="False"){
+              post_url = '/task_finish'
+            }
             var add_div_1 = $('<div></div>');
             var add_div_2 = $('<div></div>');
             var add_li = $('<li></li>');
@@ -49,6 +63,7 @@ $(function() {
             add_button.append(add_i);
             add_a.attr("href", dr_id);
             add_a.attr("id", assignment_id+"new");
+            add_a.attr("name", quiz)
             add_a.html(dr_text);
             add_li.html(dr_sub);
             add_li.append($('<br>'));
@@ -64,7 +79,7 @@ $(function() {
             var task_id = JSON.stringify({"task_id":a_ids});
             $.ajax({
               type: 'POST',
-              url: '/task_finish',
+              url: post_url,
               data: task_id,
               contentType: 'application/json',
               success: function(response){
@@ -91,6 +106,13 @@ $(function() {
             $('.new_task_btn').on('click', function(){
               dr_id = $(this).parent().parent().find('li').find('a').attr('href');
               new_assignment_id = $(this).parent().parent().find('li').find('a').attr('id');
+              quiz = $(this).parent().parent().find('li').find('a').attr('name');
+              var post_url = ''
+              if (quiz=="True"){
+                post_url = '/quiz_unfinish';
+              } else if (quiz=="False"){
+                post_url = '/task_unfinish'
+              }
               assignment_id = new_assignment_id.slice(0,-3);
               old_task = $('#' + assignment_id);
               old_task.css("display", "table");
@@ -101,7 +123,7 @@ $(function() {
               var task_id = JSON.stringify({"task_id":a_ids});
               $.ajax({
                 type: 'POST',
-                url: '/task_unfinish',
+                url: post_url,
                 data: task_id,
                 contentType: 'application/json',
                 success: function(response){
@@ -138,6 +160,13 @@ $(function() {
             dr_text = ui.draggable.find('a').text();
             dr_id = ui.draggable.find('a').attr('href');
             new_assignment_id = ui.draggable.find('a').attr('id');
+            quiz = ui.draggable.find('a').attr('name');
+            var post_url = ''
+            if (quiz=="True"){
+              post_url = '/quiz_unfinish';
+            } else if (quiz=="False"){
+              post_url = '/task_unfinish'
+            }
             assignment_id = new_assignment_id.slice(0,-3);
             old_task = $('#' + assignment_id);
             old_task.css("display", "table");
@@ -148,7 +177,7 @@ $(function() {
             var task_id = JSON.stringify({"task_id":a_ids});
             $.ajax({
               type: 'POST',
-              url: '/task_unfinish',
+              url: post_url,
               data: task_id,
               contentType: 'application/json',
               success: function(response){

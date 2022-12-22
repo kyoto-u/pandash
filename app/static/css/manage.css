@@ -1,0 +1,59 @@
+﻿
+#menubar{
+    color: white;
+}
+
+#inquerys{
+    height: 100vh;
+    border-right: 1px solid #ccc;
+    overflow-y: auto;
+    padding-bottom:300px;
+}
+
+#inquery_table{
+    font-size:small;
+}
+
+#inquery_title{
+     border-bottom: 1px solid #ccc;
+}
+
+#inquery_content{
+    min-height: 250px;
+}
+
+#reply_form{
+    height:100vh;
+    overflow-y: auto;
+    padding-bottom:300px
+}
+
+#reply_content{
+    border-top: 1px solid #ccc;
+}
+
+#reply_textarea{
+    min-height:150px;
+}
+
+.graph-canvas{
+    max-width:calc(100wd/2);
+}
+
+.nav-link{
+    background-color: white;
+    color: black;
+}
+.nav-link.active{
+    background-color:rgb(92, 154, 179) !important;
+    color: white !important;
+}
+
+.nav-link.active.show{
+    background-color:rgb(92, 154, 179);
+    color: white;
+}
+
+.inquery_selected{
+    background-color: skyblue;
+}

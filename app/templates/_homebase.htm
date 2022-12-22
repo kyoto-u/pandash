@@ -17,15 +17,16 @@
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
     <script src="https://kit.fontawesome.com/7bb95e7ca3.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 </head>
 
 <body>
-    <div class="fixed-top logos">
+    <div class="logos">
         <nav class="navbar navbar-light bg-light" id="logonav">
             <div class="row">
                 <a href="/welcome" class=navbar-brand>
                     <img id="siteface" src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ"
-                        width="175px" height="60px">
+                        height="50">
                 </a>
             </div>
         </nav>
@@ -65,7 +66,7 @@
             {% include "home_pagetransition.htm" %}
         </div>
     </div>
-    <div class="col-12">
+    <div class="col-12 pt-5">
         {% block homebodycontent %}
         Replace This
         {% endblock %}
