@@ -659,11 +659,11 @@ def announcement_clicked():
         return 'failed'
 
         
-@app.route('/announcement_all_clicked', method=['POST'])
+@app.route('/announcement_all_clicked', methods=['POST'])
 def annoucnement_all_clicked():
     studentid = session.get('student_id')
     if studentid:
-        with open_db_ses as db_ses:
+        with open_db_ses() as db_ses:
             update_all_tasks_clicked_status(studentid, db_ses, mode="anc")
         return 'success'
     else:

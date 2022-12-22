@@ -566,7 +566,7 @@ def update_all_tasks_clicked_status(studentid, db_ses, mode="task"):
         for i in enrollments:
             update_list.append({"sa_id":f"{studentid}:{i.announcement_id}","checked":1})
         db_ses.bulk_update_mappings(studentannouncement.Student_Announcement,update_list)
-    db_ses.comit()
+    db_ses.commit()
     return
 
 
