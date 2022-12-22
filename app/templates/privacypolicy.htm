@@ -1,90 +1,50 @@
-﻿<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PandAshプライバシポリシ</title>
-    <!-- BootstrapのCSS読み込み -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-    <!-- jQuery読み込み -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
-    <!-- BootstrapのJS読み込み -->
-    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
-    <script src="https://kit.fontawesome.com/7bb95e7ca3.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/privacypolicy.css') }}">
-</head>
-
-<body>
+﻿{% extends "home_afterlogin.htm" %}
+{% block home_afterlogin_homecontent %}
+<div class="container">
     <div>
-        <nav class="navbar navbar-light bg-light" id="logonav">
-            <div class="row">
-                <a href="/welcome" class="navbar-brand">
-                    <img id="siteface" src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ"
-                        width="175px" height="60px">
-                </a>
-            </div>
-        </nav>
         <nav class="navbar navbar-light bg-dark">
             <h3 style="color:white">プライバシポリシ</h3>
         </nav>
     </div>
-    <div class="container mt-3">
-        <p>
+
+    <p>
         PandAshにおいて、個人情報の取扱いは法令を遵守し、<a
             href="https://www.kyoto-u.ac.jp/uni_int/kitei/reiki_honbun/w002RG00000963.html">京都大学における個人情報の保護に関する規程</a>に基づいてサービスを運用します。
-        </p>
-        <h2>個人情報の取り扱い</h2>
-        <p>
-            PandAshは収集した個人情報を後述する用途以外で用いません。また、サービス運用に関係のない目的での個人情報の転送、販売をしません。
-        </p>
-        <h2>個人情報の収集</h2>
-        <p>
-            PandAshはPandA上の以下に示す情報を収集します。
-        <ul>
-            <li>ユーザーID</li>
-            <li>ユーザーが参加しているコースサイト</li>
-            <li>ユーザーの時間割</li>
-            <li>ユーザーの課題に関する情報（課題名、課題内容、締め切り日時、提出状況）</li>
-            <li>コースサイトにアップロードされた授業資料</li>
-            <li>コースサイトに掲示されたお知らせ</li>
-        </ul>
-        ● PandAshはユーザーID , 参加しているコースサイトの情報を、課題・授業資料に関する情報を取得するために使用します。また、コースサイトごとに課題や授業資料を整理して表示する機能のために使用します。<br>
-        ● PandAshはユーザーの時間割を、課題情報を時間割で表示する機能のために使用します。<br>
-        ● PandAshは課題に関する情報を、課題情報を表示する機能のために使用します。<br>
-        ● PandAshは授業資料の情報を、授業資料を表示、ダウンロードする機能のために使用します。<br>
-        ● PandAshはお知らせの情報を、お知らせを表示する機能に使用します。<br>
-        </p>
-        <p>
-            PandAshは以下の情報を収集します。
-        <ul>
-            <li>PandAshへの最終アクセス日時</li>
-            <li>KULASISに掲示されたお知らせ</li>
-        </ul>
-        ● PandAshへの最終アクセス日時の情報は、課題情報の変更を検出するときに使用します。<br>
-        ● KULASISに掲示されたお知らせは、お知らせを表示する機能に使用します。<br>
-        </p>
-        <h2>発効日</h2>
-        <p>
-            このバージョンのポリシーは<strong>YYYY年MM月DD日</strong>に発効します。
-        </p>
-    </div>
-    <footer>
-        <div id="footercont" class="container-fluid">
-            <div class="row">
-                <div class="ml-auto mr-5">
-                    <small>Copyright 2021 Institute for Information Management and Communication. All rights
-                        reserved.</small><br>
-                    <small>PandAsh</small>
-                </div>
-            </div>
-        </div>
-    </footer>
-</body>
+    </p>
+    <h2>個人情報の取り扱い</h2>
+    <p>
+        PandAshは収集した個人情報を後述する用途以外で用いません。また、サービス運用に関係のない目的での個人情報の転送、販売をしません。
+    </p>
+    <h2>個人情報の収集</h2>
+    <p>
+        PandAshはPandA上の以下に示す情報を収集します。
+    <ul>
+        <li>ユーザーID</li>
+        <li>ユーザーが参加しているコースサイト</li>
+        <li>ユーザーの時間割</li>
+        <li>ユーザーの課題に関する情報（課題名、課題内容、締め切り日時、提出状況）</li>
+        <li>コースサイトにアップロードされた授業資料</li>
+        <li>コースサイトに掲示されたお知らせ</li>
+    </ul>
+    ● PandAshはユーザーID , 参加しているコースサイトの情報を、課題・授業資料に関する情報を取得するために使用します。また、コースサイトごとに課題や授業資料を整理して表示する機能のために使用します。<br>
+    ● PandAshはユーザーの時間割を、課題情報を時間割で表示する機能のために使用します。<br>
+    ● PandAshは課題に関する情報を、課題情報を表示する機能のために使用します。<br>
+    ● PandAshは授業資料の情報を、授業資料を表示、ダウンロードする機能のために使用します。<br>
+    ● PandAshはお知らせの情報を、お知らせを表示する機能に使用します。<br>
+    </p>
+    <p>
+        PandAshは以下の情報を収集します。
+    <ul>
+        <li>PandAshへの最終アクセス日時</li>
+        <li>KULASISに掲示されたお知らせ</li>
+    </ul>
+    ● PandAshへの最終アクセス日時の情報は、課題情報の変更を検出するときに使用します。<br>
+    ● KULASISに掲示されたお知らせは、お知らせを表示する機能に使用します。<br>
+    </p>
+    <h2>発効日</h2>
+    <p>
+        このバージョンのポリシーは<strong>YYYY年MM月DD日</strong>に発効します。
+    </p>
+</div>
 
-</html>
+{% endblock %}

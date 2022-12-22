@@ -1,125 +1,83 @@
-﻿<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PandAshとは？</title>
-    <!-- BootstrapのCSS読み込み -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-    <!-- jQuery読み込み -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
-    <!-- BootstrapのJS読み込み -->
-    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
-    <script src="https://kit.fontawesome.com/7bb95e7ca3.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/what_is_pandash.css') }}">
-</head>
-
-<body>
-    <div>
-        <nav class="navbar navbar-light bg-light" id="logonav">
-            <div class="row">
-                <a href="/welcome" class="navbar-brand">
-                    <img id="siteface" src="{{ url_for('static', filename='images/PandAsh_logo.png') }}" alt="ロゴ"
-                        width="175px" height="60px">
-                </a>
-            </div>
-        </nav>
-        <nav class="navbar navbar-light bg-dark">
-            <h3 style="color:white">PandAshとは？</h3>
-        </nav>
-    </div>
-    <div class="container">
-        <p>
-        <div class="article">
-            <h4 style="background-color: gainsboro; color:black">PandAshは,京都大学情報環境機構のCode for
-                PandA事例認定を受けています（認定日：2021年MM月DD日）.詳しくは<a href="#">こちら</a>をご覧ください.</h4><br>
-            <small>このページの作成日：2021年5月18日　最終更新日：2021年5月27日</small>
-            <div class="row">
-                <a class="mx-1 my-3" href="/welcome">
-                    <img src="{{ url_for('static', filename='images/PandAsh_logo.png')}}" alt="ロゴ" style="width:200px;">
-                </a>
-            </div>
-            <div class="article">
-                PandAshは京都大学の学習支援システム<a href="https://panda.ecs.kyoto-u.ac.jp/portal/">PandA</a>のためのダッシュボードツールです。<br />
-                PandA上の課題の状態を管理したり、PandAにアップされた授業資料を一括でダウンロードすることが出来ます。<br />
-                詳しい使い方についてはPandAshチュートリアル、またはPandA学生用マニュアルを参考にしてください。
-            </div>
-            <div class="reference">
-                <a href="/_tutorial">PandAshチュートリアル</a><br />
-                <a href="https://panda.ecs.kyoto-u.ac.jp/student-guidebook/templates/index.htm">PandA学生用マニュアル</a>
-            </div>
+﻿{% extends "home_afterlogin.htm" %}
+{% block home_afterlogin_homecontent %}
+<div>
+    <nav class="navbar navbar-light bg-dark">
+        <h3 style="color:white">PandAshとは？</h3>
+    </nav>
+</div>
+<div class="container">
+    <p>
+    <div class="article">
+        <h4 style="background-color: gainsboro; color:black">PandAshは,京都大学情報環境機構のCode for
+            PandA事例認定を受けています（認定日：2021年MM月DD日）.詳しくは<a href="#">こちら</a>をご覧ください.</h4><br>
+        <small>このページの作成日：2021年5月18日　最終更新日：2021年5月27日</small>
+        <div class="row">
+            <a class="mx-1 my-3" href="/welcome">
+                <img src="{{ url_for('static', filename='images/PandAsh_logo.png')}}" alt="ロゴ" style="width:200px;">
+            </a>
         </div>
-        </p>
-        <p>
-        <h2>PandAshが開発されたきっかけ</h2>
         <div class="article">
-            京都大学の学習支援システムPandAは平成25年度前期から運用を開始し、京都大学の学生、教職員の方々に利用されてきました。<br />
-            サービスを運用するにつれて、学生と教職員がオンラインで通信できるという利便性が評価されましたが、一方で不便な点も指摘されるようになりました。<br />
-            主な意見として、
+            PandAshは京都大学の学習支援システム<a href="https://panda.ecs.kyoto-u.ac.jp/portal/">PandA</a>のためのダッシュボードツールです。<br />
+            PandA上の課題の状態を管理したり、PandAにアップされた授業資料を一括でダウンロードすることが出来ます。<br />
+            詳しい使い方についてはPandAshチュートリアル、またはPandA学生用マニュアルを参考にしてください。
+        </div>
+        <div class="reference">
+            <a href="/_tutorial">PandAshチュートリアル</a><br />
+            <a href="https://panda.ecs.kyoto-u.ac.jp/student-guidebook/templates/index.htm">PandA学生用マニュアル</a>
+        </div>
+    </div>
+    </p>
+    <p>
+    <h2>PandAshが開発されたきっかけ</h2>
+    <div class="article">
+        京都大学の学習支援システムPandAは平成25年度前期から運用を開始し、京都大学の学生、教職員の方々に利用されてきました。<br />
+        サービスを運用するにつれて、学生と教職員がオンラインで通信できるという利便性が評価されましたが、一方で不便な点も指摘されるようになりました。<br />
+        主な意見として、
+        <ul>
+            <li>PandA上で出題された課題を見逃してしまう</li>
+            <li>授業資料のダウンロードが面倒</li>
+        </ul>
+        というのがありました。<br>
+        2020年春、新型コロナウィルスの蔓延によって講義がオンラインになり、PandAの利用が増えるとともにPandAへの不満の声も大きくなりました。<br />
+        PandAsh開発前にも、上の問題を解消するような非公式ツールがインターネット上で公開されていましたが、情報環境機構からそういうツールを出してほしいという要望があり、開発に乗り切りました。
+    </div>
+    </p>
+    <p>
+    <h2>PandAshの仕組み(簡単な技術的説明)</h2>
+    <div class="article">
+        　PandAshは、PandAが管理している学生データを、PandAに備わっているデータを提供する仕組み(API)によって取得し、データを整理して表示しています。<br>
+        　個人情報の詳しい取扱いについては以下のプライバシポリシを参照してください。<br>
+        <div class="reference">
+            <a href="/privacypolicy">プライバシポリシ</a>
+        </div>
+    </div>
+    </p>
+    <p>
+    <h2>PandAsh開発に関する情報</h2>
+    <div class="article">
+        <div>
+            開発代表者：<br>
             <ul>
-                <li>PandA上で出題された課題を見逃してしまう</li>
-                <li>授業資料のダウンロードが面倒</li>
+                <li>
+                    梶田 将司（情報環境機構／ＩＴ企画室／教授）<br>
+                </li>
             </ul>
-            というのがありました。<br>
-            2020年春、新型コロナウィルスの蔓延によって講義がオンラインになり、PandAの利用が増えるとともにPandAへの不満の声も大きくなりました。<br />
-            PandAsh開発前にも、上の問題を解消するような非公式ツールがインターネット上で公開されていましたが、情報環境機構からそういうツールを出してほしいという要望があり、開発に乗り切りました。
         </div>
-        </p>
-        <p>
-        <h2>PandAshの仕組み(簡単な技術的説明)</h2>
-        <div class="article">
-            　PandAshは、PandAが管理している学生データを、PandAに備わっているデータを提供する仕組み(API)によって取得し、データを整理して表示しています。<br>
-            　個人情報の詳しい取扱いについては以下のプライバシポリシを参照してください。<br>
-            <div class="reference">
-                <a href="/privacypolicy">プライバシポリシ</a>
-            </div>
+        <div>
+            開発者：
+            <ul>
+                <li>赤山 慎治（工学部／地球工学科／学部生）</li>
+                <li>喜多 涼介（工学部／学部生）</li>
+                <li>中井 智也（理学部／理学科／学部生）</li>
+            </ul>
         </div>
-        </p>
-        <p>
-        <h2>PandAsh開発に関する情報</h2>
-        <div class="article">
-            <div>
-                開発代表者：<br>
-                <ul>
-                    <li>
-                        梶田 将司（情報環境機構／ＩＴ企画室／教授）<br>
-                    </li>
-                </ul>
-            </div>
-            <div>
-                開発者：
-                <ul>
-                    <li>赤山 慎治（工学部／地球工学科／学部生）</li>
-                    <li>喜多 涼介（工学部／学部生）</li>
-                    <li>中井 智也（理学部／理学科／学部生）</li>
-                </ul>
-            </div>
-            <div>
-                ソースコード：<br>
-                　PandAshはApache License 2.0ライセンスによりオープンソースソフトウェアとして公開されています。<br>
-                　GitHub：<a href="https://github.com/kyoto-u/PandAsh">https://github.com/kyoto-u/pandash</a><br>
-            </div>
-            
+        <div>
+            ソースコード：<br>
+            　PandAshはApache License 2.0ライセンスによりオープンソースソフトウェアとして公開されています。<br>
+            　GitHub：<a href="https://github.com/kyoto-u/PandAsh">https://github.com/kyoto-u/pandash</a><br>
         </div>
-        </p>
-    </div>
-    <footer>
-        <div id="footercont" class="container-fluid">
-            <div class="row">
-                <div class="ml-auto mr-5">
-                    <small>Copyright 2021 Institute for Information Management and Communication. All rights
-                        reserved.</small><br>
-                    <small>PandAsh</small>
-                </div>
-            </div>
-        </div>
-    </footer>
-</body>
 
-</html>
+    </div>
+    </p>
+</div>
+{% endblock %}

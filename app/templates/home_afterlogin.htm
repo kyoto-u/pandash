@@ -1,5 +1,13 @@
 ﻿{% extends "_base.htm" %}
 {% block bodycontent %}
-
+<div class="row col-12">
+    <div class="d-md-block col-md-2 col-sm-12 border-right border-bottom mb-5">
+        {% include "home_afterlogin_pagetransition.htm" %}
+    </div>
+    <div class="col-md-10 col-sm-12">
+        {% block home_afterlogin_homecontent %}
+        {% endblock %}
+    </div>
+</div>
 
 {% endblock %}

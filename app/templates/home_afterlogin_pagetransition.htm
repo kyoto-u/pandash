@@ -1,0 +1,115 @@
+﻿<div class="navbar navbar-expand-md navbar-light bg-light mb-md-5" style="padding: 0px">
+    <a class="navbar-brand d-block d-md-none" href="#" style="color: black">ページ切り替え</a>
+    <button class="navbar-toggler mr-5" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
+        aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03" style="padding: 0px">
+        <ul class="nav w-100 flex-column mx-auto" style="width: inherit">
+            <li class="nav-item border-bottom">
+                <a href="/update_afterlogin" role="button" class="
+            btn btn-light btn-lg btn-block
+            {%
+            if
+            '/update'
+            in
+            request.path
+            %}
+            active
+            {%
+            endif
+            %}
+          "><i class="fas fa-chart-line"></i> Update log</a>
+            </li>
+            <li class="nav-item border-bottom">
+                <a href="/privacypolicy" role="button" class="
+                        btn btn-light btn-lg btn-block
+                        {%
+                        if
+                        '/privacypolicy'
+                        in
+                        request.path
+                        %}
+                        active
+                        {%
+                        endif
+                        %}
+                      "><i class="fas fa-book"></i> PrivacyPolicy</a>
+            </li>
+            <li class="nav-item border-bottom">
+                <a href="/what_is_pandash" role="button" class="
+                        btn btn-light btn-lg btn-block
+                        {%
+                        if
+                        '/what_is_pandash'
+                        in
+                        request.path
+                        %}
+                        active
+                        {%
+                        endif
+                        %}
+                      "><i class="fas fa-book"></i> What is Pandash</a>
+            </li>
+            <li class="nav-item border-bottom">
+                <a href="/option" role="button" class="
+                        btn btn-light btn-lg btn-block
+                        {%
+                        if
+                        '/option'
+                        in
+                        request.path
+                        %}
+                        active
+                        {%
+                        endif
+                        %}
+                      "><i class="fas fa-cog"></i> Option</a>
+            </li>
+            <li class="nav-item border-bottom">
+                <a href="/contactus" role="button" class="
+                        btn btn-light btn-lg btn-block
+                        {%
+                        if
+                        '/update'
+                        in
+                        request.path
+                        %}
+                        active
+                        {%
+                        endif
+                        %}
+                      "><i class="fas fa-paper-plane"></i> Contact us</a>
+            </li>
+            <li class="nav-item border-bottom">
+                <a href="/faq_afterlogin" role="button" class="
+                                    btn btn-light btn-lg btn-block
+                                    {%
+                                    if
+                                    '/update'
+                                    in
+                                    request.path
+                                    %}
+                                    active
+                                    {%
+                                    endif
+                                    %}
+                                  "><i class="fas fa-tasks"></i> FAQ</a>
+            </li>
+            <li class="nav-item">
+                <div class="d-block d-md-none" id="helpbutton_for_small">
+                    <a role="button" target="_blank" href="/_tutorial" class="btn btn-light btn-lg btn-block">
+                        <i class="far fa-question-circle"></i> Help
+                    </a>
+                </div>
+                <div class="d-none d-md-block" id="helpbutton_for_medium">
+                    <a onclick="window.open('./_tutorial', '', 'width=760,height=500'); return false;" role="button"
+                        class="btn btn-light btn-lg btn-block">
+                        <i class="far fa-question-circle"></i> Help
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--update log,what_is_pandash & privacypolicy,faq,help,option,contact us-->
