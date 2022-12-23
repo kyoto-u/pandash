@@ -18,7 +18,6 @@ logging.basicConfig(level=logging.INFO)
 app.secret_key ='pandash'
 
 global pgtids
-global redirect_pages
 
 # url list
 # 
@@ -63,7 +62,7 @@ def login():
         redirect_page = request.args.get('page')
         if not redirect_page:
             redirect_page =""
-        redirect_pages[session['student_id']] = redirect_page
+        session['redirect_page'] = redirect_page
     cas_login_url = cas_client.get_login_url(service_url=app_login_url)
     return redirect(cas_login_url)
 
@@ -172,16 +171,12 @@ def login_successful(ses):
         
     # リダイレクト先を決める
     if 'student_id' in session:
-        if session['student_id'] in redirect_pages:
-            redirect_page = redirect_pages[session['student_id']]
-            del(redirect_pages[session['student_id']])
-            redirect_page = f"{app_url}/{redirect_page}"
-            if re.match(app_login_url, redirect_page):
-                logging.info(f"Requested redirect '{redirect_page}' is invalid because it is login page")
-            elif redirect_page == f"{app_url}/":
-                logging.info(f"Requested redirect '{redirect_page}' is invalid because it is portal page")
-            else:
-                return flask.redirect(redirect_page)
+        redirect_page=session.get('redirect_page')
+        if not 'redirect_page' in session:
+            redirect_page=""
+        if redirect_page in ['tasklist_redirect','overview','announcement_list','announcement_overview','resources_sample']:
+            del(session['redirect_page'])
+            return flask.redirect(url_for(redirect_page))
         # 前回情報がない場合のdefaultページ
         return flask.redirect(flask.url_for('tasklist', show_only_unfinished = show_only_unfinished, max_time_left = 3))
     # PGTなどが入手できたにもかかわらずstudent_idがないのは不具合であるのでエラー画面に飛ばす
@@ -973,5 +968,4 @@ if __name__ == '__main__':
     log_handler.setLevel(logging.DEBUG)
     app.logger.addHandler(log_handler)
     pgtids={}
-    redirect_pages={}
     app.run(debug=True, host='0.0.0.0', port=5000)
