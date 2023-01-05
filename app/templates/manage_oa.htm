@@ -59,6 +59,12 @@
                     <h3><i class="fas fa-feather"></i> 問い合わせ</h3>
                 </a>
             </li>
+            <li class="nav-item">
+                <a id="tab-inquery" href="#log" class="nav-link" data-toggle="tab" role="tab" aria-controls="tab-log"
+                    aria-selected="false">
+                    <h3><i class="fas fa-robot"></i> ログ</h3>
+                </a>
+            </li>
         </ul>
 
         <div class="tab-content">
@@ -224,6 +230,15 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="log" aria-labelledby="tab-log">
+                <div class="row">
+                    <div class="col-12">
+                        {% for l in log %}
+                            {{l}}<br>
+                        {%endfor%}
                     </div>
                 </div>
             </div>
