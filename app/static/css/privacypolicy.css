@@ -9,3 +9,6 @@ h1{
     margin-top:10px;
     margin-bottom:20px;
 }
+body{
+    white-space: nowrap
+}

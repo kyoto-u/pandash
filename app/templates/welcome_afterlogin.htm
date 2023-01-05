@@ -1,0 +1,50 @@
+﻿{% extends "home_afterlogin.htm" %}
+{% block home_afterlogin_homecontent %}
+<div class="container">
+    <div class="row">
+        <section class="col-md-5 col-sm-12 mb-5">
+            <h3 class="border-bottom border-dark"><b>・PandAshについて</b></h3>
+            PandAshはPandAと連携したダッシュボードサービスです。右上のログインボタンからログインしてください。<br>
+            <p class="mt-5">
+                [関連ページ]<br>
+                ●<a href="/what_is_pandash">PandAshとは？</a><br>
+                ●<a href="/privacypolicy">プライバシポリシ</a>
+            </p>
+        </section>
+        <section class="col-md-6 col-sm-12">
+            <h3 class="border-bottom border-dark"><i class="fas fa-info-circle">トピックス</i></h3>
+            <!--トピックメッセージのフォーマット-->
+            <div class="my-4">
+                <p style="background-color: whitesmoke; border: 1px solid gray;">
+                    現在PandAshは<strong>試用運転中</strong>です。ご利用中に不具合が発生する場合がありますがご了承ください。不具合を発見されましたらPandAshにログインした後、メニュー→お問い合わせよりご報告いただけると幸いです。
+                </p>
+                <p>
+                    <b>
+                        ・PandAshを利用する際のお願い
+                    </b>
+                    <br>PandAshはPandAの課題データと同期しておりますが、サーバーの負荷軽減のため、ログイン時を除いて課題、履修科目の更新は<strong>基本手動</strong>となっています。
+                    <br>手動で課題をPandAと同期させる場合はログイン後各ページの右上にある「情報を更新」、
+                    <br>履修科目をPandAと同期させる場合はログイン後右上の「メニュー」->「設定」->「表示科目」より、「更新する」
+                    <br>を押すようお願いいたします。
+                    <br>
+
+                    2021/02/10 19:24:00
+                </p>
+            </div>
+            {% macro topicmess(txt, dat) %}
+            <div class="my-4">
+                <b>{{ txt }}</b><br>
+                ({{ dat }})
+            </div>
+            {% endmacro %}
+            <!---->
+            <!-- 
+        {{ topicmess('テストのため、課題の未完了・完了の変更をリセットしました。
+                    <br>そのため、これまでに完了にした課題が未完了に戻っています。
+                    <br>また、リセット後の初めてのアクセス時はログインにかかる時間が長くなっておりますのでご注意ください。
+                    <br>β版のため、今後もリセットを行う可能性がありますのでご理解の程よろしくお願い致します。', '2021/01/25 20:25:50') }}
+        {{ topicmess('サンプルメッセージ2', 'YYYY/MM/DD HH:MM:SS') }} -->
+        </section>
+    </div>
+</div>
+{% endblock %}

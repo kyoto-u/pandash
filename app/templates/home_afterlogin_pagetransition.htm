@@ -5,7 +5,23 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03" style="padding: 0px">
+        
         <ul class="nav w-100 flex-column mx-auto" style="width: inherit">
+            <li class="nav-item border-bottom">
+                <a href="/welcome_afterlogin" role="button" class="
+                        btn btn-light btn-lg btn-block
+                        {%
+                        if
+                        '/welcome'
+                        in
+                        request.path
+                        %}
+                        active
+                        {%
+                        endif
+                        %}
+                      "><i class="fas fa-chart-line"></i> Welcome</a>
+            </li>
             <li class="nav-item border-bottom">
                 <a href="/update_afterlogin" role="button" class="
             btn btn-light btn-lg btn-block
@@ -34,7 +50,7 @@
                         {%
                         endif
                         %}
-                      "><i class="fas fa-book"></i> PrivacyPolicy</a>
+                      "><i class="fas fa-book"></i>PrivacyPolicy</a>
             </li>
             <li class="nav-item border-bottom">
                 <a href="/what_is_pandash" role="button" class="
