@@ -188,6 +188,10 @@ footer {
     min-height: 100px;
 }
 
+.attention{
+    font-weight: bold;
+}
+
 .striped_gray{
     background-color: #f1f1f1;
 }
