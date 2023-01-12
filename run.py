@@ -847,11 +847,17 @@ def manage_admin():
 @check_oa
 def manage_oa():
     # !dashboardの情報
-    
+    log = ""
+    try:
+        with open("DEBUG_LOG.log") as f:
+            log = f.read()
+    except:
+        log = ""
+    log_list = log.split("\n")
     with open_db_ses() as db_ses: 
         dashboard = get_access_logs(db_ses)
         frms=get_forums("",False,db_ses,all=True)
-    return flask.render_template('manage_oa.htm', dashboard=dashboard,frms=frms,year_sems={})
+    return flask.render_template('manage_oa.htm', dashboard = dashboard, frms = frms, year_sems = {}, log = log_list)
 
 # oa 管理ページに/manage/year_semesterのリンクを設置
 @app.route('/manage/year_semester_update')
@@ -966,6 +972,7 @@ def before_request():
 if __name__ == '__main__':
     log_handler = logging.FileHandler("DEBUG_LOG.log")
     log_handler.setLevel(logging.DEBUG)
+    app.logger.setLevel(logging.INFO)
     app.logger.addHandler(log_handler)
     pgtids={}
     app.run(debug=True, host='0.0.0.0', port=5000)
