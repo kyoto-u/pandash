@@ -234,13 +234,15 @@
                 </div>
             </div>
             <div class="tab-pane" id="log" aria-labelledby="tab-log">
-                <div class="row">
-                    <div class="col-12">
-                        {% for l in log %}
-                            {{l}}<br>
-                        {%endfor%}
+                
+                    <div class="row">
+                        <div class="col-12" id="log_box">
+                            {% for l in log %}
+                                {{l}}<br>
+                            {%endfor%}
+                        </div>
                     </div>
-                </div>
+                
             </div>
         </div>
     </div>

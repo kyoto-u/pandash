@@ -75,7 +75,43 @@ def main(name):
         "reply_contents": "返信内容３",
         "replied": 0
     }
-    log=["samplelog1","samplelog2","samplelog3"]
+    log = [
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)",
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)",
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)",
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)",
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)", 
+        "samplelog1git rev-list --full-history --count develop_newUI --  (completed in 0.239s)",
+        "samplelog2", 
+        "samplelog3"]
     return render_template(templname, path=name,dashboard=dashboard,frms=frms,log=log)
 
 
