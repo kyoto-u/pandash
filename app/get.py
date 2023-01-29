@@ -289,7 +289,7 @@ def get_courses_to_be_taken(studentid, db_ses, mode = 0,include_deleted = 0,retu
                 data.append(coursedata[0])
     return data
 
-def get_forums(student_id,show_only_not_replied,db_ses,all=false):
+def get_forums(student_id,show_only_not_replied,db_ses,all=False):
     if all:
         if show_only_not_replied == False:
             frms = db_ses.query(forum.Forum).all()
