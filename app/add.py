@@ -243,10 +243,12 @@ def add_resource(studentid, data, db_ses, allow_delete=1):
             if i.resource_url == item["resource_url"]:
                 resource_exist = True
                 if item["modifieddate"] != i.modifieddate:
+                    item["primary_id"] = i.primary_id
                     update=True
                 # もし削除扱いになっている場合はそれを直すためにupdateする
                 if i.deleted == 1:
                     item["deleted"]=0
+                    item["primary_id"] = i.primary_id
                     update = True
                 break
         if resource_exist == False:
@@ -469,15 +471,17 @@ def add_student_resource(studentid,data, db_ses,allow_delete=1):
             if i.resource_url == item["resource_url"]:
                 resource_exist = True
                 if item["status"] !=0 and i.status ==0:
+                    item["primary_id"] = i.primary_id
                     update=True
                 # もし削除扱いになっている場合はそれを直すためにupdateする
                 if i.deleted == 1:
+                    item["primary_id"] = i.primary_id
                     update = True
                 break
         if resource_exist == False:
             new_sr.append(item)
         elif update == True:
-            upd_sr.append({"sr_id":item["sr_id"],"deleted":0})
+            upd_sr.append({"primary_id":item["primary_id"],"deleted":0})
     if allow_delete == 1:
         # 逆に、テーブルに格納されている情報について、今回のAPIで取得できたかを調べる。
         for i in sr:
@@ -487,7 +491,7 @@ def add_student_resource(studentid,data, db_ses,allow_delete=1):
                     resource_deleted = False
                     break
             if resource_deleted and i.deleted == 0:
-                upd_sr.append({"sr_id": i.sr_id, "deleted": 1})
+                upd_sr.append({"primary_id": i.primary_id, "deleted": 1})
     if len(new_sr) != 0:
         db_ses.execute(studentresource.Student_Resource.__table__.insert(),new_sr)
     if len(upd_sr) != 0:
