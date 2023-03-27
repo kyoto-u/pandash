@@ -15,6 +15,14 @@ kulasis_api_url = ""
 app_login_url = app_url + "/login"
 app_logout_url = app_url + "/logout"
 
+# CASを使わない場合の追加設定
+USE_CAS = False
+# PandAでのユーザー
+USERNAME = "user"
+# PandAでのパスワード
+PASSWORD = "password"
+# CASを使わない場合の追加設定ここまで
+
 # 収集する教科の学期一覧(現在はyear_semester.jsonに移動したため利用されていない)
 # 前４ケタ:年度
 # 最後の一桁: 0-> 前期 1->　前期集中 2-> 後期　3 -> 後期集中　4 -> 通年  5 -> 通年集中  9-> どれも取得できなかった場合
