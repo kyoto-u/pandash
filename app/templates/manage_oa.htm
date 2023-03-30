@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
     <!-- jQuery読み込み -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
     <!-- BootstrapのJS読み込み -->
@@ -18,7 +18,9 @@
     <script src="https://kit.fontawesome.com/7bb95e7ca3.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/manage.css') }}" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
     <script src="{{ url_for('static', filename='js/manage.js') }}"></script>
+
 </head>
 
 <body>
@@ -32,7 +34,7 @@
             </div>
         </nav>
         <!--メニュー-->
-        <nav class="navbar navbar-expand md_fixed navbar-dark bg-dark">
+        <nav class="navbar navbar-expand mdashboard.data.d_fixed navbar-dark bg-dark">
             <div class="container" id="menubar">
                 <div class="nav-item">
                     管理者用画面
@@ -57,17 +59,135 @@
                     <h3><i class="fas fa-feather"></i> 問い合わせ</h3>
                 </a>
             </li>
+            <li class="nav-item">
+                <a id="tab-inquery" href="#log" class="nav-link" data-toggle="tab" role="tab" aria-controls="tab-log"
+                    aria-selected="false">
+                    <h3><i class="fas fa-robot"></i> ログ</h3>
+                </a>
+            </li>
         </ul>
 
         <div class="tab-content">
             <div class="tab-pane active" id="dashboard" aria-labelledby="tab-dashboard">
-                利用状況
+                <div class="container-fluid">
+                    <div class="row">
+                        <div id="unique_users_thismon" class="my-3 mx-auto">
+                            今月の利用者数：{{dashboard.unique_data.d_7}}人
+                            （先月比：
+                            {% if dashboard.unique_data.d_7 - dashboard.unique_data.d_6 >= 0 %}
+                            +{{dashboard.unique_data.d_7 - dashboard.unique_data.d_6}}
+                            {% else %}
+                            {{dashboard.unique_data.d_7 - dashboard.unique_data.d_6}}
+                            {%endif%}
+                            ）
+                        </div>
+                        <div id="total_use_thismon" class="my-3 mx-auto">
+                            今月の総利用回数：{{dashboard.total_data.d_7}}回
+                            （先月比：
+                            {% if dashboard.total_data.d_7 - dashboard.total_data.d_6 >= 0 %}
+                            +{{dashboard.total_data.d_7 - dashboard.total_data.d_6}}
+                            {% else %}
+                            {{dashboard.total_data.d_7 - dashboard.total_data.d_6}}
+                            {%endif%}
+                            ）
+                        </div>
+                    </div>
+                    <div id="users_graph">
+
+                        <div class="row">
+                            <canvas id="unique-graph-canvas" class="graph-canvas col-6"></canvas>
+                            <canvas id="total-graph-canvas" class="graph-canvas col-6"></canvas>
+                        </div>
+
+                        <script>
+                            //unique利用者数の推移グラフの描写
+                            var ctx = document.getElementById("unique-graph-canvas");
+                            var linechart = new Chart(ctx, {
+                                type: "line",
+                                data: {
+                                    labels: ["{{dashboard.labels.l_1}}", "{{dashboard.labels.l_2}}", "{{dashboard.labels.l_3}}", "{{dashboard.labels.l_4}}", "{{dashboard.labels.l_5}}", "{{dashboard.labels.l_6}}", "{{dashboard.labels.l_7}}"],
+                                    datasets: [{
+                                        label: "利用者数",
+                                        data: [{{ dashboard.unique_data.d_1}}, {{ dashboard.unique_data.d_2}}, {{ dashboard.unique_data.d_3}}, {{dashboard.unique_data.d_4}}, {{dashboard.unique_data.d_5}}, {{dashboard.unique_data.d_6}}, {{dashboard.unique_data.d_7}}],
+                            borderColor: "rgba(0,0,200,0.5)",
+                                lineTension: 0,
+                                    backgroundColor: "rgba(0,0,0,0)"
+                                        }]
+                                    },
+                            options: {
+                                title: {
+                                    display: true,
+                                        text: "利用者数の推移"
+                                },
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            suggestedMin: 0,
+                                            stepSize: 100,
+                                            callback: function (value, index, values) {
+                                                return value + '人'
+                                            }
+                                        }
+                                    }]
+                                }
+                            }
+                                })
+                        </script>
+                        <script>
+                            //total利用回数の推移グラフの描写
+                            var ctx = document.getElementById("total-graph-canvas");
+                            var linechart = new Chart(ctx, {
+                                type: "line",
+                                data: {
+                                    labels: ["{{dashboard.labels.l_1}}", "{{dashboard.labels.l_2}}", "{{dashboard.labels.l_3}}", "{{dashboard.labels.l_4}}", "{{dashboard.labels.l_5}}", "{{dashboard.labels.l_6}}", "{{dashboard.labels.l_7}}"],
+                                    datasets: [{
+                                        label: "総利用回数",
+                                        data: [{{dashboard.total_data.d_1}}, {{dashboard.total_data.d_2}}, {{dashboard.total_data.d_3}}, {{dashboard.total_data.d_4}}, {{dashboard.total_data.d_5}}, {{dashboard.total_data.d_6}}, {{dashboard.total_data.d_7}}],
+                            borderColor: "rgba(0,0,100,0.5)",
+                                lineTension: 0,
+                                    backgroundColor: "rgba(0,0,0,0)"
+                                    }]
+                                },
+                            options: {
+                                title: {
+                                    display: true,
+                                        text: "総利用回数の推移"
+                                },
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            suggestedMin: 0,
+                                            stepSize: 500,
+                                            callback: function (value, index, values) {
+                                                return value + '回'
+                                            }
+                                        }
+                                    }]
+                                }
+                            }
+                            })
+                        </script>
+                    </div>
+
+                    <!-- 暫定的にボタン追加 -->
+                    <div id="year_semester_update">
+                        <button>
+                            <a href="/manage/year_semester_update">year_semesterの数値を更新する</a>
+                        </button>
+                        <!-- 更新したデータを表示(暫定) -->
+                        <div id="update_message">
+                            {{year_sems}}
+                        </div>
+                    </div>
+
+
+                </div>
             </div>
             <div class="tab-pane" id="inquery" aria-labelledby="tab-inquery">
                 <div class="row">
                     <div id="inquerys" class="col-4">
                         問い合わせ一覧
-                        <table id="inquery_table" class="table table-striped table-sm">
+                        <table id="inquery_table" class="table table-sm">
                             <thead>
                                 <tr>
                                     <td>日時</td>
@@ -75,25 +195,30 @@
                                 <tr>
                             </thead>
                             <tbody>
-                                <tr class="inquery_row">
-                                    <td class="date">2021/11/10 16:54</td>
-                                    <td class="title">問い合わせ１</td>
+                                {% for frm in frms %}
+                                <tr class="inquery_row" id="{{frm.forum_id}}">
+                                    <td class="date">{{frm.createdate}}</td>
+                                    <td class="title">
+                                        {{frm.title}}
+                                        {% if frm.replied == 1 %}
+                                        <i class="fas fa-check" style="color:limegreen"></i>
+                                        {% endif %}
+                                    </td>
+                                    <td class="contents">{{frm.contents}}</td>
+                                    <td class="replied_contents">{{frm.reply_contents}}</td>
                                 </tr>
-                                <tr class="inquery_row">
-                                    <td class="date">2021/11/10 16:56</td>
-                                    <td class="title">問い合わせ２</td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
                     <div id="reply_form" class="col-8">
-                        <div class="container-fluid">
+                        <div class="inquery_form container-fluid" id="forum_base_id">
                             問い合わせ返信フォーム
-                            <div id="inquery_title">
-                                <h4>タイトル：問い合わせ１</h4>
+                            <div class="inquery_title">
+                                <h4 class="inq_title" id="inquery_title">タイトル</h4>
                             </div>
                             <div id="inquery_content">
-                                問い合わせ内容
+                                内容
                             </div>
                             <div id="reply_content">
                                 <div class="form-group">
@@ -101,12 +226,23 @@
                                     <textarea id="reply_textarea" class="form-control"></textarea>
                                 </div>
                                 <div class="row">
-                                    <button type="submit" class="btn btn-primary ml-auto">送信する</button>
+                                    <button type="submit" class="btn btn-primary ml-auto" id="reply_send_button">送信する</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="tab-pane" id="log" aria-labelledby="tab-log">
+                
+                    <div class="row">
+                        <div class="col-12" id="log_box">
+                            {% for l in log %}
+                                {{l}}<br>
+                            {%endfor%}
+                        </div>
+                    </div>
+                
             </div>
         </div>
     </div>

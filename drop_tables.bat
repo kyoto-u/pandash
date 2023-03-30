@@ -1,12 +1,14 @@
 use pandash;
 drop table assignments;
 drop table assignment_attachments;
+drop table comments;
 drop table courses;
 drop table instructors;
 drop table quizzes;
 drop table resources;
 drop table students;
 drop table studentassignments;
+drop table studentcomments;
 drop table studentcourses;
 drop table studentquizzes;
 drop table studentresources;

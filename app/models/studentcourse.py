@@ -11,4 +11,6 @@ class Studentcourse(settings.Base):
     hide = sqlalchemy.Column(Integer(),default=0)
     deleted = sqlalchemy.Column(Integer(),default=0)
 
+    comment_checked =sqlalchemy.Column(Integer(), default=0)
+
 settings.Base.metadata.create_all(settings.engine)

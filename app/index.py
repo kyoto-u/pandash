@@ -1,7 +1,7 @@
 # 他ファイルの複数の関数を利用する関数、あるいはどれにも属さない関数
 
 from math import *
-from .settings import app_url
+from .settings import app_url,session
 import re
 from pprint import pprint
 import copy
@@ -9,9 +9,19 @@ import asyncio
 from .add import *
 from .get import *
 from .api import *
+import contextlib
+import sqlalchemy.exc
 
 # 複合的な関数
-def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_sitelist):
+def get_announcementlist(studentid,db_ses, show_only_unchecked = False,courseid=None, day=None):
+    """
+
+    """
+    announcements=get_announcements(studentid, show_only_unchecked,courseid, day,db_ses)
+
+    return announcements
+
+def get_data_from_api_and_update(student_id,ses,now,need_to_update_sitelist,db_ses):
     """
         ユーザーの履修科目を取得し、対象科目の課題、授業資料、テスト・クイズの情報を更新する
 
@@ -19,109 +29,146 @@ def get_data_from_api_and_update(student_id,ses,now,last_update,need_to_update_s
         0 -> すでにデータベースに格納してあるユーザー履修状況をもとに対象科目を定める
         1 -> APIで履修科目を取得し、うちデータベースに格納していない科目のみを対象とする
     """
-    get_membership = {"student_id": "", "site_list":[]}
+    membership = {"student_id": "", "site_list":[]}
     if need_to_update_sitelist == 0:                
-        get_membership["student_id"] = student_id
-        get_membership["site_list"] = get_courses_id_to_be_taken(student_id)
+        membership["student_id"] = student_id
+        membership["site_list"] = get_courses_id_to_be_taken(student_id, db_ses, mode=1)
     else:
         # 時間かかる
-        last_update = 0
         # membership.json 使用
-        # get_membership = get_course_id_from_api(get_membership_json(ses))
+        membership = get_course_id_from_api(get_membership_json(ses))
         # site.json 使用
-        get_membership = get_course_id_from_site_api(get_site_json(ses),student_id)
-        already_known= get_courses_id_to_be_taken(student_id)
-        
-        # 既存の教科情報を更新
-        site_list_known = [i for i in get_membership["site_list"] if i in already_known]
-        sc_known = [{"sc_id":f"{student_id}:{i}","student_id":student_id,"course_id":i} for i in site_list_known]
-        add_studentcourse(student_id,sc_known)
-
-        # 新規のもののみを取り上げる
-        get_membership["site_list"] = [i for i in get_membership["site_list"] if i not in already_known]
-        
+        # membership = get_course_id_from_site_api(get_site_json(ses),student_id)
     if student_id != "":
         # get_assignments = get_assignments_from_api(assignments.json(), student_id)
-        get_sites = {"courses":[],"student_courses":[]}
-        get_resources = {"resources":[],"student_resources":[]}
-        get_quizzes = {"quizzes":[], "student_quizzes":[]}
+        courses = {"courses":[],"student_courses":[]}
+        resources = {"resources":[],"student_resources":[]}
+        quizzes = {"quizzes":[], "student_quizzes":[]}
+        assignments = {"assignments":[], "student_assignments":[]}
         asyncio.set_event_loop(asyncio.SelectorEventLoop())
         loop = asyncio.get_event_loop()
-        c_statements = []
-        s_statements = []
-        q_statements = []
-        p_statements = []
-        for courseid in get_membership["site_list"]:
-            c_statements.append(async_get_content(courseid, ses))
-            s_statements.append(async_get_site(courseid, ses))
-            p_statements.append(async_get_site_pages(courseid, ses))
-            q_statements.append(async_get_quiz(courseid, ses))
-            # site = s.get(f"{api_url}site/{courseid}.json")
-            # resources = s.get(f"{api_url}content/site/{courseid}.json")
-            # get_site = get_course_from_api(site.json(), student_id)
-            # get_sites["courses"].append(get_site["course"])
-            # get_sites["student_courses"].append(get_site["student_course"])
-            # get_resource = get_resources_from_api(resources.json(),courseid,student_id)
-            # get_resources["resources"].append(get_resource["resources"])
-            # get_resources["student_resources"].append(get_resources["student_resources"])
-        c_statements.extend(s_statements)
-        c_statements.extend(p_statements)
-        c_statements.extend(q_statements)
-        c_statements.extend([async_get_assignments(ses),async_get_user_info(ses)])
-        tasks = asyncio.gather(*c_statements)
-        content_site = loop.run_until_complete(tasks)
-        content_site_len = int(len(content_site))-2
-        one_forrth_content_site_len = content_site_len//4
-        contents = content_site[0:one_forrth_content_site_len]
-        sites = content_site[one_forrth_content_site_len:one_forrth_content_site_len*2]
-        pages = content_site[one_forrth_content_site_len*2:one_forrth_content_site_len*3]
-        quizzes = content_site[one_forrth_content_site_len*3:content_site_len]
-        get_assignments = get_assignments_from_api(content_site[content_site_len],student_id)
-        user_info = get_user_info_from_api(content_site[content_site_len+1])
+        content_statements = []
+        site_statements = []
+        quiz_statements = []
+        page_statements = []
+        assignment_statements = []
+        for courseid in membership["site_list"]:
+            content_statements.append(async_get_content(courseid, ses))
+            site_statements.append(async_get_site(courseid, ses))
+            page_statements.append(async_get_site_pages(courseid, ses))
+            quiz_statements.append(async_get_quiz(courseid, ses))
+            assignment_statements.append(async_get_assignments(courseid, ses))
+        statements = [*content_statements,*site_statements,*page_statements,*quiz_statements,*assignment_statements,async_get_user_info(ses),async_get_announcement(ses)]
+        tasks = asyncio.gather(*statements)
+        results = loop.run_until_complete(tasks)
+        results_len = int(len(results))-2
+        one_forth_results_len = results_len//5
+        rslt_contents = results[0:one_forth_results_len]
+        rslt_sites = results[one_forth_results_len:one_forth_results_len*2]
+        rslt_pages = results[one_forth_results_len*2:one_forth_results_len*3]
+        rslt_quizzes = results[one_forth_results_len*3:results_len*4]
+        rslt_assignments = results[one_forth_results_len*4:results_len]
+        user_info = get_user_info_from_api(results[results_len])
+        announcements = get_announcement_from_api(results[results_len+1],student_id)
         index = 0
-        for courseid in get_membership["site_list"]:
-            get_resource = get_resources_from_api(contents[index],courseid,student_id)
-            get_quiz = get_quizzes_from_api(quizzes[index],courseid,student_id)
-            get_site = get_course_from_api(sites[index], student_id)
-            if get_site:
-                get_site["course"]["page_id"] = get_page_from_api(pages[index],"assignment")
-                get_site["course"]["quiz_page_id"] = get_page_from_api(pages[index],"quiz")
-                get_sites["courses"].append(get_site["course"])
-                get_sites["student_courses"].append(get_site["student_course"])
-                get_resources["resources"].extend(get_resource["resources"])
-                get_resources["student_resources"].extend(get_resource["student_resources"])
-                get_quizzes["quizzes"].extend(get_quiz["quizzes"])
-                get_quizzes["student_quizzes"].extend(get_quiz["student_quizzes"])
+        for courseid in membership["site_list"]:
+            asm = get_assignments_from_api(rslt_assignments[index],student_id)
+            res = get_resources_from_api(rslt_contents[index],courseid,student_id)
+            quiz = get_quizzes_from_api(rslt_quizzes[index],courseid,student_id)
+            crs = get_course_from_api(rslt_sites[index], student_id)
+            if crs:
+                crs["course"]["page_id"] = get_page_from_api(rslt_pages[index],"assignment")
+                crs["course"]["quiz_page_id"] = get_page_from_api(rslt_pages[index],"quiz")
+                crs["course"]["announcement_page_id"] = get_page_from_api(rslt_pages[index],"announcement")
+                courses["courses"].append(crs["course"])
+                courses["student_courses"].append(crs["student_course"])
+                resources["resources"].extend(res["resources"])
+                resources["student_resources"].extend(res["student_resources"])
+                quizzes["quizzes"].extend(quiz["quizzes"])
+                quizzes["student_quizzes"].extend(quiz["student_quizzes"])
+                assignments["assignments"].extend(asm["assignments"])
+                assignments["student_assignments"].extend(asm["student_assignments"])
             index += 1
-        # student_id       student_id
-        # get_membership   {"student_id": , "site_list": []}
-        # get_assignments  {"assignments": [], student_assignments: []}
-        # get_sites        {"courses": [], "student_courses": []}
-        # get_resources    {"resources":[], "student_resources": []}
-        # student_quizzes  {"quizzes:[], "student_quizzes":[]}
-        # user_info        {"student_id": , "fullname": }
-        # + get_quizzes 
-        sync_student_contents(student_id, get_sites, get_assignments, get_resources, get_quizzes, now, last_update=last_update, need_to_update_sitelist=need_to_update_sitelist)
+        # student_id   student_id
+        # membership   {"student_id": , "site_list": []}
+        # assignments  {"assignments": [], student_assignments: []}
+        # courses      {"courses": [], "student_courses": []}
+        # resources    {"resources":[], "student_resources": []}
+        # quizzes      {"quizzes:[], "student_quizzes":[]}
+        # user_info    {"student_id": , "fullname": }
+        # quizzes      {"quizzes":[], "student_quizzes":[]}
+        # announcements{"announcements":[], "studnet_announcements":[]}
+        sync_student_contents(student_id, courses, assignments, resources, quizzes, announcements, now, db_ses,need_to_update_sitelist=need_to_update_sitelist)
 
-def get_tasklist(studentid, show_only_unfinished = False,courseid=None, day=None, mode=0):
+def get_data_from_kulais_api_and_update(student_id,access_param,ses,now,last_update):
+    last_update = 0
+    timetables = get_kulasis_lecture_and_department_no_from_timetable_api(get_timetable(ses,access_param),student_id)
+    lectures = {"lectures":[], "student_lectreus":[]}
+    # announcements = {"announcements":[], "student_announcements":[]}
+    asyncio.set_event_loop(asyncio.SelectorEventLoop())
+    loop = asyncio.get_event_loop()
+    lecture_statements = []
+    lecture_material_statements = []
+    mail_list_statements = []
+    for lecture in timetables["site_list"]:
+        lecture_statements.append(get_lecture_detail(ses,access_param,lecture["department_no"],lecture["lecture_no"]))
+        lecture_material_statements.append(get_lecture_material(ses,access_param,lecture["department_no"],lecture["lecture_no"]))
+        mail_list_statements.append(get_mail_list(ses,access_param,lecture["department_no"],lecture["lecture_no"]))
+    statements = [*lecture_statements,*lecture_material_statements,*mail_list_statements]
+    tasks = asyncio.gather(*statements)
+    results = loop.run_until_complete(tasks)
+    results_len = int(len(results))
+    one_third_results_len = results_len//3
+    rslt_lecture_details = results[0:one_third_results_len]
+    rslt_lecture_materials = results[one_third_results_len:one_third_results_len*2]
+    rslt_mail_lists = results[one_third_results_len*2:results_len]
+    index = 0
+    lecture_details = {"lectures":[]}
+    mail_lists = []
+    for lecture in timetables["site_list"]:
+        lecture_detail = get_lecture_detail_from_api(rslt_lecture_details[index])
+        lecture_material = get_lecture_material_from_api(rslt_lecture_details[index])
+        mail_list = get_mail_list_from_api(rslt_mail_lists[index])
+        lecture_details["lectures"].append(lecture_detail)
+        mail_lists.extend(mail_list)
+
+    mail_detail_statements = []
+    for mail in mail_lists:
+        mail_detail_statements.extend(get_mail_detail(ses,access_param,mail['department_no'],mail['courseMailNo']))
+    # 2度目の非同期処理, メール本文の取得
+    task_mail = asyncio.gather(*mail_detail_statements)
+    mail_detail_result = loop.run_until_complete(task_mail)
+    # この後メールの本文取得，追加処理
+        
+
+def get_tasklist(studentid, db_ses, show_only_unfinished = False,courseid=None, day=None, mode=0):
     """
         mode
         0:tasklist
         1:tasklist for overview
     """
 
-    assignments=get_assignments(studentid, show_only_unfinished,courseid, day, mode)
-    quizzes=get_quizzes(studentid, show_only_unfinished,courseid, day, mode)
+    assignments=get_assignments(studentid, db_ses,show_only_unfinished,courseid, day, mode)
+    quizzes=get_quizzes(studentid,show_only_unfinished,courseid, day, mode, db_ses)
     # assignmentsとquizzesを結合
     return assignments+quizzes
 
-def sync_student_assignment(studentid, sa, asm,last_update): 
+def sync_student_announcement(studentid, sa, anc, db_ses): 
     # 追加、更新をする
-    add_student_assignment(studentid,sa, last_update)
-    add_assignment(studentid, asm, last_update)
+    add_student_announcement(studentid, sa,db_ses)
+    add_announcement(studentid, anc,db_ses)
     return 0
 
-def sync_student_contents(studentid, crs, asm, res, qz, now,last_update=0,need_to_update_sitelist=0):
+def sync_student_assignment(studentid, sa, asm,need_to_update_sitelist, db_ses): 
+    # 追加、更新をする
+    add_student_assignment(studentid,sa, db_ses)
+    if need_to_update_sitelist:
+        add_assignment(studentid, asm, db_ses, allow_delete=0)
+    else:
+        add_assignment(studentid, asm, db_ses)
+    return 0
+
+def sync_student_contents(studentid, crs, asm, res, qz, anc, now,db_ses, need_to_update_sitelist=0):
     # 以下主な方針
     #
     # studentテーブルにlast_updateを用意し、毎回update後に記録しておく
@@ -134,31 +181,38 @@ def sync_student_contents(studentid, crs, asm, res, qz, now,last_update=0,need_t
     # 加えて、assignment,course,resource,quizも同時に更新することにする。
 
     # courseが最初!!!
-    sync_student_course(studentid, crs["student_courses"], crs["courses"], last_update,need_to_update_sitelist)
-    sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"], last_update)
-    sync_student_resource(studentid, res["student_resources"], res["resources"], last_update)
-    sync_student_quiz(studentid, qz["student_quizzes"], qz["quizzes"], last_update)
+    sync_student_course(studentid, crs["student_courses"], crs["courses"],need_to_update_sitelist, db_ses)
+    sync_student_assignment(studentid, asm["student_assignments"], asm["assignments"],need_to_update_sitelist, db_ses)
+    sync_student_resource(studentid, res["student_resources"], res["resources"], need_to_update_sitelist, db_ses)
+    sync_student_quiz(studentid, qz["student_quizzes"], qz["quizzes"],need_to_update_sitelist, db_ses)
+    sync_student_announcement(studentid, anc["student_announcements"], anc["announcements"], db_ses)
 
     return 0
 
-def sync_student_course(studentid, sc, crs, last_update,need_to_update_sitelist):
+def sync_student_course(studentid, sc, crs, need_to_update_sitelist, db_ses):
     # 追加、更新をする
     if need_to_update_sitelist:
-        add_studentcourse(studentid, sc,allow_delete=0)
+        add_studentcourse(studentid, sc,db_ses, allow_delete=0)
     else:
-        add_studentcourse(studentid, sc)
-    add_course(studentid, crs, last_update)
+        add_studentcourse(studentid, sc, db_ses)
+    add_course(studentid, crs, db_ses)
     return 0
 
-def sync_student_resource(studentid, sr, res, last_update):
+def sync_student_resource(studentid, sr, res, need_to_update_sitelist, db_ses):
     # 追加、更新をする
-    add_student_resource(studentid, sr)
-    add_resource(studentid, res, last_update)
+    add_student_resource(studentid, sr,db_ses)
+    if need_to_update_sitelist:
+        add_resource(studentid, res, db_ses, allow_delete=0)
+    else:
+        add_resource(studentid, res, db_ses)
     return 0
 
-def sync_student_quiz(studentid, sq, quiz, last_update):
-    add_student_quiz(studentid, sq, last_update)
-    add_quiz(studentid, quiz, last_update)
+def sync_student_quiz(studentid, sq, quiz, need_to_update_sitelist, db_ses):
+    add_student_quiz(studentid, sq, db_ses)
+    if need_to_update_sitelist:
+        add_quiz(studentid, quiz, db_ses, allow_delete=0)
+    else:
+        add_quiz(studentid, quiz, db_ses)
     return 0
 
 
@@ -179,11 +233,11 @@ def day_to_str(day):
 
     return day_str
 
-def get_search_condition(show_only_unfinished ,max_time_left , course=None, day=None):
+def get_search_condition(show_only_unfinished, max_time_left,db_ses, course=None, day=None):
     condition=[]
     select3a_judge = 0
     if course != None:
-        condition.append(f"{get_coursename(course)}のみ")
+        condition.append(f"{get_coursename(course,db_ses)}のみ")
     elif day !=None:
         condition.append(f"{day_to_str(day)}のみ")
     if show_only_unfinished == 1:
@@ -203,6 +257,15 @@ def get_search_condition(show_only_unfinished ,max_time_left , course=None, day=
     else:
         search_condition="全て"
     return {"search_condition":search_condition, "select3a_judge":select3a_judge}
+
+def order_course(course):
+    order = ['mon1','mon2','mon3','mon4','mon5','tue1','tue2','tue3','tue4','tue5','wed1','wed2','wed3','wed4','wed5',\
+        'thu1','thu2','thu3','thu4','thu5','fri1','fri2','fri3','fri4','fri5','oth']
+    value=order.index(course["classschedule"])
+    value-=course["yearsemester"]*100
+    if course["yearsemester"]==10009:
+        value+=20000*100
+    return value
 
 def order_status(status):
     if status == Status.NotYet.value:
@@ -336,7 +399,7 @@ def resource_arrange(resource_list:list, coursename:str, courseid):
         """ + html_deleted_courseid + "</div></div>"
     return html
 
-def setdefault_for_overview(studentid, mode='tasklist'):
+def setdefault_for_overview(studentid, db_ses, mode='tasklist',tasks_name="tasks"):
     """
         履修科目をデータベースから取得し、overviewで使用するdataの枠組みを作る
         data:
@@ -359,12 +422,12 @@ def setdefault_for_overview(studentid, mode='tasklist'):
     """
     data={}
     days =["mon", "tue", "wed", "thu", "fri"]
-    default = {"subject": "", "shortname": "", "searchURL": "","tasks": []}
+    default = {"subject": "", "shortname": "", "searchURL": "",tasks_name: []}
     for day in days:
         for i in range(5):
             data[day+str(i+1)]=copy.copy(default)
     data["others"]=[]
-    coursedata = get_courses_to_be_taken(studentid)
+    coursedata = get_courses_to_be_taken(studentid,db_ses)
     for course in coursedata:
         add_in_others = False
         add_subject = False
@@ -398,15 +461,40 @@ def setdefault_for_overview(studentid, mode='tasklist'):
                 data["others"][index]["subject"] = course.coursename
                 data["others"][index]["shortname"] = re.sub(
                     "\[.*\]", "", course.coursename)
-                data["others"][index]["tasks"] = []
+                data["others"][index][tasks_name] = []
 
         elif add_subject == True:
             data[course.classschedule]["searchURL"] = app_url+ f"/{mode}/course/"+course.course_id
             data[course.classschedule]["subject"] = course.coursename
             data[course.classschedule]["shortname"] = re.sub(
                 "\[.*\]", "", course.coursename)
-            data[course.classschedule]["tasks"] = []
+            data[course.classschedule][tasks_name] = []
     return data
+
+def sort_announcements(announcements,criterion,ascending):
+    """
+        
+        criterion 並び替えの順
+        0: 保存者 1: 公開日時 2: サイト名
+
+        ascending 0: 降順 1: 昇順
+    """
+    
+
+    keyname=""
+    if criterion==0:
+        keyname="publisher"
+    elif criterion==1:
+        keyname="time_ms"
+    else:
+        keyname="subject"
+    # keynameの値で並べ変える。降順ならreverseをTrueにする
+    new_announcements = sorted(announcements, key=lambda x: x[keyname],reverse=ascending==0)
+    return new_announcements
+
+def sort_courses(courses):
+    new_courses = sorted(courses,key=lambda x: order_course(x))
+    return new_courses
 
 def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
     """
@@ -425,12 +513,12 @@ def sort_tasks(tasks, show_only_unfinished = False, max_time_left = 3):
             task["status"]=Status.AlreadyDue.value
 
     
-    new_tasks = sorted([i for i in tasks if i["status"] != Status.AlreadyDue.value], key=lambda x: x["deadline"])
-    new_tasks.extend(sorted([i for i in tasks if i["status"] == Status.AlreadyDue.value], key=lambda x: x["deadline"],reverse=True))
+    new_tasks = sorted([i for i in tasks if i["status"] != Status.AlreadyDue.value], key=lambda x: x["time_ms"])
+    new_tasks.extend(sorted([i for i in tasks if i["status"] == Status.AlreadyDue.value], key=lambda x: x["time_ms"],reverse=True))
     new_tasks = sorted(new_tasks, key=lambda x: order_status(x["status"]))
     return new_tasks
 
-def task_arrange_for_overview(tasks,task_arranged):
+def task_arrange_for_overview(tasks,task_arranged,key_name="tasks"):
 
     for task in tasks:
         add_in_others = False
@@ -453,7 +541,7 @@ def task_arrange_for_overview(tasks,task_arranged):
                     break
                 index += 1
             if subject_exist:
-                task_arranged["others"][index]["tasks"].append(task)
+                task_arranged["others"][index][key_name].append(task)
             else:
                 # 新しい教科を追加(setdefault_for_overviewで型は作ってあるはずなので本来ここに到達することはない)
                 task_arranged["others"].append({})
@@ -461,10 +549,10 @@ def task_arrange_for_overview(tasks,task_arranged):
                 task_arranged["others"][index]["subject"] = task["subject"]
                 task_arranged["others"][index]["shortname"] = re.sub(
                     "\[.*\]", "", task["subject"])
-                task_arranged["others"][index]["tasks"] = [task]
+                task_arranged["others"][index][key_name] = [task]
 
         else:
-            task_arranged[task["classschedule"]]["tasks"].append(task)
+            task_arranged[task["classschedule"]][key_name].append(task)
     return task_arranged
 
 def timejudge(task, max_time_left):
@@ -475,7 +563,7 @@ def timejudge(task, max_time_left):
         0:一時間以内
         1:一日以内
         2:一週間以内
-        (3:無期限　この場合はそもそもこの関数を呼ばないが、Trueを返しておく。)
+        (3:無期限 この場合はそもそもこの関数を呼ばないが、Trueを返しておく。)
     """
     if max_time_left==3:
         return True
@@ -493,3 +581,65 @@ def timejudge(task, max_time_left):
         if units[i] in time_left["msg"]:
             return True
     return False
+
+@contextlib.contextmanager
+def open_db_ses():
+    db_ses=session()
+    try:
+        yield db_ses
+        db_ses.commit()
+    except sqlalchemy.exc.SQLAlchemyError:
+        db_ses.rollback()
+        raise
+    finally:
+        db_ses.close()
+
+
+def auto_collect_year_semester(dt):
+    """
+        dt = datetime.date.today()
+        現在の日付からvalid,show year semesterを返す
+    """
+
+    # 4月-9月なら前期
+    # 10月-3月なら後期判定
+    def is_first_semester(dt):
+        if 4 <= dt.month and dt.month <= 9:
+            return 1
+        else:
+            return 0
+
+    valid_year_semester = [10009]
+    show_year_semester = [10009]
+    str_pre_year = str(dt.year-1)
+    str_year = str(dt.year)
+    str_nex_year = str(dt.year+1)
+    first_or_not = is_first_semester(dt)
+
+    # 今が前期の場合
+    if first_or_not:
+        # 前年度後期以降
+        valid_extend1 = [int(f'{str_pre_year}2'),int(f'{str_pre_year}3'),int(f'{str_pre_year}4'),\
+            int(f'{str_pre_year}5'),int(f'{str_pre_year}9')]
+        # 今年度前期/後期/通年すべて
+        valid_extend2 = [int(f'{str_year}0'),int(f'{str_year}1'),int(f'{str_year}2'),\
+            int(f'{str_year}3'),int(f'{str_year}4'),int(f'{str_year}5'),int(f'{str_year}9')]
+        valid_year_semester = valid_year_semester + valid_extend1 + valid_extend2
+
+        show_year_semester = show_year_semester + [int(f'{str_year}0'),int(f'{str_year}1'),\
+            int(f'{str_year}4'),int(f'{str_year}5'),int(f'{str_year}9')]
+
+    # 今が後期の場合
+    else:
+        # 今年度前期/後期/通年すべて
+        valid_extend1 = [int(f'{str_year}0'),int(f'{str_year}1'),int(f'{str_year}2'),int(f'{str_year}3'),\
+            int(f'{str_year}4'),int(f'{str_year}5'),int(f'{str_year}9')]
+        # 来年度前期
+        valid_extend2 = [int(f'{str_nex_year}0'),int(f'{str_nex_year}1'),int(f'{str_nex_year}4'),\
+            int(f'{str_nex_year}5'),int(f'{str_nex_year}9')]
+        valid_year_semester = valid_year_semester + valid_extend1 + valid_extend2
+
+        show_year_semester = show_year_semester + [int(f'{str_year}2'),int(f'{str_year}3'),\
+            int(f'{str_year}4'),int(f'{str_year}5'),int(f'{str_year}9')]
+
+    return {'valid_year_semester':valid_year_semester, 'show_year_semester':show_year_semester}

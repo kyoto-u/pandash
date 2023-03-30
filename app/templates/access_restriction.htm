@@ -1,0 +1,46 @@
+{% extends "_homebase.htm" %}
+{% block homebodycontent %}
+<div class="container ml-md-5">
+    <div class="row mt-4">
+        <div class="col-sm-12 col-md-6 ml-md-5">
+            <div class="mx-auto mt-2 mb-5">
+                <h1 style="font-family:Lucida Console; font-size: xx-large;">403 forbidden</h1>
+                <h2>ログインに失敗しました。</h2>
+                <h3 class="mt-4">以下の理由により認証に失敗しました。</h3>
+                <ul>
+                    <li>PandAshにアクセスする権限がない</li>
+                </ul>
+            </div>
+            <h3><i class="fas fa-lightbulb">解決方法</i></h3>
+            <ul>
+                <li>PandAshは現在試用期間中で、アクセスには申請が必要です。</li>
+                <li><a href="/">トップページ</a>に戻る</li>
+                <li><a href="javascript:history.back();">前のページ</a>に戻る</li>
+                <li>詳細は<a href="https://panda.ecs.kyoto-u.ac.jp/portal/">PandAトップページ</a>を参照してください。</li>
+            </ul>
+        </div>
+        <div class="col-sm-12 col-md-4 mr-md-5 ml-sm-5">
+            <!-- <img id="404image" class="mt-5" src="{{ url_for('static', filename='images/panda_sleeping.jpg') }}" alt="ロゴ"
+                width="280px" height="280px">
+            <script>
+                const target = document.getElementById('404image');
+
+                //マウスが要素上に入った時
+                target.addEventListener('mouseover', () => {
+
+                    target.setAttribute('src', "{{ url_for('static', filename='images/logo.jpg') }}")
+
+                }, false);
+
+                //マウスが要素上から離れた時
+                target.addEventListener('mouseleave', () => {
+
+                    target.setAttribute('src', "{{ url_for('static', filename='images/panda_sleeping.jpg') }}")
+
+                }, false);
+            </script> -->
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

@@ -28,7 +28,7 @@
 <body>
     <header>
         <!-- ロゴとサイト名-->
-        <div class="fixed-top logos">
+        <div class="logos">
             <nav class="navbar navbar-light bg-light" id="logonav">
                 <div class="row">
                     <a href="#" class=navbar-brand>
@@ -45,11 +45,25 @@
 
     <div id="loading"></div>
     <div class="container mx-auto">
-        <div class="mx-auto">
+        <div class="mx-auto" style="text-align: center;">
             <!-- <img id="loading_logo" src="{{ url_for('static', filename='images/logo.jpg') }}" width="300" height="300"
                 style="z-index: -20; position: relative;"> -->
+            
             <img src="{{ url_for('static', filename='images/loading.gif') }}" alt="Loading..." width="300" height="300" style="z-index: -20; position: relative;">
-            <h2 id="how_percent_loaded">Loading...</h2>
+
+
+            <div class = "mx-auto">
+                <h2 id="how_percent_loaded" style="text-align: center;">Loading...</h2>
+            </div>
+
+            <div id="loading_text" class="mx-auto">
+                <h3 id="message" style="text-align: center;">
+                <a href="https://panda.ecs.kyoto-u.ac.jp/portal/" target="_blank">PandA</a>
+                から情報を取得しています。
+                しばらくお待ちください。
+                </h3>
+            </div>
+
         </div>
     </div>
 
@@ -65,7 +79,6 @@
             logo.style.transform = "rotate(" + d + "deg)";
         }, 100)
     </script>
-
     <script type="text/javascript">
         $('#loading_btn').trigger('click');
         function loading() {

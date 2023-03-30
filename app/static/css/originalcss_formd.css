@@ -91,10 +91,11 @@ footer {
   display: flex;
   flex-direction: column;  
   left:0;
-  width:98vw;
-  margin-left: 1vw;
-  margin-right: 1vw;
   pointer-events: all;
+}
+
+table{
+    word-break: break-all;
 }
 
 th,td{
@@ -166,7 +167,7 @@ body{
   
 /*授業資料ページ*/
 label > .undownloaded{
-    color: skyblue;
+    color: deepskyblue;
 }
 
 label > .downloaded{
@@ -174,28 +175,43 @@ label > .downloaded{
 }
 
 #resources_searchBox{
-    padding-left: 0;
-    padding-right: 0;
-    margin-left: 0;
-    margin-right: 0;
-    width:100vw;
-     background-color: silver;
+    background-color: silver;
 }
 
 
 /*課題の色*/
 
 .one_sec{
-    background-color: #ffdcdd;
+    background-color: rgb(255, 120, 120);
 }
 .one_min{
-    background-color: #ffdcdd;
+    background-color: rgb(255, 120, 120);
 }
 .one_hour{
-    background-color: #ffdcdd;
+    background-color: rgb(255, 120, 120);
 }
-.one_day{
-    background-color: #ffdcdd;
+.one_day {
+    background-color: rgb(255, 120, 120);
+}
+
+.two_day {
+    background-color: rgb(255, 140, 140);
+}
+
+.three_day {
+    background-color: rgb(255, 160, 160);
+}
+
+.four_day {
+    background-color: rgb(255, 180, 180);
+}
+
+.five_day {
+    background-color: rgb(255, 200, 200);
+}
+
+.six_day {
+    background-color: rgb(255, 220, 220);
 }
 .one_week{
     background-color: #ffdcbc;
@@ -231,4 +247,23 @@ label > .downloaded{
 .optiontablink{
     color:black;
     background-color:gainsboro;
+}
+#message_container{
+    min-height:200px; 
+    background-color:rgb(236, 236, 236);
+}
+
+/* お知らせモーダル */
+#modal_announcement_title{
+    color:black
+}
+#modal_announcement_subject{
+    color:black
+}
+#modal_announcement_publish_date{
+    color:black
+}
+#modal_announcement_html_file{
+    background-color: #f5f5f5;
+    min-height: 200px;
 }

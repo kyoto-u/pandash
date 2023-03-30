@@ -1,0 +1,68 @@
+﻿<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PandAsh</title>
+    <!-- BootstrapのCSS読み込み -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <!-- jQuery読み込み -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script
+        src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
+    <!-- BootstrapのJS読み込み -->
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='images/font/css/open-iconic-bootstrap.css') }}">
+    <script src="https://kit.fontawesome.com/7bb95e7ca3.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/originalcss_forlg.css') }}" type="text/css"
+        media="screen and (min-width:768px)" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/originalcss_formd.css') }}" type="text/css"
+        media="screen and (max-width:768px)" />
+</head>
+
+<body>
+<div class="modal fade show" id="modal_announcement" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-fluid" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="label1">{{announce.title}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="word-break: break-all;">
+                <div class="container-fluid">
+                    <div class="row">
+                        <ul class="col-12" style="list-style-type: none">
+                            <li>サイト：</li>
+                            <li>公開日時：</li>
+                        </ul>
+                        <div class="col-12" id="message_container">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">とじる</button>
+                <div class="mr-auto"><small>ESCキーを押しても閉じられます</small></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="btn btn-dark" onclick="clicked('{{button_clicked("button1")}}')" data-toggle ="modal" data-target="#modal_announcement">ボタン１</div>
+<div class="btn btn-warning"  onclick="clicked('{{button_clicked("button2")}}')" data-toggle ="modal" data-target="#modal_announcement">ボタン２</div>
+</body>
+<script>
+    function clicked(value){
+        var target = document.getElementById("message_container")
+        target.innerHTML = value
+    }
+</script>

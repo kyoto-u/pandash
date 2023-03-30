@@ -31,6 +31,10 @@ html{
     min-height: 100px;
 }
 
+.graph-canvas{
+    max-width: 500px;
+}
+
 @media screen and (min-width:760px){
 body {
     display: flex;

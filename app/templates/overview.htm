@@ -1,13 +1,13 @@
 {% extends "_base.htm" %}
 {% block bodycontent %}
-<div class="container container-fluid">
+<div class="container-fluid">
   <!-- See file _base.htm, line 132
     style="pointer-events: none;" -->
   <div class="row">
     <div class="col-sm-12 col-md-10" id="all_table">
       <!-- See file _base.htm, line 132
         style="pointer-events: none;" -->
-      <div class="container">
+      <div class="container-fluid">
         <div class="row">
           <h3>あなたの課題</h3>
           <div class="ml-5">
@@ -49,6 +49,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -57,6 +60,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -71,6 +77,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -79,6 +88,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -93,6 +105,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -101,6 +116,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -115,6 +133,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -123,6 +144,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -137,6 +161,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -145,6 +172,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -162,6 +192,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -170,6 +203,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -184,6 +220,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -192,6 +231,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -206,6 +248,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -214,6 +259,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -228,6 +276,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -236,6 +287,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -250,6 +304,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -258,6 +315,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -275,6 +335,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -283,6 +346,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -297,6 +363,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -305,6 +374,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -319,6 +391,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -327,6 +402,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -341,6 +419,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -349,6 +430,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -363,6 +447,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -371,6 +458,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -388,6 +478,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -396,6 +489,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -410,6 +506,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -418,6 +517,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -432,6 +534,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -440,6 +545,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -454,6 +562,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -462,6 +573,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -476,6 +590,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -484,6 +601,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -501,6 +621,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -509,6 +632,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -523,6 +649,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -531,6 +660,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -545,6 +677,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -553,6 +688,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -567,6 +705,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -575,6 +716,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -589,6 +733,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -597,6 +744,9 @@
                     {% if task.clicked == 0 %}
                     <i class="fas fa-exclamation-circle"></i>
                     {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -630,6 +780,9 @@
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i>
                 {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
             </div>
             {% else %}
             <div class="card taskcard {{task.time_left.judge}}" id="{{task.assignmentid}}">
@@ -638,6 +791,9 @@
                 {% if task.clicked == 0 %}
                 <i class="fas fa-exclamation-circle"></i>
                 {% endif %}{{task.taskname}}</a>
+                    {% if task.quiz == True %}
+                    <img height="15" width="60" class="testquiz-icon" src="{{ url_for('static', filename='images/testquiz_icon.png') }}"> </img>
+                    {% endif %}
             </div>
             {% endif %}
             {% endfor %}

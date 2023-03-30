@@ -19,7 +19,7 @@
 }
 
 #inquery_content{
-    min-height: 400px;
+    min-height: 250px;
 }
 
 #reply_form{
@@ -34,4 +34,32 @@
 
 #reply_textarea{
     min-height:150px;
+}
+
+.graph-canvas{
+    max-width:calc(100wd/2);
+}
+
+.nav-link{
+    background-color: white;
+    color: black;
+}
+.nav-link.active{
+    background-color:rgb(92, 154, 179) !important;
+    color: white !important;
+}
+
+.nav-link.active.show{
+    background-color:rgb(92, 154, 179);
+    color: white;
+}
+
+.inquery_selected{
+    background-color: skyblue;
+}
+
+#log_box{
+    font-size: 12;
+    background-color: rgb(35, 35, 35);
+    color:white
 }
