@@ -7,11 +7,11 @@ cd pandash
 ```
 
 ## 2.Install Python and Git
-### Debian系
+### Debian
     sudo apt-get install python-dev default-libmysqlclient-dev
     sudo apt-get install python3-dev
  
-### RHEL系
+### RHEL
     sudo yum install python-devel mysql-devel
     sudo yum install python3-devel
 
@@ -43,20 +43,26 @@ pip install .
 
 In addition, it is necessary to install MySQL and prepare a database named "pandash".
 
-## 5.Create Files Named "users.txt","users_oa.txt" at pandash/pandash
+## 5.Create Files Named "users.txt", "users_oa.txt", "year_semester.json" at pandash/pandash
 
 Currently, students who can use the service are restricted by email address.
 In users.txt, enter **email address** of users whom you allow to use pandash.
 
 In users_oa.txt, enter **user_id (in students table)** of the users whom you allow to use OA_tool.
 
+In year_semester.json, enter the following contents.
+```
+{"valid_year_semester": [10009], "show_year_semester": [10009]}
+```
+
 ## 6.Run run.py
 
-Issue server certificates
 When doing this on a production server, the following points should be noted
 
-- If you use CASProxy authentication, you need to issue a server certificate and register this information with the CAS server and PandA.
+- If you use CAS proxy authentication, you need to issue a server certificate and register this information with the CAS server and PandA.
+- If only you use PandAsh, you can use PandAsh without CAS proxy authentication using without_CAS branch. Some additional settings are needed and you need to install library named "Beautiful Soup". See settings_sample.py in without_CAS branch for detail.
 - The internal errors that occur can be checked in DEBUG_LOG.log
+- when you run the app for the first time, you must update "valid_year_semester" and "show_year_semester". See "Maintenance for New Semester" below for detailed instructions.
 
 # How to Maintain PandA
 
