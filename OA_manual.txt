@@ -1,6 +1,12 @@
-﻿以下に引き継ぎ資料のリンクを貼付します。
+﻿表示側
+以下に引き継ぎ資料のリンクを貼付します。
 PandAshのフロントエンド開発担当者は確認をお願いします。
 
 https://qiita.com/Tasyu/private/40808356d4843fa7a292
 
 作成者：2020～2022年度 PandAshフロントエンド開発 赤山慎治
+
+基盤側
+以下に引き継ぎ用資料のリンクを貼付します。
+PandAshのバックエンド開発担当者は確認をお願いします。
+https://docs.google.com/document/d/1RHZXK3Jm8qZaiJL76J5C0Bl_Fwbo2dXQszHhP_Hhvsc
